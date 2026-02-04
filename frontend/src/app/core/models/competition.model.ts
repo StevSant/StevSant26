@@ -1,4 +1,4 @@
-import { BaseEntity } from './base.model';
+import { BaseEntity } from './base-entity.model';
 
 /**
  * Competition entity - represents competitions/hackathons participated in
@@ -6,15 +6,7 @@ import { BaseEntity } from './base.model';
 export interface Competition extends BaseEntity {
   name: string;
   organizer: string | null;
-  date: string | null; // ISO date string
+  date: string | null;
   description: string | null;
   result: string | null;
-}
-
-export interface CompetitionFormData {
-  name: string;
-  organizer: string;
-  date: string;
-  description: string;
-  result: string;
 }

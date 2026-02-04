@@ -1,4 +1,4 @@
-import { BaseEntity } from './base.model';
+import { BaseEntity } from './base-entity.model';
 
 /**
  * Skill category entity - groups related skills together
@@ -6,9 +6,4 @@ import { BaseEntity } from './base.model';
 export interface SkillCategory extends BaseEntity {
   name: string;
   approach: string | null;
-}
-
-export interface SkillCategoryFormData {
-  name: string;
-  approach: string;
 }

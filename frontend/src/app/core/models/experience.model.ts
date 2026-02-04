@@ -1,4 +1,4 @@
-import { BaseEntity } from './base.model';
+import { BaseEntity } from './base-entity.model';
 
 /**
  * Experience entity - represents work/professional experience
@@ -6,15 +6,7 @@ import { BaseEntity } from './base.model';
 export interface Experience extends BaseEntity {
   company: string;
   role: string;
-  start_date: string | null; // ISO date string
-  end_date: string | null; // ISO date string (null = current)
+  start_date: string | null;
+  end_date: string | null;
   description: string | null;
-}
-
-export interface ExperienceFormData {
-  company: string;
-  role: string;
-  start_date: string;
-  end_date: string;
-  description: string;
 }

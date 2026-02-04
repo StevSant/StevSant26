@@ -1,4 +1,4 @@
-import { BaseEntity } from './base.model';
+import { BaseEntity } from './base-entity.model';
 import { SkillCategory } from './skill-category.model';
 
 /**
@@ -8,12 +8,5 @@ export interface Skill extends BaseEntity {
   name: string;
   description: string | null;
   skill_category_id: number | null;
-  // Joined data
   skill_category?: SkillCategory;
-}
-
-export interface SkillFormData {
-  name: string;
-  description: string;
-  skill_category_id: number | null;
 }
