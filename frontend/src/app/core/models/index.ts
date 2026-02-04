@@ -1,0 +1,11 @@
+// Core models barrel export
+export * from './base.model';
+export * from './profile.model';
+export * from './skill-category.model';
+export * from './skill.model';
+export * from './skill-usage.model';
+export * from './competition.model';
+export * from './experience.model';
+export * from './event.model';
+export * from './project.model';
+export * from './image.model';
