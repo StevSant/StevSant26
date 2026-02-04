@@ -53,6 +53,7 @@ CREATE TABLE project (
   description TEXT,
   url TEXT,
   created_at DATE DEFAULT NOW(),
+  parent_project_id INT REFERENCES project(id) ON DELETE SET NULL,
   source_id INT,
   source_type TEXT
 );
