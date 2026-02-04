@@ -1,16 +1,13 @@
 <div class="space-y-6">
   <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
     <div>
-      <h1 class="text-2xl font-bold text-white">Usos de Habilidades</h1>
-      <p class="text-gray-400 mt-1">
+      <h1 class="text-2xl font-bold text-[var(--color-text-primary)]">Usos de Habilidades</h1>
+      <p class="text-[var(--color-text-muted)] mt-1">
         Vincula habilidades con proyectos, experiencias, competencias o eventos
       </p>
     </div>
     <div class="flex gap-3">
-      <button
-        (click)="toggleShowArchived()"
-        class="px-4 py-2 bg-gray-700 hover:bg-gray-600 text-white rounded-lg transition-colors flex items-center gap-2"
-      >
+      <button (click)="toggleShowArchived()" class="btn-secondary">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path
             stroke-linecap="round"
@@ -21,10 +18,7 @@
         </svg>
         {{ showArchived() ? 'Ocultar archivados' : 'Ver archivados' }}
       </button>
-      <a
-        routerLink="new"
-        class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors flex items-center gap-2"
-      >
+      <a routerLink="new" class="btn-primary">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path
             stroke-linecap="round"
@@ -40,12 +34,7 @@
 
   @if (loading()) {
     <div class="flex items-center justify-center py-12">
-      <svg
-        class="animate-spin h-8 w-8 text-blue-500"
-        xmlns="http://www.w3.org/2000/svg"
-        fill="none"
-        viewBox="0 0 24 24"
-      >
+      <svg class="spinner-lg" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
         <circle
           class="opacity-25"
           cx="12"
@@ -62,9 +51,9 @@
       </svg>
     </div>
   } @else if (filteredItems().length === 0) {
-    <div class="bg-gray-800 rounded-xl p-12 text-center">
+    <div class="card p-12 text-center">
       <svg
-        class="mx-auto h-16 w-16 text-gray-600"
+        class="mx-auto h-16 w-16 text-[var(--color-text-disabled)]"
         fill="none"
         stroke="currentColor"
         viewBox="0 0 24 24"
@@ -76,12 +65,11 @@
           d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"
         />
       </svg>
-      <h3 class="mt-4 text-lg font-medium text-white">No hay usos de habilidades</h3>
-      <p class="mt-2 text-gray-400">Vincula habilidades con tus proyectos</p>
-      <a
-        routerLink="new"
-        class="mt-6 inline-flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
-      >
+      <h3 class="mt-4 text-lg font-medium text-[var(--color-text-primary)]">
+        No hay usos de habilidades
+      </h3>
+      <p class="mt-2 text-[var(--color-text-muted)]">Vincula habilidades con tus proyectos</p>
+      <a routerLink="new" class="mt-6 btn-primary inline-flex">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path
             stroke-linecap="round"
@@ -99,14 +87,11 @@
         <div
           cdkDrag
           [cdkDragDisabled]="showArchived()"
-          class="bg-gray-800 rounded-lg p-4 flex items-center gap-4 group hover:bg-gray-750 transition-colors"
+          class="card-hover p-4 flex items-center gap-4 group"
           [class.opacity-60]="item.is_archived"
         >
           @if (!showArchived()) {
-            <div
-              cdkDragHandle
-              class="cursor-grab active:cursor-grabbing text-gray-500 hover:text-gray-300"
-            >
+            <div cdkDragHandle class="drag-handle">
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
                   stroke-linecap="round"
@@ -119,7 +104,7 @@
           }
           <div class="flex-1 min-w-0">
             <div class="flex items-center gap-2">
-              <h3 class="text-white font-medium truncate">
+              <h3 class="text-[var(--color-text-primary)] font-medium truncate">
                 {{ item.skill?.name || 'Habilidad #' + item.skill_id }}
               </h3>
               @if (item.level) {
@@ -127,8 +112,8 @@
                   @for (i of [1, 2, 3, 4, 5]; track i) {
                     <svg
                       class="w-4 h-4"
-                      [class.text-yellow-500]="i <= item.level!"
-                      [class.text-gray-600]="i > item.level!"
+                      [class.text-[var(--color-pin)]]="i <= item.level!"
+                      [class.text-[var(--color-text-disabled)]]="i > item.level!"
                       fill="currentColor"
                       viewBox="0 0 24 24"
                     >
@@ -141,17 +126,17 @@
               }
             </div>
             @if (item.description) {
-              <p class="text-gray-400 text-sm truncate mt-1">{{ item.description }}</p>
+              <p class="text-[var(--color-text-muted)] text-sm truncate mt-1">
+                {{ item.description }}
+              </p>
             }
             <div class="flex items-center gap-2 mt-1">
               @if (item.source_type) {
-                <span class="px-2 py-0.5 text-xs rounded-full bg-purple-500/20 text-purple-400">{{
-                  item.source_type
-                }}</span>
+                <span class="badge-purple">{{ item.source_type }}</span>
               }
               @if (item.started_at) {
-                <span class="text-gray-500 text-xs"
-                  >{{ item.started_at | date: 'MMM yyyy' }}
+                <span class="text-[var(--color-text-disabled)] text-xs">
+                  {{ item.started_at | date: 'MMM yyyy' }}
                   @if (item.ended_at) {
                     - {{ item.ended_at | date: 'MMM yyyy' }}
                   }
@@ -160,10 +145,7 @@
             </div>
           </div>
           <div class="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-            <a
-              [routerLink]="[item.id]"
-              class="p-2 text-gray-400 hover:text-blue-500 hover:bg-gray-700 rounded-lg transition-colors"
-            >
+            <a [routerLink]="[item.id]" class="icon-btn-edit">
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
                   stroke-linecap="round"
@@ -173,10 +155,7 @@
                 />
               </svg>
             </a>
-            <button
-              (click)="toggleArchive(item)"
-              class="p-2 text-gray-400 hover:text-orange-500 hover:bg-gray-700 rounded-lg transition-colors"
-            >
+            <button (click)="toggleArchive(item)" class="icon-btn-archive">
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 @if (item.is_archived) {
                   <path
@@ -195,10 +174,7 @@
                 }
               </svg>
             </button>
-            <button
-              (click)="confirmDelete(item)"
-              class="p-2 text-gray-400 hover:text-red-500 hover:bg-gray-700 rounded-lg transition-colors"
-            >
+            <button (click)="confirmDelete(item)" class="icon-btn-delete">
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
                   stroke-linecap="round"

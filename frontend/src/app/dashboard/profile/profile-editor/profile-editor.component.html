@@ -2,12 +2,7 @@
   <!-- Loading State -->
   @if (loading()) {
     <div class="flex items-center justify-center py-12">
-      <svg
-        class="animate-spin h-8 w-8 text-blue-500"
-        xmlns="http://www.w3.org/2000/svg"
-        fill="none"
-        viewBox="0 0 24 24"
-      >
+      <svg class="spinner-lg" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
         <circle
           class="opacity-25"
           cx="12"
@@ -26,9 +21,14 @@
   } @else {
     <form (ngSubmit)="onSubmit()" class="space-y-6">
       <!-- Profile Card -->
-      <div class="bg-gray-800 rounded-xl p-6 space-y-6">
-        <h2 class="text-xl font-semibold text-white flex items-center gap-2">
-          <svg class="w-6 h-6 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <div class="card space-y-6">
+        <h2 class="text-xl font-semibold text-[var(--color-text-primary)] flex items-center gap-2">
+          <svg
+            class="w-6 h-6 text-[var(--color-accent)]"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
             <path
               stroke-linecap="round"
               stroke-linejoin="round"
@@ -41,7 +41,7 @@
 
         <!-- Avatar Upload -->
         <div>
-          <label class="block text-sm font-medium text-gray-300 mb-2">Foto de Perfil</label>
+          <label class="label">Foto de Perfil</label>
           <app-image-upload
             folder="profile"
             [altText]="'Foto de perfil'"
@@ -52,28 +52,24 @@
         <!-- Name Fields -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label for="first_name" class="block text-sm font-medium text-gray-300 mb-2">
-              Nombre
-            </label>
+            <label for="first_name" class="label">Nombre</label>
             <input
               type="text"
               id="first_name"
               name="first_name"
               [(ngModel)]="formData.first_name"
-              class="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+              class="input"
               placeholder="Tu nombre"
             />
           </div>
           <div>
-            <label for="last_name" class="block text-sm font-medium text-gray-300 mb-2">
-              Apellido
-            </label>
+            <label for="last_name" class="label">Apellido</label>
             <input
               type="text"
               id="last_name"
               name="last_name"
               [(ngModel)]="formData.last_name"
-              class="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+              class="input"
               placeholder="Tu apellido"
             />
           </div>
@@ -81,30 +77,26 @@
 
         <!-- Nickname -->
         <div>
-          <label for="nickname" class="block text-sm font-medium text-gray-300 mb-2">
-            Apodo / Nombre de usuario
-          </label>
+          <label for="nickname" class="label">Apodo / Nombre de usuario</label>
           <input
             type="text"
             id="nickname"
             name="nickname"
             [(ngModel)]="formData.nickname"
-            class="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+            class="input"
             placeholder="@tunickname"
           />
         </div>
 
         <!-- About -->
         <div>
-          <label for="about" class="block text-sm font-medium text-gray-300 mb-2">
-            Acerca de mí
-          </label>
+          <label for="about" class="label">Acerca de mí</label>
           <textarea
             id="about"
             name="about"
             [(ngModel)]="formData.about"
             rows="5"
-            class="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all resize-none"
+            class="input-textarea"
             placeholder="Cuéntanos sobre ti, tu experiencia y tus intereses..."
           ></textarea>
         </div>
@@ -112,38 +104,23 @@
 
       <!-- Messages -->
       @if (error()) {
-        <div class="bg-red-500/10 border border-red-500/50 rounded-lg p-4">
-          <p class="text-red-400 text-sm">{{ error() }}</p>
+        <div class="alert-error">
+          <p>{{ error() }}</p>
         </div>
       }
 
       @if (success()) {
-        <div class="bg-green-500/10 border border-green-500/50 rounded-lg p-4">
-          <p class="text-green-400 text-sm">{{ success() }}</p>
+        <div class="alert-success">
+          <p>{{ success() }}</p>
         </div>
       }
 
       <!-- Actions -->
       <div class="flex justify-end gap-3">
-        <button
-          type="button"
-          (click)="resetForm()"
-          class="px-6 py-2.5 bg-gray-700 hover:bg-gray-600 text-white font-medium rounded-lg transition-colors"
-        >
-          Cancelar
-        </button>
-        <button
-          type="submit"
-          [disabled]="saving()"
-          class="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-600/50 disabled:cursor-not-allowed text-white font-medium rounded-lg transition-colors flex items-center gap-2"
-        >
+        <button type="button" (click)="resetForm()" class="btn-secondary px-6">Cancelar</button>
+        <button type="submit" [disabled]="saving()" class="btn-primary px-6">
           @if (saving()) {
-            <svg
-              class="animate-spin h-5 w-5"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-            >
+            <svg class="spinner" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
               <circle
                 class="opacity-25"
                 cx="12"

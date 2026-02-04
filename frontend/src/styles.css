@@ -1,3 +1,343 @@
-/* You can add global styles to this file, and also import other style files */
+/* Portfolio Dashboard - Global Styles */
 
 @import "tailwindcss";
+
+/* ============================================
+   CSS Custom Properties - Color Theme
+   ============================================ */
+:root {
+  /* ===========================================
+     Background Colors
+     =========================================== */
+  --color-bg-primary: #111827;
+  /* gray-900 */
+  --color-bg-secondary: #1f2937;
+  /* gray-800 */
+  --color-bg-tertiary: #374151;
+  /* gray-700 */
+  --color-bg-input: #374151;
+  /* gray-700 */
+
+  /* ===========================================
+     Border Colors
+     =========================================== */
+  --color-border-primary: #374151;
+  /* gray-700 */
+  --color-border-secondary: #4b5563;
+  /* gray-600 */
+  --color-border-focus: #3b82f6;
+  /* blue-500 */
+
+  /* ===========================================
+     Text Colors
+     =========================================== */
+  --color-text-primary: #ffffff;
+  /* white */
+  --color-text-secondary: #d1d5db;
+  /* gray-300 */
+  --color-text-muted: #9ca3af;
+  /* gray-400 */
+  --color-text-disabled: #6b7280;
+  /* gray-500 */
+
+  /* ===========================================
+     Brand/Accent Colors
+     =========================================== */
+  --color-accent: #3b82f6;
+  /* blue-500 */
+  --color-accent-hover: #2563eb;
+  /* blue-600 */
+  --color-accent-active: #1d4ed8;
+  /* blue-700 */
+  --color-accent-muted: rgba(59, 130, 246, 0.5);
+  --color-accent-light: #60a5fa;
+  /* blue-400 */
+
+  /* ===========================================
+     Status Colors - Success
+     =========================================== */
+  --color-success: #22c55e;
+  /* green-500 */
+  --color-success-hover: #16a34a;
+  /* green-600 */
+  --color-success-bg: rgba(34, 197, 94, 0.1);
+  --color-success-border: rgba(34, 197, 94, 0.5);
+
+  /* ===========================================
+     Status Colors - Error
+     =========================================== */
+  --color-error: #ef4444;
+  /* red-500 */
+  --color-error-hover: #dc2626;
+  /* red-600 */
+  --color-error-bg: rgba(239, 68, 68, 0.1);
+  --color-error-border: rgba(239, 68, 68, 0.5);
+  --color-error-text: #f87171;
+  /* red-400 */
+
+  /* ===========================================
+     Status Colors - Warning
+     =========================================== */
+  --color-warning: #eab308;
+  /* yellow-500 */
+  --color-warning-hover: #ca8a04;
+  /* yellow-600 */
+  --color-warning-bg: rgba(234, 179, 8, 0.2);
+
+  /* ===========================================
+     Status Colors - Info
+     =========================================== */
+  --color-info: #3b82f6;
+  /* blue-500 */
+  --color-info-bg: rgba(59, 130, 246, 0.2);
+
+  /* ===========================================
+     Special Colors
+     =========================================== */
+  --color-pin: #eab308;
+  /* yellow-500 */
+  --color-archive: #f97316;
+  /* orange-500 */
+  --color-purple: #a855f7;
+  /* purple-500 */
+  --color-purple-bg: rgba(168, 85, 247, 0.2);
+
+  /* ===========================================
+     Overlay Colors
+     =========================================== */
+  --color-overlay: rgba(0, 0, 0, 0.5);
+  --color-overlay-heavy: rgba(0, 0, 0, 0.6);
+}
+
+/* ============================================
+   Tailwind Theme Extension (Layout & Spacing)
+   ============================================ */
+@theme {
+  /* Spacing */
+  --spacing-card: 1.5rem;
+  --spacing-section: 1rem;
+
+  /* Border Radius */
+  --radius-sm: 0.5rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1rem;
+
+  /* Transitions */
+  --transition-fast: 150ms;
+  --transition-normal: 200ms;
+  --transition-slow: 300ms;
+
+  /* Shadows */
+  --shadow-card: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+}
+
+/* ============================================
+   Utility Classes for Common Patterns
+   ============================================ */
+
+/* Cards */
+.card {
+  background-color: var(--color-bg-secondary);
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+}
+
+.card-hover {
+  background-color: var(--color-bg-secondary);
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  transition: background-color 0.2s;
+}
+
+.card-hover:hover {
+  background-color: var(--color-bg-tertiary);
+}
+
+/* Form Inputs */
+.input {
+  @apply w-full px-4 py-3 rounded-lg transition-all;
+  background-color: var(--color-bg-input);
+  border: 1px solid var(--color-border-secondary);
+  color: var(--color-text-primary);
+}
+
+.input::placeholder {
+  color: var(--color-text-muted);
+}
+
+.input:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--color-border-focus);
+  border-color: transparent;
+}
+
+.input:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.input-textarea {
+  @apply w-full px-4 py-3 rounded-lg transition-all resize-none;
+  background-color: var(--color-bg-input);
+  border: 1px solid var(--color-border-secondary);
+  color: var(--color-text-primary);
+}
+
+/* Labels */
+.label {
+  @apply block text-sm font-medium mb-2;
+  color: var(--color-text-secondary);
+}
+
+/* Buttons */
+.btn {
+  @apply px-4 py-2.5 font-medium rounded-lg transition-colors flex items-center justify-center gap-2;
+}
+
+.btn-primary {
+  @apply btn;
+  background-color: var(--color-accent);
+  color: var(--color-text-primary);
+}
+
+.btn-primary:hover {
+  background-color: var(--color-accent-hover);
+}
+
+.btn-primary:disabled {
+  background-color: var(--color-accent-muted);
+  cursor: not-allowed;
+}
+
+.btn-secondary {
+  @apply btn;
+  background-color: var(--color-bg-tertiary);
+  color: var(--color-text-primary);
+}
+
+.btn-secondary:hover {
+  background-color: var(--color-border-secondary);
+}
+
+.btn-danger {
+  @apply btn;
+  background-color: var(--color-error);
+  color: var(--color-text-primary);
+}
+
+.btn-danger:hover {
+  background-color: var(--color-error-hover);
+}
+
+.btn-icon {
+  @apply p-2 rounded-lg transition-colors;
+  color: var(--color-text-muted);
+}
+
+.btn-icon:hover {
+  color: var(--color-text-primary);
+  background-color: var(--color-bg-tertiary);
+}
+
+/* Alerts/Messages */
+.alert {
+  @apply rounded-lg p-4 text-sm;
+}
+
+.alert-error {
+  @apply alert;
+  background-color: var(--color-error-bg);
+  border: 1px solid var(--color-error-border);
+  color: var(--color-error-text);
+}
+
+.alert-success {
+  @apply alert;
+  background-color: var(--color-success-bg);
+  border: 1px solid var(--color-success-border);
+  color: var(--color-success);
+}
+
+/* Badges */
+.badge {
+  @apply px-2 py-0.5 text-xs rounded-full;
+}
+
+.badge-default {
+  background-color: var(--color-bg-tertiary);
+  color: var(--color-text-secondary);
+}
+
+.badge-purple {
+  background-color: var(--color-purple-bg);
+  color: var(--color-purple);
+}
+
+/* Loading Spinner */
+.spinner {
+  @apply animate-spin h-5 w-5;
+}
+
+.spinner-lg {
+  @apply animate-spin h-8 w-8;
+  color: var(--color-accent);
+}
+
+/* Nav Items */
+.nav-item {
+  @apply flex items-center gap-3 px-4 py-3 rounded-lg transition-colors;
+  color: var(--color-text-secondary);
+}
+
+.nav-item:hover {
+  background-color: var(--color-bg-tertiary);
+  color: var(--color-text-primary);
+}
+
+.nav-item-active {
+  background-color: var(--color-bg-tertiary);
+  color: var(--color-text-primary);
+}
+
+/* Drag Handle */
+.drag-handle {
+  @apply cursor-grab active:cursor-grabbing;
+  color: var(--color-text-disabled);
+}
+
+.drag-handle:hover {
+  color: var(--color-text-secondary);
+}
+
+/* Icon Buttons for Lists */
+.icon-btn-edit {
+  @apply btn-icon;
+}
+
+.icon-btn-edit:hover {
+  color: var(--color-accent);
+}
+
+.icon-btn-pin {
+  @apply btn-icon;
+}
+
+.icon-btn-pin:hover {
+  color: var(--color-pin);
+}
+
+.icon-btn-archive {
+  @apply btn-icon;
+}
+
+.icon-btn-archive:hover {
+  color: var(--color-archive);
+}
+
+.icon-btn-delete {
+  @apply btn-icon;
+}
+
+.icon-btn-delete:hover {
+  color: var(--color-error);
+}

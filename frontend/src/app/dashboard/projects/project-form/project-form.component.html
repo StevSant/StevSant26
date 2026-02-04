@@ -3,13 +3,13 @@
   <div class="flex items-center gap-4 mb-6">
     <a
       routerLink="/dashboard/projects"
-      class="p-2 text-gray-400 hover:text-white hover:bg-gray-700 rounded-lg transition-colors"
+      class="p-2 text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-bg-tertiary)] rounded-lg transition-colors"
     >
       <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
       </svg>
     </a>
-    <h1 class="text-2xl font-bold text-white">
+    <h1 class="text-2xl font-bold text-[var(--color-text-primary)]">
       {{ isNew ? 'Nuevo Proyecto' : 'Editar Proyecto' }}
     </h1>
   </div>
@@ -18,7 +18,7 @@
   @if (loading()) {
     <div class="flex items-center justify-center py-12">
       <svg
-        class="animate-spin h-8 w-8 text-blue-500"
+        class="spinner-lg"
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
         viewBox="0 0 24 24"
@@ -41,13 +41,13 @@
   } @else {
     <form (ngSubmit)="onSubmit()" class="space-y-6">
       <!-- Main Info Card -->
-      <div class="bg-gray-800 rounded-xl p-6 space-y-6">
-        <h2 class="text-lg font-semibold text-white">Información del Proyecto</h2>
+      <div class="card space-y-6">
+        <h2 class="text-lg font-semibold text-[var(--color-text-primary)]">Informacion del Proyecto</h2>
 
         <!-- Title -->
         <div>
-          <label for="title" class="block text-sm font-medium text-gray-300 mb-2">
-            Título <span class="text-red-500">*</span>
+          <label for="title" class="label">
+            Titulo <span class="text-[var(--color-error)]">*</span>
           </label>
           <input
             type="text"
@@ -55,29 +55,29 @@
             name="title"
             [(ngModel)]="formData.title"
             required
-            class="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+            class="input"
             placeholder="Nombre del proyecto"
           />
         </div>
 
         <!-- Description -->
         <div>
-          <label for="description" class="block text-sm font-medium text-gray-300 mb-2">
-            Descripción
+          <label for="description" class="label">
+            Descripcion
           </label>
           <textarea
             id="description"
             name="description"
             [(ngModel)]="formData.description"
             rows="4"
-            class="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all resize-none"
+            class="input-textarea"
             placeholder="Describe el proyecto..."
           ></textarea>
         </div>
 
         <!-- URL -->
         <div>
-          <label for="url" class="block text-sm font-medium text-gray-300 mb-2">
+          <label for="url" class="label">
             URL del Proyecto
           </label>
           <input
@@ -85,46 +85,46 @@
             id="url"
             name="url"
             [(ngModel)]="formData.url"
-            class="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+            class="input"
             placeholder="https://..."
           />
         </div>
 
         <!-- Created At -->
         <div>
-          <label for="created_at" class="block text-sm font-medium text-gray-300 mb-2">
-            Fecha de Creación
+          <label for="created_at" class="label">
+            Fecha de Creacion
           </label>
           <input
             type="date"
             id="created_at"
             name="created_at"
             [(ngModel)]="formData.created_at"
-            class="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+            class="input"
           />
         </div>
       </div>
 
       <!-- Source Association -->
-      <div class="bg-gray-800 rounded-xl p-6 space-y-6">
-        <h2 class="text-lg font-semibold text-white">Asociación (Opcional)</h2>
-        <p class="text-gray-400 text-sm">
+      <div class="card space-y-6">
+        <h2 class="text-lg font-semibold text-[var(--color-text-primary)]">Asociacion (Opcional)</h2>
+        <p class="text-[var(--color-text-muted)] text-sm">
           Vincula este proyecto a una experiencia, competencia o evento
         </p>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <!-- Source Type -->
           <div>
-            <label for="source_type" class="block text-sm font-medium text-gray-300 mb-2">
+            <label for="source_type" class="label">
               Tipo de Fuente
             </label>
             <select
               id="source_type"
               name="source_type"
               [(ngModel)]="formData.source_type"
-              class="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+              class="input"
             >
-              <option [ngValue]="null">Sin asociación</option>
+              <option [ngValue]="null">Sin asociacion</option>
               <option value="experience">Experiencia</option>
               <option value="competition">Competencia</option>
               <option value="event">Evento</option>
@@ -133,7 +133,7 @@
 
           <!-- Source ID -->
           <div>
-            <label for="source_id" class="block text-sm font-medium text-gray-300 mb-2">
+            <label for="source_id" class="label">
               ID de Fuente
             </label>
             <input
@@ -142,7 +142,7 @@
               name="source_id"
               [(ngModel)]="formData.source_id"
               [disabled]="!formData.source_type"
-              class="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all disabled:opacity-50"
+              class="input"
               placeholder="ID"
             />
           </div>
@@ -150,14 +150,14 @@
 
         <!-- Parent Project -->
         <div>
-          <label for="parent_project_id" class="block text-sm font-medium text-gray-300 mb-2">
+          <label for="parent_project_id" class="label">
             Proyecto Padre
           </label>
           <select
             id="parent_project_id"
             name="parent_project_id"
             [(ngModel)]="formData.parent_project_id"
-            class="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+            class="input"
           >
             <option [ngValue]="null">Ninguno</option>
             @for (project of parentProjects(); track project.id) {
@@ -168,8 +168,8 @@
       </div>
 
       <!-- Images -->
-      <div class="bg-gray-800 rounded-xl p-6 space-y-6">
-        <h2 class="text-lg font-semibold text-white">Imágenes del Proyecto</h2>
+      <div class="card space-y-6">
+        <h2 class="text-lg font-semibold text-[var(--color-text-primary)]">Imagenes del Proyecto</h2>
         <app-image-upload
           folder="projects"
           [multiple]="true"
@@ -181,8 +181,8 @@
 
       <!-- Messages -->
       @if (error()) {
-        <div class="bg-red-500/10 border border-red-500/50 rounded-lg p-4">
-          <p class="text-red-400 text-sm">{{ error() }}</p>
+        <div class="alert-error">
+          <p class="text-sm">{{ error() }}</p>
         </div>
       }
 
@@ -190,18 +190,18 @@
       <div class="flex justify-end gap-3">
         <a
           routerLink="/dashboard/projects"
-          class="px-6 py-2.5 bg-gray-700 hover:bg-gray-600 text-white font-medium rounded-lg transition-colors"
+          class="btn-secondary"
         >
           Cancelar
         </a>
         <button
           type="submit"
           [disabled]="saving()"
-          class="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-600/50 disabled:cursor-not-allowed text-white font-medium rounded-lg transition-colors flex items-center gap-2"
+          class="btn-primary"
         >
           @if (saving()) {
             <svg
-              class="animate-spin h-5 w-5"
+              class="spinner"
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
