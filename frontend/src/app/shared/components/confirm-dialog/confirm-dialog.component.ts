@@ -1,22 +1,22 @@
-import { Component, Input, Output, EventEmitter, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, input, output, signal } from '@angular/core';
 
 @Component({
   selector: 'app-confirm-dialog',
   standalone: true,
-  imports: [CommonModule],
   templateUrl: './confirm-dialog.component.html',
   styleUrl: './confirm-dialog.component.css',
 })
 export class ConfirmDialogComponent {
-  @Input() title = '¿Estás seguro?';
-  @Input() message = 'Esta acción no se puede deshacer.';
-  @Input() confirmText = 'Confirmar';
-  @Input() cancelText = 'Cancelar';
-  @Input() variant: 'danger' | 'warning' | 'info' = 'danger';
+  // Signal inputs
+  title = input<string>('¿Estás seguro?');
+  message = input<string>('Esta acción no se puede deshacer.');
+  confirmText = input<string>('Confirmar');
+  cancelText = input<string>('Cancelar');
+  variant = input<'danger' | 'warning' | 'info'>('danger');
 
-  @Output() confirmed = new EventEmitter<void>();
-  @Output() cancelled = new EventEmitter<void>();
+  // Signal outputs
+  confirmed = output<void>();
+  cancelled = output<void>();
 
   isOpen = signal(false);
 

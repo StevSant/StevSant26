@@ -15,8 +15,6 @@ export interface EventTranslation {
  * Event entity with optional translations
  */
 export interface Event extends BaseEntity {
-  date: string | null;
-  location: string | null;
-  url: string | null;
+  assisted_at: string | null;
   translations?: EventTranslation[];
 }

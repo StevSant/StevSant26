@@ -1,16 +1,16 @@
 <div class="space-y-4">
   <!-- Avatar Mode Layout -->
-  @if (isAvatar) {
+  @if (isAvatar()) {
     <div class="flex flex-col items-center gap-4">
       <!-- Circular Avatar Preview/Placeholder -->
       <div class="relative">
-        @if (currentImageUrl) {
+        @if (currentImageUrl()) {
           <!-- Avatar Image -->
           <div class="relative group">
             <img
-              [src]="currentImageUrl"
-              [alt]="altText || 'Avatar'"
-              class="w-32 h-32 rounded-full object-cover border-4 border-[var(--color-border-secondary)] shadow-lg"
+              [src]="currentImageUrl()"
+              [alt]="altText() || 'Avatar'"
+              class="w-32 h-32 rounded-full object-cover border-4 border-(--color-border-secondary) shadow-lg"
             />
             <!-- Overlay with actions on hover -->
             <div
@@ -20,7 +20,7 @@
               <button
                 type="button"
                 (click)="openImageModal($event)"
-                class="p-2 bg-[var(--color-accent)] hover:bg-[var(--color-accent-hover)] rounded-full text-white transition-colors"
+                class="p-2 bg-(--color-accent) hover:bg-(--color-accent-hover) rounded-full text-white transition-colors"
                 title="Ver imagen completa"
               >
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -36,7 +36,7 @@
               <button
                 type="button"
                 (click)="fileInput.click()"
-                class="p-2 bg-[var(--color-bg-secondary)] hover:bg-[var(--color-bg-tertiary)] rounded-full text-[var(--color-text-primary)] transition-colors"
+                class="p-2 bg-(--color-bg-secondary) hover:bg-(--color-bg-tertiary) rounded-full text-(--color-text-primary) transition-colors"
                 title="Cambiar imagen"
               >
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -58,7 +58,7 @@
               <button
                 type="button"
                 (click)="removeImage($event)"
-                class="p-2 bg-[var(--color-error)] hover:bg-[var(--color-error-hover)] rounded-full text-white transition-colors"
+                class="p-2 bg-(--color-error) hover:bg-(--color-error-hover) rounded-full text-white transition-colors"
                 title="Eliminar imagen"
               >
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -75,9 +75,9 @@
         } @else {
           <!-- Empty Avatar Placeholder -->
           <div
-            class="w-32 h-32 rounded-full border-4 border-dashed border-[var(--color-border-secondary)] hover:border-[var(--color-accent)] transition-colors cursor-pointer flex items-center justify-center bg-[var(--color-bg-tertiary)]"
-            [class.border-[var(--color-accent)]]="isDragging()"
-            [class.bg-[var(--color-info-bg)]]="isDragging()"
+            class="w-32 h-32 rounded-full border-4 border-dashed border-(--color-border-secondary) hover:border-(--color-accent) transition-colors cursor-pointer flex items-center justify-center bg-(--color-bg-tertiary)"
+            [class.border-(--color-accent)]="isDragging()"
+            [class.bg-(--color-info-bg)]="isDragging()"
             (dragover)="onDragOver($event)"
             (dragleave)="onDragLeave($event)"
             (drop)="onDrop($event)"
@@ -106,7 +106,7 @@
               </svg>
             } @else {
               <svg
-                class="w-10 h-10 text-[var(--color-text-muted)]"
+                class="w-10 h-10 text-(--color-text-muted)"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -124,11 +124,9 @@
       </div>
 
       <!-- Upload hint text -->
-      @if (!currentImageUrl && !uploading()) {
-        <p class="text-sm text-[var(--color-text-muted)] text-center">
-          <span
-            class="text-[var(--color-accent)] font-medium cursor-pointer"
-            (click)="fileInput.click()"
+      @if (!currentImageUrl() && !uploading()) {
+        <p class="text-sm text-(--color-text-muted) text-center">
+          <span class="text-(--color-accent) font-medium cursor-pointer" (click)="fileInput.click()"
             >Haz clic</span
           >
           o arrastra una imagen
@@ -148,9 +146,9 @@
   } @else {
     <!-- Standard Upload Area (non-avatar mode) -->
     <div
-      class="relative border-2 border-dashed border-[var(--color-border-secondary)] rounded-lg p-6 hover:border-[var(--color-accent)] transition-colors cursor-pointer"
-      [class.border-[var(--color-accent)]]="isDragging()"
-      [class.bg-[var(--color-info-bg)]]="isDragging()"
+      class="relative border-2 border-dashed border-(--color-border-secondary) rounded-lg p-6 hover:border-(--color-accent) transition-colors cursor-pointer"
+      [class.border-(--color-accent)]="isDragging()"
+      [class.bg-(--color-info-bg)]="isDragging()"
       (dragover)="onDragOver($event)"
       (dragleave)="onDragLeave($event)"
       (drop)="onDrop($event)"
@@ -160,7 +158,7 @@
         #fileInput
         type="file"
         accept="image/*"
-        [multiple]="multiple"
+        [multiple]="multiple()"
         class="hidden"
         (change)="onFileSelect($event)"
         [disabled]="uploading()"
@@ -189,13 +187,13 @@
                 d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
               ></path>
             </svg>
-            <p class="text-[var(--color-text-muted)]">
+            <p class="text-(--color-text-muted)">
               Subiendo imagen{{ uploadProgress() ? ' (' + uploadProgress() + '%)' : '...' }}
             </p>
           </div>
         } @else {
           <svg
-            class="mx-auto h-12 w-12 text-[var(--color-text-muted)]"
+            class="mx-auto h-12 w-12 text-(--color-text-muted)"
             stroke="currentColor"
             fill="none"
             viewBox="0 0 48 48"
@@ -207,25 +205,23 @@
               stroke-linejoin="round"
             />
           </svg>
-          <p class="mt-2 text-sm text-[var(--color-text-muted)]">
-            <span class="text-[var(--color-accent)] font-medium">Haz clic para subir</span> o
-            arrastra y suelta
+          <p class="mt-2 text-sm text-(--color-text-muted)">
+            <span class="text-(--color-accent) font-medium">Haz clic para subir</span> o arrastra y
+            suelta
           </p>
-          <p class="mt-1 text-xs text-[var(--color-text-disabled)]">
-            PNG, JPG, GIF, WebP hasta 10MB
-          </p>
+          <p class="mt-1 text-xs text-(--color-text-disabled)">PNG, JPG, GIF, WebP hasta 10MB</p>
         }
       </div>
     </div>
 
     <!-- Preview for non-avatar mode -->
     @if (previewUrl()) {
-      <div class="relative rounded-lg overflow-hidden bg-[var(--color-bg-tertiary)]">
-        <img [src]="previewUrl()" [alt]="altText || 'Preview'" class="w-full h-48 object-cover" />
+      <div class="relative rounded-lg overflow-hidden bg-(--color-bg-tertiary)">
+        <img [src]="previewUrl()" [alt]="altText() || 'Preview'" class="w-full h-48 object-cover" />
         <button
           type="button"
           (click)="removeImage($event)"
-          class="absolute top-2 right-2 p-1.5 bg-[var(--color-error)] hover:bg-[var(--color-error-hover)] rounded-full text-[var(--color-text-primary)] transition-colors"
+          class="absolute top-2 right-2 p-1.5 bg-(--color-error) hover:bg-(--color-error-hover) rounded-full text-(--color-text-primary) transition-colors"
         >
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
@@ -251,19 +247,19 @@
   @if (uploadedImages().length > 0) {
     <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
       @for (img of uploadedImages(); track img.path) {
-        <div class="relative group rounded-lg overflow-hidden bg-[var(--color-bg-tertiary)]">
+        <div class="relative group rounded-lg overflow-hidden bg-(--color-bg-tertiary)">
           <img
             [src]="img.url"
             [alt]="img.alt || 'Uploaded image'"
             class="w-full h-32 object-cover"
           />
           <div
-            class="absolute inset-0 bg-[var(--color-overlay)] opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center"
+            class="absolute inset-0 bg-(--color-overlay) opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center"
           >
             <button
               type="button"
               (click)="removeUploadedImage(img.path, $event)"
-              class="p-2 bg-[var(--color-error)] hover:bg-[var(--color-error-hover)] rounded-full text-[var(--color-text-primary)] transition-colors"
+              class="p-2 bg-(--color-error) hover:bg-(--color-error-hover) rounded-full text-(--color-text-primary) transition-colors"
             >
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
@@ -282,7 +278,7 @@
 </div>
 
 <!-- Image Modal -->
-@if (showModal() && currentImageUrl) {
+@if (showModal() && currentImageUrl()) {
   <div
     class="modal-backdrop fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm"
     (click)="onModalBackdropClick($event)"
@@ -292,7 +288,7 @@
       <button
         type="button"
         (click)="closeModal()"
-        class="absolute -top-12 right-0 p-2 text-white hover:text-[var(--color-accent)] transition-colors"
+        class="absolute -top-12 right-0 p-2 text-white hover:text-(--color-accent) transition-colors"
       >
         <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path
@@ -306,8 +302,8 @@
 
       <!-- Full image -->
       <img
-        [src]="currentImageUrl"
-        [alt]="altText || 'Imagen completa'"
+        [src]="currentImageUrl()"
+        [alt]="altText() || 'Imagen completa'"
         class="max-w-full max-h-[85vh] object-contain rounded-lg shadow-2xl"
       />
     </div>

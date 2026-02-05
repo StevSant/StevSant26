@@ -1,4 +1,5 @@
 import { BaseEntity } from '../base';
+import { SkillCategory, SkillCategoryTranslation } from './skill-category.model';
 
 /**
  * Skill Translation entity
@@ -12,10 +13,10 @@ export interface SkillTranslation {
 }
 
 /**
- * Skill entity with optional translations
+ * Skill entity with optional translations and category
  */
 export interface Skill extends BaseEntity {
-  category_id: number | null;
-  icon_url: string | null;
+  skill_category_id: number | null;
+  skill_category?: SkillCategory;
   translations?: SkillTranslation[];
 }

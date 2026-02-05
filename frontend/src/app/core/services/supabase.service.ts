@@ -229,7 +229,7 @@ export class SupabaseService {
   // ==================== TRANSLATION HELPERS ====================
 
   /**
-   * Get entity with translations
+   * Get entity with translations (filtered by is_archived = false)
    */
   async getWithTranslations<T>(
     table: string,
@@ -237,12 +237,29 @@ export class SupabaseService {
     foreignKey: string,
     orderBy: string = 'position',
     ascending: boolean = true
-  ) {
-    return this.supabase
+  ): Promise<{ data: T[] | null; error: Error | null }> {
+    const result = await this.supabase
       .from(table)
       .select(`*, translations:${translationTable}(*)`)
       .eq('is_archived', false)
       .order(orderBy, { ascending });
+    return { data: result.data as T[] | null, error: result.error };
+  }
+
+  /**
+   * Get all entities with translations (including archived)
+   */
+  async getAllWithTranslations<T>(
+    table: string,
+    translationTable: string,
+    orderBy: string = 'position',
+    ascending: boolean = true
+  ): Promise<{ data: T[] | null; error: Error | null }> {
+    const result = await this.supabase
+      .from(table)
+      .select(`*, translations:${translationTable}(*)`)
+      .order(orderBy, { ascending });
+    return { data: result.data as T[] | null, error: result.error };
   }
 
   /**
@@ -252,12 +269,13 @@ export class SupabaseService {
     table: string,
     translationTable: string,
     id: number
-  ) {
-    return this.supabase
+  ): Promise<{ data: T | null; error: Error | null }> {
+    const result = await this.supabase
       .from(table)
       .select(`*, translations:${translationTable}(*)`)
       .eq('id', id)
       .single();
+    return { data: result.data as T | null, error: result.error };
   }
 
   /**
@@ -401,14 +419,21 @@ export class SupabaseService {
   }
 
   /**
-   * Get skills with their categories
+   * Get skills with their categories and translations
    */
-  async getSkillsWithCategories() {
-    return this.supabase
+  async getSkillsWithCategories<T>(): Promise<{ data: T[] | null; error: Error | null }> {
+    const result = await this.supabase
       .from('skill')
-      .select('*, skill_category(*)')
-      .eq('is_archived', false)
+      .select(`
+        *,
+        translations:skill_translation(*),
+        skill_category(
+          *,
+          translations:skill_category_translation(*)
+        )
+      `)
       .order('position', { ascending: true });
+    return { data: result.data as T[] | null, error: result.error };
   }
 
   /**
@@ -421,6 +446,24 @@ export class SupabaseService {
       .eq('parent_project_id', parentProjectId)
       .eq('is_archived', false)
       .order('position', { ascending: true });
+  }
+
+  /**
+   * Get all skill usages with related skill and translations
+   */
+  async getSkillUsagesWithSkills<T>(): Promise<{ data: T[] | null; error: Error | null }> {
+    const result = await this.supabase
+      .from('skill_usages')
+      .select(`
+        *,
+        skill:skill(
+          *,
+          translations:skill_translation(*)
+        ),
+        translations:skill_usages_translation(*)
+      `)
+      .order('position', { ascending: true });
+    return { data: result.data as T[] | null, error: result.error };
   }
 
   // ==================== STORAGE OPERATIONS ====================

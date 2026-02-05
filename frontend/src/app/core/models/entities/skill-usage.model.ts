@@ -1,11 +1,12 @@
 import { PolymorphicEntity, SourceType } from '../base';
+import { Skill } from './skill.model';
 
 /**
  * Skill Usage Translation entity
  */
 export interface SkillUsageTranslation {
   id: number;
-  skill_usage_id: number;
+  skill_usages_id: number;
   language: string;
   notes: string | null;
 }
@@ -15,7 +16,9 @@ export interface SkillUsageTranslation {
  */
 export interface SkillUsage extends PolymorphicEntity {
   skill_id: number;
-  source_id: number;
-  source_type: SourceType;
+  level: number | null;
+  started_at: string | null;
+  ended_at: string | null;
+  skill?: Skill;
   translations?: SkillUsageTranslation[];
 }

@@ -1,0 +1,211 @@
+{
+  "common": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "create": "Create",
+    "back": "Back",
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "confirm": "Confirm",
+    "yes": "Yes",
+    "no": "No",
+    "search": "Search",
+    "filter": "Filter",
+    "actions": "Actions",
+    "noResults": "No results found",
+    "required": "This field is required"
+  },
+  "auth": {
+    "login": "Sign in",
+    "logout": "Sign out",
+    "email": "Email",
+    "password": "Password",
+    "forgotPassword": "Forgot password?",
+    "loginWith": "Sign in with",
+    "welcomeBack": "Welcome back",
+    "signInToContinue": "Sign in to continue managing your portfolio"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "administrator": "Administrator"
+  },
+  "nav": {
+    "profile": "Profile",
+    "skills": "Skills",
+    "skillCategories": "Skill Categories",
+    "skillUsages": "Skill Usages",
+    "projects": "Projects",
+    "experiences": "Experiences",
+    "competitions": "Competitions",
+    "events": "Events"
+  },
+  "profile": {
+    "title": "Profile",
+    "basicInfo": "Basic Information",
+    "avatar": "Profile picture",
+    "socialLinks": "Social Links",
+    "translations": "Translations",
+    "email": "Email",
+    "website": "Website",
+    "linkedin": "LinkedIn",
+    "github": "GitHub",
+    "twitter": "Twitter",
+    "youtube": "YouTube",
+    "cv": "Resume (URL)",
+    "bio": "Bio",
+    "headline": "Professional headline",
+    "saveChanges": "Save changes",
+    "saving": "Saving..."
+  },
+  "projects": {
+    "title": "Projects",
+    "create": "New Project",
+    "edit": "Edit Project",
+    "list": "Project List",
+    "fields": {
+      "title": "Title",
+      "description": "Description",
+      "url": "Project URL",
+      "githubUrl": "GitHub URL",
+      "startDate": "Start date",
+      "endDate": "End date",
+      "source": "Associated source"
+    },
+    "noSource": "No associated source",
+    "deleteConfirm": {
+      "title": "Delete project?",
+      "message": "This action will permanently delete the project and cannot be undone."
+    }
+  },
+  "skills": {
+    "title": "Skills",
+    "create": "New Skill",
+    "edit": "Edit Skill",
+    "list": "Skill List",
+    "fields": {
+      "name": "Name",
+      "description": "Description",
+      "category": "Category",
+      "iconUrl": "Icon URL"
+    },
+    "noCategory": "No category",
+    "deleteConfirm": {
+      "title": "Delete skill?",
+      "message": "This action will permanently delete the skill."
+    }
+  },
+  "skillCategories": {
+    "title": "Skill Categories",
+    "create": "New Category",
+    "edit": "Edit Category",
+    "list": "Category List",
+    "fields": {
+      "name": "Name",
+      "approach": "Approach"
+    },
+    "deleteConfirm": {
+      "title": "Delete category?",
+      "message": "This action will permanently delete the category."
+    }
+  },
+  "skillUsages": {
+    "title": "Skill Usages",
+    "create": "New Skill Usage",
+    "edit": "Edit Skill Usage",
+    "list": "Skill Usage List",
+    "fields": {
+      "skill": "Skill",
+      "source": "Source",
+      "notes": "Notes"
+    },
+    "deleteConfirm": {
+      "title": "Delete skill usage?",
+      "message": "This action will permanently delete this skill usage."
+    }
+  },
+  "experiences": {
+    "title": "Experiences",
+    "create": "New Experience",
+    "edit": "Edit Experience",
+    "list": "Experience List",
+    "fields": {
+      "company": "Company",
+      "role": "Role",
+      "description": "Description",
+      "startDate": "Start date",
+      "endDate": "End date"
+    },
+    "deleteConfirm": {
+      "title": "Delete experience?",
+      "message": "This action will permanently delete the experience."
+    }
+  },
+  "competitions": {
+    "title": "Competitions",
+    "create": "New Competition",
+    "edit": "Edit Competition",
+    "list": "Competition List",
+    "fields": {
+      "name": "Name",
+      "description": "Description",
+      "result": "Result",
+      "date": "Date",
+      "location": "Location",
+      "url": "URL"
+    },
+    "deleteConfirm": {
+      "title": "Delete competition?",
+      "message": "This action will permanently delete the competition."
+    }
+  },
+  "events": {
+    "title": "Events",
+    "create": "New Event",
+    "edit": "Edit Event",
+    "list": "Event List",
+    "fields": {
+      "name": "Name",
+      "description": "Description",
+      "date": "Date",
+      "location": "Location",
+      "url": "URL"
+    },
+    "deleteConfirm": {
+      "title": "Delete event?",
+      "message": "This action will permanently delete the event."
+    }
+  },
+  "form": {
+    "baseFields": "Base Fields",
+    "translations": "Translations",
+    "isArchived": "Archived",
+    "isPinned": "Pinned",
+    "position": "Position"
+  },
+  "imageUpload": {
+    "clickToUpload": "Click to upload",
+    "orDragDrop": "or drag and drop",
+    "uploading": "Uploading image",
+    "maxSize": "PNG, JPG, GIF, WebP up to 10MB",
+    "viewFull": "View full image",
+    "changeImage": "Change image",
+    "removeImage": "Remove image",
+    "errorType": "File type not allowed",
+    "errorSize": "File is too large. Maximum 10MB.",
+    "errorUpload": "Error uploading image. Please try again.",
+    "errorDelete": "Error deleting image."
+  },
+  "confirmDialog": {
+    "defaultTitle": "Are you sure?",
+    "defaultMessage": "This action cannot be undone."
+  },
+  "validation": {
+    "required": "This field is required",
+    "email": "Enter a valid email address",
+    "minLength": "Minimum {{min}} characters",
+    "maxLength": "Maximum {{max}} characters"
+  }
+}

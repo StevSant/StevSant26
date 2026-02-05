@@ -5,7 +5,7 @@ import { BaseEntity } from '../base';
  */
 export interface CompetitionTranslation {
   id: number;
-  competition_id: number;
+  competitions_id: number;
   language: string;
   name: string;
   description: string | null;
@@ -16,8 +16,7 @@ export interface CompetitionTranslation {
  * Competition entity with optional translations
  */
 export interface Competition extends BaseEntity {
+  organizer: string | null;
   date: string | null;
-  location: string | null;
-  url: string | null;
   translations?: CompetitionTranslation[];
 }

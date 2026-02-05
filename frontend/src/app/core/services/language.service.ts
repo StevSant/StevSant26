@@ -1,6 +1,6 @@
 import { Injectable, signal, PLATFORM_ID, inject } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
-import { Language, DEFAULT_LANGUAGE_CODE, getTranslation } from '../models/language.model';
+import { Language, DEFAULT_LANGUAGE_CODE, getTranslation } from '../models';
 import { SupabaseService } from './supabase.service';
 
 const LANGUAGE_STORAGE_KEY = 'portfolio_language';

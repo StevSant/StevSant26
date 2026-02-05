@@ -1,26 +1,29 @@
-import { Component, Input, Output, EventEmitter, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, input, output, signal, computed, inject } from '@angular/core';
 import { SupabaseService } from '../../../core/services/supabase.service';
 import { SourceType } from '../../../core/models';
 
 @Component({
   selector: 'app-image-upload',
   standalone: true,
-  imports: [CommonModule],
   templateUrl: './image-upload.component.html',
 })
 export class ImageUploadComponent {
-  @Input() folder: string = '';
-  @Input() sourceType: SourceType | null = null;
-  @Input() sourceId: number | null = null;
-  @Input() multiple = false;
-  @Input() altText = '';
-  @Input() isAvatar = false;
-  @Input() existingImageUrl: string | null = null;
+  private supabase = inject(SupabaseService);
 
-  @Output() uploaded = new EventEmitter<{ path: string; url: string }>();
-  @Output() removed = new EventEmitter<string>();
+  // Signal inputs
+  folder = input<string>('');
+  sourceType = input<SourceType | null>(null);
+  sourceId = input<number | null>(null);
+  multiple = input<boolean>(false);
+  altText = input<string>('');
+  isAvatar = input<boolean>(false);
+  existingImageUrl = input<string | null>(null);
 
+  // Signal outputs
+  uploaded = output<{ path: string; url: string }>();
+  removed = output<string>();
+
+  // Internal signals
   uploading = signal(false);
   uploadProgress = signal<number | null>(null);
   error = signal<string | null>(null);
@@ -29,10 +32,11 @@ export class ImageUploadComponent {
   uploadedImages = signal<{ path: string; url: string; alt?: string }[]>([]);
   showModal = signal(false);
 
+  // Computed
+  currentImageUrl = computed(() => this.previewUrl() || this.existingImageUrl());
+
   private readonly MAX_SIZE = 10 * 1024 * 1024; // 10MB
   private readonly ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
-
-  constructor(private supabase: SupabaseService) {}
 
   onDragOver(event: DragEvent): void {
     event.preventDefault();
@@ -83,7 +87,7 @@ export class ImageUploadComponent {
 
       await this.uploadFile(file);
 
-      if (!this.multiple) break;
+      if (!this.multiple()) break;
     }
   }
 
@@ -100,7 +104,7 @@ export class ImageUploadComponent {
       reader.readAsDataURL(file);
 
       // Determine folder path
-      const folderPath = this.folder || this.sourceType || 'misc';
+      const folderPath = this.folder() || this.sourceType() || 'misc';
 
       // Upload to Supabase Storage
       const { path, error } = await this.supabase.uploadImage(file, folderPath);
@@ -112,8 +116,8 @@ export class ImageUploadComponent {
       if (path) {
         const url = this.supabase.getPublicUrl(path);
 
-        if (this.multiple) {
-          this.uploadedImages.update((images) => [...images, { path, url, alt: this.altText }]);
+        if (this.multiple()) {
+          this.uploadedImages.update((images) => [...images, { path, url, alt: this.altText() }]);
           this.previewUrl.set(null);
         }
 
@@ -160,9 +164,5 @@ export class ImageUploadComponent {
     if ((event.target as HTMLElement).classList.contains('modal-backdrop')) {
       this.closeModal();
     }
-  }
-
-  get currentImageUrl(): string | null {
-    return this.previewUrl() || this.existingImageUrl;
   }
 }

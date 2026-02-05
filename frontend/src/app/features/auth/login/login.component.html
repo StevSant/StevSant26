@@ -1,0 +1,89 @@
+<div class="min-h-screen flex items-center justify-center bg-(--color-bg-primary) relative">
+  <!-- Language Selector -->
+  <div class="absolute top-4 right-4">
+    <app-language-selector />
+  </div>
+
+  <div class="max-w-md w-full mx-4">
+    <!-- Logo/Header -->
+    <div class="text-center mb-8">
+      <h1 class="text-3xl font-bold text-(--color-text-primary)">
+        {{ 'dashboard.title' | translate }}
+      </h1>
+      <p class="text-(--color-text-muted) mt-2">
+        {{ 'auth.signInToContinue' | translate }}
+      </p>
+    </div>
+
+    <!-- Login Card -->
+    <div class="card shadow-2xl p-8">
+      <form (ngSubmit)="onSubmit()" class="space-y-6">
+        <!-- Email Field -->
+        <div>
+          <label for="email" class="label">{{ 'auth.email' | translate }}</label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            [(ngModel)]="email"
+            required
+            class="input"
+            placeholder="tu@email.com"
+            [disabled]="loading()"
+          />
+        </div>
+
+        <!-- Password Field -->
+        <div>
+          <label for="password" class="label">{{ 'auth.password' | translate }}</label>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            [(ngModel)]="password"
+            required
+            class="input"
+            placeholder="••••••••"
+            [disabled]="loading()"
+          />
+        </div>
+
+        <!-- Error Message -->
+        @if (error()) {
+          <div class="alert-error">
+            <p>{{ error() }}</p>
+          </div>
+        }
+
+        <!-- Submit Button -->
+        <button type="submit" [disabled]="loading()" class="w-full btn-primary py-3">
+          @if (loading()) {
+            <svg class="spinner" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              <circle
+                class="opacity-25"
+                cx="12"
+                cy="12"
+                r="10"
+                stroke="currentColor"
+                stroke-width="4"
+              ></circle>
+              <path
+                class="opacity-75"
+                fill="currentColor"
+                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+              ></path>
+            </svg>
+            <span>{{ 'common.loading' | translate }}</span>
+          } @else {
+            <span>{{ 'auth.login' | translate }}</span>
+          }
+        </button>
+      </form>
+    </div>
+
+    <!-- Footer -->
+    <p class="text-center text-(--color-text-disabled) text-sm mt-8">
+      {{ 'auth.welcomeBack' | translate }}
+    </p>
+  </div>
+</div>

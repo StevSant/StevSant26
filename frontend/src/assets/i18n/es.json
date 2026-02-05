@@ -1,0 +1,211 @@
+{
+  "common": {
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "delete": "Eliminar",
+    "edit": "Editar",
+    "create": "Crear",
+    "back": "Volver",
+    "loading": "Cargando...",
+    "error": "Error",
+    "success": "Éxito",
+    "confirm": "Confirmar",
+    "yes": "Sí",
+    "no": "No",
+    "search": "Buscar",
+    "filter": "Filtrar",
+    "actions": "Acciones",
+    "noResults": "No se encontraron resultados",
+    "required": "Este campo es obligatorio"
+  },
+  "auth": {
+    "login": "Iniciar sesión",
+    "logout": "Cerrar sesión",
+    "email": "Correo electrónico",
+    "password": "Contraseña",
+    "forgotPassword": "¿Olvidaste tu contraseña?",
+    "loginWith": "Iniciar sesión con",
+    "welcomeBack": "Bienvenido de nuevo",
+    "signInToContinue": "Inicia sesión para continuar administrando tu portafolio"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "administrator": "Administrador"
+  },
+  "nav": {
+    "profile": "Perfil",
+    "skills": "Habilidades",
+    "skillCategories": "Categorías de Habilidades",
+    "skillUsages": "Uso de Habilidades",
+    "projects": "Proyectos",
+    "experiences": "Experiencias",
+    "competitions": "Competencias",
+    "events": "Eventos"
+  },
+  "profile": {
+    "title": "Perfil",
+    "basicInfo": "Información Básica",
+    "avatar": "Foto de perfil",
+    "socialLinks": "Redes Sociales",
+    "translations": "Traducciones",
+    "email": "Correo electrónico",
+    "website": "Sitio web",
+    "linkedin": "LinkedIn",
+    "github": "GitHub",
+    "twitter": "Twitter",
+    "youtube": "YouTube",
+    "cv": "Currículum (URL)",
+    "bio": "Biografía",
+    "headline": "Título profesional",
+    "saveChanges": "Guardar cambios",
+    "saving": "Guardando..."
+  },
+  "projects": {
+    "title": "Proyectos",
+    "create": "Nuevo Proyecto",
+    "edit": "Editar Proyecto",
+    "list": "Lista de Proyectos",
+    "fields": {
+      "title": "Título",
+      "description": "Descripción",
+      "url": "URL del proyecto",
+      "githubUrl": "URL de GitHub",
+      "startDate": "Fecha de inicio",
+      "endDate": "Fecha de fin",
+      "source": "Fuente asociada"
+    },
+    "noSource": "Sin fuente asociada",
+    "deleteConfirm": {
+      "title": "¿Eliminar proyecto?",
+      "message": "Esta acción eliminará permanentemente el proyecto y no se puede deshacer."
+    }
+  },
+  "skills": {
+    "title": "Habilidades",
+    "create": "Nueva Habilidad",
+    "edit": "Editar Habilidad",
+    "list": "Lista de Habilidades",
+    "fields": {
+      "name": "Nombre",
+      "description": "Descripción",
+      "category": "Categoría",
+      "iconUrl": "URL del icono"
+    },
+    "noCategory": "Sin categoría",
+    "deleteConfirm": {
+      "title": "¿Eliminar habilidad?",
+      "message": "Esta acción eliminará permanentemente la habilidad."
+    }
+  },
+  "skillCategories": {
+    "title": "Categorías de Habilidades",
+    "create": "Nueva Categoría",
+    "edit": "Editar Categoría",
+    "list": "Lista de Categorías",
+    "fields": {
+      "name": "Nombre",
+      "approach": "Enfoque"
+    },
+    "deleteConfirm": {
+      "title": "¿Eliminar categoría?",
+      "message": "Esta acción eliminará permanentemente la categoría."
+    }
+  },
+  "skillUsages": {
+    "title": "Uso de Habilidades",
+    "create": "Nuevo Uso de Habilidad",
+    "edit": "Editar Uso de Habilidad",
+    "list": "Lista de Uso de Habilidades",
+    "fields": {
+      "skill": "Habilidad",
+      "source": "Fuente",
+      "notes": "Notas"
+    },
+    "deleteConfirm": {
+      "title": "¿Eliminar uso de habilidad?",
+      "message": "Esta acción eliminará permanentemente este uso de habilidad."
+    }
+  },
+  "experiences": {
+    "title": "Experiencias",
+    "create": "Nueva Experiencia",
+    "edit": "Editar Experiencia",
+    "list": "Lista de Experiencias",
+    "fields": {
+      "company": "Empresa",
+      "role": "Cargo",
+      "description": "Descripción",
+      "startDate": "Fecha de inicio",
+      "endDate": "Fecha de fin"
+    },
+    "deleteConfirm": {
+      "title": "¿Eliminar experiencia?",
+      "message": "Esta acción eliminará permanentemente la experiencia."
+    }
+  },
+  "competitions": {
+    "title": "Competencias",
+    "create": "Nueva Competencia",
+    "edit": "Editar Competencia",
+    "list": "Lista de Competencias",
+    "fields": {
+      "name": "Nombre",
+      "description": "Descripción",
+      "result": "Resultado",
+      "date": "Fecha",
+      "location": "Ubicación",
+      "url": "URL"
+    },
+    "deleteConfirm": {
+      "title": "¿Eliminar competencia?",
+      "message": "Esta acción eliminará permanentemente la competencia."
+    }
+  },
+  "events": {
+    "title": "Eventos",
+    "create": "Nuevo Evento",
+    "edit": "Editar Evento",
+    "list": "Lista de Eventos",
+    "fields": {
+      "name": "Nombre",
+      "description": "Descripción",
+      "date": "Fecha",
+      "location": "Ubicación",
+      "url": "URL"
+    },
+    "deleteConfirm": {
+      "title": "¿Eliminar evento?",
+      "message": "Esta acción eliminará permanentemente el evento."
+    }
+  },
+  "form": {
+    "baseFields": "Campos Base",
+    "translations": "Traducciones",
+    "isArchived": "Archivado",
+    "isPinned": "Fijado",
+    "position": "Posición"
+  },
+  "imageUpload": {
+    "clickToUpload": "Haz clic para subir",
+    "orDragDrop": "o arrastra y suelta",
+    "uploading": "Subiendo imagen",
+    "maxSize": "PNG, JPG, GIF, WebP hasta 10MB",
+    "viewFull": "Ver imagen completa",
+    "changeImage": "Cambiar imagen",
+    "removeImage": "Eliminar imagen",
+    "errorType": "Tipo de archivo no permitido",
+    "errorSize": "El archivo es demasiado grande. Máximo 10MB.",
+    "errorUpload": "Error al subir la imagen. Por favor intenta de nuevo.",
+    "errorDelete": "Error al eliminar la imagen."
+  },
+  "confirmDialog": {
+    "defaultTitle": "¿Estás seguro?",
+    "defaultMessage": "Esta acción no se puede deshacer."
+  },
+  "validation": {
+    "required": "Este campo es obligatorio",
+    "email": "Ingresa un correo electrónico válido",
+    "minLength": "Mínimo {{min}} caracteres",
+    "maxLength": "Máximo {{max}} caracteres"
+  }
+}

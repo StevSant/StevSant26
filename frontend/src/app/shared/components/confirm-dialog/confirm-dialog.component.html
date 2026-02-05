@@ -2,7 +2,7 @@
   <div class="fixed inset-0 z-50 flex items-center justify-center">
     <!-- Backdrop -->
     <div
-      class="absolute inset-0 bg-[var(--color-overlay-heavy)] backdrop-blur-sm"
+      class="absolute inset-0 bg-(--color-overlay-heavy) backdrop-blur-sm"
       (click)="onCancel()"
     ></div>
 
@@ -12,15 +12,13 @@
       <div class="flex justify-center mb-4">
         <div
           class="w-16 h-16 rounded-full flex items-center justify-center"
-          [ngClass]="{
-            'bg-[var(--color-error-bg)]': variant === 'danger',
-            'bg-[var(--color-warning-bg)]': variant === 'warning',
-            'bg-[var(--color-info-bg)]': variant === 'info',
-          }"
+          [class.bg-(--color-error-bg)]="variant() === 'danger'"
+          [class.bg-(--color-warning-bg)]="variant() === 'warning'"
+          [class.bg-(--color-info-bg)]="variant() === 'info'"
         >
-          @if (variant === 'danger') {
+          @if (variant() === 'danger') {
             <svg
-              class="w-8 h-8 text-[var(--color-error)]"
+              class="w-8 h-8 text-(--color-error)"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -33,9 +31,9 @@
               />
             </svg>
           }
-          @if (variant === 'warning') {
+          @if (variant() === 'warning') {
             <svg
-              class="w-8 h-8 text-[var(--color-warning)]"
+              class="w-8 h-8 text-(--color-warning)"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -48,9 +46,9 @@
               />
             </svg>
           }
-          @if (variant === 'info') {
+          @if (variant() === 'info') {
             <svg
-              class="w-8 h-8 text-[var(--color-info)]"
+              class="w-8 h-8 text-(--color-info)"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -67,32 +65,31 @@
       </div>
 
       <!-- Title -->
-      <h3 class="text-xl font-semibold text-[var(--color-text-primary)] text-center mb-2">
-        {{ title }}
+      <h3 class="text-xl font-semibold text-(--color-text-primary) text-center mb-2">
+        {{ title() }}
       </h3>
 
       <!-- Message -->
-      <p class="text-[var(--color-text-muted)] text-center mb-6">{{ message }}</p>
+      <p class="text-(--color-text-muted) text-center mb-6">{{ message() }}</p>
 
       <!-- Actions -->
       <div class="flex gap-3">
         <button type="button" (click)="onCancel()" class="flex-1 btn-secondary">
-          {{ cancelText }}
+          {{ cancelText() }}
         </button>
         <button
           type="button"
           (click)="onConfirm()"
           class="flex-1 btn"
-          [ngClass]="{
-            'bg-[var(--color-error)] hover:bg-[var(--color-error-hover)] text-[var(--color-text-primary)]':
-              variant === 'danger',
-            'bg-[var(--color-warning)] hover:bg-[var(--color-warning-hover)] text-[var(--color-text-primary)]':
-              variant === 'warning',
-            'bg-[var(--color-accent)] hover:bg-[var(--color-accent-hover)] text-[var(--color-text-primary)]':
-              variant === 'info',
-          }"
+          [class.bg-(--color-error)]="variant() === 'danger'"
+          [class.hover:bg-(--color-error-hover)]="variant() === 'danger'"
+          [class.bg-(--color-warning)]="variant() === 'warning'"
+          [class.hover:bg-(--color-warning-hover)]="variant() === 'warning'"
+          [class.bg-(--color-accent)]="variant() === 'info'"
+          [class.hover:bg-(--color-accent-hover)]="variant() === 'info'"
+          [class.text-(--color-text-primary)]="true"
         >
-          {{ confirmText }}
+          {{ confirmText() }}
         </button>
       </div>
     </div>
