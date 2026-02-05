@@ -35,7 +35,8 @@
   },
   "dashboard": {
     "title": "Dashboard",
-    "administrator": "Administrator"
+    "administrator": "Administrator",
+    "viewSite": "View Site"
   },
   "nav": {
     "profile": "Profile",
@@ -308,5 +309,34 @@
     "email": "Enter a valid email address",
     "minLength": "Minimum {{min}} characters",
     "maxLength": "Maximum {{max}} characters"
+  },
+  "portfolio": {
+    "nav": {
+      "about": "About",
+      "projects": "Projects",
+      "experience": "Experience",
+      "skills": "Skills",
+      "contact": "Contact"
+    },
+    "sections": {
+      "about": "About Me",
+      "projects": "Projects",
+      "experience": "Experience",
+      "skills": "Skills",
+      "competitions": "Competitions & Awards",
+      "events": "Events Attended",
+      "contact": "Get in Touch"
+    },
+    "empty": {
+      "about": "No bio available",
+      "projects": "No projects to display",
+      "experience": "No experience to display",
+      "skills": "No skills to display"
+    },
+    "viewProject": "View Project",
+    "contactMessage": "Interested in working together? Feel free to reach out!",
+    "sendEmail": "Send Email",
+    "downloadCV": "Download CV",
+    "allRightsReserved": "All rights reserved."
   }
 }

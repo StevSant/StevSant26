@@ -27,11 +27,6 @@ export class DashboardLayoutComponent {
       icon: '<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>',
     },
     {
-      path: 'preview',
-      labelKey: 'nav.preview',
-      icon: '<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>',
-    },
-    {
       path: 'projects',
       labelKey: 'nav.projects',
       icon: '<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"/></svg>',
@@ -73,7 +68,6 @@ export class DashboardLayoutComponent {
     const path = this.router.url.split('/').pop() || 'profile';
     const titleKeys: Record<string, string> = {
       profile: 'nav.profile',
-      preview: 'nav.preview',
       projects: 'nav.projects',
       events: 'nav.events',
       experiences: 'nav.experiences',

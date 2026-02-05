@@ -1,0 +1,242 @@
+import { Component, OnInit, signal, inject, computed } from '@angular/core';
+import { CommonModule, DatePipe } from '@angular/common';
+import { RouterModule } from '@angular/router';
+import { SupabaseService } from '@core/services/supabase.service';
+import { LanguageService } from '@core/services/language.service';
+import { TranslatePipe } from '@shared/pipes/translate.pipe';
+import { SafeHtmlPipe } from '@shared/pipes/safe-html.pipe';
+import { LanguageSelectorComponent } from '@shared/components/language-selector/language-selector.component';
+import {
+  Profile,
+  Project,
+  Experience,
+  Competition,
+  Event,
+  Skill,
+  SkillCategory,
+  getTranslation,
+} from '@core/models';
+
+interface SkillWithLevel extends Skill {
+  calculatedLevel: number;
+  categoryName?: string;
+}
+
+interface SkillCategoryWithSkills extends SkillCategory {
+  skills: SkillWithLevel[];
+}
+
+@Component({
+  selector: 'app-portfolio-layout',
+  standalone: true,
+  imports: [CommonModule, RouterModule, DatePipe, TranslatePipe, SafeHtmlPipe, LanguageSelectorComponent],
+  templateUrl: './portfolio-layout.component.html',
+})
+export class PortfolioLayoutComponent implements OnInit {
+  private supabase = inject(SupabaseService);
+  private languageService = inject(LanguageService);
+
+  loading = signal(true);
+  profile = signal<Profile | null>(null);
+  avatarUrl = signal<string | null>(null);
+  projects = signal<Project[]>([]);
+  experiences = signal<Experience[]>([]);
+  competitions = signal<Competition[]>([]);
+  events = signal<Event[]>([]);
+  skillCategories = signal<SkillCategoryWithSkills[]>([]);
+  mobileMenuOpen = signal(false);
+
+  currentLang = computed(() => this.languageService.currentLanguageCode());
+
+  currentYear = new Date().getFullYear();
+
+  async ngOnInit(): Promise<void> {
+    await Promise.all([
+      this.loadProfile(),
+      this.loadProjects(),
+      this.loadExperiences(),
+      this.loadCompetitions(),
+      this.loadEvents(),
+      this.loadSkillsWithLevels(),
+    ]);
+    this.loading.set(false);
+  }
+
+  private async loadProfile(): Promise<void> {
+    const { data } = await this.supabase
+      .from('profiles')
+      .select('*, translations:profile_translations(*)')
+      .single();
+    if (data) {
+      this.profile.set(data as Profile);
+    }
+
+    const { data: avatarImages } = await this.supabase.getImagesBySourceType('profile');
+    if (avatarImages && avatarImages.length > 0) {
+      this.avatarUrl.set(avatarImages[0].url);
+    }
+  }
+
+  private async loadProjects(): Promise<void> {
+    const { data } = await this.supabase
+      .from('projects')
+      .select('*, translations:project_translations(*)')
+      .eq('is_archived', false)
+      .order('is_pinned', { ascending: false })
+      .order('position', { ascending: true });
+    if (data) {
+      this.projects.set(data as Project[]);
+    }
+  }
+
+  private async loadExperiences(): Promise<void> {
+    const { data } = await this.supabase
+      .from('experiences')
+      .select('*, translations:experience_translations(*)')
+      .eq('is_archived', false)
+      .order('start_date', { ascending: false });
+    if (data) {
+      this.experiences.set(data as Experience[]);
+    }
+  }
+
+  private async loadCompetitions(): Promise<void> {
+    const { data } = await this.supabase
+      .from('competitions')
+      .select('*, translations:competition_translations(*)')
+      .eq('is_archived', false)
+      .order('date', { ascending: false });
+    if (data) {
+      this.competitions.set(data as Competition[]);
+    }
+  }
+
+  private async loadEvents(): Promise<void> {
+    const { data } = await this.supabase
+      .from('events')
+      .select('*, translations:event_translations(*)')
+      .eq('is_archived', false)
+      .order('assisted_at', { ascending: false });
+    if (data) {
+      this.events.set(data as Event[]);
+    }
+  }
+
+  private async loadSkillsWithLevels(): Promise<void> {
+    const { data: skills } = await this.supabase
+      .from('skills')
+      .select(`
+        *,
+        translations:skill_translations(*),
+        category:skill_categories(*, translations:skill_category_translations(*))
+      `)
+      .eq('is_archived', false);
+
+    if (!skills || skills.length === 0) {
+      this.skillCategories.set([]);
+      return;
+    }
+
+    const { data: usages } = await this.supabase
+      .from('skill_usages')
+      .select('skill_id, level, created_at')
+      .order('created_at', { ascending: false });
+
+    const levelMap = new Map<number, number>();
+    if (usages) {
+      for (const usage of usages) {
+        if (!levelMap.has(usage.skill_id) && usage.level) {
+          levelMap.set(usage.skill_id, usage.level);
+        }
+      }
+    }
+
+    const categoryMap = new Map<number | null, SkillCategoryWithSkills>();
+
+    for (const skill of skills as any[]) {
+      const categoryId = skill.skill_category_id || null;
+      const calculatedLevel = levelMap.get(skill.id) || 0;
+
+      const skillWithLevel: SkillWithLevel = {
+        ...skill,
+        calculatedLevel,
+        categoryName: skill.category
+          ? getTranslation(skill.category, this.currentLang(), 'name')
+          : undefined,
+      };
+
+      if (!categoryMap.has(categoryId)) {
+        const category = skill.category || {
+          id: 0,
+          name: 'Uncategorized',
+          translations: [],
+        };
+        categoryMap.set(categoryId, {
+          ...category,
+          skills: [],
+        });
+      }
+
+      categoryMap.get(categoryId)!.skills.push(skillWithLevel);
+    }
+
+    for (const category of categoryMap.values()) {
+      category.skills.sort((a, b) => b.calculatedLevel - a.calculatedLevel);
+    }
+
+    this.skillCategories.set(Array.from(categoryMap.values()));
+  }
+
+  toggleMobileMenu(): void {
+    this.mobileMenuOpen.update((open) => !open);
+  }
+
+  closeMobileMenu(): void {
+    this.mobileMenuOpen.set(false);
+  }
+
+  scrollToSection(sectionId: string): void {
+    this.closeMobileMenu();
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  }
+
+  getEntityTranslation(entity: any, field: string): string {
+    const translation = getTranslation(entity.translations, this.currentLang());
+    return (translation as any)?.[field] || '';
+  }
+
+  getProfileBio(): string {
+    const p = this.profile();
+    if (!p) return '';
+    const translation = getTranslation(p.translations, this.currentLang());
+    return (translation as any)?.bio || '';
+  }
+
+  getProfileHeadline(): string {
+    const p = this.profile();
+    if (!p) return '';
+    const translation = getTranslation(p.translations, this.currentLang());
+    return (translation as any)?.headline || '';
+  }
+
+  getCategoryName(category: SkillCategoryWithSkills): string {
+    const translation = getTranslation(category.translations as any[], this.currentLang());
+    return (translation as any)?.name || 'Other';
+  }
+
+  getStarArray(level: number): boolean[] {
+    return Array(5).fill(false).map((_, i) => i < level);
+  }
+
+  formatDateRange(startDate: string | null, endDate: string | null): string {
+    if (!startDate) return '';
+    const start = new Date(startDate).toLocaleDateString();
+    if (!endDate) {
+      return `${start} - Present`;
+    }
+    return `${start} - ${new Date(endDate).toLocaleDateString()}`;
+  }
+}

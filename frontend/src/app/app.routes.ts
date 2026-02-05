@@ -4,8 +4,8 @@ import { authGuard, noAuthGuard } from './core/guards/auth.guard';
 export const routes: Routes = [
   {
     path: '',
-    redirectTo: 'dashboard',
-    pathMatch: 'full',
+    loadComponent: () =>
+      import('./features/portfolio/portfolio-layout/portfolio-layout.component').then((m) => m.PortfolioLayoutComponent),
   },
   {
     path: 'login',
@@ -28,11 +28,6 @@ export const routes: Routes = [
         path: 'profile',
         loadComponent: () =>
           import('./features/dashboard/profile/profile-editor/profile-editor.component').then((m) => m.ProfileEditorComponent),
-      },
-      {
-        path: 'preview',
-        loadComponent: () =>
-          import('./features/dashboard/profile/profile-preview/profile-preview.component').then((m) => m.ProfilePreviewComponent),
       },
       {
         path: 'projects',
@@ -98,6 +93,6 @@ export const routes: Routes = [
   },
   {
     path: '**',
-    redirectTo: 'dashboard',
+    redirectTo: '',
   },
 ];
