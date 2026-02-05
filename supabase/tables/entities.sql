@@ -6,7 +6,7 @@
 -- Tabla: profile
 -- =========================
 CREATE TABLE profile (
-  id UUID PRIMARY KEY,
+  id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
   first_name TEXT,
   last_name TEXT,
   nickname TEXT
@@ -113,5 +113,14 @@ CREATE TABLE skill_usages (
   is_archived BOOLEAN DEFAULT false,
   is_pinned BOOLEAN DEFAULT false,
   position INT
+);
+
+-- =========================
+-- Tabla: language
+-- =========================
+CREATE TABLE language (
+  id SERIAL PRIMARY KEY,
+  code TEXT UNIQUE NOT NULL, -- 'es', 'en', 'fr'
+  name TEXT NOT NULL        -- 'Español', 'English', 'Français'
 );
 

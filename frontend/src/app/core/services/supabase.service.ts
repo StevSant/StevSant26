@@ -168,22 +168,25 @@ export class SupabaseService {
   // ==================== PROFILE OPERATIONS ====================
 
   /**
-   * Get the current user's profile
+   * Get the current user's profile with translations
    */
   async getProfile() {
     const userId = this.user()?.id;
     if (!userId) return { data: null, error: new Error('Not authenticated') };
-    return this.supabase.from('profile').select('*').eq('id', userId).single();
+    return this.supabase
+      .from('profile')
+      .select('*, translations:profile_translation(*)')
+      .eq('id', userId)
+      .single();
   }
 
   /**
-   * Update the current user's profile
+   * Update the current user's profile (base fields only)
    */
   async updateProfile(data: {
     first_name?: string;
     last_name?: string;
     nickname?: string;
-    about?: string;
   }) {
     const userId = this.user()?.id;
     if (!userId) return { data: null, error: new Error('Not authenticated') };
@@ -197,7 +200,6 @@ export class SupabaseService {
     first_name?: string;
     last_name?: string;
     nickname?: string;
-    about?: string;
   }) {
     const userId = this.user()?.id;
     if (!userId) return { data: null, error: new Error('Not authenticated') };
@@ -206,6 +208,155 @@ export class SupabaseService {
       .insert({ id: userId, ...data })
       .select()
       .single();
+  }
+
+  /**
+   * Upsert a profile translation
+   */
+  async upsertProfileTranslation(data: { language: string; about: string }) {
+    const userId = this.user()?.id;
+    if (!userId) return { data: null, error: new Error('Not authenticated') };
+    return this.supabase
+      .from('profile_translation')
+      .upsert(
+        { profile_id: userId, ...data },
+        { onConflict: 'profile_id,language' }
+      )
+      .select()
+      .single();
+  }
+
+  // ==================== TRANSLATION HELPERS ====================
+
+  /**
+   * Get entity with translations
+   */
+  async getWithTranslations<T>(
+    table: string,
+    translationTable: string,
+    foreignKey: string,
+    orderBy: string = 'position',
+    ascending: boolean = true
+  ) {
+    return this.supabase
+      .from(table)
+      .select(`*, translations:${translationTable}(*)`)
+      .eq('is_archived', false)
+      .order(orderBy, { ascending });
+  }
+
+  /**
+   * Get a single entity by ID with translations
+   */
+  async getByIdWithTranslations<T>(
+    table: string,
+    translationTable: string,
+    id: number
+  ) {
+    return this.supabase
+      .from(table)
+      .select(`*, translations:${translationTable}(*)`)
+      .eq('id', id)
+      .single();
+  }
+
+  /**
+   * Upsert a translation for an entity
+   */
+  async upsertTranslation(
+    translationTable: string,
+    foreignKey: string,
+    entityId: number,
+    translation: { language: string; [key: string]: string | null }
+  ) {
+    return this.supabase
+      .from(translationTable)
+      .upsert(
+        { [foreignKey]: entityId, ...translation },
+        { onConflict: `${foreignKey},language` }
+      )
+      .select()
+      .single();
+  }
+
+  /**
+   * Create entity with translations in a single operation
+   */
+  async createWithTranslations<T>(
+    table: string,
+    translationTable: string,
+    foreignKey: string,
+    entityData: Record<string, unknown>,
+    translations: { language: string; [key: string]: string | null }[]
+  ) {
+    // First, create the entity
+    const { data: entity, error: entityError } = await this.supabase
+      .from(table)
+      .insert(entityData)
+      .select()
+      .single();
+
+    if (entityError || !entity) {
+      return { data: null, error: entityError };
+    }
+
+    // Then, create translations
+    const translationsWithFk = translations.map((t) => ({
+      ...t,
+      [foreignKey]: (entity as { id: number }).id,
+    }));
+
+    const { error: translationError } = await this.supabase
+      .from(translationTable)
+      .insert(translationsWithFk);
+
+    if (translationError) {
+      // Rollback: delete the entity
+      await this.supabase.from(table).delete().eq('id', (entity as { id: number }).id);
+      return { data: null, error: translationError };
+    }
+
+    // Fetch complete entity with translations
+    return this.getByIdWithTranslations(table, translationTable, (entity as { id: number }).id);
+  }
+
+  /**
+   * Update entity with translations
+   */
+  async updateWithTranslations<T>(
+    table: string,
+    translationTable: string,
+    foreignKey: string,
+    entityId: number,
+    entityData: Record<string, unknown>,
+    translations: { language: string; [key: string]: string | null }[]
+  ) {
+    // Update the entity
+    const { error: entityError } = await this.supabase
+      .from(table)
+      .update(entityData)
+      .eq('id', entityId);
+
+    if (entityError) {
+      return { data: null, error: entityError };
+    }
+
+    // Upsert translations
+    for (const translation of translations) {
+      const { error: translationError } = await this.supabase
+        .from(translationTable)
+        .upsert(
+          { [foreignKey]: entityId, ...translation },
+          { onConflict: `${foreignKey},language` }
+        );
+
+      if (translationError) {
+        return { data: null, error: translationError };
+      }
+    }
+
+    // Fetch complete entity with translations
+    return this.getByIdWithTranslations(table, translationTable, entityId);
   }
 
   // ==================== POLYMORPHIC QUERIES ====================

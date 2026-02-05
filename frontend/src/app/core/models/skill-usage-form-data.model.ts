@@ -1,6 +1,14 @@
 import { SourceType } from './source-type.model';
 
 /**
+ * Translation form data for skill usage
+ */
+export interface SkillUsageTranslationFormData {
+  language: string;
+  notes: string;
+}
+
+/**
  * Form data interface for creating/updating skill usages
  */
 export interface SkillUsageFormData {
@@ -8,7 +16,8 @@ export interface SkillUsageFormData {
   source_id: number;
   source_type: SourceType;
   level: number | null;
-  description: string;
   started_at: string;
   ended_at: string;
+  // Translations for each supported language
+  translations: SkillUsageTranslationFormData[];
 }
