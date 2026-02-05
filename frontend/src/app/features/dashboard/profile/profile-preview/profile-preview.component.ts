@@ -37,6 +37,7 @@ export class ProfilePreviewComponent implements OnInit {
 
   loading = signal(true);
   profile = signal<Profile | null>(null);
+  avatarUrl = signal<string | null>(null);
   projects = signal<Project[]>([]);
   experiences = signal<Experience[]>([]);
   competitions = signal<Competition[]>([]);
@@ -64,6 +65,12 @@ export class ProfilePreviewComponent implements OnInit {
       .single();
     if (data) {
       this.profile.set(data as Profile);
+    }
+
+    // Load avatar from images table
+    const { data: avatarImages } = await this.supabase.getImagesBySourceType('profile');
+    if (avatarImages && avatarImages.length > 0) {
+      this.avatarUrl.set(avatarImages[0].url);
     }
   }
 

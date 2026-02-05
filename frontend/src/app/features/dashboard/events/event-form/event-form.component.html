@@ -35,7 +35,9 @@
     <form (ngSubmit)="onSubmit()" class="space-y-6">
       <!-- Base Information Card -->
       <div class="card space-y-6">
-        <h2 class="text-lg font-semibold text-[var(--color-text-primary)]">{{ 'events.baseInfo' | translate }}</h2>
+        <h2 class="text-lg font-semibold text-[var(--color-text-primary)]">
+          {{ 'events.baseInfo' | translate }}
+        </h2>
 
         <div>
           <label for="assisted_at" class="label">{{ 'events.fields.date' | translate }}</label>
@@ -112,7 +114,9 @@
       </div>
 
       <div class="card space-y-6">
-        <h2 class="text-lg font-semibold text-[var(--color-text-primary)]">{{ 'events.images' | translate }}</h2>
+        <h2 class="text-lg font-semibold text-[var(--color-text-primary)]">
+          {{ 'events.images' | translate }}
+        </h2>
         <app-image-upload
           folder="events"
           [multiple]="true"
@@ -135,7 +139,9 @@
       }
 
       <div class="flex justify-end gap-3">
-        <a routerLink="/dashboard/events" class="btn-secondary">{{ 'common.cancel' | translate }}</a>
+        <a routerLink="/dashboard/events" class="btn-secondary">{{
+          'common.cancel' | translate
+        }}</a>
         <button type="submit" [disabled]="saving()" class="btn-primary">
           @if (saving()) {
             <svg class="spinner" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -155,7 +161,9 @@
             </svg>
             <span>{{ 'common.saving' | translate }}</span>
           } @else {
-            <span>{{ isNew ? ('common.create' | translate) : ('common.saveChanges' | translate) }}</span>
+            <span>{{
+              isNew ? ('common.create' | translate) : ('common.saveChanges' | translate)
+            }}</span>
           }
         </button>
       </div>

@@ -35,11 +35,15 @@
     <form (ngSubmit)="onSubmit()" class="space-y-6">
       <!-- Base Information Card -->
       <div class="card space-y-6">
-        <h2 class="text-lg font-semibold text-[var(--color-text-primary)]">{{ 'competitions.baseInfo' | translate }}</h2>
+        <h2 class="text-lg font-semibold text-[var(--color-text-primary)]">
+          {{ 'competitions.baseInfo' | translate }}
+        </h2>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label for="organizer" class="label">{{ 'competitions.fields.organizer' | translate }}</label>
+            <label for="organizer" class="label">{{
+              'competitions.fields.organizer' | translate
+            }}</label>
             <input
               type="text"
               id="organizer"
@@ -83,7 +87,8 @@
 
         <div>
           <label for="name" class="label">
-            {{ 'competitions.fields.name' | translate }} <span class="text-[var(--color-error)]">*</span>
+            {{ 'competitions.fields.name' | translate }}
+            <span class="text-[var(--color-error)]">*</span>
             <span class="text-xs text-[var(--color-text-muted)] ml-2"
               >({{ currentEditLanguage() | uppercase }})</span
             >
@@ -137,7 +142,9 @@
       </div>
 
       <div class="card space-y-6">
-        <h2 class="text-lg font-semibold text-[var(--color-text-primary)]">{{ 'competitions.images' | translate }}</h2>
+        <h2 class="text-lg font-semibold text-[var(--color-text-primary)]">
+          {{ 'competitions.images' | translate }}
+        </h2>
         <app-image-upload
           folder="competitions"
           [multiple]="true"
@@ -164,7 +171,9 @@
       }
 
       <div class="flex justify-end gap-3">
-        <a routerLink="/dashboard/competitions" class="btn-secondary">{{ 'common.cancel' | translate }}</a>
+        <a routerLink="/dashboard/competitions" class="btn-secondary">{{
+          'common.cancel' | translate
+        }}</a>
         <button type="submit" [disabled]="saving()" class="btn-primary">
           @if (saving()) {
             <svg class="spinner" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -184,7 +193,9 @@
             </svg>
             <span>{{ 'common.saving' | translate }}</span>
           } @else {
-            <span>{{ isNew ? ('common.create' | translate) : ('common.saveChanges' | translate) }}</span>
+            <span>{{
+              isNew ? ('common.create' | translate) : ('common.saveChanges' | translate)
+            }}</span>
           }
         </button>
       </div>

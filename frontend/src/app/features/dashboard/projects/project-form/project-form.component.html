@@ -37,7 +37,9 @@
     <form (ngSubmit)="onSubmit()" class="space-y-6">
       <!-- Base Info Card -->
       <div class="card space-y-6">
-        <h2 class="text-lg font-semibold text-[var(--color-text-primary)]">{{ 'projects.baseInfo' | translate }}</h2>
+        <h2 class="text-lg font-semibold text-[var(--color-text-primary)]">
+          {{ 'projects.baseInfo' | translate }}
+        </h2>
 
         <!-- URL -->
         <div>
@@ -93,7 +95,8 @@
         <!-- Title -->
         <div>
           <label for="title" class="label">
-            {{ 'projects.fields.title' | translate }} <span class="text-[var(--color-error)]">*</span>
+            {{ 'projects.fields.title' | translate }}
+            <span class="text-[var(--color-error)]">*</span>
             <span class="text-xs text-[var(--color-text-muted)] ml-2"
               >({{ currentEditLanguage() | uppercase }})</span
             >
@@ -141,7 +144,9 @@
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <!-- Source Type -->
           <div>
-            <label for="source_type" class="label">{{ 'projects.fields.sourceType' | translate }}</label>
+            <label for="source_type" class="label">{{
+              'projects.fields.sourceType' | translate
+            }}</label>
             <select
               id="source_type"
               name="source_type"
@@ -149,15 +154,21 @@
               class="input"
             >
               <option [ngValue]="null">{{ 'common.noAssociation' | translate }}</option>
-              <option value="experience">{{ 'projects.sourceTypes.experience' | translate }}</option>
-              <option value="competition">{{ 'projects.sourceTypes.competition' | translate }}</option>
+              <option value="experience">
+                {{ 'projects.sourceTypes.experience' | translate }}
+              </option>
+              <option value="competition">
+                {{ 'projects.sourceTypes.competition' | translate }}
+              </option>
               <option value="event">{{ 'projects.sourceTypes.event' | translate }}</option>
             </select>
           </div>
 
           <!-- Source ID -->
           <div>
-            <label for="source_id" class="label">{{ 'projects.fields.sourceId' | translate }}</label>
+            <label for="source_id" class="label">{{
+              'projects.fields.sourceId' | translate
+            }}</label>
             <input
               type="number"
               id="source_id"
@@ -172,7 +183,9 @@
 
         <!-- Parent Project -->
         <div>
-          <label for="parent_project_id" class="label">{{ 'projects.parentProject' | translate }}</label>
+          <label for="parent_project_id" class="label">{{
+            'projects.parentProject' | translate
+          }}</label>
           <select
             id="parent_project_id"
             name="parent_project_id"
@@ -216,7 +229,9 @@
 
       <!-- Actions -->
       <div class="flex justify-end gap-3">
-        <a routerLink="/dashboard/projects" class="btn-secondary">{{ 'common.cancel' | translate }}</a>
+        <a routerLink="/dashboard/projects" class="btn-secondary">{{
+          'common.cancel' | translate
+        }}</a>
         <button type="submit" [disabled]="saving()" class="btn-primary">
           @if (saving()) {
             <svg class="spinner" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -236,7 +251,9 @@
             </svg>
             <span>{{ 'common.saving' | translate }}</span>
           } @else {
-            <span>{{ isNew ? ('common.create' | translate) : ('common.saveChanges' | translate) }}</span>
+            <span>{{
+              isNew ? ('common.create' | translate) : ('common.saveChanges' | translate)
+            }}</span>
           }
         </button>
       </div>

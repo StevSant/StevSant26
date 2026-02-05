@@ -35,11 +35,14 @@
     <form (ngSubmit)="onSubmit()" class="space-y-6">
       <!-- Base Information Card -->
       <div class="card space-y-6">
-        <h2 class="text-lg font-semibold text-[var(--color-text-primary)]">{{ 'experiences.baseInfo' | translate }}</h2>
+        <h2 class="text-lg font-semibold text-[var(--color-text-primary)]">
+          {{ 'experiences.baseInfo' | translate }}
+        </h2>
 
         <div>
           <label for="company" class="label">
-            {{ 'experiences.fields.company' | translate }} <span class="text-[var(--color-error)]">*</span>
+            {{ 'experiences.fields.company' | translate }}
+            <span class="text-[var(--color-error)]">*</span>
           </label>
           <input
             type="text"
@@ -54,7 +57,9 @@
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label for="start_date" class="label">{{ 'experiences.fields.startDate' | translate }}</label>
+            <label for="start_date" class="label">{{
+              'experiences.fields.startDate' | translate
+            }}</label>
             <input
               type="date"
               id="start_date"
@@ -64,7 +69,9 @@
             />
           </div>
           <div>
-            <label for="end_date" class="label">{{ 'experiences.fields.endDate' | translate }}</label>
+            <label for="end_date" class="label">{{
+              'experiences.fields.endDate' | translate
+            }}</label>
             <input
               type="date"
               id="end_date"
@@ -106,7 +113,8 @@
 
         <div>
           <label for="role" class="label">
-            {{ 'experiences.fields.role' | translate }} <span class="text-[var(--color-error)]">*</span>
+            {{ 'experiences.fields.role' | translate }}
+            <span class="text-[var(--color-error)]">*</span>
             <span class="text-xs text-[var(--color-text-muted)] ml-2"
               >({{ currentEditLanguage() | uppercase }})</span
             >
@@ -142,7 +150,9 @@
       </div>
 
       <div class="card space-y-6">
-        <h2 class="text-lg font-semibold text-[var(--color-text-primary)]">{{ 'experiences.images' | translate }}</h2>
+        <h2 class="text-lg font-semibold text-[var(--color-text-primary)]">
+          {{ 'experiences.images' | translate }}
+        </h2>
         <app-image-upload
           folder="experiences"
           [multiple]="true"
@@ -169,7 +179,9 @@
       }
 
       <div class="flex justify-end gap-3">
-        <a routerLink="/dashboard/experiences" class="btn-secondary">{{ 'common.cancel' | translate }}</a>
+        <a routerLink="/dashboard/experiences" class="btn-secondary">{{
+          'common.cancel' | translate
+        }}</a>
         <button type="submit" [disabled]="saving()" class="btn-primary">
           @if (saving()) {
             <svg class="spinner" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -189,7 +201,9 @@
             </svg>
             <span>{{ 'common.saving' | translate }}</span>
           } @else {
-            <span>{{ isNew ? ('common.create' | translate) : ('common.saveChanges' | translate) }}</span>
+            <span>{{
+              isNew ? ('common.create' | translate) : ('common.saveChanges' | translate)
+            }}</span>
           }
         </button>
       </div>
