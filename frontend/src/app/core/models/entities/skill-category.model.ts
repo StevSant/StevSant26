@@ -1,4 +1,4 @@
-import { BaseEntity } from '../base';
+import { BaseEntity, Language } from '../base';
 
 /**
  * Skill Category Translation entity
@@ -6,9 +6,10 @@ import { BaseEntity } from '../base';
 export interface SkillCategoryTranslation {
   id: number;
   skill_category_id: number;
-  language: string;
+  language_id: number;
   name: string;
   approach: string | null;
+  language?: Language;
 }
 
 /**

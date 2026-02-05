@@ -51,7 +51,7 @@ export class EventListComponent implements OnInit {
    */
   getItemName(item: Event): string {
     const lang = this.translateService.currentLang();
-    const translation = item.translations?.find(t => t.language === lang);
+    const translation = item.translations?.find(t => t.language?.code === lang);
     return translation?.name || item.translations?.[0]?.name || `Event #${item.id}`;
   }
 

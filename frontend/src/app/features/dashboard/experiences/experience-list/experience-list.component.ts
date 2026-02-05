@@ -45,7 +45,7 @@ export class ExperienceListComponent implements OnInit {
    */
   getItemRole(item: Experience): string {
     const lang = this.translateService.currentLang();
-    const translation = item.translations?.find(t => t.language === lang);
+    const translation = item.translations?.find(t => t.language?.code === lang);
     return translation?.role || item.translations?.[0]?.role || `Experience #${item.id}`;
   }
 

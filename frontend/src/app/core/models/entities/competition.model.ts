@@ -1,4 +1,4 @@
-import { BaseEntity } from '../base';
+import { BaseEntity, Language } from '../base';
 
 /**
  * Competition Translation entity
@@ -6,10 +6,11 @@ import { BaseEntity } from '../base';
 export interface CompetitionTranslation {
   id: number;
   competitions_id: number;
-  language: string;
+  language_id: number;
   name: string;
   description: string | null;
   result: string | null;
+  language?: Language;
 }
 
 /**

@@ -108,10 +108,13 @@ export class ProjectFormComponent implements OnInit {
           // Load translations
           if (data.translations) {
             for (const t of data.translations as ProjectTranslation[]) {
-              this.translations.set(t.language, {
-                title: t.title || '',
-                description: t.description || '',
-              });
+              const langCode = t.language?.code;
+              if (langCode) {
+                this.translations.set(langCode, {
+                  title: t.title || '',
+                  description: t.description || '',
+                });
+              }
             }
           }
         }

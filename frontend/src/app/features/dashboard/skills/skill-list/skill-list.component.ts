@@ -40,7 +40,7 @@ export class SkillListComponent implements OnInit {
    */
   getItemName(item: Skill): string {
     const lang = this.translateService.currentLang();
-    const translation = item.translations?.find(t => t.language === lang);
+    const translation = item.translations?.find(t => t.language?.code === lang);
     return translation?.name || item.translations?.[0]?.name || `Skill #${item.id}`;
   }
 
@@ -49,7 +49,7 @@ export class SkillListComponent implements OnInit {
    */
   getItemDescription(item: Skill): string | null {
     const lang = this.translateService.currentLang();
-    const translation = item.translations?.find(t => t.language === lang);
+    const translation = item.translations?.find(t => t.language?.code === lang);
     return translation?.description || item.translations?.[0]?.description || null;
   }
 
@@ -59,7 +59,7 @@ export class SkillListComponent implements OnInit {
   getCategoryName(item: Skill): string | null {
     if (!item.skill_category) return null;
     const lang = this.translateService.currentLang();
-    const translation = item.skill_category.translations?.find(t => t.language === lang);
+    const translation = item.skill_category.translations?.find(t => t.language?.code === lang);
     return translation?.name || item.skill_category.translations?.[0]?.name || null;
   }
 

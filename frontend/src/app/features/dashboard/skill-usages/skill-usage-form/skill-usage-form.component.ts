@@ -107,9 +107,12 @@ export class SkillUsageFormComponent implements OnInit {
           // Load translations
           if (data.translations) {
             for (const t of data.translations as SkillUsageTranslation[]) {
-              this.translations.set(t.language, {
-                notes: t.notes || '',
-              });
+              const langCode = t.language?.code;
+              if (langCode) {
+                this.translations.set(langCode, {
+                  notes: t.notes || '',
+                });
+              }
             }
           }
         }

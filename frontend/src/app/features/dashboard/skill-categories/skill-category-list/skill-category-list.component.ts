@@ -50,7 +50,7 @@ export class SkillCategoryListComponent implements OnInit {
    */
   getItemName(item: SkillCategory): string {
     const lang = this.translateService.currentLang();
-    const translation = item.translations?.find(t => t.language === lang);
+    const translation = item.translations?.find(t => t.language?.code === lang);
     return translation?.name || item.translations?.[0]?.name || `Category #${item.id}`;
   }
 
@@ -59,7 +59,7 @@ export class SkillCategoryListComponent implements OnInit {
    */
   getItemApproach(item: SkillCategory): string | null {
     const lang = this.translateService.currentLang();
-    const translation = item.translations?.find(t => t.language === lang);
+    const translation = item.translations?.find(t => t.language?.code === lang);
     return translation?.approach || item.translations?.[0]?.approach || null;
   }
 

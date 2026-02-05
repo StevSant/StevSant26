@@ -73,7 +73,10 @@ export class ProfileEditorComponent implements OnInit {
         this.translations.clear();
         if (data.translations) {
           for (const t of data.translations as ProfileTranslation[]) {
-            this.translations.set(t.language, { about: t.about || '' });
+            const langCode = t.language?.code;
+            if (langCode) {
+              this.translations.set(langCode, { about: t.about || '' });
+            }
           }
         }
 
@@ -166,7 +169,10 @@ export class ProfileEditorComponent implements OnInit {
       this.translations.clear();
       if (this.profile.translations) {
         for (const t of this.profile.translations as ProfileTranslation[]) {
-          this.translations.set(t.language, { about: t.about || '' });
+          const langCode = t.language?.code;
+          if (langCode) {
+            this.translations.set(langCode, { about: t.about || '' });
+          }
         }
       }
     } else {

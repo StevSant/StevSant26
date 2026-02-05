@@ -175,7 +175,7 @@ export class SupabaseService {
     if (!userId) return { data: null, error: new Error('Not authenticated') };
     return this.supabase
       .from('profile')
-      .select('*, translations:profile_translation(*)')
+      .select('*, translations:profile_translation(*, language:language(*))')
       .eq('id', userId)
       .single();
   }
@@ -211,16 +211,32 @@ export class SupabaseService {
   }
 
   /**
+   * Get language ID by code
+   */
+  async getLanguageIdByCode(code: string): Promise<number | null> {
+    const { data } = await this.supabase
+      .from('language')
+      .select('id')
+      .eq('code', code)
+      .single();
+    return data?.id ?? null;
+  }
+
+  /**
    * Upsert a profile translation
    */
   async upsertProfileTranslation(data: { language: string; about: string }) {
     const userId = this.user()?.id;
     if (!userId) return { data: null, error: new Error('Not authenticated') };
+
+    const languageId = await this.getLanguageIdByCode(data.language);
+    if (!languageId) return { data: null, error: new Error(`Language '${data.language}' not found`) };
+
     return this.supabase
       .from('profile_translation')
       .upsert(
-        { profile_id: userId, ...data },
-        { onConflict: 'profile_id,language' }
+        { profile_id: userId, language_id: languageId, about: data.about },
+        { onConflict: 'profile_id,language_id' }
       )
       .select()
       .single();
@@ -240,7 +256,7 @@ export class SupabaseService {
   ): Promise<{ data: T[] | null; error: Error | null }> {
     const result = await this.supabase
       .from(table)
-      .select(`*, translations:${translationTable}(*)`)
+      .select(`*, translations:${translationTable}(*, language:language(*))`)
       .eq('is_archived', false)
       .order(orderBy, { ascending });
     return { data: result.data as T[] | null, error: result.error };
@@ -257,7 +273,7 @@ export class SupabaseService {
   ): Promise<{ data: T[] | null; error: Error | null }> {
     const result = await this.supabase
       .from(table)
-      .select(`*, translations:${translationTable}(*)`)
+      .select(`*, translations:${translationTable}(*, language:language(*))`)
       .order(orderBy, { ascending });
     return { data: result.data as T[] | null, error: result.error };
   }
@@ -272,7 +288,7 @@ export class SupabaseService {
   ): Promise<{ data: T | null; error: Error | null }> {
     const result = await this.supabase
       .from(table)
-      .select(`*, translations:${translationTable}(*)`)
+      .select(`*, translations:${translationTable}(*, language:language(*))`)
       .eq('id', id)
       .single();
     return { data: result.data as T | null, error: result.error };
@@ -287,11 +303,17 @@ export class SupabaseService {
     entityId: number,
     translation: { language: string; [key: string]: string | null }
   ) {
+    const { language, ...rest } = translation;
+    const languageId = await this.getLanguageIdByCode(language);
+    if (!languageId) {
+      return { data: null, error: new Error(`Language '${language}' not found`) };
+    }
+
     return this.supabase
       .from(translationTable)
       .upsert(
-        { [foreignKey]: entityId, ...translation },
-        { onConflict: `${foreignKey},language` }
+        { [foreignKey]: entityId, language_id: languageId, ...rest },
+        { onConflict: `${foreignKey},language_id` }
       )
       .select()
       .single();
@@ -318,11 +340,22 @@ export class SupabaseService {
       return { data: null, error: entityError };
     }
 
-    // Then, create translations
-    const translationsWithFk = translations.map((t) => ({
-      ...t,
-      [foreignKey]: (entity as { id: number }).id,
-    }));
+    // Then, create translations with language_id
+    const translationsWithFk = [];
+    for (const t of translations) {
+      const { language, ...rest } = t;
+      const languageId = await this.getLanguageIdByCode(language);
+      if (!languageId) {
+        // Rollback: delete the entity
+        await this.supabase.from(table).delete().eq('id', (entity as { id: number }).id);
+        return { data: null, error: new Error(`Language '${language}' not found`) };
+      }
+      translationsWithFk.push({
+        ...rest,
+        language_id: languageId,
+        [foreignKey]: (entity as { id: number }).id,
+      });
+    }
 
     const { error: translationError } = await this.supabase
       .from(translationTable)
@@ -359,13 +392,19 @@ export class SupabaseService {
       return { data: null, error: entityError };
     }
 
-    // Upsert translations
+    // Upsert translations with language_id
     for (const translation of translations) {
+      const { language, ...rest } = translation;
+      const languageId = await this.getLanguageIdByCode(language);
+      if (!languageId) {
+        return { data: null, error: new Error(`Language '${language}' not found`) };
+      }
+
       const { error: translationError } = await this.supabase
         .from(translationTable)
         .upsert(
-          { [foreignKey]: entityId, ...translation },
-          { onConflict: `${foreignKey},language` }
+          { [foreignKey]: entityId, language_id: languageId, ...rest },
+          { onConflict: `${foreignKey},language_id` }
         );
 
       if (translationError) {

@@ -45,7 +45,7 @@ export class CompetitionListComponent implements OnInit {
    */
   getItemName(item: Competition): string {
     const lang = this.translateService.currentLang();
-    const translation = item.translations?.find(t => t.language === lang);
+    const translation = item.translations?.find(t => t.language?.code === lang);
     return translation?.name || item.translations?.[0]?.name || `Competition #${item.id}`;
   }
 
@@ -54,7 +54,7 @@ export class CompetitionListComponent implements OnInit {
    */
   getItemResult(item: Competition): string | null {
     const lang = this.translateService.currentLang();
-    const translation = item.translations?.find(t => t.language === lang);
+    const translation = item.translations?.find(t => t.language?.code === lang);
     return translation?.result || item.translations?.[0]?.result || null;
   }
 

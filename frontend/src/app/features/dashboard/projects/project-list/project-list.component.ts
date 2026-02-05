@@ -51,7 +51,7 @@ export class ProjectListComponent implements OnInit {
    */
   getItemTitle(item: Project): string {
     const lang = this.translateService.currentLang();
-    const translation = item.translations?.find(t => t.language === lang);
+    const translation = item.translations?.find(t => t.language?.code === lang);
     return translation?.title || item.translations?.[0]?.title || `Project #${item.id}`;
   }
 
@@ -60,7 +60,7 @@ export class ProjectListComponent implements OnInit {
    */
   getItemDescription(item: Project): string | null {
     const lang = this.translateService.currentLang();
-    const translation = item.translations?.find(t => t.language === lang);
+    const translation = item.translations?.find(t => t.language?.code === lang);
     return translation?.description || item.translations?.[0]?.description || null;
   }
 

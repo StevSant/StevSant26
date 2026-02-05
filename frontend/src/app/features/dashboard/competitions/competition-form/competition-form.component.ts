@@ -81,11 +81,14 @@ export class CompetitionFormComponent implements OnInit {
           // Load translations
           if (data.translations) {
             for (const t of data.translations as CompetitionTranslation[]) {
-              this.translations.set(t.language, {
-                name: t.name || '',
-                description: t.description || '',
-                result: t.result || '',
-              });
+              const langCode = t.language?.code;
+              if (langCode) {
+                this.translations.set(langCode, {
+                  name: t.name || '',
+                  description: t.description || '',
+                  result: t.result || '',
+                });
+              }
             }
           }
         }

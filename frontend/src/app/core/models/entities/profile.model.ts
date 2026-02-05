@@ -1,11 +1,14 @@
+import { Language } from '../base/language.model';
+
 /**
  * Profile Translation entity
  */
 export interface ProfileTranslation {
   id: number;
   profile_id: string;
-  language: string;
+  language_id: number;
   about: string;
+  language?: Language;
 }
 
 /**

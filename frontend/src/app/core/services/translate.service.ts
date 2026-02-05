@@ -1,4 +1,4 @@
-import { Injectable, signal, computed, inject, PLATFORM_ID } from '@angular/core';
+import { Injectable, signal, computed, inject, PLATFORM_ID, ApplicationRef } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
@@ -15,17 +15,22 @@ const SUPPORTED_LANGS = ['es', 'en'];
 export class TranslateService {
   private http = inject(HttpClient);
   private platformId = inject(PLATFORM_ID);
+  private appRef = inject(ApplicationRef);
 
   private translations = signal<Map<string, TranslationData>>(new Map());
   private currentLangSignal = signal<string>(DEFAULT_LANG);
   private loadedLanguages = signal<Set<string>>(new Set());
   private loadingSignal = signal<boolean>(false);
+  private translationsVersion = signal<number>(0);
 
   /** Current language code */
   readonly currentLang = this.currentLangSignal.asReadonly();
 
   /** Whether translations are loading */
   readonly loading = this.loadingSignal.asReadonly();
+
+  /** Version counter that increments when translations change - useful for reactivity */
+  readonly version = this.translationsVersion.asReadonly();
 
   /** Supported languages */
   readonly supportedLanguages = SUPPORTED_LANGS;
@@ -96,6 +101,12 @@ export class TranslateService {
         newSet.add(lang);
         return newSet;
       });
+
+      // Increment version to trigger reactivity
+      this.translationsVersion.update((v) => v + 1);
+
+      // Force change detection to update all pipes
+      this.appRef.tick();
     } catch (error) {
       console.error(`Failed to load translations for "${lang}":`, error);
     } finally {

@@ -1,4 +1,4 @@
-import { PolymorphicEntity, SourceType } from '../base';
+import { Language, PolymorphicEntity, SourceType } from '../base';
 import { Skill } from './skill.model';
 
 /**
@@ -7,8 +7,9 @@ import { Skill } from './skill.model';
 export interface SkillUsageTranslation {
   id: number;
   skill_usages_id: number;
-  language: string;
+  language_id: number;
   notes: string | null;
+  language?: Language;
 }
 
 /**

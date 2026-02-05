@@ -39,7 +39,7 @@
                 class="nav-item"
                 (click)="closeSidebarOnMobile()"
               >
-                <span [innerHTML]="item.icon" class="w-5 h-5"></span>
+                <span [innerHTML]="item.icon | safeHtml" class="w-5 h-5"></span>
                 <span>{{ item.labelKey | translate }}</span>
               </a>
             </li>

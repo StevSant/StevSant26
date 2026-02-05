@@ -83,10 +83,13 @@ export class ExperienceFormComponent implements OnInit {
           // Load translations
           if (data.translations) {
             for (const t of data.translations as ExperienceTranslation[]) {
-              this.translations.set(t.language, {
-                role: t.role || '',
-                description: t.description || '',
-              });
+              const langCode = t.language?.code;
+              if (langCode) {
+                this.translations.set(langCode, {
+                  role: t.role || '',
+                  description: t.description || '',
+                });
+              }
             }
           }
         }

@@ -4,12 +4,13 @@ import { SupabaseService } from '../../../core/services/supabase.service';
 import { TranslateService } from '../../../core/services/translate.service';
 import { NavItem } from './nav-item.interface';
 import { TranslatePipe } from '../../../shared/pipes/translate.pipe';
+import { SafeHtmlPipe } from '../../../shared/pipes/safe-html.pipe';
 import { LanguageSelectorComponent } from '../../../shared/components/language-selector/language-selector.component';
 
 @Component({
   selector: 'app-dashboard-layout',
   standalone: true,
-  imports: [RouterModule, TranslatePipe, LanguageSelectorComponent],
+  imports: [RouterModule, TranslatePipe, SafeHtmlPipe, LanguageSelectorComponent],
   templateUrl: './dashboard-layout.component.html',
 })
 export class DashboardLayoutComponent {

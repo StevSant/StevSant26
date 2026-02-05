@@ -1,4 +1,4 @@
-import { PolymorphicEntity } from '../base';
+import { Language, PolymorphicEntity } from '../base';
 
 /**
  * Project Translation entity
@@ -6,9 +6,10 @@ import { PolymorphicEntity } from '../base';
 export interface ProjectTranslation {
   id: number;
   project_id: number;
-  language: string;
+  language_id: number;
   title: string;
   description: string | null;
+  language?: Language;
 }
 
 /**

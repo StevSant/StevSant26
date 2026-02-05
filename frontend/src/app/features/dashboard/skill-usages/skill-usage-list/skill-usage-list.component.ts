@@ -41,7 +41,7 @@ export class SkillUsageListComponent implements OnInit {
   getSkillName(item: SkillUsage): string {
     if (!item.skill) return `Skill #${item.skill_id}`;
     const lang = this.translateService.currentLang();
-    const translation = item.skill.translations?.find(t => t.language === lang);
+    const translation = item.skill.translations?.find(t => t.language?.code === lang);
     return translation?.name || item.skill.translations?.[0]?.name || `Skill #${item.skill_id}`;
   }
 

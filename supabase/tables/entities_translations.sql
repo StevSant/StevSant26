@@ -8,10 +8,10 @@
 CREATE TABLE profile_translation (
   id SERIAL PRIMARY KEY,
   profile_id UUID REFERENCES profile(id) ON DELETE CASCADE,
-  language TEXT NOT NULL,
+  language_id INT NOT NULL REFERENCES language(id),
   about TEXT NOT NULL,
 
-  UNIQUE(profile_id, language)
+  UNIQUE(profile_id, language_id)
 );
 
 -- =========================
@@ -20,11 +20,11 @@ CREATE TABLE profile_translation (
 CREATE TABLE skill_category_translation (
   id SERIAL PRIMARY KEY,
   skill_category_id INT REFERENCES skill_category(id) ON DELETE CASCADE,
-  language TEXT NOT NULL,
+  language_id INT NOT NULL REFERENCES language(id),
   name TEXT NOT NULL,
   approach TEXT,
 
-  UNIQUE(skill_category_id, language)
+  UNIQUE(skill_category_id, language_id)
 );
 
 -- =========================
@@ -33,14 +33,12 @@ CREATE TABLE skill_category_translation (
 CREATE TABLE skill_translation (
   id SERIAL PRIMARY KEY,
   skill_id INT REFERENCES skill(id) ON DELETE CASCADE,
-  language TEXT NOT NULL,
+  language_id INT NOT NULL REFERENCES language(id),
   name TEXT NOT NULL,
   description TEXT,
 
-  UNIQUE(skill_id, language)
+  UNIQUE(skill_id, language_id)
 );
-
--
 
 -- =========================
 -- competitions_translation
@@ -48,12 +46,12 @@ CREATE TABLE skill_translation (
 CREATE TABLE competitions_translation (
   id SERIAL PRIMARY KEY,
   competitions_id INT REFERENCES competitions(id) ON DELETE CASCADE,
-  language TEXT NOT NULL,
+  language_id INT NOT NULL REFERENCES language(id),
   name TEXT NOT NULL,
   description TEXT,
   result TEXT,
 
-  UNIQUE(competitions_id, language)
+  UNIQUE(competitions_id, language_id)
 );
 
 -- =========================
@@ -62,11 +60,11 @@ CREATE TABLE competitions_translation (
 CREATE TABLE experience_translation (
   id SERIAL PRIMARY KEY,
   experience_id INT REFERENCES experience(id) ON DELETE CASCADE,
-  language TEXT NOT NULL,
+  language_id INT NOT NULL REFERENCES language(id),
   role TEXT NOT NULL,
   description TEXT,
 
-  UNIQUE(experience_id, language)
+  UNIQUE(experience_id, language_id)
 );
 
 -- =========================
@@ -75,11 +73,11 @@ CREATE TABLE experience_translation (
 CREATE TABLE event_translation (
   id SERIAL PRIMARY KEY,
   event_id INT REFERENCES event(id) ON DELETE CASCADE,
-  language TEXT NOT NULL,
+  language_id INT NOT NULL REFERENCES language(id),
   name TEXT NOT NULL,
   description TEXT,
 
-  UNIQUE(event_id, language)
+  UNIQUE(event_id, language_id)
 );
 
 -- =========================
@@ -88,11 +86,11 @@ CREATE TABLE event_translation (
 CREATE TABLE project_translation (
   id SERIAL PRIMARY KEY,
   project_id INT REFERENCES project(id) ON DELETE CASCADE,
-  language TEXT NOT NULL,
+  language_id INT NOT NULL REFERENCES language(id),
   title TEXT NOT NULL,
   description TEXT,
 
-  UNIQUE(project_id, language)
+  UNIQUE(project_id, language_id)
 );
 
 -- =========================
@@ -101,8 +99,8 @@ CREATE TABLE project_translation (
 CREATE TABLE skill_usages_translation (
   id SERIAL PRIMARY KEY,
   skill_usages_id INT REFERENCES skill_usages(id) ON DELETE CASCADE,
-  language TEXT NOT NULL,
+  language_id INT NOT NULL REFERENCES language(id),
   notes TEXT,
 
-  UNIQUE(skill_usages_id, language)
+  UNIQUE(skill_usages_id, language_id)
 );

@@ -1,4 +1,4 @@
-import { BaseEntity } from '../base';
+import { BaseEntity, Language } from '../base';
 
 /**
  * Experience Translation entity
@@ -6,9 +6,10 @@ import { BaseEntity } from '../base';
 export interface ExperienceTranslation {
   id: number;
   experience_id: number;
-  language: string;
+  language_id: number;
   role: string;
   description: string | null;
+  language?: Language;
 }
 
 /**

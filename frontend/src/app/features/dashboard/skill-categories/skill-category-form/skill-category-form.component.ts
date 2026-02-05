@@ -69,10 +69,13 @@ export class SkillCategoryFormComponent implements OnInit {
           // Load translations
           if (data.translations) {
             for (const t of data.translations as SkillCategoryTranslation[]) {
-              this.translations.set(t.language, {
-                name: t.name || '',
-                approach: t.approach || '',
-              });
+              const langCode = t.language?.code;
+              if (langCode) {
+                this.translations.set(langCode, {
+                  name: t.name || '',
+                  approach: t.approach || '',
+                });
+              }
             }
           }
         }
