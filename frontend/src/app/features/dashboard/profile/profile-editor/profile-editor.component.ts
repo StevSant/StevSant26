@@ -27,6 +27,12 @@ export class ProfileEditorComponent implements OnInit {
   // Current language for editing translations
   currentEditLanguage = signal<string>('es');
 
+  // Pending avatar to save after profile creation
+  pendingAvatar = signal<{ path: string; url: string } | null>(null);
+
+  // Existing avatar URL loaded from database
+  existingAvatarUrl = signal<string | null>(null);
+
   // Base profile fields
   formData = {
     first_name: '',
@@ -86,6 +92,13 @@ export class ProfileEditorComponent implements OnInit {
             this.translations.set(lang.code, { about: '' });
           }
         }
+
+        // Load existing avatar
+        const { data: avatarImages, error: avatarError } = await this.supabase.getImagesBySourceType('profile');
+        console.log('loadProfile avatar query result:', { avatarImages, avatarError });
+        if (avatarImages && avatarImages.length > 0) {
+          this.existingAvatarUrl.set(avatarImages[0].url);
+        }
       } else {
         this.profileExists = false;
         // Initialize empty translations
@@ -144,6 +157,9 @@ export class ProfileEditorComponent implements OnInit {
         }
       }
 
+      // Save pending avatar if any
+      await this.savePendingAvatar();
+
       // Reload profile to get updated data
       await this.loadProfile();
       this.success.set('Perfil actualizado correctamente');
@@ -195,7 +211,61 @@ export class ProfileEditorComponent implements OnInit {
     this.success.set(null);
   }
 
-  onAvatarUploaded(data: { path: string; url: string }): void {
-    console.log('Avatar uploaded:', data);
+  private async savePendingAvatar(): Promise<void> {
+    const avatar = this.pendingAvatar();
+    console.log('savePendingAvatar called, avatar:', avatar);
+    if (!avatar) return;
+
+    try {
+      // For profile avatars, we save to image table with source_type='profile'
+      // source_id is left null since profile uses UUID and image.source_id is INT
+      const result = await this.supabase.create('image', {
+        url: avatar.url,
+        source_type: 'profile',
+        alt_text: 'Avatar de perfil',
+        position: 0,
+      });
+      console.log('savePendingAvatar result:', result);
+
+      if (result.error) throw result.error;
+
+      // Update the existing avatar URL to show the new image
+      this.existingAvatarUrl.set(avatar.url);
+      this.pendingAvatar.set(null);
+    } catch (err) {
+      console.error('Error saving avatar:', err);
+    }
+  }
+
+  async onAvatarUploaded(data: { path: string; url: string }): Promise<void> {
+    console.log('Avatar uploaded, profileExists:', this.profileExists, 'data:', data);
+
+    if (this.profileExists) {
+      // If profile exists, save the avatar immediately
+      try {
+        const result = await this.supabase.create('image', {
+          url: data.url,
+          source_type: 'profile',
+          alt_text: 'Avatar de perfil',
+          position: 0,
+        });
+        console.log('Avatar save result:', result);
+
+        if (result.error) throw result.error;
+
+        // Update the existing avatar URL to show the new image
+        this.existingAvatarUrl.set(data.url);
+        this.success.set('Avatar actualizado correctamente');
+        setTimeout(() => this.success.set(null), 3000);
+      } catch (err) {
+        console.error('Error saving avatar:', err);
+        this.error.set('Error al guardar el avatar');
+      }
+    } else {
+      // Queue for saving after profile creation and also update the preview
+      console.log('Profile does not exist, queueing avatar');
+      this.pendingAvatar.set(data);
+      this.existingAvatarUrl.set(data.url);
+    }
   }
 }

@@ -20,7 +20,7 @@ export const DEFAULT_LANGUAGE_CODE = 'es';
 /**
  * Helper function to get translation for current language from an array of translations
  */
-export function getTranslation<T extends { language: string }>(
+export function getTranslation<T extends { language?: Language }>(
   translations: T[] | undefined,
   languageCode: string,
   fallbackLanguageCode: string = DEFAULT_LANGUAGE_CODE
@@ -30,13 +30,13 @@ export function getTranslation<T extends { language: string }>(
   }
 
   // Try to find translation for requested language
-  const translation = translations.find((t) => t.language === languageCode);
+  const translation = translations.find((t) => t.language?.code === languageCode);
   if (translation) {
     return translation;
   }
 
   // Fallback to default language
-  const fallback = translations.find((t) => t.language === fallbackLanguageCode);
+  const fallback = translations.find((t) => t.language?.code === fallbackLanguageCode);
   if (fallback) {
     return fallback;
   }

@@ -103,7 +103,7 @@ export class LanguageService {
   /**
    * Get translation from an entity's translations array
    */
-  getTranslation<T extends { language: string }>(translations: T[] | undefined): T | undefined {
+  getTranslation<T extends { language?: Language }>(translations: T[] | undefined): T | undefined {
     return getTranslation(translations, this.currentLanguageCode(), this.defaultLanguageCode);
   }
 

@@ -59,7 +59,7 @@ export class SkillUsageFormComponent implements OnInit {
    */
   getSkillName(skill: Skill): string {
     const lang = this.translateService.currentLang();
-    const translation = skill.translations?.find(t => t.language === lang);
+    const translation = skill.translations?.find(t => t.language?.code === lang);
     return translation?.name || skill.translations?.[0]?.name || `Skill #${skill.id}`;
   }
 

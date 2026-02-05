@@ -46,6 +46,7 @@
             folder="profile"
             [altText]="'Foto de perfil'"
             [isAvatar]="true"
+            [existingImageUrl]="existingAvatarUrl()"
             (uploaded)="onAvatarUploaded($event)"
           />
         </div>

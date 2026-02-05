@@ -5,7 +5,7 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { SupabaseService } from '../../../../core/services/supabase.service';
 import { LanguageService } from '../../../../core/services/language.service';
 import { Event, EventTranslation, Language } from '../../../../core/models';
-import { ImageUploadComponent } from '../../../../shared/components/image-upload/image-upload.component';
+import { ImageUploadComponent, ExistingImage } from '../../../../shared/components/image-upload/image-upload.component';
 import { LanguageTabsComponent } from '../../../../shared/components/language-tabs/language-tabs.component';
 
 @Component({
@@ -29,6 +29,12 @@ export class EventFormComponent implements OnInit {
 
   // Current language for editing translations
   currentEditLanguage = signal<string>('es');
+
+  // Pending images to save after entity creation
+  pendingImages = signal<{ path: string; url: string }[]>([]);
+
+  // Existing images loaded from database
+  existingImages = signal<ExistingImage[]>([]);
 
   // Base fields (non-translatable)
   formData = {
@@ -88,6 +94,12 @@ export class EventFormComponent implements OnInit {
                 });
               }
             }
+          }
+
+          // Load existing images
+          const { data: images } = await this.supabase.getImagesBySource('event', this.currentId!);
+          if (images) {
+            this.existingImages.set(images as ExistingImage[]);
           }
         }
       }
@@ -152,6 +164,13 @@ export class EventFormComponent implements OnInit {
       }
 
       if (result.error) throw result.error;
+
+      // Save pending images after entity creation
+      const entityId = this.isNew ? (result.data as { id: number })?.id : this.currentId!;
+      if (entityId) {
+        await this.savePendingImages(entityId);
+      }
+
       this.router.navigate(['/dashboard/events']);
     } catch (err) {
       this.error.set('Error al guardar el evento');
@@ -161,14 +180,41 @@ export class EventFormComponent implements OnInit {
     }
   }
 
-  onImageUploaded(data: { path: string; url: string }): void {
+  private async savePendingImages(entityId: number): Promise<void> {
+    const images = this.pendingImages();
+    for (let i = 0; i < images.length; i++) {
+      const img = images[i];
+      try {
+        await this.supabase.create('image', {
+          url: img.url,
+          source_type: 'event',
+          source_id: entityId,
+          position: i,
+        });
+      } catch (err) {
+        console.error('Error saving image:', err);
+      }
+    }
+    this.pendingImages.set([]);
+  }
+
+  async onImageUploaded(data: { path: string; url: string }): Promise<void> {
     if (this.currentId) {
-      this.supabase.create('image', {
-        url: data.url,
-        source_type: 'event',
-        source_id: this.currentId,
-        position: 0,
-      });
+      // If editing existing entity, save immediately
+      try {
+        await this.supabase.create('image', {
+          url: data.url,
+          source_type: 'event',
+          source_id: this.currentId,
+          position: 0,
+        });
+      } catch (err) {
+        console.error('Error saving image:', err);
+        this.error.set('Error al guardar la imagen');
+      }
+    } else {
+      // Queue for saving after entity creation
+      this.pendingImages.update(images => [...images, data]);
     }
   }
 }

@@ -508,6 +508,32 @@ export class SupabaseService {
   // ==================== STORAGE OPERATIONS ====================
 
   /**
+   * Get images by source type and source id
+   */
+  async getImagesBySource(sourceType: string, sourceId: number) {
+    return this.supabase
+      .from('image')
+      .select('*')
+      .eq('source_type', sourceType)
+      .eq('source_id', sourceId)
+      .eq('is_archived', false)
+      .order('position', { ascending: true });
+  }
+
+  /**
+   * Get images by source type only (for profile which doesn't have source_id)
+   */
+  async getImagesBySourceType(sourceType: string) {
+    return this.supabase
+      .from('image')
+      .select('*')
+      .eq('source_type', sourceType)
+      .eq('is_archived', false)
+      .order('position', { ascending: true })
+      .limit(1);
+  }
+
+  /**
    * Upload an image to Supabase Storage
    * @param file The file to upload
    * @param folder The folder path (e.g., 'projects', 'events', 'experiences', 'competitions', 'profile')

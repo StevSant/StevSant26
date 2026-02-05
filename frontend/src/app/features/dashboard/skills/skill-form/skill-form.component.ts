@@ -54,7 +54,7 @@ export class SkillFormComponent implements OnInit {
    */
   getCategoryName(category: SkillCategory): string {
     const lang = this.translateService.currentLang();
-    const translation = category.translations?.find(t => t.language === lang);
+    const translation = category.translations?.find(t => t.language?.code === lang);
     return translation?.name || category.translations?.[0]?.name || `Category #${category.id}`;
   }
 

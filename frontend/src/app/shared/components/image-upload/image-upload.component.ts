@@ -1,6 +1,12 @@
-import { Component, input, output, signal, computed, inject } from '@angular/core';
+import { Component, input, output, signal, computed, inject, effect } from '@angular/core';
 import { SupabaseService } from '../../../core/services/supabase.service';
 import { SourceType } from '../../../core/models';
+
+export interface ExistingImage {
+  id: number;
+  url: string;
+  alt_text?: string | null;
+}
 
 @Component({
   selector: 'app-image-upload',
@@ -18,10 +24,12 @@ export class ImageUploadComponent {
   altText = input<string>('');
   isAvatar = input<boolean>(false);
   existingImageUrl = input<string | null>(null);
+  existingImages = input<ExistingImage[]>([]);
 
   // Signal outputs
   uploaded = output<{ path: string; url: string }>();
   removed = output<string>();
+  imageDeleted = output<number>();
 
   // Internal signals
   uploading = signal(false);
@@ -31,6 +39,19 @@ export class ImageUploadComponent {
   previewUrl = signal<string | null>(null);
   uploadedImages = signal<{ path: string; url: string; alt?: string }[]>([]);
   showModal = signal(false);
+
+  // Track loaded existing images to display them
+  loadedExistingImages = signal<ExistingImage[]>([]);
+
+  constructor() {
+    // Effect to sync existingImages input with internal signal
+    effect(() => {
+      const existing = this.existingImages();
+      if (existing.length > 0) {
+        this.loadedExistingImages.set(existing);
+      }
+    });
+  }
 
   // Computed
   currentImageUrl = computed(() => this.previewUrl() || this.existingImageUrl());
@@ -145,6 +166,20 @@ export class ImageUploadComponent {
       await this.supabase.deleteFromStorage(path);
       this.uploadedImages.update((images) => images.filter((img) => img.path !== path));
       this.removed.emit(path);
+    } catch (err) {
+      this.error.set('Error al eliminar la imagen.');
+      console.error('Delete error:', err);
+    }
+  }
+
+  async removeExistingImage(imageId: number, event: Event): Promise<void> {
+    event.stopPropagation();
+
+    try {
+      // Delete from the image table (soft delete by archiving)
+      await this.supabase.update('image', imageId, { is_archived: true });
+      this.loadedExistingImages.update((images) => images.filter((img) => img.id !== imageId));
+      this.imageDeleted.emit(imageId);
     } catch (err) {
       this.error.set('Error al eliminar la imagen.');
       console.error('Delete error:', err);

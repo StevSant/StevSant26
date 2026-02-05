@@ -197,6 +197,7 @@
           [multiple]="true"
           [sourceType]="'project'"
           [sourceId]="currentId"
+          [existingImages]="existingImages()"
           (uploaded)="onImageUploaded($event)"
         />
       </div>

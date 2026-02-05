@@ -143,6 +143,7 @@
           [multiple]="true"
           [sourceType]="'competition'"
           [sourceId]="currentId"
+          [existingImages]="existingImages()"
           (uploaded)="onImageUploaded($event)"
         />
       </div>
