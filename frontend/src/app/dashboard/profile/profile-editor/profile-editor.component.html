@@ -45,6 +45,8 @@
           <app-image-upload
             folder="profile"
             [altText]="'Foto de perfil'"
+            [isAvatar]="true"
+            [existingImageUrl]="profile?.avatar_url || null"
             (uploaded)="onAvatarUploaded($event)"
           />
         </div>

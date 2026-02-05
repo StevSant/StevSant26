@@ -7,4 +7,5 @@ export interface Profile {
   last_name: string | null;
   nickname: string | null;
   about: string | null;
+  avatar_url: string | null;
 }

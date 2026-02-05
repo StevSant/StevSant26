@@ -15,6 +15,8 @@ export class ImageUploadComponent {
   @Input() sourceId: number | null = null;
   @Input() multiple = false;
   @Input() altText = '';
+  @Input() isAvatar = false;
+  @Input() existingImageUrl: string | null = null;
 
   @Output() uploaded = new EventEmitter<{ path: string; url: string }>();
   @Output() removed = new EventEmitter<string>();
@@ -25,6 +27,7 @@ export class ImageUploadComponent {
   isDragging = signal(false);
   previewUrl = signal<string | null>(null);
   uploadedImages = signal<{ path: string; url: string; alt?: string }[]>([]);
+  showModal = signal(false);
 
   private readonly MAX_SIZE = 10 * 1024 * 1024; // 10MB
   private readonly ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
@@ -142,5 +145,24 @@ export class ImageUploadComponent {
       this.error.set('Error al eliminar la imagen.');
       console.error('Delete error:', err);
     }
+  }
+
+  openImageModal(event: Event): void {
+    event.stopPropagation();
+    this.showModal.set(true);
+  }
+
+  closeModal(): void {
+    this.showModal.set(false);
+  }
+
+  onModalBackdropClick(event: MouseEvent): void {
+    if ((event.target as HTMLElement).classList.contains('modal-backdrop')) {
+      this.closeModal();
+    }
+  }
+
+  get currentImageUrl(): string | null {
+    return this.previewUrl() || this.existingImageUrl;
   }
 }

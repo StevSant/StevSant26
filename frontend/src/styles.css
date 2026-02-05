@@ -155,7 +155,10 @@
 
 /* Form Inputs */
 .input {
-  @apply w-full px-4 py-3 rounded-lg transition-all;
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  transition: all 0.2s;
   background-color: var(--color-bg-input);
   border: 1px solid var(--color-border-secondary);
   color: var(--color-text-primary);
@@ -177,7 +180,11 @@
 }
 
 .input-textarea {
-  @apply w-full px-4 py-3 rounded-lg transition-all resize-none;
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  transition: all 0.2s;
+  resize: none;
   background-color: var(--color-bg-input);
   border: 1px solid var(--color-border-secondary);
   color: var(--color-text-primary);
@@ -185,17 +192,23 @@
 
 /* Labels */
 .label {
-  @apply block text-sm font-medium mb-2;
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
   color: var(--color-text-secondary);
 }
 
 /* Buttons */
-.btn {
-  @apply px-4 py-2.5 font-medium rounded-lg transition-colors flex items-center justify-center gap-2;
-}
-
 .btn-primary {
-  @apply btn;
+  padding: 0.625rem 1rem;
+  font-weight: 500;
+  border-radius: 0.5rem;
+  transition: background-color 0.2s, color 0.2s;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
   background-color: var(--color-accent);
   color: var(--color-text-primary);
 }
@@ -210,7 +223,14 @@
 }
 
 .btn-secondary {
-  @apply btn;
+  padding: 0.625rem 1rem;
+  font-weight: 500;
+  border-radius: 0.5rem;
+  transition: background-color 0.2s, color 0.2s;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
   background-color: var(--color-bg-tertiary);
   color: var(--color-text-primary);
 }
@@ -220,7 +240,14 @@
 }
 
 .btn-danger {
-  @apply btn;
+  padding: 0.625rem 1rem;
+  font-weight: 500;
+  border-radius: 0.5rem;
+  transition: background-color 0.2s, color 0.2s;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
   background-color: var(--color-error);
   color: var(--color-text-primary);
 }
@@ -229,63 +256,78 @@
   background-color: var(--color-error-hover);
 }
 
-.btn-icon {
-  @apply p-2 rounded-lg transition-colors;
+.btn-icon,
+.icon-btn {
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  transition: background-color 0.2s, color 0.2s;
   color: var(--color-text-muted);
 }
 
-.btn-icon:hover {
+.btn-icon:hover,
+.icon-btn:hover {
   color: var(--color-text-primary);
   background-color: var(--color-bg-tertiary);
 }
 
 /* Alerts/Messages */
-.alert {
-  @apply rounded-lg p-4 text-sm;
-}
-
 .alert-error {
-  @apply alert;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  font-size: 0.875rem;
   background-color: var(--color-error-bg);
   border: 1px solid var(--color-error-border);
   color: var(--color-error-text);
 }
 
 .alert-success {
-  @apply alert;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  font-size: 0.875rem;
   background-color: var(--color-success-bg);
   border: 1px solid var(--color-success-border);
   color: var(--color-success);
 }
 
 /* Badges */
-.badge {
-  @apply px-2 py-0.5 text-xs rounded-full;
-}
-
 .badge-default {
+  padding: 0.125rem 0.5rem;
+  font-size: 0.75rem;
+  border-radius: 9999px;
   background-color: var(--color-bg-tertiary);
   color: var(--color-text-secondary);
 }
 
 .badge-purple {
+  padding: 0.125rem 0.5rem;
+  font-size: 0.75rem;
+  border-radius: 9999px;
   background-color: var(--color-purple-bg);
   color: var(--color-purple);
 }
 
 /* Loading Spinner */
 .spinner {
-  @apply animate-spin h-5 w-5;
+  animation: spin 1s linear infinite;
+  height: 1.25rem;
+  width: 1.25rem;
 }
 
 .spinner-lg {
-  @apply animate-spin h-8 w-8;
+  animation: spin 1s linear infinite;
+  height: 2rem;
+  width: 2rem;
   color: var(--color-accent);
 }
 
 /* Nav Items */
 .nav-item {
-  @apply flex items-center gap-3 px-4 py-3 rounded-lg transition-colors;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  transition: background-color 0.2s, color 0.2s;
   color: var(--color-text-secondary);
 }
 
@@ -301,8 +343,12 @@
 
 /* Drag Handle */
 .drag-handle {
-  @apply cursor-grab active:cursor-grabbing;
+  cursor: grab;
   color: var(--color-text-disabled);
+}
+
+.drag-handle:active {
+  cursor: grabbing;
 }
 
 .drag-handle:hover {
@@ -311,33 +357,49 @@
 
 /* Icon Buttons for Lists */
 .icon-btn-edit {
-  @apply btn-icon;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  transition: background-color 0.2s, color 0.2s;
+  color: var(--color-text-muted);
 }
 
 .icon-btn-edit:hover {
   color: var(--color-accent);
+  background-color: var(--color-bg-tertiary);
 }
 
 .icon-btn-pin {
-  @apply btn-icon;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  transition: background-color 0.2s, color 0.2s;
+  color: var(--color-text-muted);
 }
 
 .icon-btn-pin:hover {
   color: var(--color-pin);
+  background-color: var(--color-bg-tertiary);
 }
 
 .icon-btn-archive {
-  @apply btn-icon;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  transition: background-color 0.2s, color 0.2s;
+  color: var(--color-text-muted);
 }
 
 .icon-btn-archive:hover {
   color: var(--color-archive);
+  background-color: var(--color-bg-tertiary);
 }
 
 .icon-btn-delete {
-  @apply btn-icon;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  transition: background-color 0.2s, color 0.2s;
+  color: var(--color-text-muted);
 }
 
 .icon-btn-delete:hover {
   color: var(--color-error);
+  background-color: var(--color-bg-tertiary);
 }

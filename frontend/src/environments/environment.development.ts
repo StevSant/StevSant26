@@ -1,6 +1,6 @@
 export const environment = {
   production: false,
-  supabaseUrl: 'YOUR_SUPABASE_URL',
-  supabaseKey: 'YOUR_SUPABASE_ANON_KEY',
+  supabaseUrl: 'https://veelrxhltxgdbhytjpcu.supabase.co',
+  supabaseKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZlZWxyeGhsdHhnZGJoeXRqcGN1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAxNzY1ODMsImV4cCI6MjA4NTc1MjU4M30.Z5ropjAauf4R0yyLkzPaSisz1r-KY9cvlO0eGfZxGxY',
   storageBucket: 'images',
 };

@@ -1,4 +1,5 @@
-import { inject } from '@angular/core';
+import { inject, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { CanActivateFn, Router } from '@angular/router';
 import { SupabaseService } from '../services/supabase.service';
 
@@ -7,6 +8,13 @@ import { SupabaseService } from '../services/supabase.service';
  * Redirects to login page if user is not authenticated
  */
 export const authGuard: CanActivateFn = async () => {
+  const platformId = inject(PLATFORM_ID);
+
+  // Skip auth check on server - client will handle it
+  if (!isPlatformBrowser(platformId)) {
+    return true;
+  }
+
   const supabase = inject(SupabaseService);
   const router = inject(Router);
 
@@ -29,6 +37,13 @@ export const authGuard: CanActivateFn = async () => {
  * Guard to redirect authenticated users away from login page
  */
 export const noAuthGuard: CanActivateFn = async () => {
+  const platformId = inject(PLATFORM_ID);
+
+  // Skip auth check on server - client will handle it
+  if (!isPlatformBrowser(platformId)) {
+    return true;
+  }
+
   const supabase = inject(SupabaseService);
   const router = inject(Router);
 

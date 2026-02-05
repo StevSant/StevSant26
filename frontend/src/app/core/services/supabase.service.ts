@@ -28,6 +28,9 @@ export class SupabaseService {
     if (isPlatformBrowser(this.platformId)) {
       this.supabase = createClient(environment.supabaseUrl, environment.supabaseKey);
       this.initializeAuth();
+    } else {
+      // Server-side: immediately mark as not loading since auth won't initialize
+      this.loading.set(false);
     }
   }
 
