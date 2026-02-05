@@ -2,8 +2,10 @@
   <!-- Header -->
   <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
     <div>
-      <h1 class="text-2xl font-bold text-[var(--color-text-primary)]">Proyectos</h1>
-      <p class="text-[var(--color-text-muted)] mt-1">Gestiona tus proyectos del portafolio</p>
+      <h1 class="text-2xl font-bold text-[var(--color-text-primary)]">
+        {{ 'projects.title' | translate }}
+      </h1>
+      <p class="text-[var(--color-text-muted)] mt-1">{{ 'projects.subtitle' | translate }}</p>
     </div>
     <div class="flex gap-3">
       <button (click)="toggleShowArchived()" class="btn-secondary">
@@ -15,7 +17,9 @@
             d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"
           />
         </svg>
-        {{ showArchived() ? 'Ocultar archivados' : 'Ver archivados' }}
+        {{
+          showArchived() ? ('common.hideArchived' | translate) : ('common.showArchived' | translate)
+        }}
       </button>
       <a routerLink="new" class="btn-primary">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -26,7 +30,7 @@
             d="M12 4v16m8-8H4"
           />
         </svg>
-        Nuevo Proyecto
+        {{ 'projects.create' | translate }}
       </a>
     </div>
   </div>
@@ -66,8 +70,10 @@
           d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"
         />
       </svg>
-      <h3 class="mt-4 text-lg font-medium text-[var(--color-text-primary)]">No hay proyectos</h3>
-      <p class="mt-2 text-[var(--color-text-muted)]">Comienza creando tu primer proyecto</p>
+      <h3 class="mt-4 text-lg font-medium text-[var(--color-text-primary)]">
+        {{ 'projects.empty' | translate }}
+      </h3>
+      <p class="mt-2 text-[var(--color-text-muted)]">{{ 'projects.emptyHint' | translate }}</p>
       <a routerLink="new" class="mt-6 inline-flex btn-primary">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path
@@ -77,7 +83,7 @@
             d="M12 4v16m8-8H4"
           />
         </svg>
-        Crear proyecto
+        {{ 'projects.create' | translate }}
       </a>
     </div>
   } @else {
@@ -139,7 +145,7 @@
                     d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
                   />
                 </svg>
-                Ver proyecto
+                {{ 'projects.viewProject' | translate }}
               </a>
             }
           </div>
@@ -153,7 +159,7 @@
           <div class="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
             <button
               (click)="togglePin(item)"
-              [title]="item.is_pinned ? 'Desfijar' : 'Fijar'"
+              [title]="item.is_pinned ? ('common.unpin' | translate) : ('common.pin' | translate)"
               class="icon-btn-pin"
             >
               <svg
@@ -170,7 +176,7 @@
                 />
               </svg>
             </button>
-            <a [routerLink]="[item.id]" class="icon-btn-edit" title="Editar">
+            <a [routerLink]="[item.id]" class="icon-btn-edit" [title]="'common.edit' | translate">
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
                   stroke-linecap="round"
@@ -182,7 +188,9 @@
             </a>
             <button
               (click)="toggleArchive(item)"
-              [title]="item.is_archived ? 'Restaurar' : 'Archivar'"
+              [title]="
+                item.is_archived ? ('common.restore' | translate) : ('common.archive' | translate)
+              "
               class="icon-btn-archive"
             >
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -203,7 +211,11 @@
                 }
               </svg>
             </button>
-            <button (click)="confirmDelete(item)" class="icon-btn-delete" title="Eliminar">
+            <button
+              (click)="confirmDelete(item)"
+              class="icon-btn-delete"
+              [title]="'common.delete' | translate"
+            >
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
                   stroke-linecap="round"
@@ -222,9 +234,9 @@
   <!-- Confirm Dialog -->
   <app-confirm-dialog
     #confirmDialog
-    title="Eliminar proyecto"
-    message="¿Estás seguro de que deseas eliminar este proyecto? Esta acción no se puede deshacer."
-    confirmText="Eliminar"
+    [title]="'projects.deleteConfirm.title' | translate"
+    [message]="'projects.deleteConfirm.message' | translate"
+    [confirmText]="'common.delete' | translate"
     (confirmed)="deleteItem()"
   />
 </div>

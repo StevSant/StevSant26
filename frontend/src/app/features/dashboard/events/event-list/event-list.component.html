@@ -2,8 +2,10 @@
   <!-- Header -->
   <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
     <div>
-      <h1 class="text-2xl font-bold text-[var(--color-text-primary)]">Eventos</h1>
-      <p class="text-[var(--color-text-muted)] mt-1">Gestiona los eventos a los que has asistido</p>
+      <h1 class="text-2xl font-bold text-[var(--color-text-primary)]">
+        {{ 'events.title' | translate }}
+      </h1>
+      <p class="text-[var(--color-text-muted)] mt-1">{{ 'events.subtitle' | translate }}</p>
     </div>
     <div class="flex gap-3">
       <button (click)="toggleShowArchived()" class="btn-secondary">
@@ -15,7 +17,9 @@
             d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"
           />
         </svg>
-        {{ showArchived() ? 'Ocultar archivados' : 'Ver archivados' }}
+        {{
+          showArchived() ? ('common.hideArchived' | translate) : ('common.showArchived' | translate)
+        }}
       </button>
       <a routerLink="new" class="btn-primary">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -26,7 +30,7 @@
             d="M12 4v16m8-8H4"
           />
         </svg>
-        Nuevo Evento
+        {{ 'events.create' | translate }}
       </a>
     </div>
   </div>
@@ -65,8 +69,10 @@
           d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
         />
       </svg>
-      <h3 class="mt-4 text-lg font-medium text-[var(--color-text-primary)]">No hay eventos</h3>
-      <p class="mt-2 text-[var(--color-text-muted)]">Comienza agregando un evento</p>
+      <h3 class="mt-4 text-lg font-medium text-[var(--color-text-primary)]">
+        {{ 'events.empty' | translate }}
+      </h3>
+      <p class="mt-2 text-[var(--color-text-muted)]">{{ 'events.emptyHint' | translate }}</p>
       <a routerLink="new" class="mt-6 inline-flex items-center gap-2 btn-primary">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path
@@ -76,7 +82,7 @@
             d="M12 4v16m8-8H4"
           />
         </svg>
-        Crear evento
+        {{ 'events.create' | translate }}
       </a>
     </div>
   } @else {
@@ -185,9 +191,9 @@
 
   <app-confirm-dialog
     #confirmDialog
-    title="Eliminar evento"
-    message="¿Estás seguro de que deseas eliminar este evento?"
-    confirmText="Eliminar"
+    [title]="'events.deleteConfirm.title' | translate"
+    [message]="'events.deleteConfirm.message' | translate"
+    [confirmText]="'common.delete' | translate"
     (confirmed)="deleteItem()"
   />
 </div>

@@ -1,16 +1,17 @@
 import { Component, OnInit, signal, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, UpperCasePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { SupabaseService } from '@core/services/supabase.service';
 import { LanguageService } from '@core/services/language.service';
+import { TranslatePipe } from '@shared/pipes/translate.pipe';
 import { SkillCategory, SkillCategoryTranslation, Language } from '@core/models';
 import { LanguageTabsComponent } from '@shared/components/language-tabs/language-tabs.component';
 
 @Component({
   selector: 'app-skill-category-form',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule, LanguageTabsComponent],
+  imports: [CommonModule, FormsModule, RouterModule, UpperCasePipe, TranslatePipe, LanguageTabsComponent],
   templateUrl: './skill-category-form.component.html',
 })
 export class SkillCategoryFormComponent implements OnInit {

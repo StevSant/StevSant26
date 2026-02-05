@@ -6,11 +6,12 @@ import { SupabaseService } from '@core/services/supabase.service';
 import { TranslateService } from '@core/services/translate.service';
 import { Event, EventTranslation } from '@core/models';
 import { ConfirmDialogComponent } from '@shared/components/confirm-dialog/confirm-dialog.component';
+import { TranslatePipe } from '@shared/pipes/translate.pipe';
 
 @Component({
   selector: 'app-event-list',
   standalone: true,
-  imports: [CommonModule, RouterModule, DragDropModule, ConfirmDialogComponent],
+  imports: [CommonModule, RouterModule, DragDropModule, ConfirmDialogComponent, TranslatePipe],
   templateUrl: './event-list.component.html',
 })
 export class EventListComponent implements OnInit {

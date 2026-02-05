@@ -21,7 +21,16 @@
     "saveChanges": "Guardar Cambios",
     "preview": "Vista Previa",
     "none": "Ninguno",
-    "noAssociation": "Sin asociación"
+    "noAssociation": "Sin asociación",
+    "pin": "Fijar",
+    "unpin": "Desfijar",
+    "archive": "Archivar",
+    "restore": "Restaurar",
+    "showArchived": "Ver archivados",
+    "hideArchived": "Ocultar archivados",
+    "view": "Ver",
+    "empty": "Sin elementos",
+    "emptyHint": "Comienza creando tu primer elemento"
   },
   "auth": {
     "login": "Iniciar sesión",
@@ -70,7 +79,9 @@
   },
   "profile": {
     "title": "Perfil",
+    "subtitle": "Gestiona tu información personal",
     "basicInfo": "Información Básica",
+    "personalInfo": "Información Personal",
     "avatar": "Foto de perfil",
     "socialLinks": "Redes Sociales",
     "translations": "Traducciones",
@@ -82,12 +93,21 @@
     "youtube": "YouTube",
     "cv": "Currículum (URL)",
     "bio": "Biografía",
+    "about": "Acerca de mí",
+    "firstName": "Nombre",
+    "lastName": "Apellido",
+    "nickname": "Apodo / Nombre de usuario",
+    "firstNamePlaceholder": "Tu nombre",
+    "lastNamePlaceholder": "Tu apellido",
+    "nicknamePlaceholder": "@tunickname",
+    "aboutPlaceholder": "Cuéntanos sobre ti, tu experiencia y tus intereses...",
     "headline": "Título profesional",
     "saveChanges": "Guardar cambios",
     "saving": "Guardando..."
   },
   "projects": {
     "title": "Proyectos",
+    "subtitle": "Gestiona tus proyectos del portafolio",
     "create": "Nuevo Proyecto",
     "edit": "Editar Proyecto",
     "list": "Lista de Proyectos",
@@ -100,6 +120,9 @@
     "createdAtLabel": "Fecha de Creación",
     "titlePlaceholder": "Nombre del proyecto",
     "descriptionPlaceholder": "Describe el proyecto...",
+    "empty": "No hay proyectos",
+    "emptyHint": "Comienza creando tu primer proyecto",
+    "viewProject": "Ver proyecto",
     "fields": {
       "title": "Título",
       "description": "Descripción",
@@ -128,9 +151,16 @@
   },
   "skills": {
     "title": "Habilidades",
+    "subtitle": "Gestiona tus habilidades técnicas",
     "create": "Nueva Habilidad",
     "edit": "Editar Habilidad",
     "list": "Lista de Habilidades",
+    "empty": "No hay habilidades",
+    "emptyHint": "Comienza creando tu primera habilidad",
+    "baseInfo": "Información Base",
+    "translatableContent": "Contenido Traducible",
+    "namePlaceholder": "Nombre de la habilidad",
+    "descriptionPlaceholder": "Describe la habilidad...",
     "fields": {
       "name": "Nombre",
       "description": "Descripción",
@@ -145,9 +175,15 @@
   },
   "skillCategories": {
     "title": "Categorías de Habilidades",
+    "subtitle": "Organiza tus habilidades por categorías",
     "create": "Nueva Categoría",
     "edit": "Editar Categoría",
     "list": "Lista de Categorías",
+    "empty": "No hay categorías",
+    "emptyHint": "Comienza creando tu primera categoría",
+    "translatableContent": "Contenido Traducible",
+    "namePlaceholder": "Nombre de la categoría",
+    "approachPlaceholder": "Enfoque o área de la categoría...",
     "fields": {
       "name": "Nombre",
       "approach": "Enfoque"
@@ -195,6 +231,7 @@
   },
   "experiences": {
     "title": "Experiencias",
+    "subtitle": "Gestiona tus experiencias laborales",
     "create": "Nueva Experiencia",
     "edit": "Editar Experiencia",
     "list": "Lista de Experiencias",
@@ -205,6 +242,8 @@
     "rolePlaceholder": "Tu cargo o posición",
     "descriptionPlaceholder": "Describe tus responsabilidades y logros...",
     "companyPlaceholder": "Nombre de la empresa",
+    "empty": "No hay experiencias",
+    "emptyHint": "Comienza creando tu primera experiencia",
     "fields": {
       "company": "Empresa",
       "role": "Cargo",
@@ -224,6 +263,7 @@
   },
   "competitions": {
     "title": "Competencias",
+    "subtitle": "Gestiona tus competencias y premios",
     "create": "Nueva Competencia",
     "edit": "Editar Competencia",
     "list": "Lista de Competencias",
@@ -234,6 +274,8 @@
     "resultPlaceholder": "Ej: 1er lugar, Finalista, Mención honorífica",
     "descriptionPlaceholder": "Describe la competencia y tu participación...",
     "organizerPlaceholder": "Empresa u organización",
+    "empty": "No hay competencias",
+    "emptyHint": "Comienza creando tu primera competencia",
     "fields": {
       "name": "Nombre",
       "description": "Descripción",
@@ -254,6 +296,7 @@
   },
   "events": {
     "title": "Eventos",
+    "subtitle": "Gestiona los eventos a los que has asistido",
     "create": "Nuevo Evento",
     "edit": "Editar Evento",
     "list": "Lista de Eventos",
@@ -262,6 +305,8 @@
     "images": "Imágenes del Evento",
     "namePlaceholder": "Nombre del evento",
     "descriptionPlaceholder": "Describe el evento...",
+    "empty": "No hay eventos",
+    "emptyHint": "Comienza creando tu primer evento",
     "fields": {
       "name": "Nombre",
       "description": "Descripción",

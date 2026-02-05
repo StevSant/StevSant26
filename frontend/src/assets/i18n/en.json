@@ -21,7 +21,16 @@
     "saveChanges": "Save Changes",
     "preview": "Preview",
     "none": "None",
-    "noAssociation": "No association"
+    "noAssociation": "No association",
+    "pin": "Pin",
+    "unpin": "Unpin",
+    "archive": "Archive",
+    "restore": "Restore",
+    "showArchived": "Show archived",
+    "hideArchived": "Hide archived",
+    "view": "View",
+    "empty": "No items",
+    "emptyHint": "Start by creating your first item"
   },
   "auth": {
     "login": "Sign in",
@@ -70,7 +79,9 @@
   },
   "profile": {
     "title": "Profile",
+    "subtitle": "Manage your personal information",
     "basicInfo": "Basic Information",
+    "personalInfo": "Personal Information",
     "avatar": "Profile picture",
     "socialLinks": "Social Links",
     "translations": "Translations",
@@ -82,12 +93,21 @@
     "youtube": "YouTube",
     "cv": "Resume (URL)",
     "bio": "Bio",
+    "about": "About me",
+    "firstName": "First name",
+    "lastName": "Last name",
+    "nickname": "Nickname / Username",
+    "firstNamePlaceholder": "Your first name",
+    "lastNamePlaceholder": "Your last name",
+    "nicknamePlaceholder": "@yournickname",
+    "aboutPlaceholder": "Tell us about yourself, your experience and interests...",
     "headline": "Professional headline",
     "saveChanges": "Save changes",
     "saving": "Saving..."
   },
   "projects": {
     "title": "Projects",
+    "subtitle": "Manage your portfolio projects",
     "create": "New Project",
     "edit": "Edit Project",
     "list": "Project List",
@@ -100,6 +120,9 @@
     "createdAtLabel": "Created Date",
     "titlePlaceholder": "Project name",
     "descriptionPlaceholder": "Describe the project...",
+    "empty": "No projects",
+    "emptyHint": "Start by creating your first project",
+    "viewProject": "View project",
     "fields": {
       "title": "Title",
       "description": "Description",
@@ -128,9 +151,16 @@
   },
   "skills": {
     "title": "Skills",
+    "subtitle": "Manage your technical skills",
     "create": "New Skill",
     "edit": "Edit Skill",
     "list": "Skill List",
+    "empty": "No skills",
+    "emptyHint": "Start by creating your first skill",
+    "baseInfo": "Base Information",
+    "translatableContent": "Translatable Content",
+    "namePlaceholder": "Skill name",
+    "descriptionPlaceholder": "Describe the skill...",
     "fields": {
       "name": "Name",
       "description": "Description",
@@ -145,9 +175,15 @@
   },
   "skillCategories": {
     "title": "Skill Categories",
+    "subtitle": "Organize your skills by categories",
     "create": "New Category",
     "edit": "Edit Category",
     "list": "Category List",
+    "empty": "No categories",
+    "emptyHint": "Start by creating your first category",
+    "translatableContent": "Translatable Content",
+    "namePlaceholder": "Category name",
+    "approachPlaceholder": "Category approach or focus...",
     "fields": {
       "name": "Name",
       "approach": "Approach"
@@ -195,6 +231,7 @@
   },
   "experiences": {
     "title": "Experiences",
+    "subtitle": "Manage your work experiences",
     "create": "New Experience",
     "edit": "Edit Experience",
     "list": "Experience List",
@@ -205,6 +242,8 @@
     "rolePlaceholder": "E.g: Senior Software Developer",
     "descriptionPlaceholder": "Describe your responsibilities and achievements...",
     "companyPlaceholder": "Company or organization name",
+    "empty": "No experiences",
+    "emptyHint": "Start by creating your first experience",
     "fields": {
       "company": "Company",
       "role": "Role",
@@ -226,6 +265,7 @@
   },
   "competitions": {
     "title": "Competitions",
+    "subtitle": "Manage your competitions and awards",
     "create": "New Competition",
     "edit": "Edit Competition",
     "list": "Competition List",
@@ -236,6 +276,8 @@
     "resultPlaceholder": "E.g: 1st place, Finalist, Honorable mention",
     "descriptionPlaceholder": "Describe the competition and your participation...",
     "organizerPlaceholder": "Company or organization",
+    "empty": "No competitions",
+    "emptyHint": "Start by creating your first competition",
     "fields": {
       "name": "Name",
       "description": "Description",
@@ -256,6 +298,7 @@
   },
   "events": {
     "title": "Events",
+    "subtitle": "Manage the events you've attended",
     "create": "New Event",
     "edit": "Edit Event",
     "list": "Event List",
@@ -264,6 +307,8 @@
     "images": "Event Images",
     "namePlaceholder": "Event name",
     "descriptionPlaceholder": "Describe the event...",
+    "empty": "No events",
+    "emptyHint": "Start by creating your first event",
     "fields": {
       "name": "Name",
       "description": "Description",

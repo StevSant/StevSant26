@@ -33,8 +33,9 @@ export class LanguageService {
    * Initialize the service - load languages and restore saved preference
    */
   private async initialize(): Promise<void> {
-    await this.loadLanguages();
+    // Only load from database in browser environment
     if (isPlatformBrowser(this.platformId)) {
+      await this.loadLanguages();
       this.loadSavedLanguage();
     }
     this.loading.set(false);

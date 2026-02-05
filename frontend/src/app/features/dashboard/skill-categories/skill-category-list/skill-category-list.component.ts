@@ -6,11 +6,12 @@ import { SupabaseService } from '@core/services/supabase.service';
 import { TranslateService } from '@core/services/translate.service';
 import { SkillCategory, SkillCategoryTranslation } from '@core/models';
 import { ConfirmDialogComponent } from '@shared/components/confirm-dialog/confirm-dialog.component';
+import { TranslatePipe } from '@shared/pipes/translate.pipe';
 
 @Component({
   selector: 'app-skill-category-list',
   standalone: true,
-  imports: [CommonModule, RouterModule, DragDropModule, ConfirmDialogComponent],
+  imports: [CommonModule, RouterModule, DragDropModule, ConfirmDialogComponent, TranslatePipe],
   templateUrl: './skill-category-list.component.html',
 })
 export class SkillCategoryListComponent implements OnInit {

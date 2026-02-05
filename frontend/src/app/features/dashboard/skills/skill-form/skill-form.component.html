@@ -9,7 +9,7 @@
       </svg>
     </a>
     <h1 class="text-2xl font-bold text-[var(--color-text-primary)]">
-      {{ isNew ? 'Nueva Habilidad' : 'Editar Habilidad' }}
+      {{ isNew ? ('skills.create' | translate) : ('skills.edit' | translate) }}
     </h1>
   </div>
 
@@ -35,17 +35,21 @@
     <form (ngSubmit)="onSubmit()" class="space-y-6">
       <!-- Base Info Card -->
       <div class="card space-y-6">
-        <h2 class="text-lg font-semibold text-[var(--color-text-primary)]">Información Base</h2>
+        <h2 class="text-lg font-semibold text-[var(--color-text-primary)]">
+          {{ 'skills.baseInfo' | translate }}
+        </h2>
 
         <div>
-          <label for="skill_category_id" class="label">Categoría</label>
+          <label for="skill_category_id" class="label">{{
+            'skills.fields.category' | translate
+          }}</label>
           <select
             id="skill_category_id"
             name="skill_category_id"
             [(ngModel)]="formData.skill_category_id"
             class="input"
           >
-            <option [ngValue]="null">Sin categoría</option>
+            <option [ngValue]="null">{{ 'skills.noCategory' | translate }}</option>
             @for (cat of categories(); track cat.id) {
               <option [ngValue]="cat.id">{{ getCategoryName(cat) }}</option>
             }
@@ -69,7 +73,7 @@
               d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129"
             />
           </svg>
-          Contenido Traducible
+          {{ 'skills.translatableContent' | translate }}
         </h2>
 
         <!-- Language Tabs -->
@@ -80,7 +84,7 @@
 
         <div>
           <label for="name" class="label">
-            Nombre <span class="text-[var(--color-error)]">*</span>
+            {{ 'skills.fields.name' | translate }} <span class="text-[var(--color-error)]">*</span>
             <span class="text-xs text-[var(--color-text-muted)] ml-2"
               >({{ currentEditLanguage() | uppercase }})</span
             >
@@ -92,13 +96,13 @@
             [ngModel]="currentTranslation.name"
             (ngModelChange)="updateTranslation('name', $event)"
             class="input"
-            placeholder="Ej: TypeScript, Angular, Python..."
+            [placeholder]="'skills.namePlaceholder' | translate"
           />
         </div>
 
         <div>
           <label for="description" class="label">
-            Descripción
+            {{ 'skills.fields.description' | translate }}
             <span class="text-xs text-[var(--color-text-muted)] ml-2"
               >({{ currentEditLanguage() | uppercase }})</span
             >
@@ -110,7 +114,7 @@
             (ngModelChange)="updateTranslation('description', $event)"
             rows="4"
             class="input-textarea"
-            placeholder="Describe tu experiencia con esta habilidad..."
+            [placeholder]="'skills.descriptionPlaceholder' | translate"
           ></textarea>
         </div>
       </div>
@@ -122,7 +126,9 @@
       }
 
       <div class="flex justify-end gap-3">
-        <a routerLink="/dashboard/skills" class="btn-secondary">Cancelar</a>
+        <a routerLink="/dashboard/skills" class="btn-secondary">{{
+          'common.cancel' | translate
+        }}</a>
         <button type="submit" [disabled]="saving()" class="btn-primary">
           @if (saving()) {
             <svg class="spinner" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -140,9 +146,11 @@
                 d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
               ></path>
             </svg>
-            <span>Guardando...</span>
+            <span>{{ 'common.saving' | translate }}</span>
           } @else {
-            <span>{{ isNew ? 'Crear Habilidad' : 'Guardar Cambios' }}</span>
+            <span>{{
+              isNew ? ('common.create' | translate) : ('common.saveChanges' | translate)
+            }}</span>
           }
         </button>
       </div>

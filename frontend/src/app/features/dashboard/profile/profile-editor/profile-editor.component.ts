@@ -5,11 +5,12 @@ import { SupabaseService } from '@core/services/supabase.service';
 import { LanguageService } from '@core/services/language.service';
 import { Profile, ProfileTranslation, Language } from '@core/models';
 import { ImageUploadComponent } from '@shared/components/image-upload/image-upload.component';
+import { TranslatePipe } from '@shared/pipes/translate.pipe';
 
 @Component({
   selector: 'app-profile-editor',
   standalone: true,
-  imports: [CommonModule, FormsModule, ImageUploadComponent],
+  imports: [CommonModule, FormsModule, ImageUploadComponent, TranslatePipe],
   templateUrl: './profile-editor.component.html',
 })
 export class ProfileEditorComponent implements OnInit {

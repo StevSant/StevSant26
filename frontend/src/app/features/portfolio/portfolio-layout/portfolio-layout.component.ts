@@ -1,5 +1,5 @@
-import { Component, OnInit, signal, inject, computed } from '@angular/core';
-import { CommonModule, DatePipe } from '@angular/common';
+import { Component, OnInit, signal, inject, computed, PLATFORM_ID } from '@angular/core';
+import { CommonModule, DatePipe, isPlatformBrowser } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { SupabaseService } from '@core/services/supabase.service';
 import { LanguageService } from '@core/services/language.service';
@@ -35,6 +35,7 @@ interface SkillCategoryWithSkills extends SkillCategory {
 export class PortfolioLayoutComponent implements OnInit {
   private supabase = inject(SupabaseService);
   private languageService = inject(LanguageService);
+  private platformId = inject(PLATFORM_ID);
 
   loading = signal(true);
   profile = signal<Profile | null>(null);
@@ -51,6 +52,12 @@ export class PortfolioLayoutComponent implements OnInit {
   currentYear = new Date().getFullYear();
 
   async ngOnInit(): Promise<void> {
+    // Only load data in browser environment
+    if (!isPlatformBrowser(this.platformId)) {
+      this.loading.set(false);
+      return;
+    }
+
     await Promise.all([
       this.loadProfile(),
       this.loadProjects(),
@@ -64,11 +71,11 @@ export class PortfolioLayoutComponent implements OnInit {
 
   private async loadProfile(): Promise<void> {
     const { data } = await this.supabase
-      .from('profiles')
-      .select('*, translations:profile_translations(*)')
-      .single();
-    if (data) {
-      this.profile.set(data as Profile);
+      .from('profile')
+      .select('*, translations:profile_translation(*)')
+      .limit(1);
+    if (data && data.length > 0) {
+      this.profile.set(data[0] as Profile);
     }
 
     const { data: avatarImages } = await this.supabase.getImagesBySourceType('profile');
@@ -79,8 +86,8 @@ export class PortfolioLayoutComponent implements OnInit {
 
   private async loadProjects(): Promise<void> {
     const { data } = await this.supabase
-      .from('projects')
-      .select('*, translations:project_translations(*)')
+      .from('project')
+      .select('*, translations:project_translation(*)')
       .eq('is_archived', false)
       .order('is_pinned', { ascending: false })
       .order('position', { ascending: true });
@@ -91,8 +98,8 @@ export class PortfolioLayoutComponent implements OnInit {
 
   private async loadExperiences(): Promise<void> {
     const { data } = await this.supabase
-      .from('experiences')
-      .select('*, translations:experience_translations(*)')
+      .from('experience')
+      .select('*, translations:experience_translation(*)')
       .eq('is_archived', false)
       .order('start_date', { ascending: false });
     if (data) {
@@ -103,7 +110,7 @@ export class PortfolioLayoutComponent implements OnInit {
   private async loadCompetitions(): Promise<void> {
     const { data } = await this.supabase
       .from('competitions')
-      .select('*, translations:competition_translations(*)')
+      .select('*, translations:competitions_translation(*)')
       .eq('is_archived', false)
       .order('date', { ascending: false });
     if (data) {
@@ -113,8 +120,8 @@ export class PortfolioLayoutComponent implements OnInit {
 
   private async loadEvents(): Promise<void> {
     const { data } = await this.supabase
-      .from('events')
-      .select('*, translations:event_translations(*)')
+      .from('event')
+      .select('*, translations:event_translation(*)')
       .eq('is_archived', false)
       .order('assisted_at', { ascending: false });
     if (data) {
@@ -124,11 +131,11 @@ export class PortfolioLayoutComponent implements OnInit {
 
   private async loadSkillsWithLevels(): Promise<void> {
     const { data: skills } = await this.supabase
-      .from('skills')
+      .from('skill')
       .select(`
         *,
-        translations:skill_translations(*),
-        category:skill_categories(*, translations:skill_category_translations(*))
+        translations:skill_translation(*),
+        category:skill_category(*, translations:skill_category_translation(*))
       `)
       .eq('is_archived', false);
 
