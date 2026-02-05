@@ -1,7 +1,7 @@
-import { BaseEntity } from './base-entity.model';
+import { BaseEntity } from '../base';
 
 /**
- * Experience translation for i18n support
+ * Experience Translation entity
  */
 export interface ExperienceTranslation {
   id: number;
@@ -12,15 +12,11 @@ export interface ExperienceTranslation {
 }
 
 /**
- * Experience entity - represents work/professional experience
+ * Experience entity with optional translations
  */
 export interface Experience extends BaseEntity {
   company: string;
   start_date: string | null;
   end_date: string | null;
-  // Translations (joined from experience_translation)
   translations?: ExperienceTranslation[];
-  // Convenience fields for current language
-  role?: string;
-  description?: string | null;
 }

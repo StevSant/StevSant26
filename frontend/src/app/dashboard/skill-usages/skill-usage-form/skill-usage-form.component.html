@@ -35,15 +35,14 @@
     </div>
   } @else {
     <form (ngSubmit)="onSubmit()" class="space-y-6">
+      <!-- Base Info Card -->
       <div class="card p-6 space-y-6">
-        <h2 class="text-lg font-semibold text-[var(--color-text-primary)]">
-          Información del Vínculo
-        </h2>
+        <h2 class="text-lg font-semibold text-[var(--color-text-primary)]">Información Base</h2>
 
         <div>
-          <label for="skill_id" class="label"
-            >Habilidad <span class="text-[var(--color-error)]">*</span></label
-          >
+          <label for="skill_id" class="label">
+            Habilidad <span class="text-[var(--color-error)]">*</span>
+          </label>
           <select
             id="skill_id"
             name="skill_id"
@@ -60,9 +59,9 @@
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label for="source_type" class="label"
-              >Tipo de Fuente <span class="text-[var(--color-error)]">*</span></label
-            >
+            <label for="source_type" class="label">
+              Tipo de Fuente <span class="text-[var(--color-error)]">*</span>
+            </label>
             <select
               id="source_type"
               name="source_type"
@@ -77,9 +76,9 @@
             </select>
           </div>
           <div>
-            <label for="source_id" class="label"
-              >ID de Fuente <span class="text-[var(--color-error)]">*</span></label
-            >
+            <label for="source_id" class="label">
+              ID de Fuente <span class="text-[var(--color-error)]">*</span>
+            </label>
             <input
               type="number"
               id="source_id"
@@ -146,13 +145,45 @@
             />
           </div>
         </div>
+      </div>
+
+      <!-- Translations Card -->
+      <div class="card p-6 space-y-6">
+        <h2 class="text-lg font-semibold text-[var(--color-text-primary)] flex items-center gap-2">
+          <svg
+            class="w-5 h-5 text-[var(--color-accent)]"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129"
+            />
+          </svg>
+          Contenido Traducible
+        </h2>
+
+        <!-- Language Tabs -->
+        <app-language-tabs
+          [selectedLanguage]="currentEditLanguage()"
+          (languageChange)="setEditLanguage($event)"
+        />
 
         <div>
-          <label for="description" class="label">Descripción</label>
+          <label for="notes" class="label">
+            Notas
+            <span class="text-xs text-[var(--color-text-muted)] ml-2"
+              >({{ currentEditLanguage() | uppercase }})</span
+            >
+          </label>
           <textarea
-            id="description"
-            name="description"
-            [(ngModel)]="formData.description"
+            id="notes"
+            name="notes"
+            [ngModel]="currentTranslation.notes"
+            (ngModelChange)="updateTranslation('notes', $event)"
             rows="3"
             class="input resize-none"
             placeholder="Describe cómo usaste esta habilidad..."

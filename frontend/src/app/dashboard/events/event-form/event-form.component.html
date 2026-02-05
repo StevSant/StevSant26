@@ -33,37 +33,9 @@
     </div>
   } @else {
     <form (ngSubmit)="onSubmit()" class="space-y-6">
+      <!-- Base Information Card -->
       <div class="card space-y-6">
-        <h2 class="text-lg font-semibold text-[var(--color-text-primary)]">
-          Información del Evento
-        </h2>
-
-        <div>
-          <label for="name" class="label"
-            >Nombre <span class="text-[var(--color-error)]">*</span></label
-          >
-          <input
-            type="text"
-            id="name"
-            name="name"
-            [(ngModel)]="formData.name"
-            required
-            class="input"
-            placeholder="Nombre del evento"
-          />
-        </div>
-
-        <div>
-          <label for="description" class="label">Descripción</label>
-          <textarea
-            id="description"
-            name="description"
-            [(ngModel)]="formData.description"
-            rows="4"
-            class="input-textarea"
-            placeholder="Describe el evento..."
-          ></textarea>
-        </div>
+        <h2 class="text-lg font-semibold text-[var(--color-text-primary)]">Información Base</h2>
 
         <div>
           <label for="assisted_at" class="label">Fecha de Asistencia</label>
@@ -74,6 +46,68 @@
             [(ngModel)]="formData.assisted_at"
             class="input"
           />
+        </div>
+      </div>
+
+      <!-- Translations Card -->
+      <div class="card space-y-6">
+        <h2 class="text-lg font-semibold text-[var(--color-text-primary)] flex items-center gap-2">
+          <svg
+            class="w-5 h-5 text-[var(--color-accent)]"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129"
+            />
+          </svg>
+          Contenido Traducible
+        </h2>
+
+        <!-- Language Tabs -->
+        <app-language-tabs
+          [selectedLanguage]="currentEditLanguage()"
+          (languageChange)="setEditLanguage($event)"
+        />
+
+        <div>
+          <label for="name" class="label">
+            Nombre <span class="text-[var(--color-error)]">*</span>
+            <span class="text-xs text-[var(--color-text-muted)] ml-2"
+              >({{ currentEditLanguage() | uppercase }})</span
+            >
+          </label>
+          <input
+            type="text"
+            id="name"
+            name="name"
+            [ngModel]="currentTranslation.name"
+            (ngModelChange)="updateTranslation('name', $event)"
+            class="input"
+            placeholder="Nombre del evento"
+          />
+        </div>
+
+        <div>
+          <label for="description" class="label">
+            Descripción
+            <span class="text-xs text-[var(--color-text-muted)] ml-2"
+              >({{ currentEditLanguage() | uppercase }})</span
+            >
+          </label>
+          <textarea
+            id="description"
+            name="description"
+            [ngModel]="currentTranslation.description"
+            (ngModelChange)="updateTranslation('description', $event)"
+            rows="4"
+            class="input-textarea"
+            placeholder="Describe el evento..."
+          ></textarea>
         </div>
       </div>
 

@@ -1,5 +1,5 @@
 /**
- * Translation form data for experience
+ * Experience Translation form data
  */
 export interface ExperienceTranslationFormData {
   language: string;
@@ -8,12 +8,14 @@ export interface ExperienceTranslationFormData {
 }
 
 /**
- * Form data interface for creating/updating experiences
+ * Experience form data for create/update operations
  */
 export interface ExperienceFormData {
   company: string;
   start_date: string;
   end_date: string;
-  // Translations for each supported language
+  is_archived: boolean;
+  is_pinned: boolean;
+  position: number | null;
   translations: ExperienceTranslationFormData[];
 }

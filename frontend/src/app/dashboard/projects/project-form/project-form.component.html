@@ -17,12 +17,7 @@
   <!-- Loading -->
   @if (loading()) {
     <div class="flex items-center justify-center py-12">
-      <svg
-        class="spinner-lg"
-        xmlns="http://www.w3.org/2000/svg"
-        fill="none"
-        viewBox="0 0 24 24"
-      >
+      <svg class="spinner-lg" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
         <circle
           class="opacity-25"
           cx="12"
@@ -40,46 +35,13 @@
     </div>
   } @else {
     <form (ngSubmit)="onSubmit()" class="space-y-6">
-      <!-- Main Info Card -->
+      <!-- Base Info Card -->
       <div class="card space-y-6">
-        <h2 class="text-lg font-semibold text-[var(--color-text-primary)]">Informacion del Proyecto</h2>
-
-        <!-- Title -->
-        <div>
-          <label for="title" class="label">
-            Titulo <span class="text-[var(--color-error)]">*</span>
-          </label>
-          <input
-            type="text"
-            id="title"
-            name="title"
-            [(ngModel)]="formData.title"
-            required
-            class="input"
-            placeholder="Nombre del proyecto"
-          />
-        </div>
-
-        <!-- Description -->
-        <div>
-          <label for="description" class="label">
-            Descripcion
-          </label>
-          <textarea
-            id="description"
-            name="description"
-            [(ngModel)]="formData.description"
-            rows="4"
-            class="input-textarea"
-            placeholder="Describe el proyecto..."
-          ></textarea>
-        </div>
+        <h2 class="text-lg font-semibold text-[var(--color-text-primary)]">Información Base</h2>
 
         <!-- URL -->
         <div>
-          <label for="url" class="label">
-            URL del Proyecto
-          </label>
+          <label for="url" class="label"> URL del Proyecto </label>
           <input
             type="url"
             id="url"
@@ -92,9 +54,7 @@
 
         <!-- Created At -->
         <div>
-          <label for="created_at" class="label">
-            Fecha de Creacion
-          </label>
+          <label for="created_at" class="label"> Fecha de Creación </label>
           <input
             type="date"
             id="created_at"
@@ -105,9 +65,75 @@
         </div>
       </div>
 
+      <!-- Translations Card -->
+      <div class="card space-y-6">
+        <h2 class="text-lg font-semibold text-[var(--color-text-primary)] flex items-center gap-2">
+          <svg
+            class="w-5 h-5 text-[var(--color-accent)]"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129"
+            />
+          </svg>
+          Contenido Traducible
+        </h2>
+
+        <!-- Language Tabs -->
+        <app-language-tabs
+          [selectedLanguage]="currentEditLanguage()"
+          (languageChange)="setEditLanguage($event)"
+        />
+
+        <!-- Title -->
+        <div>
+          <label for="title" class="label">
+            Título <span class="text-[var(--color-error)]">*</span>
+            <span class="text-xs text-[var(--color-text-muted)] ml-2"
+              >({{ currentEditLanguage() | uppercase }})</span
+            >
+          </label>
+          <input
+            type="text"
+            id="title"
+            name="title"
+            [ngModel]="currentTranslation.title"
+            (ngModelChange)="updateTranslation('title', $event)"
+            class="input"
+            placeholder="Nombre del proyecto"
+          />
+        </div>
+
+        <!-- Description -->
+        <div>
+          <label for="description" class="label">
+            Descripción
+            <span class="text-xs text-[var(--color-text-muted)] ml-2"
+              >({{ currentEditLanguage() | uppercase }})</span
+            >
+          </label>
+          <textarea
+            id="description"
+            name="description"
+            [ngModel]="currentTranslation.description"
+            (ngModelChange)="updateTranslation('description', $event)"
+            rows="4"
+            class="input-textarea"
+            placeholder="Describe el proyecto..."
+          ></textarea>
+        </div>
+      </div>
+
       <!-- Source Association -->
       <div class="card space-y-6">
-        <h2 class="text-lg font-semibold text-[var(--color-text-primary)]">Asociacion (Opcional)</h2>
+        <h2 class="text-lg font-semibold text-[var(--color-text-primary)]">
+          Asociación (Opcional)
+        </h2>
         <p class="text-[var(--color-text-muted)] text-sm">
           Vincula este proyecto a una experiencia, competencia o evento
         </p>
@@ -115,16 +141,14 @@
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <!-- Source Type -->
           <div>
-            <label for="source_type" class="label">
-              Tipo de Fuente
-            </label>
+            <label for="source_type" class="label"> Tipo de Fuente </label>
             <select
               id="source_type"
               name="source_type"
               [(ngModel)]="formData.source_type"
               class="input"
             >
-              <option [ngValue]="null">Sin asociacion</option>
+              <option [ngValue]="null">Sin asociación</option>
               <option value="experience">Experiencia</option>
               <option value="competition">Competencia</option>
               <option value="event">Evento</option>
@@ -133,9 +157,7 @@
 
           <!-- Source ID -->
           <div>
-            <label for="source_id" class="label">
-              ID de Fuente
-            </label>
+            <label for="source_id" class="label"> ID de Fuente </label>
             <input
               type="number"
               id="source_id"
@@ -150,9 +172,7 @@
 
         <!-- Parent Project -->
         <div>
-          <label for="parent_project_id" class="label">
-            Proyecto Padre
-          </label>
+          <label for="parent_project_id" class="label"> Proyecto Padre </label>
           <select
             id="parent_project_id"
             name="parent_project_id"
@@ -169,7 +189,9 @@
 
       <!-- Images -->
       <div class="card space-y-6">
-        <h2 class="text-lg font-semibold text-[var(--color-text-primary)]">Imagenes del Proyecto</h2>
+        <h2 class="text-lg font-semibold text-[var(--color-text-primary)]">
+          Imágenes del Proyecto
+        </h2>
         <app-image-upload
           folder="projects"
           [multiple]="true"
@@ -188,24 +210,10 @@
 
       <!-- Actions -->
       <div class="flex justify-end gap-3">
-        <a
-          routerLink="/dashboard/projects"
-          class="btn-secondary"
-        >
-          Cancelar
-        </a>
-        <button
-          type="submit"
-          [disabled]="saving()"
-          class="btn-primary"
-        >
+        <a routerLink="/dashboard/projects" class="btn-secondary"> Cancelar </a>
+        <button type="submit" [disabled]="saving()" class="btn-primary">
           @if (saving()) {
-            <svg
-              class="spinner"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-            >
+            <svg class="spinner" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
               <circle
                 class="opacity-25"
                 cx="12"

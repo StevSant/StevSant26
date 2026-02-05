@@ -1,5 +1,5 @@
 /**
- * Translation form data for competition
+ * Competition Translation form data
  */
 export interface CompetitionTranslationFormData {
   language: string;
@@ -9,11 +9,14 @@ export interface CompetitionTranslationFormData {
 }
 
 /**
- * Form data interface for creating/updating competitions
+ * Competition form data for create/update operations
  */
 export interface CompetitionFormData {
-  organizer: string;
   date: string;
-  // Translations for each supported language
+  location: string;
+  url: string;
+  is_archived: boolean;
+  is_pinned: boolean;
+  position: number | null;
   translations: CompetitionTranslationFormData[];
 }

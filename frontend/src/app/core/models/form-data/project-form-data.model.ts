@@ -1,7 +1,7 @@
-import { SourceType } from './source-type.model';
+import { SourceType } from '../base';
 
 /**
- * Translation form data for project
+ * Project Translation form data
  */
 export interface ProjectTranslationFormData {
   language: string;
@@ -10,14 +10,17 @@ export interface ProjectTranslationFormData {
 }
 
 /**
- * Form data interface for creating/updating projects
+ * Project form data for create/update operations
  */
 export interface ProjectFormData {
   url: string;
-  created_at: string;
-  parent_project_id: number | null;
+  github_url: string;
+  start_date: string;
+  end_date: string;
   source_id: number | null;
   source_type: SourceType | null;
-  // Translations for each supported language
+  is_archived: boolean;
+  is_pinned: boolean;
+  position: number | null;
   translations: ProjectTranslationFormData[];
 }

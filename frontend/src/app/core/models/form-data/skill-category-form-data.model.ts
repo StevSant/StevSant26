@@ -1,5 +1,5 @@
 /**
- * Translation form data for skill category
+ * SkillCategory Translation form data
  */
 export interface SkillCategoryTranslationFormData {
   language: string;
@@ -8,9 +8,11 @@ export interface SkillCategoryTranslationFormData {
 }
 
 /**
- * Form data interface for creating/updating skill categories
+ * SkillCategory form data for create/update operations
  */
 export interface SkillCategoryFormData {
-  // Translations for each supported language
+  is_archived: boolean;
+  is_pinned: boolean;
+  position: number | null;
   translations: SkillCategoryTranslationFormData[];
 }

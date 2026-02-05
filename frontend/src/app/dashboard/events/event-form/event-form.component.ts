@@ -1,18 +1,25 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { SupabaseService } from '../../../core/services/supabase.service';
-import { Event, EventFormData } from '../../../core/models';
+import { LanguageService } from '../../../core/services/language.service';
+import { Event, EventTranslation, Language } from '../../../core/models';
 import { ImageUploadComponent } from '../../../shared/components/image-upload/image-upload.component';
+import { LanguageTabsComponent } from '../../../shared/components/language-tabs/language-tabs.component';
 
 @Component({
   selector: 'app-event-form',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule, ImageUploadComponent],
+  imports: [CommonModule, FormsModule, RouterModule, ImageUploadComponent, LanguageTabsComponent],
   templateUrl: './event-form.component.html',
 })
 export class EventFormComponent implements OnInit {
+  private supabase = inject(SupabaseService);
+  private languageService = inject(LanguageService);
+  private route = inject(ActivatedRoute);
+  private router = inject(Router);
+
   loading = signal(true);
   saving = signal(false);
   error = signal<string | null>(null);
@@ -20,13 +27,26 @@ export class EventFormComponent implements OnInit {
   isNew = true;
   currentId: number | null = null;
 
-  formData: EventFormData = {
-    name: '',
-    description: '',
+  // Current language for editing translations
+  currentEditLanguage = signal<string>('es');
+
+  // Base fields (non-translatable)
+  formData = {
     assisted_at: '',
   };
 
-  constructor(private supabase: SupabaseService, private route: ActivatedRoute, private router: Router) {}
+  // Translations map by language code
+  translations: Map<string, { name: string; description: string }> = new Map();
+
+  // Get available languages from service
+  get supportedLanguages(): Language[] {
+    return this.languageService.supportedLanguages();
+  }
+
+  // Get current translation being edited
+  get currentTranslation(): { name: string; description: string } {
+    return this.translations.get(this.currentEditLanguage()) || { name: '', description: '' };
+  }
 
   async ngOnInit(): Promise<void> {
     const id = this.route.snapshot.paramMap.get('id');
@@ -40,15 +60,32 @@ export class EventFormComponent implements OnInit {
   async loadData(): Promise<void> {
     this.loading.set(true);
     try {
+      // Initialize empty translations for all languages
+      for (const lang of this.supportedLanguages) {
+        this.translations.set(lang.code, { name: '', description: '' });
+      }
+
       if (!this.isNew && this.currentId) {
-        const { data, error } = await this.supabase.getById<Event>('event', this.currentId);
+        const { data, error } = await this.supabase.getByIdWithTranslations<Event>(
+          'event',
+          'event_translation',
+          this.currentId
+        );
         if (error) throw error;
         if (data) {
           this.formData = {
-            name: data.name,
-            description: data.description || '',
             assisted_at: data.assisted_at?.split('T')[0] || '',
           };
+
+          // Load translations
+          if (data.translations) {
+            for (const t of data.translations as EventTranslation[]) {
+              this.translations.set(t.language, {
+                name: t.name || '',
+                description: t.description || '',
+              });
+            }
+          }
         }
       }
     } catch (err) {
@@ -59,9 +96,21 @@ export class EventFormComponent implements OnInit {
     }
   }
 
+  setEditLanguage(langCode: string): void {
+    this.currentEditLanguage.set(langCode);
+  }
+
+  updateTranslation(field: 'name' | 'description', value: string): void {
+    const current = this.translations.get(this.currentEditLanguage()) || { name: '', description: '' };
+    current[field] = value;
+    this.translations.set(this.currentEditLanguage(), current);
+  }
+
   async onSubmit(): Promise<void> {
-    if (!this.formData.name.trim()) {
-      this.error.set('El nombre es requerido');
+    // Validate that at least one language has a name
+    const hasName = Array.from(this.translations.values()).some((t) => t.name.trim());
+    if (!hasName) {
+      this.error.set('El nombre es requerido en al menos un idioma');
       return;
     }
 
@@ -69,17 +118,34 @@ export class EventFormComponent implements OnInit {
     this.error.set(null);
 
     try {
-      const payload = {
-        name: this.formData.name,
-        description: this.formData.description || null,
+      const basePayload = {
         assisted_at: this.formData.assisted_at || null,
       };
 
+      const translationsPayload = Array.from(this.translations.entries()).map(([lang, t]) => ({
+        language: lang,
+        name: t.name || null,
+        description: t.description || null,
+      }));
+
       let result;
       if (this.isNew) {
-        result = await this.supabase.create('event', payload);
+        result = await this.supabase.createWithTranslations(
+          'event',
+          'event_translation',
+          'event_id',
+          basePayload,
+          translationsPayload
+        );
       } else {
-        result = await this.supabase.update('event', this.currentId!, payload);
+        result = await this.supabase.updateWithTranslations(
+          'event',
+          'event_translation',
+          'event_id',
+          this.currentId!,
+          basePayload,
+          translationsPayload
+        );
       }
 
       if (result.error) throw result.error;
@@ -94,7 +160,12 @@ export class EventFormComponent implements OnInit {
 
   onImageUploaded(data: { path: string; url: string }): void {
     if (this.currentId) {
-      this.supabase.create('image', { url: data.url, source_type: 'event', source_id: this.currentId, position: 0 });
+      this.supabase.create('image', {
+        url: data.url,
+        source_type: 'event',
+        source_id: this.currentId,
+        position: 0,
+      });
     }
   }
 }

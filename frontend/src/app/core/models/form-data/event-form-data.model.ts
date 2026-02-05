@@ -1,5 +1,5 @@
 /**
- * Translation form data for event
+ * Event Translation form data
  */
 export interface EventTranslationFormData {
   language: string;
@@ -8,10 +8,14 @@ export interface EventTranslationFormData {
 }
 
 /**
- * Form data interface for creating/updating events
+ * Event form data for create/update operations
  */
 export interface EventFormData {
-  assisted_at: string;
-  // Translations for each supported language
+  date: string;
+  location: string;
+  url: string;
+  is_archived: boolean;
+  is_pinned: boolean;
+  position: number | null;
   translations: EventTranslationFormData[];
 }

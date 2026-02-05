@@ -1,18 +1,25 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { SupabaseService } from '../../../core/services/supabase.service';
-import { Project, ProjectFormData } from '../../../core/models';
+import { LanguageService } from '../../../core/services/language.service';
+import { Project, ProjectTranslation, Language } from '../../../core/models';
 import { ImageUploadComponent } from '../../../shared/components/image-upload/image-upload.component';
+import { LanguageTabsComponent } from '../../../shared/components/language-tabs/language-tabs.component';
 
 @Component({
   selector: 'app-project-form',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule, ImageUploadComponent],
+  imports: [CommonModule, FormsModule, RouterModule, ImageUploadComponent, LanguageTabsComponent],
   templateUrl: './project-form.component.html',
 })
 export class ProjectFormComponent implements OnInit {
+  private supabase = inject(SupabaseService);
+  private languageService = inject(LanguageService);
+  private route = inject(ActivatedRoute);
+  private router = inject(Router);
+
   loading = signal(true);
   saving = signal(false);
   error = signal<string | null>(null);
@@ -21,21 +28,30 @@ export class ProjectFormComponent implements OnInit {
   isNew = true;
   currentId: number | null = null;
 
-  formData: ProjectFormData = {
-    title: '',
-    description: '',
+  // Current language for editing translations
+  currentEditLanguage = signal<string>('es');
+
+  // Base fields (non-translatable)
+  formData = {
     url: '',
     created_at: new Date().toISOString().split('T')[0],
-    parent_project_id: null,
-    source_id: null,
-    source_type: null,
+    parent_project_id: null as number | null,
+    source_id: null as number | null,
+    source_type: null as string | null,
   };
 
-  constructor(
-    private supabase: SupabaseService,
-    private route: ActivatedRoute,
-    private router: Router
-  ) {}
+  // Translations map by language code
+  translations: Map<string, { title: string; description: string }> = new Map();
+
+  // Get available languages from service
+  get supportedLanguages(): Language[] {
+    return this.languageService.supportedLanguages();
+  }
+
+  // Get current translation being edited
+  get currentTranslation(): { title: string; description: string } {
+    return this.translations.get(this.currentEditLanguage()) || { title: '', description: '' };
+  }
 
   async ngOnInit(): Promise<void> {
     const id = this.route.snapshot.paramMap.get('id');
@@ -51,6 +67,11 @@ export class ProjectFormComponent implements OnInit {
   async loadData(): Promise<void> {
     this.loading.set(true);
     try {
+      // Initialize empty translations for all languages
+      for (const lang of this.supportedLanguages) {
+        this.translations.set(lang.code, { title: '', description: '' });
+      }
+
       // Load parent projects (exclude current if editing)
       const { data: projects } = await this.supabase.getActive<Project>('project');
       if (projects) {
@@ -61,18 +82,30 @@ export class ProjectFormComponent implements OnInit {
 
       // Load current item if editing
       if (!this.isNew && this.currentId) {
-        const { data, error } = await this.supabase.getById<Project>('project', this.currentId);
+        const { data, error } = await this.supabase.getByIdWithTranslations<Project>(
+          'project',
+          'project_translation',
+          this.currentId
+        );
         if (error) throw error;
         if (data) {
           this.formData = {
-            title: data.title,
-            description: data.description || '',
             url: data.url || '',
             created_at: data.created_at?.split('T')[0] || '',
             parent_project_id: data.parent_project_id,
             source_id: data.source_id,
             source_type: data.source_type,
           };
+
+          // Load translations
+          if (data.translations) {
+            for (const t of data.translations as ProjectTranslation[]) {
+              this.translations.set(t.language, {
+                title: t.title || '',
+                description: t.description || '',
+              });
+            }
+          }
         }
       }
     } catch (err) {
@@ -83,9 +116,21 @@ export class ProjectFormComponent implements OnInit {
     }
   }
 
+  setEditLanguage(langCode: string): void {
+    this.currentEditLanguage.set(langCode);
+  }
+
+  updateTranslation(field: 'title' | 'description', value: string): void {
+    const current = this.translations.get(this.currentEditLanguage()) || { title: '', description: '' };
+    current[field] = value;
+    this.translations.set(this.currentEditLanguage(), current);
+  }
+
   async onSubmit(): Promise<void> {
-    if (!this.formData.title.trim()) {
-      this.error.set('El título es requerido');
+    // Validate that at least one language has a title
+    const hasTitle = Array.from(this.translations.values()).some((t) => t.title.trim());
+    if (!hasTitle) {
+      this.error.set('El título es requerido en al menos un idioma');
       return;
     }
 
@@ -93,9 +138,7 @@ export class ProjectFormComponent implements OnInit {
     this.error.set(null);
 
     try {
-      const payload = {
-        title: this.formData.title,
-        description: this.formData.description || null,
+      const basePayload = {
         url: this.formData.url || null,
         created_at: this.formData.created_at || null,
         parent_project_id: this.formData.parent_project_id,
@@ -103,11 +146,30 @@ export class ProjectFormComponent implements OnInit {
         source_type: this.formData.source_type,
       };
 
+      const translationsPayload = Array.from(this.translations.entries()).map(([lang, t]) => ({
+        language: lang,
+        title: t.title || null,
+        description: t.description || null,
+      }));
+
       let result;
       if (this.isNew) {
-        result = await this.supabase.create('project', payload);
+        result = await this.supabase.createWithTranslations(
+          'project',
+          'project_translation',
+          'project_id',
+          basePayload,
+          translationsPayload
+        );
       } else {
-        result = await this.supabase.update('project', this.currentId!, payload);
+        result = await this.supabase.updateWithTranslations(
+          'project',
+          'project_translation',
+          'project_id',
+          this.currentId!,
+          basePayload,
+          translationsPayload
+        );
       }
 
       if (result.error) throw result.error;

@@ -1,7 +1,7 @@
-import { SourceType } from './source-type.model';
+import { SourceType } from '../base';
 
 /**
- * Translation form data for skill usage
+ * SkillUsage Translation form data
  */
 export interface SkillUsageTranslationFormData {
   language: string;
@@ -9,15 +9,14 @@ export interface SkillUsageTranslationFormData {
 }
 
 /**
- * Form data interface for creating/updating skill usages
+ * SkillUsage form data for create/update operations
  */
 export interface SkillUsageFormData {
   skill_id: number;
   source_id: number;
   source_type: SourceType;
-  level: number | null;
-  started_at: string;
-  ended_at: string;
-  // Translations for each supported language
+  is_archived: boolean;
+  is_pinned: boolean;
+  position: number | null;
   translations: SkillUsageTranslationFormData[];
 }
