@@ -1,9 +1,9 @@
 import { Component, signal, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { SupabaseService } from '../../../core/services/supabase.service';
-import { TranslatePipe } from '../../../shared/pipes/translate.pipe';
-import { LanguageSelectorComponent } from '../../../shared/components/language-selector/language-selector.component';
+import { SupabaseService } from '@core/services/supabase.service';
+import { TranslatePipe } from '@shared/pipes/translate.pipe';
+import { LanguageSelectorComponent } from '@shared/components/language-selector/language-selector.component';
 
 @Component({
   selector: 'app-login',

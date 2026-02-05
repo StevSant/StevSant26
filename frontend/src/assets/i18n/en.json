@@ -16,7 +16,12 @@
     "filter": "Filter",
     "actions": "Actions",
     "noResults": "No results found",
-    "required": "This field is required"
+    "required": "This field is required",
+    "saving": "Saving...",
+    "saveChanges": "Save Changes",
+    "preview": "Preview",
+    "none": "None",
+    "noAssociation": "No association"
   },
   "auth": {
     "login": "Sign in",
@@ -34,6 +39,7 @@
   },
   "nav": {
     "profile": "Profile",
+    "preview": "Preview",
     "skills": "Skills",
     "skillCategories": "Skill Categories",
     "skillUsages": "Skill Usages",
@@ -41,6 +47,25 @@
     "experiences": "Experiences",
     "competitions": "Competitions",
     "events": "Events"
+  },
+  "preview": {
+    "title": "Profile Preview",
+    "subtitle": "This is how visitors will see your portfolio",
+    "noProjects": "No projects to display",
+    "noExperiences": "No experiences to display",
+    "noCompetitions": "No competitions to display",
+    "noEvents": "No events to display",
+    "noSkills": "No skills to display",
+    "featuredProjects": "Featured Projects",
+    "allExperiences": "Experiences",
+    "allCompetitions": "Competitions",
+    "allEvents": "Events Attended",
+    "skillsByCategory": "Skills by Category",
+    "currentPosition": "Current Position",
+    "viewMore": "View more",
+    "present": "Present",
+    "skillLevel": "Level",
+    "based_on_usage": "Based on most recent usage"
   },
   "profile": {
     "title": "Profile",
@@ -65,6 +90,15 @@
     "create": "New Project",
     "edit": "Edit Project",
     "list": "Project List",
+    "baseInfo": "Base Information",
+    "translatableContent": "Translatable Content",
+    "association": "Association (Optional)",
+    "associationHint": "Link this project to an experience, competition or event",
+    "projectImages": "Project Images",
+    "parentProject": "Parent Project",
+    "createdAtLabel": "Created Date",
+    "titlePlaceholder": "Project name",
+    "descriptionPlaceholder": "Describe the project...",
     "fields": {
       "title": "Title",
       "description": "Description",
@@ -72,9 +106,20 @@
       "githubUrl": "GitHub URL",
       "startDate": "Start date",
       "endDate": "End date",
-      "source": "Associated source"
+      "source": "Associated source",
+      "sourceType": "Source Type",
+      "sourceId": "Source ID"
+    },
+    "sourceTypes": {
+      "experience": "Experience",
+      "competition": "Competition",
+      "event": "Event"
     },
     "noSource": "No associated source",
+    "errors": {
+      "titleRequired": "Title is required in at least one language",
+      "saveError": "Error saving project"
+    },
     "deleteConfirm": {
       "title": "Delete project?",
       "message": "This action will permanently delete the project and cannot be undone."
@@ -152,12 +197,26 @@
     "create": "New Experience",
     "edit": "Edit Experience",
     "list": "Experience List",
+    "baseInfo": "Base Information",
+    "translatableContent": "Translatable Content",
+    "images": "Experience Images",
+    "currentJobHint": "Leave empty if it's your current job",
+    "rolePlaceholder": "E.g: Senior Software Developer",
+    "descriptionPlaceholder": "Describe your responsibilities and achievements...",
+    "companyPlaceholder": "Company or organization name",
     "fields": {
       "company": "Company",
       "role": "Role",
       "description": "Description",
       "startDate": "Start date",
-      "endDate": "End date"
+      "endDate": "End date",
+      "location": "Location",
+      "url": "URL"
+    },
+    "errors": {
+      "companyRequired": "Company is required",
+      "roleRequired": "Role is required in at least one language",
+      "saveError": "Error saving experience"
     },
     "deleteConfirm": {
       "title": "Delete experience?",
@@ -169,13 +228,25 @@
     "create": "New Competition",
     "edit": "Edit Competition",
     "list": "Competition List",
+    "baseInfo": "Base Information",
+    "translatableContent": "Translatable Content",
+    "images": "Competition Images",
+    "namePlaceholder": "Competition name",
+    "resultPlaceholder": "E.g: 1st place, Finalist, Honorable mention",
+    "descriptionPlaceholder": "Describe the competition and your participation...",
+    "organizerPlaceholder": "Company or organization",
     "fields": {
       "name": "Name",
       "description": "Description",
       "result": "Result",
       "date": "Date",
+      "organizer": "Organizer",
       "location": "Location",
       "url": "URL"
+    },
+    "errors": {
+      "nameRequired": "Name is required in at least one language",
+      "saveError": "Error saving competition"
     },
     "deleteConfirm": {
       "title": "Delete competition?",
@@ -187,12 +258,21 @@
     "create": "New Event",
     "edit": "Edit Event",
     "list": "Event List",
+    "baseInfo": "Base Information",
+    "translatableContent": "Translatable Content",
+    "images": "Event Images",
+    "namePlaceholder": "Event name",
+    "descriptionPlaceholder": "Describe the event...",
     "fields": {
       "name": "Name",
       "description": "Description",
-      "date": "Date",
+      "date": "Attendance Date",
       "location": "Location",
       "url": "URL"
+    },
+    "errors": {
+      "nameRequired": "Name is required in at least one language",
+      "saveError": "Error saving event"
     },
     "deleteConfirm": {
       "title": "Delete event?",

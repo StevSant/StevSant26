@@ -16,7 +16,12 @@
     "filter": "Filtrar",
     "actions": "Acciones",
     "noResults": "No se encontraron resultados",
-    "required": "Este campo es obligatorio"
+    "required": "Este campo es obligatorio",
+    "saving": "Guardando...",
+    "saveChanges": "Guardar Cambios",
+    "preview": "Vista Previa",
+    "none": "Ninguno",
+    "noAssociation": "Sin asociación"
   },
   "auth": {
     "login": "Iniciar sesión",
@@ -34,6 +39,7 @@
   },
   "nav": {
     "profile": "Perfil",
+    "preview": "Vista Previa",
     "skills": "Habilidades",
     "skillCategories": "Categorías de Habilidades",
     "skillUsages": "Uso de Habilidades",
@@ -41,6 +47,25 @@
     "experiences": "Experiencias",
     "competitions": "Competencias",
     "events": "Eventos"
+  },
+  "preview": {
+    "title": "Vista Previa del Perfil",
+    "subtitle": "Así verán los visitantes tu portafolio",
+    "noProjects": "No hay proyectos para mostrar",
+    "noExperiences": "No hay experiencias para mostrar",
+    "noCompetitions": "No hay competencias para mostrar",
+    "noEvents": "No hay eventos para mostrar",
+    "noSkills": "No hay habilidades para mostrar",
+    "featuredProjects": "Proyectos Destacados",
+    "allExperiences": "Experiencias",
+    "allCompetitions": "Competencias",
+    "allEvents": "Eventos Asistidos",
+    "skillsByCategory": "Habilidades por Categoría",
+    "currentPosition": "Puesto Actual",
+    "viewMore": "Ver más",
+    "present": "Presente",
+    "skillLevel": "Nivel",
+    "based_on_usage": "Basado en uso más reciente"
   },
   "profile": {
     "title": "Perfil",
@@ -65,16 +90,36 @@
     "create": "Nuevo Proyecto",
     "edit": "Editar Proyecto",
     "list": "Lista de Proyectos",
+    "baseInfo": "Información Base",
+    "translatableContent": "Contenido Traducible",
+    "association": "Asociación (Opcional)",
+    "associationHint": "Vincula este proyecto a una experiencia, competencia o evento",
+    "projectImages": "Imágenes del Proyecto",
+    "parentProject": "Proyecto Padre",
+    "createdAtLabel": "Fecha de Creación",
+    "titlePlaceholder": "Nombre del proyecto",
+    "descriptionPlaceholder": "Describe el proyecto...",
     "fields": {
       "title": "Título",
       "description": "Descripción",
-      "url": "URL del proyecto",
+      "url": "URL del Proyecto",
       "githubUrl": "URL de GitHub",
       "startDate": "Fecha de inicio",
       "endDate": "Fecha de fin",
-      "source": "Fuente asociada"
+      "source": "Fuente asociada",
+      "sourceType": "Tipo de Fuente",
+      "sourceId": "ID de Fuente"
+    },
+    "sourceTypes": {
+      "experience": "Experiencia",
+      "competition": "Competencia",
+      "event": "Evento"
     },
     "noSource": "Sin fuente asociada",
+    "errors": {
+      "titleRequired": "El título es requerido en al menos un idioma",
+      "saveError": "Error al guardar el proyecto"
+    },
     "deleteConfirm": {
       "title": "¿Eliminar proyecto?",
       "message": "Esta acción eliminará permanentemente el proyecto y no se puede deshacer."
@@ -152,12 +197,24 @@
     "create": "Nueva Experiencia",
     "edit": "Editar Experiencia",
     "list": "Lista de Experiencias",
+    "baseInfo": "Información Base",
+    "translatableContent": "Contenido Traducible",
+    "images": "Imágenes",
+    "currentJobHint": "Deja vacío si es tu empleo actual",
+    "rolePlaceholder": "Tu cargo o posición",
+    "descriptionPlaceholder": "Describe tus responsabilidades y logros...",
+    "companyPlaceholder": "Nombre de la empresa",
     "fields": {
       "company": "Empresa",
       "role": "Cargo",
       "description": "Descripción",
-      "startDate": "Fecha de inicio",
-      "endDate": "Fecha de fin"
+      "startDate": "Fecha de Inicio",
+      "endDate": "Fecha de Fin"
+    },
+    "errors": {
+      "companyRequired": "La empresa es requerida",
+      "roleRequired": "El rol es requerido en al menos un idioma",
+      "saveError": "Error al guardar la experiencia"
     },
     "deleteConfirm": {
       "title": "¿Eliminar experiencia?",
@@ -169,13 +226,25 @@
     "create": "Nueva Competencia",
     "edit": "Editar Competencia",
     "list": "Lista de Competencias",
+    "baseInfo": "Información Base",
+    "translatableContent": "Contenido Traducible",
+    "images": "Imágenes",
+    "namePlaceholder": "Nombre de la competencia",
+    "resultPlaceholder": "Ej: 1er lugar, Finalista, Mención honorífica",
+    "descriptionPlaceholder": "Describe la competencia y tu participación...",
+    "organizerPlaceholder": "Empresa u organización",
     "fields": {
       "name": "Nombre",
       "description": "Descripción",
       "result": "Resultado",
       "date": "Fecha",
+      "organizer": "Organizador",
       "location": "Ubicación",
       "url": "URL"
+    },
+    "errors": {
+      "nameRequired": "El nombre es requerido en al menos un idioma",
+      "saveError": "Error al guardar la competencia"
     },
     "deleteConfirm": {
       "title": "¿Eliminar competencia?",
@@ -187,12 +256,21 @@
     "create": "Nuevo Evento",
     "edit": "Editar Evento",
     "list": "Lista de Eventos",
+    "baseInfo": "Información Base",
+    "translatableContent": "Contenido Traducible",
+    "images": "Imágenes del Evento",
+    "namePlaceholder": "Nombre del evento",
+    "descriptionPlaceholder": "Describe el evento...",
     "fields": {
       "name": "Nombre",
       "description": "Descripción",
-      "date": "Fecha",
+      "date": "Fecha de Asistencia",
       "location": "Ubicación",
       "url": "URL"
+    },
+    "errors": {
+      "nameRequired": "El nombre es requerido en al menos un idioma",
+      "saveError": "Error al guardar el evento"
     },
     "deleteConfirm": {
       "title": "¿Eliminar evento?",

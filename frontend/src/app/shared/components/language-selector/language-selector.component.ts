@@ -1,5 +1,5 @@
 import { Component, inject, signal } from '@angular/core';
-import { TranslateService } from '../../../core/services/translate.service';
+import { TranslateService } from '@core/services/translate.service';
 
 @Component({
   selector: 'app-language-selector',

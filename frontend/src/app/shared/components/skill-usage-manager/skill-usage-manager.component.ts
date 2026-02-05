@@ -1,10 +1,10 @@
 import { Component, input, signal, inject, effect, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { SupabaseService } from '../../../core/services/supabase.service';
-import { LanguageService } from '../../../core/services/language.service';
-import { TranslateService } from '../../../core/services/translate.service';
-import { SkillUsage, Skill, SourceType, Language } from '../../../core/models';
+import { SupabaseService } from '@core/services/supabase.service';
+import { LanguageService } from '@core/services/language.service';
+import { TranslateService } from '@core/services/translate.service';
+import { SkillUsage, Skill, SourceType, Language } from '@core/models';
 import { LanguageTabsComponent } from '../language-tabs/language-tabs.component';
 import { TranslatePipe } from '../../pipes/translate.pipe';
 

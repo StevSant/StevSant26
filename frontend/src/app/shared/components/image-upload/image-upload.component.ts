@@ -1,6 +1,6 @@
 import { Component, input, output, signal, computed, inject, effect } from '@angular/core';
-import { SupabaseService } from '../../../core/services/supabase.service';
-import { SourceType } from '../../../core/models';
+import { SupabaseService } from '@core/services/supabase.service';
+import { SourceType } from '@core/models';
 
 export interface ExistingImage {
   id: number;

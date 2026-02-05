@@ -30,6 +30,11 @@ export const routes: Routes = [
           import('./features/dashboard/profile/profile-editor/profile-editor.component').then((m) => m.ProfileEditorComponent),
       },
       {
+        path: 'preview',
+        loadComponent: () =>
+          import('./features/dashboard/profile/profile-preview/profile-preview.component').then((m) => m.ProfilePreviewComponent),
+      },
+      {
         path: 'projects',
         loadComponent: () =>
           import('./features/dashboard/projects/project-list/project-list.component').then((m) => m.ProjectListComponent),

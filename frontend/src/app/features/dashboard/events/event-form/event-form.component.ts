@@ -1,18 +1,19 @@
 import { Component, OnInit, signal, inject, ViewChild } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, UpperCasePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-import { SupabaseService } from '../../../../core/services/supabase.service';
-import { LanguageService } from '../../../../core/services/language.service';
-import { Event, EventTranslation, Language } from '../../../../core/models';
-import { ImageUploadComponent, ExistingImage } from '../../../../shared/components/image-upload/image-upload.component';
-import { LanguageTabsComponent } from '../../../../shared/components/language-tabs/language-tabs.component';
-import { SkillUsageManagerComponent } from '../../../../shared/components/skill-usage-manager/skill-usage-manager.component';
+import { SupabaseService } from '@core/services/supabase.service';
+import { LanguageService } from '@core/services/language.service';
+import { TranslatePipe } from '@shared/pipes/translate.pipe';
+import { Event, EventTranslation, Language } from '@core/models';
+import { ImageUploadComponent, ExistingImage } from '@shared/components/image-upload/image-upload.component';
+import { LanguageTabsComponent } from '@shared/components/language-tabs/language-tabs.component';
+import { SkillUsageManagerComponent } from '@shared/components/skill-usage-manager/skill-usage-manager.component';
 
 @Component({
   selector: 'app-event-form',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule, ImageUploadComponent, LanguageTabsComponent, SkillUsageManagerComponent],
+  imports: [CommonModule, FormsModule, RouterModule, UpperCasePipe, TranslatePipe, ImageUploadComponent, LanguageTabsComponent, SkillUsageManagerComponent],
   templateUrl: './event-form.component.html',
 })
 export class EventFormComponent implements OnInit {

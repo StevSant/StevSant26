@@ -2,11 +2,11 @@ import { Component, OnInit, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-import { SupabaseService } from '../../../../core/services/supabase.service';
-import { LanguageService } from '../../../../core/services/language.service';
-import { TranslateService } from '../../../../core/services/translate.service';
-import { SkillUsage, SkillUsageTranslation, Skill, SourceType, Language } from '../../../../core/models';
-import { LanguageTabsComponent } from '../../../../shared/components/language-tabs/language-tabs.component';
+import { SupabaseService } from '@core/services/supabase.service';
+import { LanguageService } from '@core/services/language.service';
+import { TranslateService } from '@core/services/translate.service';
+import { SkillUsage, SkillUsageTranslation, Skill, SourceType, Language } from '@core/models';
+import { LanguageTabsComponent } from '@shared/components/language-tabs/language-tabs.component';
 
 @Component({
   selector: 'app-skill-usage-form',

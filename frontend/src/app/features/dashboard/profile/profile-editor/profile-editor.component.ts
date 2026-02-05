@@ -1,10 +1,10 @@
 import { Component, OnInit, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { SupabaseService } from '../../../../core/services/supabase.service';
-import { LanguageService } from '../../../../core/services/language.service';
-import { Profile, ProfileTranslation, Language } from '../../../../core/models';
-import { ImageUploadComponent } from '../../../../shared/components/image-upload/image-upload.component';
+import { SupabaseService } from '@core/services/supabase.service';
+import { LanguageService } from '@core/services/language.service';
+import { Profile, ProfileTranslation, Language } from '@core/models';
+import { ImageUploadComponent } from '@shared/components/image-upload/image-upload.component';
 
 @Component({
   selector: 'app-profile-editor',

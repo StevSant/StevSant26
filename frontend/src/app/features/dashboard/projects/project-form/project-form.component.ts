@@ -2,18 +2,19 @@ import { Component, OnInit, signal, inject, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { UpperCasePipe } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-import { SupabaseService } from '../../../../core/services/supabase.service';
-import { LanguageService } from '../../../../core/services/language.service';
-import { TranslateService } from '../../../../core/services/translate.service';
-import { Project, ProjectTranslation, Language, getTranslation } from '../../../../core/models';
-import { ImageUploadComponent, ExistingImage } from '../../../../shared/components/image-upload/image-upload.component';
-import { LanguageTabsComponent } from '../../../../shared/components/language-tabs/language-tabs.component';
-import { SkillUsageManagerComponent } from '../../../../shared/components/skill-usage-manager/skill-usage-manager.component';
+import { SupabaseService } from '@core/services/supabase.service';
+import { LanguageService } from '@core/services/language.service';
+import { TranslateService } from '@core/services/translate.service';
+import { TranslatePipe } from '@shared/pipes/translate.pipe';
+import { Project, ProjectTranslation, Language, getTranslation } from '@core/models';
+import { ImageUploadComponent, ExistingImage } from '@shared/components/image-upload/image-upload.component';
+import { LanguageTabsComponent } from '@shared/components/language-tabs/language-tabs.component';
+import { SkillUsageManagerComponent } from '@shared/components/skill-usage-manager/skill-usage-manager.component';
 
 @Component({
   selector: 'app-project-form',
   standalone: true,
-  imports: [FormsModule, RouterModule, UpperCasePipe, ImageUploadComponent, LanguageTabsComponent, SkillUsageManagerComponent],
+  imports: [FormsModule, RouterModule, UpperCasePipe, TranslatePipe, ImageUploadComponent, LanguageTabsComponent, SkillUsageManagerComponent],
   templateUrl: './project-form.component.html',
 })
 export class ProjectFormComponent implements OnInit {

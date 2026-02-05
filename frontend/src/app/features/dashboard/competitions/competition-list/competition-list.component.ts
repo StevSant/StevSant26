@@ -2,10 +2,10 @@ import { Component, OnInit, signal, ViewChild, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
-import { SupabaseService } from '../../../../core/services/supabase.service';
-import { TranslateService } from '../../../../core/services/translate.service';
-import { Competition, CompetitionTranslation } from '../../../../core/models';
-import { ConfirmDialogComponent } from '../../../../shared/components/confirm-dialog/confirm-dialog.component';
+import { SupabaseService } from '@core/services/supabase.service';
+import { TranslateService } from '@core/services/translate.service';
+import { Competition, CompetitionTranslation } from '@core/models';
+import { ConfirmDialogComponent } from '@shared/components/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-competition-list',
