@@ -1,0 +1,283 @@
+<div class="space-y-4">
+  <!-- Header -->
+  <div class="flex items-center justify-between">
+    <h3 class="text-lg font-semibold text-[var(--color-text-primary)] flex items-center gap-2">
+      <svg
+        class="w-5 h-5 text-[var(--color-accent)]"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"
+        />
+      </svg>
+      {{ 'skillUsages.sectionTitle' | translate }}
+    </h3>
+    @if (!showAddForm()) {
+      <button
+        type="button"
+        (click)="openAddForm()"
+        class="btn-secondary text-sm flex items-center gap-1"
+      >
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M12 4v16m8-8H4"
+          />
+        </svg>
+        {{ 'skillUsages.addSkill' | translate }}
+      </button>
+    }
+  </div>
+
+  <!-- Loading -->
+  @if (loading()) {
+    <div class="flex items-center justify-center py-8">
+      <svg class="spinner-lg" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+        <circle
+          class="opacity-25"
+          cx="12"
+          cy="12"
+          r="10"
+          stroke="currentColor"
+          stroke-width="4"
+        ></circle>
+        <path
+          class="opacity-75"
+          fill="currentColor"
+          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+        ></path>
+      </svg>
+    </div>
+  } @else {
+    <!-- Add Form -->
+    @if (showAddForm()) {
+      <div
+        class="bg-[var(--color-bg-tertiary)] rounded-lg p-4 space-y-4 border border-[var(--color-border-secondary)]"
+      >
+        <h4 class="font-medium text-[var(--color-text-primary)]">
+          {{ 'skillUsages.newSkill' | translate }}
+        </h4>
+
+        <!-- Skill Selection -->
+        <div>
+          <label for="skill_select" class="label">
+            {{ 'skillUsages.fields.skill' | translate }}
+            <span class="text-[var(--color-error)]">*</span>
+          </label>
+          <select id="skill_select" [(ngModel)]="newUsageForm.skill_id" class="input">
+            <option [ngValue]="0" disabled>{{ 'skillUsages.selectSkill' | translate }}</option>
+            @for (skill of skills(); track skill.id) {
+              <option [ngValue]="skill.id">{{ getSkillName(skill) }}</option>
+            }
+          </select>
+        </div>
+
+        <!-- Level -->
+        <div>
+          <label class="label">{{ 'skillUsages.levelLabel' | translate }}</label>
+          <div class="flex items-center gap-2">
+            @for (i of [1, 2, 3, 4, 5]; track i) {
+              <button
+                type="button"
+                (click)="setLevel(i)"
+                class="w-10 h-10 rounded-lg border-2 transition-all duration-200 flex items-center justify-center text-lg"
+                [class.border-[var(--color-accent)]]="newUsageForm.level === i"
+                [class.bg-[var(--color-accent)]]="newUsageForm.level === i"
+                [class.text-white]="newUsageForm.level === i"
+                [class.border-[var(--color-border-secondary)]]="newUsageForm.level !== i"
+                [class.hover:border-[var(--color-accent)]]="newUsageForm.level !== i"
+              >
+                {{ i }}
+              </button>
+            }
+            @if (newUsageForm.level) {
+              <button
+                type="button"
+                (click)="setLevel(null)"
+                class="ml-2 text-sm text-[var(--color-text-muted)] hover:text-[var(--color-error)]"
+              >
+                {{ 'skillUsages.clearLevel' | translate }}
+              </button>
+            }
+          </div>
+        </div>
+
+        <!-- Dates -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label for="started_at" class="label">{{ 'skillUsages.startDate' | translate }}</label>
+            <input
+              type="date"
+              id="started_at"
+              [(ngModel)]="newUsageForm.started_at"
+              class="input"
+            />
+          </div>
+          <div>
+            <label for="ended_at" class="label">{{ 'skillUsages.endDate' | translate }}</label>
+            <input type="date" id="ended_at" [(ngModel)]="newUsageForm.ended_at" class="input" />
+          </div>
+        </div>
+
+        <!-- Notes with language tabs -->
+        <div>
+          <label class="label">{{ 'skillUsages.notesLabel' | translate }}</label>
+          <app-language-tabs
+            [selectedLanguage]="currentEditLanguage()"
+            (languageChange)="setEditLanguage($event)"
+          />
+          <textarea
+            [ngModel]="currentNewTranslation.notes"
+            (ngModelChange)="updateNewTranslation($event)"
+            rows="2"
+            class="input-textarea mt-2"
+            [placeholder]="'skillUsages.notesPlaceholder' | translate"
+          ></textarea>
+        </div>
+
+        <!-- Form Actions -->
+        <div class="flex justify-end gap-2">
+          <button type="button" (click)="cancelAdd()" class="btn-secondary text-sm">
+            {{ 'common.cancel' | translate }}
+          </button>
+          <button
+            type="button"
+            (click)="addSkillUsage()"
+            [disabled]="saving()"
+            class="btn-primary text-sm"
+          >
+            @if (saving()) {
+              <svg
+                class="spinner"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <circle
+                  class="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  stroke-width="4"
+                ></circle>
+                <path
+                  class="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                ></path>
+              </svg>
+              {{ 'skillUsages.saving' | translate }}
+            } @else {
+              {{ 'skillUsages.add' | translate }}
+            }
+          </button>
+        </div>
+      </div>
+    }
+
+    <!-- Error -->
+    @if (error()) {
+      <div class="alert-error">
+        <p class="text-sm">{{ error() }}</p>
+      </div>
+    }
+
+    <!-- Skill Usages List -->
+    @if (skillUsages().length > 0) {
+      <div class="space-y-2">
+        @for (usage of skillUsages(); track usage.id ?? usage.skill_id) {
+          <div
+            class="flex items-center justify-between p-3 bg-[var(--color-bg-tertiary)] rounded-lg border border-[var(--color-border-secondary)] hover:border-[var(--color-accent)] transition-colors"
+          >
+            <div class="flex items-center gap-3">
+              <!-- Skill Icon -->
+              <div
+                class="w-10 h-10 rounded-full bg-[var(--color-accent)]/10 flex items-center justify-center"
+              >
+                <svg
+                  class="w-5 h-5 text-[var(--color-accent)]"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"
+                  />
+                </svg>
+              </div>
+
+              <!-- Skill Info -->
+              <div>
+                <p class="font-medium text-[var(--color-text-primary)]">
+                  {{
+                    usage.skill
+                      ? getSkillName(usage.skill)
+                      : getSkillName(getSkillById(usage.skill_id))
+                  }}
+                </p>
+                <div class="flex items-center gap-2 text-sm text-[var(--color-text-muted)]">
+                  @if (usage.level) {
+                    <span class="text-amber-500">{{ getLevelStars(usage.level) }}</span>
+                  }
+                  @if (usage.started_at) {
+                    <span>{{ usage.started_at }}</span>
+                    @if (usage.ended_at) {
+                      <span>→ {{ usage.ended_at }}</span>
+                    }
+                  }
+                </div>
+              </div>
+            </div>
+
+            <!-- Actions -->
+            <button
+              type="button"
+              (click)="removeSkillUsage(usage)"
+              class="p-2 text-[var(--color-text-muted)] hover:text-[var(--color-error)] hover:bg-[var(--color-error)]/10 rounded-lg transition-colors"
+              [title]="'common.delete' | translate"
+            >
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                />
+              </svg>
+            </button>
+          </div>
+        }
+      </div>
+    } @else if (!showAddForm()) {
+      <!-- Empty State -->
+      <div class="text-center py-8 text-[var(--color-text-muted)]">
+        <svg
+          class="w-12 h-12 mx-auto mb-3 opacity-50"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"
+          />
+        </svg>
+        <p>{{ 'skillUsages.emptyState' | translate }}</p>
+        <p class="text-sm mt-1">{{ 'skillUsages.emptyStateHint' | translate }}</p>
+      </div>
+    }
+  }
+</div>

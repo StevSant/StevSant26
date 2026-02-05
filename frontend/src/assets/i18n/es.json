@@ -113,13 +113,34 @@
   },
   "skillUsages": {
     "title": "Uso de Habilidades",
+    "sectionTitle": "Habilidades Utilizadas",
     "create": "Nuevo Uso de Habilidad",
     "edit": "Editar Uso de Habilidad",
     "list": "Lista de Uso de Habilidades",
+    "addSkill": "Agregar Habilidad",
+    "newSkill": "Nueva Habilidad",
+    "selectSkill": "Selecciona una habilidad",
+    "levelLabel": "Nivel de Dominio (1-5)",
+    "clearLevel": "Limpiar",
+    "startDate": "Fecha de Inicio",
+    "endDate": "Fecha de Fin",
+    "notesLabel": "Notas (opcional)",
+    "notesPlaceholder": "Notas sobre cómo usaste esta habilidad...",
+    "add": "Agregar",
+    "saving": "Guardando...",
+    "emptyState": "No hay habilidades asociadas aún",
+    "emptyStateHint": "Haz clic en \"Agregar Habilidad\" para comenzar",
+    "unknownSkill": "Habilidad desconocida",
     "fields": {
       "skill": "Habilidad",
       "source": "Fuente",
       "notes": "Notas"
+    },
+    "errors": {
+      "loadError": "Error al cargar los usos de habilidades",
+      "saveError": "Error al guardar el uso de habilidad",
+      "deleteError": "Error al eliminar el uso de habilidad",
+      "selectSkill": "Debes seleccionar una habilidad"
     },
     "deleteConfirm": {
       "title": "¿Eliminar uso de habilidad?",

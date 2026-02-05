@@ -1,4 +1,4 @@
-import { Component, OnInit, signal, inject } from '@angular/core';
+import { Component, OnInit, signal, inject, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { UpperCasePipe } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
@@ -8,11 +8,12 @@ import { TranslateService } from '../../../../core/services/translate.service';
 import { Project, ProjectTranslation, Language, getTranslation } from '../../../../core/models';
 import { ImageUploadComponent, ExistingImage } from '../../../../shared/components/image-upload/image-upload.component';
 import { LanguageTabsComponent } from '../../../../shared/components/language-tabs/language-tabs.component';
+import { SkillUsageManagerComponent } from '../../../../shared/components/skill-usage-manager/skill-usage-manager.component';
 
 @Component({
   selector: 'app-project-form',
   standalone: true,
-  imports: [FormsModule, RouterModule, UpperCasePipe, ImageUploadComponent, LanguageTabsComponent],
+  imports: [FormsModule, RouterModule, UpperCasePipe, ImageUploadComponent, LanguageTabsComponent, SkillUsageManagerComponent],
   templateUrl: './project-form.component.html',
 })
 export class ProjectFormComponent implements OnInit {
@@ -21,6 +22,8 @@ export class ProjectFormComponent implements OnInit {
   private translateService = inject(TranslateService);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
+
+  @ViewChild('skillUsageManager') skillUsageManager!: SkillUsageManagerComponent;
 
   loading = signal(true);
   saving = signal(false);
@@ -197,10 +200,14 @@ export class ProjectFormComponent implements OnInit {
 
       if (result.error) throw result.error;
 
-      // Save pending images after entity creation
+      // Save pending images and skill usages after entity creation
       const entityId = this.isNew ? (result.data as { id: number })?.id : this.currentId!;
       if (entityId) {
         await this.savePendingImages(entityId);
+        // Save pending skill usages
+        if (this.skillUsageManager?.hasPendingUsages()) {
+          await this.skillUsageManager.savePendingUsages(entityId);
+        }
       }
 
       this.router.navigate(['/dashboard/projects']);

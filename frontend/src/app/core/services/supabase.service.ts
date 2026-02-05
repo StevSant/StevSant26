@@ -86,6 +86,14 @@ export class SupabaseService {
     return this.supabase.auth.onAuthStateChange(callback);
   }
 
+  /**
+   * Access to Supabase client's from() method for custom queries
+   * Use this for complex queries not covered by generic CRUD methods
+   */
+  from(table: string) {
+    return this.supabase.from(table);
+  }
+
   // ==================== GENERIC CRUD OPERATIONS ====================
 
   /**

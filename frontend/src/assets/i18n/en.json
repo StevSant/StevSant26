@@ -113,13 +113,34 @@
   },
   "skillUsages": {
     "title": "Skill Usages",
+    "sectionTitle": "Skills Used",
     "create": "New Skill Usage",
     "edit": "Edit Skill Usage",
     "list": "Skill Usage List",
+    "addSkill": "Add Skill",
+    "newSkill": "New Skill",
+    "selectSkill": "Select a skill",
+    "levelLabel": "Proficiency Level (1-5)",
+    "clearLevel": "Clear",
+    "startDate": "Start Date",
+    "endDate": "End Date",
+    "notesLabel": "Notes (optional)",
+    "notesPlaceholder": "Notes about how you used this skill...",
+    "add": "Add",
+    "saving": "Saving...",
+    "emptyState": "No skills associated yet",
+    "emptyStateHint": "Click \"Add Skill\" to get started",
+    "unknownSkill": "Unknown skill",
     "fields": {
       "skill": "Skill",
       "source": "Source",
       "notes": "Notes"
+    },
+    "errors": {
+      "loadError": "Error loading skill usages",
+      "saveError": "Error saving skill usage",
+      "deleteError": "Error deleting skill usage",
+      "selectSkill": "You must select a skill"
     },
     "deleteConfirm": {
       "title": "Delete skill usage?",

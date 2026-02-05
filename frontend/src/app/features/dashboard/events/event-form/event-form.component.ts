@@ -1,4 +1,4 @@
-import { Component, OnInit, signal, inject } from '@angular/core';
+import { Component, OnInit, signal, inject, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
@@ -7,11 +7,12 @@ import { LanguageService } from '../../../../core/services/language.service';
 import { Event, EventTranslation, Language } from '../../../../core/models';
 import { ImageUploadComponent, ExistingImage } from '../../../../shared/components/image-upload/image-upload.component';
 import { LanguageTabsComponent } from '../../../../shared/components/language-tabs/language-tabs.component';
+import { SkillUsageManagerComponent } from '../../../../shared/components/skill-usage-manager/skill-usage-manager.component';
 
 @Component({
   selector: 'app-event-form',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule, ImageUploadComponent, LanguageTabsComponent],
+  imports: [CommonModule, FormsModule, RouterModule, ImageUploadComponent, LanguageTabsComponent, SkillUsageManagerComponent],
   templateUrl: './event-form.component.html',
 })
 export class EventFormComponent implements OnInit {
@@ -19,6 +20,8 @@ export class EventFormComponent implements OnInit {
   private languageService = inject(LanguageService);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
+
+  @ViewChild('skillUsageManager') skillUsageManager!: SkillUsageManagerComponent;
 
   loading = signal(true);
   saving = signal(false);
@@ -165,10 +168,14 @@ export class EventFormComponent implements OnInit {
 
       if (result.error) throw result.error;
 
-      // Save pending images after entity creation
+      // Save pending images and skill usages after entity creation
       const entityId = this.isNew ? (result.data as { id: number })?.id : this.currentId!;
       if (entityId) {
         await this.savePendingImages(entityId);
+        // Save pending skill usages
+        if (this.skillUsageManager?.hasPendingUsages()) {
+          await this.skillUsageManager.savePendingUsages(entityId);
+        }
       }
 
       this.router.navigate(['/dashboard/events']);

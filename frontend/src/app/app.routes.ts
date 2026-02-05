@@ -89,16 +89,6 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/dashboard/skill-categories/skill-category-form/skill-category-form.component').then((m) => m.SkillCategoryFormComponent),
       },
-      {
-        path: 'skill-usages',
-        loadComponent: () =>
-          import('./features/dashboard/skill-usages/skill-usage-list/skill-usage-list.component').then((m) => m.SkillUsageListComponent),
-      },
-      {
-        path: 'skill-usages/:id',
-        loadComponent: () =>
-          import('./features/dashboard/skill-usages/skill-usage-form/skill-usage-form.component').then((m) => m.SkillUsageFormComponent),
-      },
     ],
   },
   {

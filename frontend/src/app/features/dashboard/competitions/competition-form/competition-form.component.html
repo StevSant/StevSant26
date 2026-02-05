@@ -148,6 +148,15 @@
         />
       </div>
 
+      <!-- Skill Usages -->
+      <div class="card">
+        <app-skill-usage-manager
+          #skillUsageManager
+          sourceType="competition"
+          [sourceId]="currentId"
+        />
+      </div>
+
       @if (error()) {
         <div class="alert-error">
           <p class="text-sm">{{ error() }}</p>
