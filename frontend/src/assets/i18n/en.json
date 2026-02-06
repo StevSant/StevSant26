@@ -385,11 +385,17 @@
   },
   "portfolio": {
     "nav": {
+      "home": "Home",
       "about": "About",
       "projects": "Projects",
       "experience": "Experience",
       "skills": "Skills",
-      "contact": "Contact"
+      "competitions": "Competitions",
+      "events": "Events",
+      "contact": "Contact",
+      "more": "More",
+      "cvDocuments": "CV Documents",
+      "viewCV": "View CV"
     },
     "sections": {
       "about": "About Me",
@@ -404,7 +410,9 @@
       "about": "No bio available",
       "projects": "No projects to display",
       "experience": "No experience to display",
-      "skills": "No skills to display"
+      "skills": "No skills to display",
+      "competitions": "No competitions to display",
+      "events": "No events to display"
     },
     "viewProject": "View Project",
     "contactMessage": "Interested in working together? Feel free to reach out!",

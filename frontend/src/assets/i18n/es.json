@@ -383,11 +383,17 @@
   },
   "portfolio": {
     "nav": {
+      "home": "Inicio",
       "about": "Sobre mí",
       "projects": "Proyectos",
       "experience": "Experiencia",
       "skills": "Habilidades",
-      "contact": "Contacto"
+      "competitions": "Competencias",
+      "events": "Eventos",
+      "contact": "Contacto",
+      "more": "Más",
+      "cvDocuments": "Documentos CV",
+      "viewCV": "Ver CV"
     },
     "sections": {
       "about": "Sobre Mí",
@@ -402,7 +408,9 @@
       "about": "No hay biografía disponible",
       "projects": "No hay proyectos para mostrar",
       "experience": "No hay experiencia para mostrar",
-      "skills": "No hay habilidades para mostrar"
+      "skills": "No hay habilidades para mostrar",
+      "competitions": "No hay competencias para mostrar",
+      "events": "No hay eventos para mostrar"
     },
     "viewProject": "Ver Proyecto",
     "contactMessage": "¿Interesado en trabajar juntos? ¡No dudes en contactarme!",

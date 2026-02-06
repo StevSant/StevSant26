@@ -3,17 +3,20 @@ import { isPlatformBrowser } from '@angular/common';
 
 export type ThemeId = 'dark-elegant' | 'light-elegant' | 'midnight-blue' | 'warm-sepia';
 
+export type ThemeIconType = 'moon' | 'sun' | 'waves' | 'book';
+
 export interface ThemeDefinition {
   id: ThemeId;
   nameKey: string;
   icon: string;
+  iconType: ThemeIconType;
 }
 
 export const AVAILABLE_THEMES: ThemeDefinition[] = [
-  { id: 'dark-elegant', nameKey: 'theme.darkElegant', icon: '🌑' },
-  { id: 'light-elegant', nameKey: 'theme.lightElegant', icon: '☀️' },
-  { id: 'midnight-blue', nameKey: 'theme.midnightBlue', icon: '🌊' },
-  { id: 'warm-sepia', nameKey: 'theme.warmSepia', icon: '📜' },
+  { id: 'dark-elegant', nameKey: 'theme.darkElegant', icon: '🌑', iconType: 'moon' },
+  { id: 'light-elegant', nameKey: 'theme.lightElegant', icon: '☀️', iconType: 'sun' },
+  { id: 'midnight-blue', nameKey: 'theme.midnightBlue', icon: '🌊', iconType: 'waves' },
+  { id: 'warm-sepia', nameKey: 'theme.warmSepia', icon: '📜', iconType: 'book' },
 ];
 
 const STORAGE_KEY = 'portfolio-theme';

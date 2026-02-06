@@ -1,0 +1,75 @@
+import { Component, inject, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { PortfolioDataService } from '../services/portfolio-data.service';
+import { TranslatePipe } from '@shared/pipes/translate.pipe';
+
+@Component({
+  selector: 'app-portfolio-projects',
+  standalone: true,
+  imports: [CommonModule, TranslatePipe],
+  template: `
+    <section class="py-24 px-4 sm:px-6 lg:px-8">
+      <div class="max-w-6xl mx-auto">
+        <h2 class="text-sm uppercase tracking-[0.3em] text-(--color-text-muted) mb-3 text-center font-medium">
+          {{ 'portfolio.sections.projects' | translate }}
+        </h2>
+        <div class="w-12 h-px bg-(--color-accent) mx-auto mb-14 opacity-60"></div>
+
+        @if (data.projects().length === 0) {
+          <p class="text-(--color-text-muted) text-center italic font-light">
+            {{ 'portfolio.empty.projects' | translate }}
+          </p>
+        } @else {
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            @for (project of data.projects(); track project.id) {
+              <div class="group bg-(--color-bg-secondary) rounded-lg p-6 border border-(--color-card-border) hover:border-(--color-accent)/30 transition-all duration-500 hover:shadow-xl">
+                <div class="flex flex-col h-full">
+                  <div class="flex-1">
+                    <div class="flex items-start justify-between mb-4">
+                      <h3 class="text-lg font-medium text-(--color-text-primary) group-hover:text-(--color-accent) transition-colors tracking-tight">
+                        {{ data.getEntityTranslation(project, 'title') }}
+                      </h3>
+                      @if (project.is_pinned) {
+                        <span class="text-(--color-pin) opacity-70">
+                          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                          </svg>
+                        </span>
+                      }
+                    </div>
+                    @if (data.getEntityTranslation(project, 'description')) {
+                      <p class="text-sm text-(--color-text-muted) line-clamp-3 mb-4 leading-relaxed font-light">
+                        {{ data.getEntityTranslation(project, 'description') }}
+                      </p>
+                    }
+                  </div>
+                  <div class="flex items-center gap-3 mt-auto pt-4 border-t border-(--color-divider)">
+                    @if (project.url) {
+                      <a
+                        [href]="project.url"
+                        target="_blank"
+                        class="text-xs uppercase tracking-widest text-(--color-accent) hover:text-(--color-accent-hover) flex items-center gap-1.5 transition-colors"
+                      >
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                        </svg>
+                        {{ 'portfolio.viewProject' | translate }}
+                      </a>
+                    }
+                  </div>
+                </div>
+              </div>
+            }
+          </div>
+        }
+      </div>
+    </section>
+  `,
+})
+export class PortfolioProjectsComponent implements OnInit {
+  protected data = inject(PortfolioDataService);
+
+  async ngOnInit(): Promise<void> {
+    await this.data.initialize();
+  }
+}

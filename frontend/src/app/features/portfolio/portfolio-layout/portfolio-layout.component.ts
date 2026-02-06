@@ -1,218 +1,31 @@
-import { Component, OnInit, signal, inject, computed, PLATFORM_ID } from '@angular/core';
-import { CommonModule, DatePipe, isPlatformBrowser } from '@angular/common';
+import { Component, OnInit, signal, inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { SupabaseService } from '@core/services/supabase.service';
-import { LanguageService } from '@core/services/language.service';
 import { ThemeService } from '@core/services/theme.service';
 import { TranslatePipe } from '@shared/pipes/translate.pipe';
-import { SafeHtmlPipe } from '@shared/pipes/safe-html.pipe';
 import { LanguageSelectorComponent } from '@shared/components/language-selector/language-selector.component';
 import { ThemeToggleComponent } from '@shared/components/theme-toggle/theme-toggle.component';
-import {
-  Profile,
-  Project,
-  Experience,
-  Competition,
-  Event,
-  Skill,
-  SkillCategory,
-  SkillCategoryTranslation,
-  CvDocument,
-  getTranslation,
-} from '@core/models';
-
-interface SkillWithLevel extends Skill {
-  calculatedLevel: number;
-  categoryName?: string;
-}
-
-interface SkillCategoryWithSkills extends SkillCategory {
-  skills: SkillWithLevel[];
-}
+import { PortfolioDataService } from '../services/portfolio-data.service';
 
 @Component({
   selector: 'app-portfolio-layout',
   standalone: true,
-  imports: [CommonModule, RouterModule, DatePipe, TranslatePipe, SafeHtmlPipe, LanguageSelectorComponent, ThemeToggleComponent],
+  imports: [CommonModule, RouterModule, TranslatePipe, LanguageSelectorComponent, ThemeToggleComponent],
   templateUrl: './portfolio-layout.component.html',
 })
 export class PortfolioLayoutComponent implements OnInit {
-  private supabase = inject(SupabaseService);
-  private languageService = inject(LanguageService);
-  private platformId = inject(PLATFORM_ID);
+  protected data = inject(PortfolioDataService);
   // Theme service injected to ensure initialization
   protected themeService = inject(ThemeService);
 
-  loading = signal(true);
-  profile = signal<Profile | null>(null);
-  avatarUrl = signal<string | null>(null);
-  bannerUrl = signal<string | null>(null);
-  projects = signal<Project[]>([]);
-  experiences = signal<Experience[]>([]);
-  competitions = signal<Competition[]>([]);
-  events = signal<Event[]>([]);
-  skillCategories = signal<SkillCategoryWithSkills[]>([]);
-  cvDocuments = signal<CvDocument[]>([]);
   mobileMenuOpen = signal(false);
-
-  currentLang = computed(() => this.languageService.currentLanguageCode());
+  moreMenuOpen = signal(false);
+  cvMenuOpen = signal(false);
 
   currentYear = new Date().getFullYear();
 
   async ngOnInit(): Promise<void> {
-    // Only load data in browser environment
-    if (!isPlatformBrowser(this.platformId)) {
-      this.loading.set(false);
-      return;
-    }
-
-    await Promise.all([
-      this.loadProfile(),
-      this.loadProjects(),
-      this.loadExperiences(),
-      this.loadCompetitions(),
-      this.loadEvents(),
-      this.loadSkillsWithLevels(),
-    ]);
-    this.loading.set(false);
-  }
-
-  private async loadProfile(): Promise<void> {
-    const { data } = await this.supabase
-      .from('profile')
-      .select('*, translations:profile_translation(*)')
-      .limit(1);
-    if (data && data.length > 0) {
-      this.profile.set(data[0] as Profile);
-    }
-
-    const { data: avatarImages } = await this.supabase.getImagesBySourceType('profile');
-    if (avatarImages && avatarImages.length > 0) {
-      this.avatarUrl.set(avatarImages[0].url);
-    }
-
-    const { data: bannerImages } = await this.supabase.getImagesBySourceType('profile_banner');
-    if (bannerImages && bannerImages.length > 0) {
-      this.bannerUrl.set(bannerImages[0].url);
-    }
-
-    // Load CV documents
-    const { data: cvData } = await this.supabase
-      .from('cv_document')
-      .select('*, language:language(*)')
-      .order('position', { ascending: true });
-    if (cvData) {
-      this.cvDocuments.set(cvData as CvDocument[]);
-    }
-  }
-
-  private async loadProjects(): Promise<void> {
-    const { data } = await this.supabase
-      .from('project')
-      .select('*, translations:project_translation(*)')
-      .eq('is_archived', false)
-      .order('is_pinned', { ascending: false })
-      .order('position', { ascending: true });
-    if (data) {
-      this.projects.set(data as Project[]);
-    }
-  }
-
-  private async loadExperiences(): Promise<void> {
-    const { data } = await this.supabase
-      .from('experience')
-      .select('*, translations:experience_translation(*)')
-      .eq('is_archived', false)
-      .order('start_date', { ascending: false });
-    if (data) {
-      this.experiences.set(data as Experience[]);
-    }
-  }
-
-  private async loadCompetitions(): Promise<void> {
-    const { data } = await this.supabase
-      .from('competitions')
-      .select('*, translations:competitions_translation(*)')
-      .eq('is_archived', false)
-      .order('date', { ascending: false });
-    if (data) {
-      this.competitions.set(data as Competition[]);
-    }
-  }
-
-  private async loadEvents(): Promise<void> {
-    const { data } = await this.supabase
-      .from('event')
-      .select('*, translations:event_translation(*)')
-      .eq('is_archived', false)
-      .order('assisted_at', { ascending: false });
-    if (data) {
-      this.events.set(data as Event[]);
-    }
-  }
-
-  private async loadSkillsWithLevels(): Promise<void> {
-    const { data: skills } = await this.supabase
-      .from('skill')
-      .select(`
-        *,
-        translations:skill_translation(*),
-        category:skill_category(*, translations:skill_category_translation(*))
-      `)
-      .eq('is_archived', false);
-
-    if (!skills || skills.length === 0) {
-      this.skillCategories.set([]);
-      return;
-    }
-
-    const { data: usages } = await this.supabase
-      .from('skill_usages')
-      .select('skill_id, level');
-
-    const levelMap = new Map<number, number>();
-    if (usages) {
-      for (const usage of usages) {
-        if (!levelMap.has(usage.skill_id) && usage.level) {
-          levelMap.set(usage.skill_id, usage.level);
-        }
-      }
-    }
-
-    const categoryMap = new Map<number | null, SkillCategoryWithSkills>();
-
-    for (const skill of skills as any[]) {
-      const categoryId = skill.skill_category_id || null;
-      const calculatedLevel = levelMap.get(skill.id) || 0;
-
-      const skillWithLevel: SkillWithLevel = {
-        ...skill,
-        calculatedLevel,
-        categoryName: skill.category
-          ? getTranslation<SkillCategoryTranslation>(skill.category.translations, this.currentLang())?.name
-          : undefined,
-      };
-
-      if (!categoryMap.has(categoryId)) {
-        const category = skill.category || {
-          id: 0,
-          name: 'Uncategorized',
-          translations: [],
-        };
-        categoryMap.set(categoryId, {
-          ...category,
-          skills: [],
-        });
-      }
-
-      categoryMap.get(categoryId)!.skills.push(skillWithLevel);
-    }
-
-    for (const category of categoryMap.values()) {
-      category.skills.sort((a, b) => b.calculatedLevel - a.calculatedLevel);
-    }
-
-    this.skillCategories.set(Array.from(categoryMap.values()));
+    await this.data.initialize();
   }
 
   toggleMobileMenu(): void {
@@ -223,45 +36,19 @@ export class PortfolioLayoutComponent implements OnInit {
     this.mobileMenuOpen.set(false);
   }
 
-  scrollToSection(sectionId: string): void {
-    this.closeMobileMenu();
-    const element = document.getElementById(sectionId);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
+  toggleMoreMenu(): void {
+    this.cvMenuOpen.set(false);
+    this.moreMenuOpen.update((v) => !v);
   }
 
-  getEntityTranslation(entity: any, field: string): string {
-    const translation = getTranslation(entity.translations, this.currentLang());
-    return (translation as any)?.[field] || '';
+  toggleCvMenu(): void {
+    this.moreMenuOpen.set(false);
+    this.cvMenuOpen.update((v) => !v);
   }
 
-  getProfileBio(): string {
-    const p = this.profile();
-    if (!p) return '';
-    const translation = getTranslation(p.translations, this.currentLang());
-    return translation?.about || '';
-  }
-
-  getProfileHeadline(): string {
-    return '';
-  }
-
-  getCategoryName(category: SkillCategoryWithSkills): string {
-    const translation = getTranslation(category.translations as any[], this.currentLang());
-    return (translation as any)?.name || 'Other';
-  }
-
-  getStarArray(level: number): boolean[] {
-    return Array(5).fill(false).map((_, i) => i < level);
-  }
-
-  formatDateRange(startDate: string | null, endDate: string | null): string {
-    if (!startDate) return '';
-    const start = new Date(startDate).toLocaleDateString();
-    if (!endDate) {
-      return `${start} - Present`;
-    }
-    return `${start} - ${new Date(endDate).toLocaleDateString()}`;
+  closeAllMenus(): void {
+    this.moreMenuOpen.set(false);
+    this.cvMenuOpen.set(false);
+    this.mobileMenuOpen.set(false);
   }
 }

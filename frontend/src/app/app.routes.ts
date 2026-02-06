@@ -2,10 +2,49 @@ import { Routes } from '@angular/router';
 import { authGuard, noAuthGuard } from './core/guards/auth.guard';
 import { environment } from '../environments/environment';
 
+const portfolioChildren: Routes = [
+  {
+    path: '',
+    loadComponent: () =>
+      import('./features/portfolio/portfolio-home/portfolio-home.component').then((m) => m.PortfolioHomeComponent),
+  },
+  {
+    path: 'projects',
+    loadComponent: () =>
+      import('./features/portfolio/portfolio-projects/portfolio-projects.component').then((m) => m.PortfolioProjectsComponent),
+  },
+  {
+    path: 'experience',
+    loadComponent: () =>
+      import('./features/portfolio/portfolio-experience/portfolio-experience.component').then((m) => m.PortfolioExperienceComponent),
+  },
+  {
+    path: 'skills',
+    loadComponent: () =>
+      import('./features/portfolio/portfolio-skills/portfolio-skills.component').then((m) => m.PortfolioSkillsComponent),
+  },
+  {
+    path: 'competitions',
+    loadComponent: () =>
+      import('./features/portfolio/portfolio-competitions/portfolio-competitions.component').then((m) => m.PortfolioCompetitionsComponent),
+  },
+  {
+    path: 'events',
+    loadComponent: () =>
+      import('./features/portfolio/portfolio-events/portfolio-events.component').then((m) => m.PortfolioEventsComponent),
+  },
+  {
+    path: 'contact',
+    loadComponent: () =>
+      import('./features/portfolio/portfolio-contact/portfolio-contact.component').then((m) => m.PortfolioContactComponent),
+  },
+];
+
 const portfolioRoute = {
   path: '',
   loadComponent: () =>
     import('./features/portfolio/portfolio-layout/portfolio-layout.component').then((m) => m.PortfolioLayoutComponent),
+  children: portfolioChildren,
 };
 
 const devRoutes: Routes = [
@@ -18,6 +57,7 @@ const devRoutes: Routes = [
     path: 'portfolio',
     loadComponent: () =>
       import('./features/portfolio/portfolio-layout/portfolio-layout.component').then((m) => m.PortfolioLayoutComponent),
+    children: portfolioChildren,
   },
   {
     path: 'login',
