@@ -1,0 +1,31 @@
+@if (visible() && imageUrl()) {
+  <div
+    class="modal-backdrop fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm"
+    (click)="onBackdropClick($event)"
+  >
+    <div class="relative max-w-4xl max-h-[90vh] mx-4">
+      <!-- Close button -->
+      <button
+        type="button"
+        (click)="close.emit()"
+        class="absolute -top-12 right-0 p-2 text-white hover:text-(--color-accent) transition-colors"
+      >
+        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M6 18L18 6M6 6l12 12"
+          />
+        </svg>
+      </button>
+
+      <!-- Full image -->
+      <img
+        [src]="imageUrl()"
+        [alt]="altText() || 'Imagen completa'"
+        class="max-w-full max-h-[85vh] object-contain rounded-lg shadow-2xl"
+      />
+    </div>
+  </div>
+}

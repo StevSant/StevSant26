@@ -1,6 +1,11 @@
 import { Component, input, output, signal, computed, inject, effect } from '@angular/core';
 import { SupabaseService } from '@core/services/supabase.service';
 import { SourceType } from '@core/models';
+import { ImageUploadAvatarComponent } from './image-upload-avatar/image-upload-avatar.component';
+import { ImageUploadBannerComponent } from './image-upload-banner/image-upload-banner.component';
+import { ImageUploadStandardComponent } from './image-upload-standard/image-upload-standard.component';
+import { ImageUploadGalleryComponent } from './image-upload-gallery/image-upload-gallery.component';
+import { ImageUploadModalComponent } from './image-upload-modal/image-upload-modal.component';
 
 export interface ExistingImage {
   id: number;
@@ -11,6 +16,13 @@ export interface ExistingImage {
 @Component({
   selector: 'app-image-upload',
   standalone: true,
+  imports: [
+    ImageUploadAvatarComponent,
+    ImageUploadBannerComponent,
+    ImageUploadStandardComponent,
+    ImageUploadGalleryComponent,
+    ImageUploadModalComponent,
+  ],
   templateUrl: './image-upload.component.html',
 })
 export class ImageUploadComponent {
@@ -199,6 +211,42 @@ export class ImageUploadComponent {
   onModalBackdropClick(event: MouseEvent): void {
     if ((event.target as HTMLElement).classList.contains('modal-backdrop')) {
       this.closeModal();
+    }
+  }
+
+  // --- Sub-component event handlers ---
+
+  onOpenImageModal(): void {
+    this.showModal.set(true);
+  }
+
+  onRemovePreview(): void {
+    this.previewUrl.set(null);
+  }
+
+  processDroppedFiles(files: File[]): void {
+    this.processFiles(files);
+  }
+
+  async onGalleryRemoveUploaded(path: string): Promise<void> {
+    try {
+      await this.supabase.deleteFromStorage(path);
+      this.uploadedImages.update((images) => images.filter((img) => img.path !== path));
+      this.removed.emit(path);
+    } catch (err) {
+      this.error.set('Error al eliminar la imagen.');
+      console.error('Delete error:', err);
+    }
+  }
+
+  async onGalleryRemoveExisting(imageId: number): Promise<void> {
+    try {
+      await this.supabase.update('image', imageId, { is_archived: true });
+      this.loadedExistingImages.update((images) => images.filter((img) => img.id !== imageId));
+      this.imageDeleted.emit(imageId);
+    } catch (err) {
+      this.error.set('Error al eliminar la imagen.');
+      console.error('Delete error:', err);
     }
   }
 }

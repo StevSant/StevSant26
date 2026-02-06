@@ -1,0 +1,123 @@
+<div
+  class="bg-[var(--color-bg-tertiary)] rounded-lg p-4 space-y-4 border border-[var(--color-border-secondary)]"
+>
+  <h4 class="font-medium text-[var(--color-text-primary)]">
+    {{ 'skillUsages.newSkill' | translate }}
+  </h4>
+
+  <!-- Skill Selection -->
+  <div>
+    <label for="skill_select" class="label">
+      {{ 'skillUsages.fields.skill' | translate }}
+      <span class="text-[var(--color-error)]">*</span>
+    </label>
+    <select id="skill_select" [(ngModel)]="formData().skill_id" class="input">
+      <option [ngValue]="0" disabled>{{ 'skillUsages.selectSkill' | translate }}</option>
+      @for (skill of skills(); track skill.id) {
+        <option [ngValue]="skill.id">{{ getSkillName(skill) }}</option>
+      }
+    </select>
+  </div>
+
+  <!-- Level -->
+  <div>
+    <label class="label">{{ 'skillUsages.levelLabel' | translate }}</label>
+    <div class="flex items-center gap-2">
+      @for (i of [1, 2, 3, 4, 5]; track i) {
+        <button
+          type="button"
+          (click)="levelChange.emit(i)"
+          class="w-10 h-10 rounded-lg border-2 transition-all duration-200 flex items-center justify-center text-lg"
+          [class.border-[var(--color-accent)]]="formData().level === i"
+          [class.bg-[var(--color-accent)]]="formData().level === i"
+          [class.text-white]="formData().level === i"
+          [class.border-[var(--color-border-secondary)]]="formData().level !== i"
+          [class.hover:border-[var(--color-accent)]]="formData().level !== i"
+        >
+          {{ i }}
+        </button>
+      }
+      @if (formData().level) {
+        <button
+          type="button"
+          (click)="levelChange.emit(null)"
+          class="ml-2 text-sm text-[var(--color-text-muted)] hover:text-[var(--color-error)]"
+        >
+          {{ 'skillUsages.clearLevel' | translate }}
+        </button>
+      }
+    </div>
+  </div>
+
+  <!-- Dates -->
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div>
+      <label for="started_at" class="label">{{ 'skillUsages.startDate' | translate }}</label>
+      <input
+        type="date"
+        id="started_at"
+        [(ngModel)]="formData().started_at"
+        class="input"
+      />
+    </div>
+    <div>
+      <label for="ended_at" class="label">{{ 'skillUsages.endDate' | translate }}</label>
+      <input type="date" id="ended_at" [(ngModel)]="formData().ended_at" class="input" />
+    </div>
+  </div>
+
+  <!-- Notes with language tabs -->
+  <div>
+    <label class="label">{{ 'skillUsages.notesLabel' | translate }}</label>
+    <app-language-tabs
+      [selectedLanguage]="currentEditLanguage()"
+      (languageChange)="languageChange.emit($event)"
+    />
+    <textarea
+      [ngModel]="currentTranslation().notes"
+      (ngModelChange)="translationChange.emit($event)"
+      rows="2"
+      class="input-textarea mt-2"
+      [placeholder]="'skillUsages.notesPlaceholder' | translate"
+    ></textarea>
+  </div>
+
+  <!-- Form Actions -->
+  <div class="flex justify-end gap-2">
+    <button type="button" (click)="cancel.emit()" class="btn-secondary text-sm">
+      {{ 'common.cancel' | translate }}
+    </button>
+    <button
+      type="button"
+      (click)="add.emit()"
+      [disabled]="saving()"
+      class="btn-primary text-sm"
+    >
+      @if (saving()) {
+        <svg
+          class="spinner"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+        >
+          <circle
+            class="opacity-25"
+            cx="12"
+            cy="12"
+            r="10"
+            stroke="currentColor"
+            stroke-width="4"
+          ></circle>
+          <path
+            class="opacity-75"
+            fill="currentColor"
+            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+          ></path>
+        </svg>
+        {{ 'skillUsages.saving' | translate }}
+      } @else {
+        {{ 'skillUsages.add' | translate }}
+      }
+    </button>
+  </div>
+</div>

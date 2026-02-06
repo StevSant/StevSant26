@@ -4,14 +4,24 @@ import { FormsModule } from '@angular/forms';
 import { SupabaseService } from '@core/services/supabase.service';
 import { LanguageService } from '@core/services/language.service';
 import { Profile, ProfileTranslation, Language } from '@core/models';
-import { ImageUploadComponent } from '@shared/components/image-upload/image-upload.component';
 import { CvManagerComponent } from '@shared/components/cv-manager/cv-manager.component';
 import { TranslatePipe } from '@shared/pipes/translate.pipe';
+import { PersonalInfoCardComponent } from './personal-info-card/personal-info-card.component';
+import { SocialLinksCardComponent } from './social-links-card/social-links-card.component';
+import { ProfileTranslationsCardComponent } from './profile-translations-card/profile-translations-card.component';
 
 @Component({
   selector: 'app-profile-editor',
   standalone: true,
-  imports: [CommonModule, FormsModule, ImageUploadComponent, CvManagerComponent, TranslatePipe],
+  imports: [
+    CommonModule,
+    FormsModule,
+    CvManagerComponent,
+    TranslatePipe,
+    PersonalInfoCardComponent,
+    SocialLinksCardComponent,
+    ProfileTranslationsCardComponent,
+  ],
   templateUrl: './profile-editor.component.html',
 })
 export class ProfileEditorComponent implements OnInit {
@@ -53,6 +63,41 @@ export class ProfileEditorComponent implements OnInit {
     instagram_url: '',
     whatsapp: '',
   };
+
+  // Computed sub-data objects for child components
+  get personalInfoData() {
+    return {
+      first_name: this.formData.first_name,
+      last_name: this.formData.last_name,
+      nickname: this.formData.nickname,
+    };
+  }
+
+  get socialLinksData() {
+    return {
+      email: this.formData.email,
+      phone: this.formData.phone,
+      whatsapp: this.formData.whatsapp,
+      linkedin_url: this.formData.linkedin_url,
+      github_url: this.formData.github_url,
+      instagram_url: this.formData.instagram_url,
+    };
+  }
+
+  onPersonalInfoChange(data: { first_name: string; last_name: string; nickname: string }): void {
+    this.formData.first_name = data.first_name;
+    this.formData.last_name = data.last_name;
+    this.formData.nickname = data.nickname;
+  }
+
+  onSocialLinksChange(data: { email: string; phone: string; whatsapp: string; linkedin_url: string; github_url: string; instagram_url: string }): void {
+    this.formData.email = data.email;
+    this.formData.phone = data.phone;
+    this.formData.whatsapp = data.whatsapp;
+    this.formData.linkedin_url = data.linkedin_url;
+    this.formData.github_url = data.github_url;
+    this.formData.instagram_url = data.instagram_url;
+  }
 
   // Translations map by language code
   translations: Map<string, { about: string }> = new Map();

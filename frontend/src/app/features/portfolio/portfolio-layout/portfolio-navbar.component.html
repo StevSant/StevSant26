@@ -1,0 +1,221 @@
+<div class="hidden lg:flex items-center space-x-1">
+  <!-- Main nav links -->
+  <a
+    routerLink="./"
+    routerLinkActive="nav-link-active"
+    [routerLinkActiveOptions]="{ exact: true }"
+    class="nav-link"
+  >
+    {{ 'portfolio.nav.home' | translate }}
+  </a>
+  <a routerLink="projects" routerLinkActive="nav-link-active" class="nav-link">
+    {{ 'portfolio.nav.projects' | translate }}
+  </a>
+  <a routerLink="experience" routerLinkActive="nav-link-active" class="nav-link">
+    {{ 'portfolio.nav.experience' | translate }}
+  </a>
+  <a routerLink="skills" routerLinkActive="nav-link-active" class="nav-link">
+    {{ 'portfolio.nav.skills' | translate }}
+  </a>
+
+  <!-- More dropdown -->
+  <div class="relative">
+    <button
+      type="button"
+      (click)="toggleMoreMenu.emit()"
+      class="nav-link inline-flex items-center gap-1"
+    >
+      {{ 'portfolio.nav.more' | translate }}
+      <svg
+        class="w-3.5 h-3.5 transition-transform"
+        [class.rotate-180]="moreMenuOpen()"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+      </svg>
+    </button>
+    @if (moreMenuOpen()) {
+      <div
+        class="absolute left-0 mt-2 w-52 bg-(--color-bg-secondary) border border-(--color-border-primary) rounded-lg shadow-xl z-50 py-1 overflow-hidden"
+      >
+        <a
+          routerLink="competitions"
+          (click)="closeAllMenus.emit()"
+          class="flex items-center gap-3 px-4 py-2.5 text-sm text-(--color-text-primary) hover:bg-(--color-bg-tertiary) transition-colors"
+        >
+          <svg
+            class="w-4 h-4 text-(--color-text-muted)"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"
+            />
+          </svg>
+          {{ 'portfolio.nav.competitions' | translate }}
+        </a>
+        <a
+          routerLink="events"
+          (click)="closeAllMenus.emit()"
+          class="flex items-center gap-3 px-4 py-2.5 text-sm text-(--color-text-primary) hover:bg-(--color-bg-tertiary) transition-colors"
+        >
+          <svg
+            class="w-4 h-4 text-(--color-text-muted)"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+            />
+          </svg>
+          {{ 'portfolio.nav.events' | translate }}
+        </a>
+        <div class="h-px bg-(--color-divider) my-1"></div>
+        <a
+          routerLink="contact"
+          (click)="closeAllMenus.emit()"
+          class="flex items-center gap-3 px-4 py-2.5 text-sm text-(--color-text-primary) hover:bg-(--color-bg-tertiary) transition-colors"
+        >
+          <svg
+            class="w-4 h-4 text-(--color-text-muted)"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+            />
+          </svg>
+          {{ 'portfolio.nav.contact' | translate }}
+        </a>
+      </div>
+    }
+  </div>
+
+  <!-- Divider -->
+  <div class="w-px h-5 bg-(--color-divider) mx-2"></div>
+
+  <!-- CV Button -->
+  @if (data.cvDocuments().length > 0) {
+    <div class="relative">
+      <button
+        type="button"
+        (click)="toggleCvMenu.emit()"
+        class="inline-flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium text-(--color-accent) hover:bg-(--color-bg-tertiary) transition-colors"
+      >
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+          />
+        </svg>
+        CV
+        <svg
+          class="w-3.5 h-3.5 transition-transform"
+          [class.rotate-180]="cvMenuOpen()"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M19 9l-7 7-7-7"
+          />
+        </svg>
+      </button>
+      @if (cvMenuOpen()) {
+        <div
+          class="absolute right-0 mt-2 w-64 bg-(--color-bg-secondary) border border-(--color-border-primary) rounded-lg shadow-xl z-50 py-1 overflow-hidden"
+        >
+          <div class="px-4 py-2 border-b border-(--color-divider)">
+            <p class="text-xs font-medium uppercase tracking-wider text-(--color-text-muted)">
+              {{ 'portfolio.nav.cvDocuments' | translate }}
+            </p>
+          </div>
+          @for (cv of data.cvDocuments(); track cv.id) {
+            <div class="px-4 py-3 hover:bg-(--color-bg-tertiary) transition-colors">
+              <div class="flex items-center justify-between">
+                <div class="min-w-0 flex-1">
+                  <p class="text-sm font-medium text-(--color-text-primary) truncate">
+                    {{ cv.label || cv.file_name || 'CV' }}
+                  </p>
+                  @if (cv.language) {
+                    <p class="text-xs text-(--color-text-muted)">
+                      {{ cv.language.name }}
+                    </p>
+                  }
+                </div>
+                <div class="flex items-center gap-1 shrink-0 ml-3">
+                  <!-- View -->
+                  <a
+                    [href]="cv.url"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    (click)="closeAllMenus.emit()"
+                    class="p-1.5 rounded-md text-(--color-text-muted) hover:text-(--color-accent) hover:bg-(--color-bg-primary) transition-colors"
+                    [title]="'portfolio.nav.viewCV' | translate"
+                  >
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                      />
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                      />
+                    </svg>
+                  </a>
+                  <!-- Download -->
+                  <a
+                    [href]="cv.url"
+                    download
+                    (click)="closeAllMenus.emit()"
+                    class="p-1.5 rounded-md text-(--color-text-muted) hover:text-(--color-accent) hover:bg-(--color-bg-primary) transition-colors"
+                    [title]="'portfolio.downloadCV' | translate"
+                  >
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
+                      />
+                    </svg>
+                  </a>
+                </div>
+              </div>
+            </div>
+          }
+        </div>
+      }
+    </div>
+  }
+
+  <!-- Divider -->
+  <div class="w-px h-5 bg-(--color-divider) mx-1"></div>
+
+  <app-language-selector />
+  <app-theme-toggle />
+</div>

@@ -5,8 +5,9 @@ import { SupabaseService } from '@core/services/supabase.service';
 import { LanguageService } from '@core/services/language.service';
 import { TranslateService } from '@core/services/translate.service';
 import { SkillUsage, Skill, SourceType, Language } from '@core/models';
-import { LanguageTabsComponent } from '../language-tabs/language-tabs.component';
 import { TranslatePipe } from '../../pipes/translate.pipe';
+import { SkillUsageAddFormComponent } from './skill-usage-add-form/skill-usage-add-form.component';
+import { SkillUsageItemComponent } from './skill-usage-item/skill-usage-item.component';
 
 export interface SkillUsageItem {
   id?: number;
@@ -23,7 +24,7 @@ export interface SkillUsageItem {
 @Component({
   selector: 'app-skill-usage-manager',
   standalone: true,
-  imports: [CommonModule, FormsModule, LanguageTabsComponent, TranslatePipe],
+  imports: [CommonModule, FormsModule, TranslatePipe, SkillUsageAddFormComponent, SkillUsageItemComponent],
   templateUrl: './skill-usage-manager.component.html',
 })
 export class SkillUsageManagerComponent implements OnInit {

@@ -1,0 +1,76 @@
+<!-- Hero Section -->
+<section class="relative pt-12 pb-24 px-4 sm:px-6 lg:px-8 overflow-hidden">
+  <!-- Banner Background -->
+  @if (data.bannerUrl()) {
+    <div class="absolute inset-0 z-0">
+      <img [src]="data.bannerUrl()" alt="Banner" class="w-full h-full object-cover opacity-30" />
+      <div
+        class="absolute inset-0"
+        style="
+          background: linear-gradient(
+            to bottom,
+            var(--color-hero-gradient-start),
+            var(--color-hero-gradient-end)
+          );
+        "
+      ></div>
+    </div>
+  }
+
+  <div class="relative z-10 max-w-6xl mx-auto">
+    <div class="flex flex-col md:flex-row items-center gap-10 md:gap-16">
+      <!-- Avatar -->
+      @if (data.avatarUrl()) {
+        <div class="shrink-0">
+          <img
+            [src]="data.avatarUrl()"
+            alt="Avatar"
+            class="w-44 h-44 md:w-56 md:h-56 rounded-full object-cover shadow-2xl ring-2 ring-(--color-accent)/20 ring-offset-4 ring-offset-(--color-bg-primary)"
+          />
+        </div>
+      }
+
+      <!-- Hero Content -->
+      <div class="text-center md:text-left flex-1">
+        <h1
+          class="text-4xl md:text-5xl lg:text-6xl font-bold text-(--color-text-primary) mb-4 tracking-tight leading-tight"
+        >
+          {{ data.profile()?.first_name }} {{ data.profile()?.last_name }}
+        </h1>
+        @if (data.profile()?.nickname) {
+          <p class="text-(--color-text-muted) text-lg mb-6 font-light">
+            &#64;{{ data.profile()?.nickname }}
+          </p>
+        }
+        <div class="hidden md:block w-24 h-px bg-(--color-accent) mt-6 opacity-50"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Divider -->
+<div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+  <div class="h-px bg-(--color-divider)"></div>
+</div>
+
+<!-- About Section -->
+<section class="py-24 px-4 sm:px-6 lg:px-8">
+  <div class="max-w-4xl mx-auto">
+    <h2
+      class="text-sm uppercase tracking-[0.3em] text-(--color-text-muted) mb-3 text-center font-medium"
+    >
+      {{ 'portfolio.sections.about' | translate }}
+    </h2>
+    <div class="w-12 h-px bg-(--color-accent) mx-auto mb-10 opacity-60"></div>
+    @if (data.getProfileBio()) {
+      <div
+        class="prose prose-lg max-w-none text-(--color-text-secondary) text-center leading-relaxed"
+        [innerHTML]="data.getProfileBio() | safeHtml"
+      ></div>
+    } @else {
+      <p class="text-(--color-text-muted) text-center italic font-light">
+        {{ 'portfolio.empty.about' | translate }}
+      </p>
+    }
+  </div>
+</section>

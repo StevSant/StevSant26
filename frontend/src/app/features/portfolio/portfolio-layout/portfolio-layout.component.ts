@@ -6,11 +6,23 @@ import { TranslatePipe } from '@shared/pipes/translate.pipe';
 import { LanguageSelectorComponent } from '@shared/components/language-selector/language-selector.component';
 import { ThemeToggleComponent } from '@shared/components/theme-toggle/theme-toggle.component';
 import { PortfolioDataService } from '../services/portfolio-data.service';
+import { PortfolioNavbarComponent } from './portfolio-navbar.component';
+import { PortfolioMobileMenuComponent } from './portfolio-mobile-menu.component';
+import { PortfolioFooterComponent } from './portfolio-footer.component';
 
 @Component({
   selector: 'app-portfolio-layout',
   standalone: true,
-  imports: [CommonModule, RouterModule, TranslatePipe, LanguageSelectorComponent, ThemeToggleComponent],
+  imports: [
+    CommonModule,
+    RouterModule,
+    TranslatePipe,
+    LanguageSelectorComponent,
+    ThemeToggleComponent,
+    PortfolioNavbarComponent,
+    PortfolioMobileMenuComponent,
+    PortfolioFooterComponent,
+  ],
   templateUrl: './portfolio-layout.component.html',
 })
 export class PortfolioLayoutComponent implements OnInit {

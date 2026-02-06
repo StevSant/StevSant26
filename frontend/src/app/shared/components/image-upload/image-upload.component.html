@@ -1,377 +1,38 @@
 <div class="space-y-4">
-  <!-- Avatar Mode Layout -->
+  <!-- Avatar Mode -->
   @if (isAvatar()) {
-    <div class="flex flex-col items-center gap-4">
-      <!-- Circular Avatar Preview/Placeholder -->
-      <div class="relative">
-        @if (currentImageUrl()) {
-          <!-- Avatar Image -->
-          <div class="relative group">
-            <img
-              [src]="currentImageUrl()"
-              [alt]="altText() || 'Avatar'"
-              class="w-32 h-32 rounded-full object-cover border-4 border-(--color-border-secondary) shadow-lg"
-            />
-            <!-- Overlay with actions on hover -->
-            <div
-              class="absolute inset-0 rounded-full bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2"
-            >
-              <!-- View full image button -->
-              <button
-                type="button"
-                (click)="openImageModal($event)"
-                class="p-2 bg-(--color-accent) hover:bg-(--color-accent-hover) rounded-full text-white transition-colors"
-                title="Ver imagen completa"
-              >
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7"
-                  />
-                </svg>
-              </button>
-              <!-- Change image button -->
-              <button
-                type="button"
-                (click)="fileInput.click()"
-                class="p-2 bg-(--color-bg-secondary) hover:bg-(--color-bg-tertiary) rounded-full text-(--color-text-primary) transition-colors"
-                title="Cambiar imagen"
-              >
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"
-                  />
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"
-                  />
-                </svg>
-              </button>
-              <!-- Remove image button -->
-              <button
-                type="button"
-                (click)="removeImage($event)"
-                class="p-2 bg-(--color-error) hover:bg-(--color-error-hover) rounded-full text-white transition-colors"
-                title="Eliminar imagen"
-              >
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M6 18L18 6M6 6l12 12"
-                  />
-                </svg>
-              </button>
-            </div>
-          </div>
-        } @else {
-          <!-- Empty Avatar Placeholder -->
-          <div
-            class="w-32 h-32 rounded-full border-4 border-dashed border-(--color-border-secondary) hover:border-(--color-accent) transition-colors cursor-pointer flex items-center justify-center bg-(--color-bg-tertiary)"
-            [class.border-(--color-accent)]="isDragging()"
-            [class.bg-(--color-info-bg)]="isDragging()"
-            (dragover)="onDragOver($event)"
-            (dragleave)="onDragLeave($event)"
-            (drop)="onDrop($event)"
-            (click)="fileInput.click()"
-          >
-            @if (uploading()) {
-              <svg
-                class="spinner-lg"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-              >
-                <circle
-                  class="opacity-25"
-                  cx="12"
-                  cy="12"
-                  r="10"
-                  stroke="currentColor"
-                  stroke-width="4"
-                ></circle>
-                <path
-                  class="opacity-75"
-                  fill="currentColor"
-                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                ></path>
-              </svg>
-            } @else {
-              <svg
-                class="w-10 h-10 text-(--color-text-muted)"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                />
-              </svg>
-            }
-          </div>
-        }
-      </div>
-
-      <!-- Upload hint text -->
-      @if (!currentImageUrl() && !uploading()) {
-        <p class="text-sm text-(--color-text-muted) text-center">
-          <span class="text-(--color-accent) font-medium cursor-pointer" (click)="fileInput.click()"
-            >Haz clic</span
-          >
-          o arrastra una imagen
-        </p>
-      }
-
-      <!-- Hidden file input -->
-      <input
-        #fileInput
-        type="file"
-        accept="image/*"
-        class="hidden"
-        (change)="onFileSelect($event)"
-        [disabled]="uploading()"
-      />
-    </div>
+    <app-image-upload-avatar
+      [currentImageUrl]="currentImageUrl()"
+      [altText]="altText()"
+      [uploading]="uploading()"
+      (viewImage)="onOpenImageModal()"
+      (fileSelected)="onFileSelect($event)"
+      (fileDrop)="processDroppedFiles($event)"
+      (removeImage)="onRemovePreview()"
+    />
   } @else if (isBanner()) {
-    <!-- Banner Mode Layout -->
-    <div class="flex flex-col gap-4">
-      <div class="relative">
-        @if (currentImageUrl()) {
-          <!-- Banner Image Preview -->
-          <div class="relative group">
-            <img
-              [src]="currentImageUrl()"
-              [alt]="altText() || 'Banner'"
-              class="w-full h-48 md:h-56 rounded-xl object-cover border-2 border-(--color-border-secondary) shadow-lg"
-            />
-            <!-- Overlay with actions on hover -->
-            <div
-              class="absolute inset-0 rounded-xl bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2"
-            >
-              <!-- View full image button -->
-              <button
-                type="button"
-                (click)="openImageModal($event)"
-                class="p-2 bg-(--color-accent) hover:bg-(--color-accent-hover) rounded-full text-white transition-colors"
-                title="Ver imagen completa"
-              >
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7"
-                  />
-                </svg>
-              </button>
-              <!-- Change image button -->
-              <button
-                type="button"
-                (click)="bannerFileInput.click()"
-                class="p-2 bg-(--color-bg-secondary) hover:bg-(--color-bg-tertiary) rounded-full text-(--color-text-primary) transition-colors"
-                title="Cambiar banner"
-              >
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"
-                  />
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"
-                  />
-                </svg>
-              </button>
-              <!-- Remove image button -->
-              <button
-                type="button"
-                (click)="removeImage($event)"
-                class="p-2 bg-(--color-error) hover:bg-(--color-error-hover) rounded-full text-white transition-colors"
-                title="Eliminar banner"
-              >
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M6 18L18 6M6 6l12 12"
-                  />
-                </svg>
-              </button>
-            </div>
-          </div>
-        } @else {
-          <!-- Empty Banner Placeholder -->
-          <div
-            class="w-full h-48 md:h-56 rounded-xl border-2 border-dashed border-(--color-border-secondary) hover:border-(--color-accent) transition-colors cursor-pointer flex flex-col items-center justify-center gap-3 bg-(--color-bg-tertiary)"
-            [class.border-(--color-accent)]="isDragging()"
-            [class.bg-(--color-info-bg)]="isDragging()"
-            (dragover)="onDragOver($event)"
-            (dragleave)="onDragLeave($event)"
-            (drop)="onDrop($event)"
-            (click)="bannerFileInput.click()"
-          >
-            @if (uploading()) {
-              <svg
-                class="spinner-lg"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-              >
-                <circle
-                  class="opacity-25"
-                  cx="12"
-                  cy="12"
-                  r="10"
-                  stroke="currentColor"
-                  stroke-width="4"
-                ></circle>
-                <path
-                  class="opacity-75"
-                  fill="currentColor"
-                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                ></path>
-              </svg>
-            } @else {
-              <svg
-                class="w-12 h-12 text-(--color-text-muted)"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
-                />
-              </svg>
-              <p class="text-sm text-(--color-text-muted)">
-                <span class="text-(--color-accent) font-medium">Haz clic</span> o arrastra una
-                imagen de banner
-              </p>
-              <p class="text-xs text-(--color-text-disabled)">Recomendado: 1500 x 500px</p>
-            }
-          </div>
-        }
-      </div>
-
-      <!-- Hidden file input for banner -->
-      <input
-        #bannerFileInput
-        type="file"
-        accept="image/*"
-        class="hidden"
-        (change)="onFileSelect($event)"
-        [disabled]="uploading()"
-      />
-    </div>
+    <!-- Banner Mode -->
+    <app-image-upload-banner
+      [currentImageUrl]="currentImageUrl()"
+      [altText]="altText()"
+      [uploading]="uploading()"
+      (viewImage)="onOpenImageModal()"
+      (fileSelected)="onFileSelect($event)"
+      (fileDrop)="processDroppedFiles($event)"
+      (removeImage)="onRemovePreview()"
+    />
   } @else {
-    <!-- Standard Upload Area (non-avatar mode) -->
-    <div
-      class="relative border-2 border-dashed border-(--color-border-secondary) rounded-lg p-6 hover:border-(--color-accent) transition-colors cursor-pointer"
-      [class.border-(--color-accent)]="isDragging()"
-      [class.bg-(--color-info-bg)]="isDragging()"
-      (dragover)="onDragOver($event)"
-      (dragleave)="onDragLeave($event)"
-      (drop)="onDrop($event)"
-      (click)="fileInput.click()"
-    >
-      <input
-        #fileInput
-        type="file"
-        accept="image/*"
-        [multiple]="multiple()"
-        class="hidden"
-        (change)="onFileSelect($event)"
-        [disabled]="uploading()"
-      />
-
-      <div class="text-center">
-        @if (uploading()) {
-          <div class="flex flex-col items-center gap-3">
-            <svg
-              class="spinner-lg"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-            >
-              <circle
-                class="opacity-25"
-                cx="12"
-                cy="12"
-                r="10"
-                stroke="currentColor"
-                stroke-width="4"
-              ></circle>
-              <path
-                class="opacity-75"
-                fill="currentColor"
-                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-              ></path>
-            </svg>
-            <p class="text-(--color-text-muted)">
-              Subiendo imagen{{ uploadProgress() ? ' (' + uploadProgress() + '%)' : '...' }}
-            </p>
-          </div>
-        } @else {
-          <svg
-            class="mx-auto h-12 w-12 text-(--color-text-muted)"
-            stroke="currentColor"
-            fill="none"
-            viewBox="0 0 48 48"
-          >
-            <path
-              d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-          </svg>
-          <p class="mt-2 text-sm text-(--color-text-muted)">
-            <span class="text-(--color-accent) font-medium">Haz clic para subir</span> o arrastra y
-            suelta
-          </p>
-          <p class="mt-1 text-xs text-(--color-text-disabled)">PNG, JPG, GIF, WebP hasta 10MB</p>
-        }
-      </div>
-    </div>
-
-    <!-- Preview for non-avatar mode -->
-    @if (previewUrl()) {
-      <div class="relative rounded-lg overflow-hidden bg-(--color-bg-tertiary)">
-        <img [src]="previewUrl()" [alt]="altText() || 'Preview'" class="w-full h-48 object-cover" />
-        <button
-          type="button"
-          (click)="removeImage($event)"
-          class="absolute top-2 right-2 p-1.5 bg-(--color-error) hover:bg-(--color-error-hover) rounded-full text-(--color-text-primary) transition-colors"
-        >
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M6 18L18 6M6 6l12 12"
-            />
-          </svg>
-        </button>
-      </div>
-    }
+    <!-- Standard Mode -->
+    <app-image-upload-standard
+      [uploading]="uploading()"
+      [uploadProgress]="uploadProgress()"
+      [multiple]="multiple()"
+      [previewUrl]="previewUrl()"
+      [altText]="altText()"
+      (fileSelected)="onFileSelect($event)"
+      (fileDrop)="processDroppedFiles($event)"
+      (removePreview)="onRemovePreview()"
+    />
   }
 
   <!-- Error Message -->
@@ -381,105 +42,19 @@
     </div>
   }
 
-  <!-- Uploaded Images Gallery -->
-  @if (uploadedImages().length > 0) {
-    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-      @for (img of uploadedImages(); track img.path) {
-        <div class="relative group rounded-lg overflow-hidden bg-(--color-bg-tertiary)">
-          <img
-            [src]="img.url"
-            [alt]="img.alt || 'Uploaded image'"
-            class="w-full h-32 object-cover"
-          />
-          <div
-            class="absolute inset-0 bg-(--color-overlay) opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center"
-          >
-            <button
-              type="button"
-              (click)="removeUploadedImage(img.path, $event)"
-              class="p-2 bg-(--color-error) hover:bg-(--color-error-hover) rounded-full text-(--color-text-primary) transition-colors"
-            >
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                />
-              </svg>
-            </button>
-          </div>
-        </div>
-      }
-    </div>
-  }
+  <!-- Gallery -->
+  <app-image-upload-gallery
+    [uploadedImages]="uploadedImages()"
+    [existingImages]="loadedExistingImages()"
+    (removeUploaded)="onGalleryRemoveUploaded($event)"
+    (removeExisting)="onGalleryRemoveExisting($event)"
+  />
 
-  <!-- Existing Images Gallery (from database) -->
-  @if (loadedExistingImages().length > 0) {
-    <div class="space-y-2">
-      <p class="text-sm text-(--color-text-muted)">Imágenes guardadas:</p>
-      <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-        @for (img of loadedExistingImages(); track img.id) {
-          <div class="relative group rounded-lg overflow-hidden bg-(--color-bg-tertiary)">
-            <img
-              [src]="img.url"
-              [alt]="img.alt_text || 'Saved image'"
-              class="w-full h-32 object-cover"
-            />
-            <div
-              class="absolute inset-0 bg-(--color-overlay) opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center"
-            >
-              <button
-                type="button"
-                (click)="removeExistingImage(img.id, $event)"
-                class="p-2 bg-(--color-error) hover:bg-(--color-error-hover) rounded-full text-(--color-text-primary) transition-colors"
-              >
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                  />
-                </svg>
-              </button>
-            </div>
-          </div>
-        }
-      </div>
-    </div>
-  }
+  <!-- Modal -->
+  <app-image-upload-modal
+    [visible]="showModal()"
+    [imageUrl]="currentImageUrl()"
+    [altText]="altText()"
+    (close)="closeModal()"
+  />
 </div>
-
-<!-- Image Modal -->
-@if (showModal() && currentImageUrl()) {
-  <div
-    class="modal-backdrop fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm"
-    (click)="onModalBackdropClick($event)"
-  >
-    <div class="relative max-w-4xl max-h-[90vh] mx-4">
-      <!-- Close button -->
-      <button
-        type="button"
-        (click)="closeModal()"
-        class="absolute -top-12 right-0 p-2 text-white hover:text-(--color-accent) transition-colors"
-      >
-        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M6 18L18 6M6 6l12 12"
-          />
-        </svg>
-      </button>
-
-      <!-- Full image -->
-      <img
-        [src]="currentImageUrl()"
-        [alt]="altText() || 'Imagen completa'"
-        class="max-w-full max-h-[85vh] object-contain rounded-lg shadow-2xl"
-      />
-    </div>
-  </div>
-}
