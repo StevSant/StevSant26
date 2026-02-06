@@ -14,9 +14,19 @@ const portfolioChildren: Routes = [
       import('./features/portfolio/portfolio-projects/portfolio-projects.component').then((m) => m.PortfolioProjectsComponent),
   },
   {
+    path: 'projects/:id',
+    loadComponent: () =>
+      import('./features/portfolio/portfolio-project-detail/portfolio-project-detail.component').then((m) => m.PortfolioProjectDetailComponent),
+  },
+  {
     path: 'experience',
     loadComponent: () =>
       import('./features/portfolio/portfolio-experience/portfolio-experience.component').then((m) => m.PortfolioExperienceComponent),
+  },
+  {
+    path: 'experience/:id',
+    loadComponent: () =>
+      import('./features/portfolio/portfolio-experience-detail/portfolio-experience-detail.component').then((m) => m.PortfolioExperienceDetailComponent),
   },
   {
     path: 'skills',
@@ -29,9 +39,19 @@ const portfolioChildren: Routes = [
       import('./features/portfolio/portfolio-competitions/portfolio-competitions.component').then((m) => m.PortfolioCompetitionsComponent),
   },
   {
+    path: 'competitions/:id',
+    loadComponent: () =>
+      import('./features/portfolio/portfolio-competition-detail/portfolio-competition-detail.component').then((m) => m.PortfolioCompetitionDetailComponent),
+  },
+  {
     path: 'events',
     loadComponent: () =>
       import('./features/portfolio/portfolio-events/portfolio-events.component').then((m) => m.PortfolioEventsComponent),
+  },
+  {
+    path: 'events/:id',
+    loadComponent: () =>
+      import('./features/portfolio/portfolio-event-detail/portfolio-event-detail.component').then((m) => m.PortfolioEventDetailComponent),
   },
   {
     path: 'contact',

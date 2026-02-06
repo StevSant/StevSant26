@@ -1,12 +1,13 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
+import { RouterModule } from '@angular/router';
 import { PortfolioDataService } from '../services/portfolio-data.service';
 import { TranslatePipe } from '@shared/pipes/translate.pipe';
 
 @Component({
   selector: 'app-portfolio-projects',
   standalone: true,
-  imports: [CommonModule, DatePipe, TranslatePipe],
+  imports: [CommonModule, DatePipe, RouterModule, TranslatePipe],
   template: `
     <section class="py-24 px-4 sm:px-6 lg:px-8">
       <div class="max-w-6xl mx-auto">
@@ -102,6 +103,15 @@ import { TranslatePipe } from '@shared/pipes/translate.pipe';
                         {{ 'portfolio.viewProject' | translate }}
                       </a>
                     }
+                    <a
+                      [routerLink]="[project.id]"
+                      class="text-xs uppercase tracking-widest text-(--color-text-muted) hover:text-(--color-accent) flex items-center gap-1.5 transition-colors ml-auto"
+                    >
+                      {{ 'portfolio.viewDetails' | translate }}
+                      <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                      </svg>
+                    </a>
                   </div>
                 </div>
               </div>

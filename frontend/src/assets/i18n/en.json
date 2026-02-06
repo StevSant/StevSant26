@@ -415,6 +415,17 @@
       "events": "No events to display"
     },
     "viewProject": "View Project",
+    "viewDetails": "View Details",
+    "backToList": "Back to list",
+    "gallery": "Gallery",
+    "skillsUsed": "Skills Used",
+    "noImages": "No images available",
+    "details": {
+      "project": "Project Details",
+      "experience": "Experience Details",
+      "competition": "Competition Details",
+      "event": "Event Details"
+    },
     "contactMessage": "Interested in working together? Feel free to reach out!",
     "sendEmail": "Send Email",
     "downloadCV": "Download CV",

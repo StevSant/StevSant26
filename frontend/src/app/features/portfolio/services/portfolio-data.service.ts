@@ -46,8 +46,10 @@ export class PortfolioDataService {
   skillCategories = signal<SkillCategoryWithSkills[]>([]);
   cvDocuments = signal<CvDocument[]>([]);
 
-  /** Map: "sourceType:sourceId" → first image URL */
+  /** Map: "sourceType:sourceId" → first image */
   private imageMap = new Map<string, Image>();
+  /** Map: "sourceType:sourceId" → ALL images for that entity */
+  private allImagesMap = new Map<string, Image[]>();
   /** Map: "sourceType:sourceId" → skill usages with skill data */
   private skillUsageMap = new Map<string, SkillUsage[]>();
 
@@ -257,6 +259,11 @@ export class PortfolioDataService {
           if (!this.imageMap.has(key)) {
             this.imageMap.set(key, img);
           }
+          // Store all images per entity
+          if (!this.allImagesMap.has(key)) {
+            this.allImagesMap.set(key, []);
+          }
+          this.allImagesMap.get(key)!.push(img);
         }
       }
     }
@@ -291,6 +298,31 @@ export class PortfolioDataService {
   /** Get the first image URL for an entity */
   getFirstImageUrl(sourceType: SourceType, sourceId: number): string | null {
     return this.imageMap.get(`${sourceType}:${sourceId}`)?.url ?? null;
+  }
+
+  /** Get ALL images for an entity */
+  getAllImages(sourceType: SourceType, sourceId: number): Image[] {
+    return this.allImagesMap.get(`${sourceType}:${sourceId}`) ?? [];
+  }
+
+  /** Find a project by ID */
+  getProjectById(id: number): Project | undefined {
+    return this.projects().find(p => p.id === id);
+  }
+
+  /** Find an experience by ID */
+  getExperienceById(id: number): Experience | undefined {
+    return this.experiences().find(e => e.id === id);
+  }
+
+  /** Find a competition by ID */
+  getCompetitionById(id: number): Competition | undefined {
+    return this.competitions().find(c => c.id === id);
+  }
+
+  /** Find an event by ID */
+  getEventById(id: number): Event | undefined {
+    return this.events().find(e => e.id === id);
   }
 
   /** Get skill usages for an entity */

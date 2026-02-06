@@ -413,6 +413,17 @@
       "events": "No hay eventos para mostrar"
     },
     "viewProject": "Ver Proyecto",
+    "viewDetails": "Ver Detalles",
+    "backToList": "Volver a la lista",
+    "gallery": "Galería",
+    "skillsUsed": "Habilidades Utilizadas",
+    "noImages": "No hay imágenes disponibles",
+    "details": {
+      "project": "Detalle del Proyecto",
+      "experience": "Detalle de Experiencia",
+      "competition": "Detalle de Competencia",
+      "event": "Detalle del Evento"
+    },
     "contactMessage": "¿Interesado en trabajar juntos? ¡No dudes en contactarme!",
     "sendEmail": "Enviar Email",
     "downloadCV": "Descargar CV",
