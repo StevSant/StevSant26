@@ -8,3 +8,4 @@ export * from './experience.model';
 export * from './event.model';
 export * from './project.model';
 export * from './image.model';
+export * from './cv-document.model';

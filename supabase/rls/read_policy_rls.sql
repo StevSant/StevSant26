@@ -57,6 +57,13 @@ FOR SELECT
 USING (true);
 
 
+-- cv_document
+CREATE POLICY "cv_document_read"
+ON cv_document
+FOR SELECT
+USING (true);
+
+
 -- =========================
 -- TRANSLATION TABLES
 -- =========================

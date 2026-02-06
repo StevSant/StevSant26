@@ -201,7 +201,6 @@ export class SupabaseService {
     github_url?: string;
     instagram_url?: string;
     whatsapp?: string;
-    cv_url?: string;
   }) {
     const userId = this.user()?.id;
     if (!userId) return { data: null, error: new Error('Not authenticated') };
@@ -221,7 +220,6 @@ export class SupabaseService {
     github_url?: string;
     instagram_url?: string;
     whatsapp?: string;
-    cv_url?: string;
   }) {
     const userId = this.user()?.id;
     if (!userId) return { data: null, error: new Error('Not authenticated') };
@@ -556,12 +554,12 @@ export class SupabaseService {
   }
 
   /**
-   * Upload an image to Supabase Storage
+   * Upload a file to Supabase Storage
    * @param file The file to upload
-   * @param folder The folder path (e.g., 'projects', 'events', 'experiences', 'competitions', 'profile')
+   * @param folder The folder path (e.g., 'projects', 'events', 'experiences', 'competitions', 'profile', 'cv')
    * @returns The file path in storage
    */
-  async uploadImage(file: File, folder: string = ''): Promise<{ path: string | null; error: Error | null }> {
+  async uploadFile(file: File, folder: string = ''): Promise<{ path: string | null; error: Error | null }> {
     try {
       const fileExt = file.name.split('.').pop();
       const fileName = `${Date.now()}-${Math.random().toString(36).substring(2, 9)}.${fileExt}`;

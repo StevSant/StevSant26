@@ -5,12 +5,13 @@ import { SupabaseService } from '@core/services/supabase.service';
 import { LanguageService } from '@core/services/language.service';
 import { Profile, ProfileTranslation, Language } from '@core/models';
 import { ImageUploadComponent } from '@shared/components/image-upload/image-upload.component';
+import { CvManagerComponent } from '@shared/components/cv-manager/cv-manager.component';
 import { TranslatePipe } from '@shared/pipes/translate.pipe';
 
 @Component({
   selector: 'app-profile-editor',
   standalone: true,
-  imports: [CommonModule, FormsModule, ImageUploadComponent, TranslatePipe],
+  imports: [CommonModule, FormsModule, ImageUploadComponent, CvManagerComponent, TranslatePipe],
   templateUrl: './profile-editor.component.html',
 })
 export class ProfileEditorComponent implements OnInit {
@@ -51,7 +52,6 @@ export class ProfileEditorComponent implements OnInit {
     github_url: '',
     instagram_url: '',
     whatsapp: '',
-    cv_url: '',
   };
 
   // Translations map by language code
@@ -93,7 +93,6 @@ export class ProfileEditorComponent implements OnInit {
           github_url: data.github_url || '',
           instagram_url: data.instagram_url || '',
           whatsapp: data.whatsapp || '',
-          cv_url: data.cv_url || '',
         };
 
         // Load translations into the map
@@ -215,7 +214,6 @@ export class ProfileEditorComponent implements OnInit {
         github_url: this.profile.github_url || '',
         instagram_url: this.profile.instagram_url || '',
         whatsapp: this.profile.whatsapp || '',
-        cv_url: this.profile.cv_url || '',
       };
 
       // Reset translations
@@ -239,7 +237,6 @@ export class ProfileEditorComponent implements OnInit {
         github_url: '',
         instagram_url: '',
         whatsapp: '',
-        cv_url: '',
       };
       this.translations.clear();
     }

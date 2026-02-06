@@ -25,6 +25,5 @@ export interface Profile {
   github_url: string | null;
   instagram_url: string | null;
   whatsapp: string | null;
-  cv_url: string | null;
   translations?: ProfileTranslation[];
 }

@@ -58,6 +58,13 @@ FOR ALL
 USING (auth.uid() IS NOT NULL)
 WITH CHECK (auth.uid() IS NOT NULL);
 
+-- cv document
+CREATE POLICY "cv_document_write"
+ON cv_document
+FOR ALL
+USING (profile_id = auth.uid())
+WITH CHECK (profile_id = auth.uid());
+
 
 -- =========================
 -- TRANSLATION TABLES

@@ -119,6 +119,20 @@
     "saveChanges": "Guardar cambios",
     "saving": "Guardando..."
   },
+  "cv": {
+    "title": "Documentos CV",
+    "description": "Sube tus currículums en diferentes formatos e idiomas.",
+    "uploadNew": "Subir nuevo CV",
+    "label": "Etiqueta",
+    "labelPlaceholder": "Ej: Backend, Frontend, General",
+    "language": "Idioma",
+    "anyLanguage": "Cualquier idioma",
+    "selectFile": "Seleccionar archivo",
+    "uploading": "Subiendo...",
+    "maxSize": "Máximo 15MB",
+    "download": "Descargar",
+    "empty": "No hay CVs subidos aún."
+  },
   "projects": {
     "title": "Proyectos",
     "subtitle": "Gestiona tus proyectos del portafolio",

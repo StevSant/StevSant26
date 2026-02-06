@@ -17,6 +17,7 @@ import {
   Skill,
   SkillCategory,
   SkillCategoryTranslation,
+  CvDocument,
   getTranslation,
 } from '@core/models';
 
@@ -51,6 +52,7 @@ export class PortfolioLayoutComponent implements OnInit {
   competitions = signal<Competition[]>([]);
   events = signal<Event[]>([]);
   skillCategories = signal<SkillCategoryWithSkills[]>([]);
+  cvDocuments = signal<CvDocument[]>([]);
   mobileMenuOpen = signal(false);
 
   currentLang = computed(() => this.languageService.currentLanguageCode());
@@ -92,6 +94,15 @@ export class PortfolioLayoutComponent implements OnInit {
     const { data: bannerImages } = await this.supabase.getImagesBySourceType('profile_banner');
     if (bannerImages && bannerImages.length > 0) {
       this.bannerUrl.set(bannerImages[0].url);
+    }
+
+    // Load CV documents
+    const { data: cvData } = await this.supabase
+      .from('cv_document')
+      .select('*, language:language(*)')
+      .order('position', { ascending: true });
+    if (cvData) {
+      this.cvDocuments.set(cvData as CvDocument[]);
     }
   }
 

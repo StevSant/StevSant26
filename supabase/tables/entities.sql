@@ -15,8 +15,21 @@ CREATE TABLE profile (
   linkedin_url TEXT,
   github_url TEXT,
   instagram_url TEXT,
-  whatsapp TEXT,
-  cv_url TEXT
+  whatsapp TEXT
+);
+
+-- =========================
+-- Tabla: cv_document
+-- =========================
+CREATE TABLE cv_document (
+  id SERIAL PRIMARY KEY,
+  profile_id UUID NOT NULL REFERENCES profile(id) ON DELETE CASCADE,
+  url TEXT NOT NULL,
+  file_name TEXT,
+  label TEXT,
+  language_id INT REFERENCES language(id) ON DELETE SET NULL,
+  position INT DEFAULT 0,
+  created_at TIMESTAMP DEFAULT NOW()
 );
 
 -- =========================

@@ -119,6 +119,20 @@
     "saveChanges": "Save changes",
     "saving": "Saving..."
   },
+  "cv": {
+    "title": "CV Documents",
+    "description": "Upload your resumes in different formats and languages.",
+    "uploadNew": "Upload new CV",
+    "label": "Label",
+    "labelPlaceholder": "E.g.: Backend, Frontend, General",
+    "language": "Language",
+    "anyLanguage": "Any language",
+    "selectFile": "Select file",
+    "uploading": "Uploading...",
+    "maxSize": "Max 15MB",
+    "download": "Download",
+    "empty": "No CVs uploaded yet."
+  },
   "projects": {
     "title": "Projects",
     "subtitle": "Manage your portfolio projects",

@@ -129,7 +129,7 @@ export class ImageUploadComponent {
       const folderPath = this.folder() || this.sourceType() || 'misc';
 
       // Upload to Supabase Storage
-      const { path, error } = await this.supabase.uploadImage(file, folderPath);
+      const { path, error } = await this.supabase.uploadFile(file, folderPath);
 
       if (error) {
         throw error;

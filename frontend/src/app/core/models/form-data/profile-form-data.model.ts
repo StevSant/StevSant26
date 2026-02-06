@@ -20,6 +20,5 @@ export interface ProfileFormData {
   github_url?: string;
   instagram_url?: string;
   whatsapp?: string;
-  cv_url?: string;
   translations?: ProfileTranslationFormData[];
 }
