@@ -83,6 +83,7 @@
     "basicInfo": "Información Básica",
     "personalInfo": "Información Personal",
     "avatar": "Foto de perfil",
+    "banner": "Banner de perfil",
     "socialLinks": "Redes Sociales",
     "translations": "Traducciones",
     "email": "Correo electrónico",
@@ -381,5 +382,12 @@
     "sendEmail": "Enviar Email",
     "downloadCV": "Descargar CV",
     "allRightsReserved": "Todos los derechos reservados."
+  },
+  "theme": {
+    "switchTheme": "Cambiar Tema",
+    "darkElegant": "Elegante Oscuro",
+    "lightElegant": "Elegante Claro",
+    "midnightBlue": "Azul Medianoche",
+    "warmSepia": "Sepia Cálido"
   }
 }

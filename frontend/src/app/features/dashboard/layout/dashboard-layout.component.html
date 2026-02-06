@@ -115,7 +115,7 @@
         <a
           routerLink="/"
           target="_blank"
-          class="inline-flex items-center gap-2 px-3 py-1.5 text-sm font-medium text-(--color-accent) border border-(--color-accent) rounded-lg hover:bg-(--color-accent) hover:text-white transition-colors"
+          class="inline-flex items-center gap-2 px-3 py-1.5 text-sm font-medium text-(--color-accent) border border-(--color-accent)/40 rounded-lg hover:bg-(--color-accent) hover:text-(--btn-primary-text) transition-all duration-300"
         >
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
@@ -133,6 +133,9 @@
           </svg>
           <span class="hidden sm:inline">{{ 'dashboard.viewSite' | translate }}</span>
         </a>
+
+        <!-- Theme Toggle -->
+        <app-theme-toggle />
 
         <!-- Language Selector -->
         <app-language-selector />

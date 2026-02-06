@@ -23,6 +23,7 @@ export class ImageUploadComponent {
   multiple = input<boolean>(false);
   altText = input<string>('');
   isAvatar = input<boolean>(false);
+  isBanner = input<boolean>(false);
   existingImageUrl = input<string | null>(null);
   existingImages = input<ExistingImage[]>([]);
 

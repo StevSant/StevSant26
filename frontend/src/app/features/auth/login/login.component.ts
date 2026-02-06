@@ -4,11 +4,12 @@ import { Router } from '@angular/router';
 import { SupabaseService } from '@core/services/supabase.service';
 import { TranslatePipe } from '@shared/pipes/translate.pipe';
 import { LanguageSelectorComponent } from '@shared/components/language-selector/language-selector.component';
+import { ThemeToggleComponent } from '@shared/components/theme-toggle/theme-toggle.component';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [FormsModule, TranslatePipe, LanguageSelectorComponent],
+  imports: [FormsModule, TranslatePipe, LanguageSelectorComponent, ThemeToggleComponent],
   templateUrl: './login.component.html',
 })
 export class LoginComponent {

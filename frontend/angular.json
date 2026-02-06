@@ -7,7 +7,7 @@
   },
   "newProjectRoot": "projects",
   "projects": {
-    "portafolio-2026": {
+    "stevsant26": {
       "projectType": "application",
       "schematics": {},
       "root": "",
@@ -67,10 +67,10 @@
           "builder": "@angular/build:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "portafolio-2026:build:production"
+              "buildTarget": "stevsant26:build:production"
             },
             "development": {
-              "buildTarget": "portafolio-2026:build:development"
+              "buildTarget": "stevsant26:build:development"
             }
           },
           "defaultConfiguration": "development"

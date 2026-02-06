@@ -1,21 +1,23 @@
 <div class="min-h-screen flex items-center justify-center bg-(--color-bg-primary) relative">
-  <!-- Language Selector -->
-  <div class="absolute top-4 right-4">
+  <!-- Top Controls -->
+  <div class="absolute top-4 right-4 flex items-center gap-2">
+    <app-theme-toggle />
     <app-language-selector />
   </div>
 
   <div class="max-w-md w-full mx-4">
-    <!-- Logo/Header -->
-    <div class="text-center mb-8">
-      <h1 class="text-3xl font-bold text-(--color-text-primary)">
+    <!-- Logo/Header — Elegant -->
+    <div class="text-center mb-10">
+      <h1 class="text-2xl font-semibold text-(--color-text-primary) tracking-tight">
         {{ 'dashboard.title' | translate }}
       </h1>
-      <p class="text-(--color-text-muted) mt-2">
+      <div class="w-10 h-px bg-(--color-accent) mx-auto mt-4 mb-3 opacity-50"></div>
+      <p class="text-(--color-text-muted) text-sm tracking-wide">
         {{ 'auth.signInToContinue' | translate }}
       </p>
     </div>
 
-    <!-- Login Card -->
+    <!-- Login Card — Elegant -->
     <div class="card shadow-2xl p-8">
       <form (ngSubmit)="onSubmit()" class="space-y-6">
         <!-- Email Field -->
@@ -28,7 +30,7 @@
             [(ngModel)]="email"
             required
             class="input"
-            placeholder="tu@email.com"
+            placeholder="tu&#64;email.com"
             [disabled]="loading()"
           />
         </div>
@@ -56,7 +58,7 @@
         }
 
         <!-- Submit Button -->
-        <button type="submit" [disabled]="loading()" class="w-full btn-primary py-3">
+        <button type="submit" [disabled]="loading()" class="w-full btn-primary py-3 tracking-wide">
           @if (loading()) {
             <svg class="spinner" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
               <circle
@@ -82,7 +84,7 @@
     </div>
 
     <!-- Footer -->
-    <p class="text-center text-(--color-text-disabled) text-sm mt-8">
+    <p class="text-center text-(--color-text-disabled) text-xs mt-8 uppercase tracking-widest">
       {{ 'auth.welcomeBack' | translate }}
     </p>
   </div>

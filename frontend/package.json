@@ -1,5 +1,5 @@
 {
-  "name": "portafolio-2026",
+  "name": "stevsant26",
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
@@ -7,7 +7,7 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "serve:ssr:portafolio-2026": "node dist/portafolio-2026/server/server.mjs"
+    "serve:ssr:stevsant26": "node dist/stevsant26/server/server.mjs"
   },
   "prettier": {
     "printWidth": 100,

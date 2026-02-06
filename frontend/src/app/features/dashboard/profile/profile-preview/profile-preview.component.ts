@@ -13,6 +13,7 @@ import {
   Event,
   Skill,
   SkillCategory,
+  SkillCategoryTranslation,
   getTranslation,
 } from '@core/models';
 
@@ -38,6 +39,7 @@ export class ProfilePreviewComponent implements OnInit {
   loading = signal(true);
   profile = signal<Profile | null>(null);
   avatarUrl = signal<string | null>(null);
+  bannerUrl = signal<string | null>(null);
   projects = signal<Project[]>([]);
   experiences = signal<Experience[]>([]);
   competitions = signal<Competition[]>([]);
@@ -71,6 +73,12 @@ export class ProfilePreviewComponent implements OnInit {
     const { data: avatarImages } = await this.supabase.getImagesBySourceType('profile');
     if (avatarImages && avatarImages.length > 0) {
       this.avatarUrl.set(avatarImages[0].url);
+    }
+
+    // Load banner from images table
+    const { data: bannerImages } = await this.supabase.getImagesBySourceType('profile_banner');
+    if (bannerImages && bannerImages.length > 0) {
+      this.bannerUrl.set(bannerImages[0].url);
     }
   }
 
@@ -139,8 +147,7 @@ export class ProfilePreviewComponent implements OnInit {
     // Load skill usages to calculate levels (get most recent per skill)
     const { data: usages } = await this.supabase
       .from('skill_usages')
-      .select('skill_id, level, created_at')
-      .order('created_at', { ascending: false });
+      .select('skill_id, level');
 
     // Build a map of skill_id -> most recent level
     const levelMap = new Map<number, number>();
@@ -163,7 +170,7 @@ export class ProfilePreviewComponent implements OnInit {
         ...skill,
         calculatedLevel,
         categoryName: skill.category
-          ? getTranslation(skill.category, this.currentLang(), 'name')
+          ? getTranslation<SkillCategoryTranslation>(skill.category.translations, this.currentLang())?.name
           : undefined,
       };
 
@@ -199,14 +206,11 @@ export class ProfilePreviewComponent implements OnInit {
     const p = this.profile();
     if (!p) return '';
     const translation = getTranslation(p.translations, this.currentLang());
-    return (translation as any)?.bio || '';
+    return translation?.about || '';
   }
 
   getProfileHeadline(): string {
-    const p = this.profile();
-    if (!p) return '';
-    const translation = getTranslation(p.translations, this.currentLang());
-    return (translation as any)?.headline || '';
+    return '';
   }
 
   getCategoryName(category: SkillCategoryWithSkills): string {

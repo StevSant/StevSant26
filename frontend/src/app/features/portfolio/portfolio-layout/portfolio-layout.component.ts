@@ -3,9 +3,11 @@ import { CommonModule, DatePipe, isPlatformBrowser } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { SupabaseService } from '@core/services/supabase.service';
 import { LanguageService } from '@core/services/language.service';
+import { ThemeService } from '@core/services/theme.service';
 import { TranslatePipe } from '@shared/pipes/translate.pipe';
 import { SafeHtmlPipe } from '@shared/pipes/safe-html.pipe';
 import { LanguageSelectorComponent } from '@shared/components/language-selector/language-selector.component';
+import { ThemeToggleComponent } from '@shared/components/theme-toggle/theme-toggle.component';
 import {
   Profile,
   Project,
@@ -14,6 +16,7 @@ import {
   Event,
   Skill,
   SkillCategory,
+  SkillCategoryTranslation,
   getTranslation,
 } from '@core/models';
 
@@ -29,17 +32,20 @@ interface SkillCategoryWithSkills extends SkillCategory {
 @Component({
   selector: 'app-portfolio-layout',
   standalone: true,
-  imports: [CommonModule, RouterModule, DatePipe, TranslatePipe, SafeHtmlPipe, LanguageSelectorComponent],
+  imports: [CommonModule, RouterModule, DatePipe, TranslatePipe, SafeHtmlPipe, LanguageSelectorComponent, ThemeToggleComponent],
   templateUrl: './portfolio-layout.component.html',
 })
 export class PortfolioLayoutComponent implements OnInit {
   private supabase = inject(SupabaseService);
   private languageService = inject(LanguageService);
   private platformId = inject(PLATFORM_ID);
+  // Theme service injected to ensure initialization
+  protected themeService = inject(ThemeService);
 
   loading = signal(true);
   profile = signal<Profile | null>(null);
   avatarUrl = signal<string | null>(null);
+  bannerUrl = signal<string | null>(null);
   projects = signal<Project[]>([]);
   experiences = signal<Experience[]>([]);
   competitions = signal<Competition[]>([]);
@@ -81,6 +87,11 @@ export class PortfolioLayoutComponent implements OnInit {
     const { data: avatarImages } = await this.supabase.getImagesBySourceType('profile');
     if (avatarImages && avatarImages.length > 0) {
       this.avatarUrl.set(avatarImages[0].url);
+    }
+
+    const { data: bannerImages } = await this.supabase.getImagesBySourceType('profile_banner');
+    if (bannerImages && bannerImages.length > 0) {
+      this.bannerUrl.set(bannerImages[0].url);
     }
   }
 
@@ -146,8 +157,7 @@ export class PortfolioLayoutComponent implements OnInit {
 
     const { data: usages } = await this.supabase
       .from('skill_usages')
-      .select('skill_id, level, created_at')
-      .order('created_at', { ascending: false });
+      .select('skill_id, level');
 
     const levelMap = new Map<number, number>();
     if (usages) {
@@ -168,7 +178,7 @@ export class PortfolioLayoutComponent implements OnInit {
         ...skill,
         calculatedLevel,
         categoryName: skill.category
-          ? getTranslation(skill.category, this.currentLang(), 'name')
+          ? getTranslation<SkillCategoryTranslation>(skill.category.translations, this.currentLang())?.name
           : undefined,
       };
 
@@ -219,14 +229,11 @@ export class PortfolioLayoutComponent implements OnInit {
     const p = this.profile();
     if (!p) return '';
     const translation = getTranslation(p.translations, this.currentLang());
-    return (translation as any)?.bio || '';
+    return translation?.about || '';
   }
 
   getProfileHeadline(): string {
-    const p = this.profile();
-    if (!p) return '';
-    const translation = getTranslation(p.translations, this.currentLang());
-    return (translation as any)?.headline || '';
+    return '';
   }
 
   getCategoryName(category: SkillCategoryWithSkills): string {

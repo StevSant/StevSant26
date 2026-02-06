@@ -83,6 +83,7 @@
     "basicInfo": "Basic Information",
     "personalInfo": "Personal Information",
     "avatar": "Profile picture",
+    "banner": "Profile banner",
     "socialLinks": "Social Links",
     "translations": "Translations",
     "email": "Email",
@@ -383,5 +384,12 @@
     "sendEmail": "Send Email",
     "downloadCV": "Download CV",
     "allRightsReserved": "All rights reserved."
+  },
+  "theme": {
+    "switchTheme": "Switch Theme",
+    "darkElegant": "Dark Elegant",
+    "lightElegant": "Light Elegant",
+    "midnightBlue": "Midnight Blue",
+    "warmSepia": "Warm Sepia"
   }
 }

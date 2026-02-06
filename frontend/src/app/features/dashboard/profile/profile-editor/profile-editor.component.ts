@@ -31,8 +31,14 @@ export class ProfileEditorComponent implements OnInit {
   // Pending avatar to save after profile creation
   pendingAvatar = signal<{ path: string; url: string } | null>(null);
 
+  // Pending banner to save after profile creation
+  pendingBanner = signal<{ path: string; url: string } | null>(null);
+
   // Existing avatar URL loaded from database
   existingAvatarUrl = signal<string | null>(null);
+
+  // Existing banner URL loaded from database
+  existingBannerUrl = signal<string | null>(null);
 
   // Base profile fields
   formData = {
@@ -100,6 +106,12 @@ export class ProfileEditorComponent implements OnInit {
         if (avatarImages && avatarImages.length > 0) {
           this.existingAvatarUrl.set(avatarImages[0].url);
         }
+
+        // Load existing banner
+        const { data: bannerImages } = await this.supabase.getImagesBySourceType('profile_banner');
+        if (bannerImages && bannerImages.length > 0) {
+          this.existingBannerUrl.set(bannerImages[0].url);
+        }
       } else {
         this.profileExists = false;
         // Initialize empty translations
@@ -161,6 +173,9 @@ export class ProfileEditorComponent implements OnInit {
       // Save pending avatar if any
       await this.savePendingAvatar();
 
+      // Save pending banner if any
+      await this.savePendingBanner();
+
       // Reload profile to get updated data
       await this.loadProfile();
       this.success.set('Perfil actualizado correctamente');
@@ -218,8 +233,6 @@ export class ProfileEditorComponent implements OnInit {
     if (!avatar) return;
 
     try {
-      // For profile avatars, we save to image table with source_type='profile'
-      // source_id is left null since profile uses UUID and image.source_id is INT
       const result = await this.supabase.create('image', {
         url: avatar.url,
         source_type: 'profile',
@@ -230,11 +243,31 @@ export class ProfileEditorComponent implements OnInit {
 
       if (result.error) throw result.error;
 
-      // Update the existing avatar URL to show the new image
       this.existingAvatarUrl.set(avatar.url);
       this.pendingAvatar.set(null);
     } catch (err) {
       console.error('Error saving avatar:', err);
+    }
+  }
+
+  private async savePendingBanner(): Promise<void> {
+    const banner = this.pendingBanner();
+    if (!banner) return;
+
+    try {
+      const result = await this.supabase.create('image', {
+        url: banner.url,
+        source_type: 'profile_banner',
+        alt_text: 'Banner de perfil',
+        position: 0,
+      });
+
+      if (result.error) throw result.error;
+
+      this.existingBannerUrl.set(banner.url);
+      this.pendingBanner.set(null);
+    } catch (err) {
+      console.error('Error saving banner:', err);
     }
   }
 
@@ -267,6 +300,31 @@ export class ProfileEditorComponent implements OnInit {
       console.log('Profile does not exist, queueing avatar');
       this.pendingAvatar.set(data);
       this.existingAvatarUrl.set(data.url);
+    }
+  }
+
+  async onBannerUploaded(data: { path: string; url: string }): Promise<void> {
+    if (this.profileExists) {
+      try {
+        const result = await this.supabase.create('image', {
+          url: data.url,
+          source_type: 'profile_banner',
+          alt_text: 'Banner de perfil',
+          position: 0,
+        });
+
+        if (result.error) throw result.error;
+
+        this.existingBannerUrl.set(data.url);
+        this.success.set('Banner actualizado correctamente');
+        setTimeout(() => this.success.set(null), 3000);
+      } catch (err) {
+        console.error('Error saving banner:', err);
+        this.error.set('Error al guardar el banner');
+      }
+    } else {
+      this.pendingBanner.set(data);
+      this.existingBannerUrl.set(data.url);
     }
   }
 }
