@@ -11,7 +11,10 @@ import {
   Skill,
   SkillCategory,
   SkillCategoryTranslation,
+  SkillUsage,
+  Image,
   CvDocument,
+  SourceType,
   getTranslation,
 } from '@core/models';
 
@@ -43,6 +46,11 @@ export class PortfolioDataService {
   skillCategories = signal<SkillCategoryWithSkills[]>([]);
   cvDocuments = signal<CvDocument[]>([]);
 
+  /** Map: "sourceType:sourceId" → first image URL */
+  private imageMap = new Map<string, Image>();
+  /** Map: "sourceType:sourceId" → skill usages with skill data */
+  private skillUsageMap = new Map<string, SkillUsage[]>();
+
   currentLang = computed(() => this.languageService.currentLanguageCode());
 
   async initialize(): Promise<void> {
@@ -59,6 +67,8 @@ export class PortfolioDataService {
       this.loadCompetitions(),
       this.loadEvents(),
       this.loadSkillsWithLevels(),
+      this.loadAllImages(),
+      this.loadAllSkillUsages(),
     ]);
     this.loading.set(false);
     this.initialized = true;
@@ -230,5 +240,68 @@ export class PortfolioDataService {
       return `${start} - Present`;
     }
     return `${start} - ${new Date(endDate).toLocaleDateString()}`;
+  }
+
+  /** Bulk-load all non-archived images and index by source */
+  private async loadAllImages(): Promise<void> {
+    const { data } = await this.supabase
+      .from('image')
+      .select('*')
+      .eq('is_archived', false)
+      .order('position', { ascending: true });
+    if (data) {
+      for (const img of data as Image[]) {
+        if (img.source_type && img.source_id != null) {
+          const key = `${img.source_type}:${img.source_id}`;
+          // Keep only the first (lowest position) image per source
+          if (!this.imageMap.has(key)) {
+            this.imageMap.set(key, img);
+          }
+        }
+      }
+    }
+  }
+
+  /** Bulk-load all skill usages with skill details and index by source */
+  private async loadAllSkillUsages(): Promise<void> {
+    const { data } = await this.supabase
+      .from('skill_usages')
+      .select(`
+        *,
+        skill:skill(
+          *,
+          translations:skill_translation(*)
+        )
+      `)
+      .eq('is_archived', false)
+      .order('position', { ascending: true });
+    if (data) {
+      for (const usage of data as SkillUsage[]) {
+        if (usage.source_type && usage.source_id != null) {
+          const key = `${usage.source_type}:${usage.source_id}`;
+          if (!this.skillUsageMap.has(key)) {
+            this.skillUsageMap.set(key, []);
+          }
+          this.skillUsageMap.get(key)!.push(usage);
+        }
+      }
+    }
+  }
+
+  /** Get the first image URL for an entity */
+  getFirstImageUrl(sourceType: SourceType, sourceId: number): string | null {
+    return this.imageMap.get(`${sourceType}:${sourceId}`)?.url ?? null;
+  }
+
+  /** Get skill usages for an entity */
+  getSkillUsages(sourceType: SourceType, sourceId: number): SkillUsage[] {
+    return this.skillUsageMap.get(`${sourceType}:${sourceId}`) ?? [];
+  }
+
+  /** Get translated skill name from a SkillUsage */
+  getSkillName(usage: SkillUsage): string {
+    if (!usage.skill) return '';
+    const translation = getTranslation(usage.skill.translations as any[], this.currentLang());
+    return (translation as any)?.name || '';
   }
 }

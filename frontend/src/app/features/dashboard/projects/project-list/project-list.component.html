@@ -110,6 +110,19 @@
             </div>
           }
 
+          <!-- Thumbnail -->
+          @if (imageMap.get(item.id)) {
+            <div
+              class="w-14 h-14 rounded-lg overflow-hidden shrink-0 border border-[var(--color-border-primary)]"
+            >
+              <img
+                [src]="imageMap.get(item.id)"
+                [alt]="getItemTitle(item)"
+                class="w-full h-full object-cover"
+              />
+            </div>
+          }
+
           <!-- Pin Indicator -->
           @if (item.is_pinned) {
             <div class="text-[var(--color-pin)]">
@@ -147,6 +160,11 @@
                 </svg>
                 {{ 'projects.viewProject' | translate }}
               </a>
+            }
+            @if (item.created_at) {
+              <span class="text-[var(--color-text-disabled)] text-xs mt-1 block">
+                {{ item.created_at | date: 'mediumDate' }}
+              </span>
             }
           </div>
 

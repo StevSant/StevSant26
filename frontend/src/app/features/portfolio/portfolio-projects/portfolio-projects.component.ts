@@ -1,12 +1,12 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { PortfolioDataService } from '../services/portfolio-data.service';
 import { TranslatePipe } from '@shared/pipes/translate.pipe';
 
 @Component({
   selector: 'app-portfolio-projects',
   standalone: true,
-  imports: [CommonModule, TranslatePipe],
+  imports: [CommonModule, DatePipe, TranslatePipe],
   template: `
     <section class="py-24 px-4 sm:px-6 lg:px-8">
       <div class="max-w-6xl mx-auto">
@@ -22,14 +22,33 @@ import { TranslatePipe } from '@shared/pipes/translate.pipe';
         } @else {
           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             @for (project of data.projects(); track project.id) {
-              <div class="group bg-(--color-bg-secondary) rounded-lg p-6 border border-(--color-card-border) hover:border-(--color-accent)/30 transition-all duration-500 hover:shadow-xl">
-                <div class="flex flex-col h-full">
+              <div class="group bg-(--color-bg-secondary) rounded-lg overflow-hidden border border-(--color-card-border) hover:border-(--color-accent)/30 transition-all duration-500 hover:shadow-xl flex flex-col">
+                <!-- Image -->
+                @if (data.getFirstImageUrl('project', project.id)) {
+                  <div class="relative h-44 overflow-hidden">
+                    <img
+                      [src]="data.getFirstImageUrl('project', project.id)"
+                      [alt]="data.getEntityTranslation(project, 'title')"
+                      class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    />
+                    @if (project.is_pinned) {
+                      <span class="absolute top-2 right-2 text-(--color-pin) bg-(--color-bg-primary)/80 rounded-full p-1">
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                        </svg>
+                      </span>
+                    }
+                  </div>
+                }
+
+                <div class="flex flex-col flex-1 p-6">
                   <div class="flex-1">
-                    <div class="flex items-start justify-between mb-4">
+                    <!-- Title + Pin (no image case) -->
+                    <div class="flex items-start justify-between mb-2">
                       <h3 class="text-lg font-medium text-(--color-text-primary) group-hover:text-(--color-accent) transition-colors tracking-tight">
                         {{ data.getEntityTranslation(project, 'title') }}
                       </h3>
-                      @if (project.is_pinned) {
+                      @if (project.is_pinned && !data.getFirstImageUrl('project', project.id)) {
                         <span class="text-(--color-pin) opacity-70">
                           <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                             <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
@@ -37,12 +56,39 @@ import { TranslatePipe } from '@shared/pipes/translate.pipe';
                         </span>
                       }
                     </div>
+
+                    <!-- Date -->
+                    @if (project.created_at) {
+                      <p class="text-xs text-(--color-text-muted) uppercase tracking-wider mb-3">
+                        {{ project.created_at | date: 'mediumDate' }}
+                      </p>
+                    }
+
+                    <!-- Description -->
                     @if (data.getEntityTranslation(project, 'description')) {
                       <p class="text-sm text-(--color-text-muted) line-clamp-3 mb-4 leading-relaxed font-light">
                         {{ data.getEntityTranslation(project, 'description') }}
                       </p>
                     }
+
+                    <!-- Skills -->
+                    @if (data.getSkillUsages('project', project.id).length > 0) {
+                      <div class="flex flex-wrap gap-1.5 mb-4">
+                        @for (usage of data.getSkillUsages('project', project.id).slice(0, 6); track usage.id) {
+                          <span class="px-2 py-0.5 text-xs rounded-full bg-(--color-bg-tertiary) text-(--color-text-secondary) border border-(--color-border-primary)">
+                            {{ data.getSkillName(usage) }}
+                          </span>
+                        }
+                        @if (data.getSkillUsages('project', project.id).length > 6) {
+                          <span class="px-2 py-0.5 text-xs rounded-full bg-(--color-bg-tertiary) text-(--color-text-muted)">
+                            +{{ data.getSkillUsages('project', project.id).length - 6 }}
+                          </span>
+                        }
+                      </div>
+                    }
                   </div>
+
+                  <!-- Footer links -->
                   <div class="flex items-center gap-3 mt-auto pt-4 border-t border-(--color-divider)">
                     @if (project.url) {
                       <a

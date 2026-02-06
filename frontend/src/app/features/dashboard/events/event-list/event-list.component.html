@@ -107,6 +107,18 @@
             </div>
           }
 
+          @if (imageMap.get(item.id)) {
+            <div
+              class="w-14 h-14 rounded-lg overflow-hidden shrink-0 border border-[var(--color-border-primary)]"
+            >
+              <img
+                [src]="imageMap.get(item.id)"
+                [alt]="getItemName(item)"
+                class="w-full h-full object-cover"
+              />
+            </div>
+          }
+
           @if (item.is_pinned) {
             <div class="text-[var(--color-pin)]">
               <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
@@ -121,6 +133,11 @@
             <h3 class="text-[var(--color-text-primary)] font-medium truncate">
               {{ getItemName(item) }}
             </h3>
+            @if (getItemDescription(item)) {
+              <p class="text-[var(--color-text-muted)] text-sm truncate mt-0.5">
+                {{ getItemDescription(item) }}
+              </p>
+            }
             @if (item.assisted_at) {
               <p class="text-[var(--color-text-disabled)] text-xs mt-1">
                 {{ item.assisted_at | date: 'mediumDate' }}

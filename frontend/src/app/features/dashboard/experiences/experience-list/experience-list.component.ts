@@ -4,7 +4,7 @@ import { RouterModule } from '@angular/router';
 import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
 import { SupabaseService } from '@core/services/supabase.service';
 import { TranslateService } from '@core/services/translate.service';
-import { Experience, ExperienceTranslation } from '@core/models';
+import { Experience, ExperienceTranslation, Image } from '@core/models';
 import { ConfirmDialogComponent } from '@shared/components/confirm-dialog/confirm-dialog.component';
 import { TranslatePipe } from '@shared/pipes/translate.pipe';
 
@@ -23,6 +23,7 @@ export class ExperienceListComponent implements OnInit {
   showArchived = signal(false);
   items = signal<Experience[]>([]);
   itemToDelete: Experience | null = null;
+  imageMap = new Map<number, string>();
 
   async ngOnInit(): Promise<void> { await this.loadItems(); }
 
@@ -37,6 +38,7 @@ export class ExperienceListComponent implements OnInit {
       );
       if (error) throw error;
       this.items.set(data || []);
+      await this.loadImages(data || []);
     } catch (err) { console.error('Error loading experiences:', err); }
     finally { this.loading.set(false); }
   }
@@ -44,6 +46,26 @@ export class ExperienceListComponent implements OnInit {
   /**
    * Get the translated role for an experience
    */
+  private async loadImages(items: Experience[]): Promise<void> {
+    if (items.length === 0) return;
+    const ids = items.map(i => i.id);
+    const { data } = await this.supabase
+      .from('image')
+      .select('*')
+      .eq('source_type', 'experience')
+      .in('source_id', ids)
+      .eq('is_archived', false)
+      .order('position', { ascending: true });
+    if (data) {
+      this.imageMap.clear();
+      for (const img of data as Image[]) {
+        if (img.source_id && !this.imageMap.has(img.source_id)) {
+          this.imageMap.set(img.source_id, img.url);
+        }
+      }
+    }
+  }
+
   getItemRole(item: Experience): string {
     const lang = this.translateService.currentLang();
     const translation = item.translations?.find(t => t.language?.code === lang);

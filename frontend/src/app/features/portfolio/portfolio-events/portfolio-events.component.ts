@@ -27,15 +27,43 @@ import { TranslatePipe } from '@shared/pipes/translate.pipe';
         } @else {
           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             @for (event of data.events(); track event.id) {
-              <div class="bg-(--color-bg-secondary) rounded-lg p-6 border border-(--color-card-border) hover:border-(--color-accent)/30 transition-all duration-500">
-                <h3 class="text-lg font-medium text-(--color-text-primary) mb-2 tracking-tight">
-                  {{ data.getEntityTranslation(event, 'name') }}
-                </h3>
-                @if (event.assisted_at) {
-                  <p class="text-xs text-(--color-text-muted) uppercase tracking-wider">
-                    {{ event.assisted_at | date }}
-                  </p>
+              <div class="group bg-(--color-bg-secondary) rounded-lg overflow-hidden border border-(--color-card-border) hover:border-(--color-accent)/30 transition-all duration-500 flex flex-col">
+                <!-- Image -->
+                @if (data.getFirstImageUrl('event', event.id)) {
+                  <div class="relative h-40 overflow-hidden">
+                    <img
+                      [src]="data.getFirstImageUrl('event', event.id)"
+                      [alt]="data.getEntityTranslation(event, 'name')"
+                      class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    />
+                  </div>
                 }
+
+                <div class="p-6 flex flex-col flex-1">
+                  <h3 class="text-lg font-medium text-(--color-text-primary) mb-2 tracking-tight">
+                    {{ data.getEntityTranslation(event, 'name') }}
+                  </h3>
+                  @if (event.assisted_at) {
+                    <p class="text-xs text-(--color-text-muted) uppercase tracking-wider mb-3">
+                      {{ event.assisted_at | date: 'mediumDate' }}
+                    </p>
+                  }
+                  @if (data.getEntityTranslation(event, 'description')) {
+                    <p class="text-sm text-(--color-text-muted) line-clamp-3 leading-relaxed font-light">
+                      {{ data.getEntityTranslation(event, 'description') }}
+                    </p>
+                  }
+                  <!-- Skills -->
+                  @if (data.getSkillUsages('event', event.id).length > 0) {
+                    <div class="flex flex-wrap gap-1.5 mt-auto pt-3 border-t border-(--color-divider)">
+                      @for (usage of data.getSkillUsages('event', event.id).slice(0, 5); track usage.id) {
+                        <span class="px-2 py-0.5 text-xs rounded-full bg-(--color-bg-tertiary) text-(--color-text-secondary) border border-(--color-border-primary)">
+                          {{ data.getSkillName(usage) }}
+                        </span>
+                      }
+                    </div>
+                  }
+                </div>
               </div>
             }
           </div>

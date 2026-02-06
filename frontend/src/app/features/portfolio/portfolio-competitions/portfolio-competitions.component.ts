@@ -27,25 +27,58 @@ import { TranslatePipe } from '@shared/pipes/translate.pipe';
         } @else {
           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             @for (comp of data.competitions(); track comp.id) {
-              <div class="bg-(--color-bg-secondary) rounded-lg p-6 border border-(--color-card-border) hover:border-(--color-accent)/30 transition-all duration-500">
-                <div class="flex items-start justify-between mb-3">
-                  <h3 class="text-lg font-medium text-(--color-text-primary) tracking-tight">
-                    {{ data.getEntityTranslation(comp, 'name') }}
-                  </h3>
-                  @if (comp.date) {
-                    <span class="text-xs text-(--color-text-muted) uppercase tracking-wider">
-                      {{ comp.date | date }}
-                    </span>
+              <div class="group bg-(--color-bg-secondary) rounded-lg overflow-hidden border border-(--color-card-border) hover:border-(--color-accent)/30 transition-all duration-500 flex flex-col">
+                <!-- Image -->
+                @if (data.getFirstImageUrl('competition', comp.id)) {
+                  <div class="relative h-40 overflow-hidden">
+                    <img
+                      [src]="data.getFirstImageUrl('competition', comp.id)"
+                      [alt]="data.getEntityTranslation(comp, 'name')"
+                      class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    />
+                  </div>
+                }
+
+                <div class="p-6 flex flex-col flex-1">
+                  <div class="flex items-start justify-between mb-3">
+                    <h3 class="text-lg font-medium text-(--color-text-primary) tracking-tight">
+                      {{ data.getEntityTranslation(comp, 'name') }}
+                    </h3>
+                    @if (comp.date) {
+                      <span class="text-xs text-(--color-text-muted) uppercase tracking-wider shrink-0 ml-2">
+                        {{ comp.date | date }}
+                      </span>
+                    }
+                  </div>
+                  @if (data.getEntityTranslation(comp, 'result')) {
+                    <p class="text-(--color-accent) text-sm font-medium mb-2 tracking-wide">
+                      {{ data.getEntityTranslation(comp, 'result') }}
+                    </p>
+                  }
+                  @if (data.getEntityTranslation(comp, 'description')) {
+                    <p class="text-sm text-(--color-text-muted) line-clamp-3 mb-3 leading-relaxed font-light">
+                      {{ data.getEntityTranslation(comp, 'description') }}
+                    </p>
+                  }
+                  @if (comp.organizer) {
+                    <p class="text-sm text-(--color-text-muted) font-light mt-auto">{{ comp.organizer }}</p>
+                  }
+                  <!-- Skills -->
+                  @if (data.getSkillUsages('competition', comp.id).length > 0) {
+                    <div class="flex flex-wrap gap-1.5 mt-3 pt-3 border-t border-(--color-divider)">
+                      @for (usage of data.getSkillUsages('competition', comp.id).slice(0, 5); track usage.id) {
+                        <span class="px-2 py-0.5 text-xs rounded-full bg-(--color-bg-tertiary) text-(--color-text-secondary) border border-(--color-border-primary)">
+                          {{ data.getSkillName(usage) }}
+                        </span>
+                      }
+                      @if (data.getSkillUsages('competition', comp.id).length > 5) {
+                        <span class="px-2 py-0.5 text-xs rounded-full bg-(--color-bg-tertiary) text-(--color-text-muted)">
+                          +{{ data.getSkillUsages('competition', comp.id).length - 5 }}
+                        </span>
+                      }
+                    </div>
                   }
                 </div>
-                @if (data.getEntityTranslation(comp, 'result')) {
-                  <p class="text-(--color-accent) text-sm font-medium mb-2 tracking-wide">
-                    {{ data.getEntityTranslation(comp, 'result') }}
-                  </p>
-                }
-                @if (comp.organizer) {
-                  <p class="text-sm text-(--color-text-muted) font-light">{{ comp.organizer }}</p>
-                }
               </div>
             }
           </div>
