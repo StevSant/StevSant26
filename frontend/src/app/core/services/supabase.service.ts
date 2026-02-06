@@ -195,6 +195,16 @@ export class SupabaseService {
     first_name?: string;
     last_name?: string;
     nickname?: string;
+    email?: string;
+    phone?: string;
+    website_url?: string;
+    linkedin_url?: string;
+    github_url?: string;
+    twitter_url?: string;
+    youtube_url?: string;
+    instagram_url?: string;
+    whatsapp?: string;
+    cv_url?: string;
   }) {
     const userId = this.user()?.id;
     if (!userId) return { data: null, error: new Error('Not authenticated') };
@@ -208,6 +218,16 @@ export class SupabaseService {
     first_name?: string;
     last_name?: string;
     nickname?: string;
+    email?: string;
+    phone?: string;
+    website_url?: string;
+    linkedin_url?: string;
+    github_url?: string;
+    twitter_url?: string;
+    youtube_url?: string;
+    instagram_url?: string;
+    whatsapp?: string;
+    cv_url?: string;
   }) {
     const userId = this.user()?.id;
     if (!userId) return { data: null, error: new Error('Not authenticated') };

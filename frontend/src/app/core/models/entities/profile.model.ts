@@ -19,5 +19,15 @@ export interface Profile {
   first_name: string | null;
   last_name: string | null;
   nickname: string | null;
+  email: string | null;
+  phone: string | null;
+  website_url: string | null;
+  linkedin_url: string | null;
+  github_url: string | null;
+  twitter_url: string | null;
+  youtube_url: string | null;
+  instagram_url: string | null;
+  whatsapp: string | null;
+  cv_url: string | null;
   translations?: ProfileTranslation[];
 }

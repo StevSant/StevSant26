@@ -103,6 +103,156 @@
         </div>
       </div>
 
+      <!-- Social Links Card -->
+      <div class="card space-y-6">
+        <h2 class="text-xl font-semibold text-[var(--color-text-primary)] flex items-center gap-2">
+          <svg
+            class="w-6 h-6 text-[var(--color-accent)]"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"
+            />
+          </svg>
+          {{ 'profile.socialLinks' | translate }}
+        </h2>
+
+        <!-- Email & Phone -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label for="email" class="label">{{ 'profile.email' | translate }}</label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              [(ngModel)]="formData.email"
+              class="input"
+              [placeholder]="'profile.emailPlaceholder' | translate"
+            />
+          </div>
+          <div>
+            <label for="phone" class="label">{{ 'profile.phone' | translate }}</label>
+            <input
+              type="tel"
+              id="phone"
+              name="phone"
+              [(ngModel)]="formData.phone"
+              class="input"
+              [placeholder]="'profile.phonePlaceholder' | translate"
+            />
+          </div>
+        </div>
+
+        <!-- WhatsApp & Website -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label for="whatsapp" class="label">{{ 'profile.whatsapp' | translate }}</label>
+            <input
+              type="text"
+              id="whatsapp"
+              name="whatsapp"
+              [(ngModel)]="formData.whatsapp"
+              class="input"
+              [placeholder]="'profile.whatsappPlaceholder' | translate"
+            />
+          </div>
+          <div>
+            <label for="website_url" class="label">{{ 'profile.website' | translate }}</label>
+            <input
+              type="url"
+              id="website_url"
+              name="website_url"
+              [(ngModel)]="formData.website_url"
+              class="input"
+              [placeholder]="'profile.websitePlaceholder' | translate"
+            />
+          </div>
+        </div>
+
+        <!-- LinkedIn & GitHub -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label for="linkedin_url" class="label">{{ 'profile.linkedin' | translate }}</label>
+            <input
+              type="url"
+              id="linkedin_url"
+              name="linkedin_url"
+              [(ngModel)]="formData.linkedin_url"
+              class="input"
+              [placeholder]="'profile.linkedinPlaceholder' | translate"
+            />
+          </div>
+          <div>
+            <label for="github_url" class="label">{{ 'profile.github' | translate }}</label>
+            <input
+              type="url"
+              id="github_url"
+              name="github_url"
+              [(ngModel)]="formData.github_url"
+              class="input"
+              [placeholder]="'profile.githubPlaceholder' | translate"
+            />
+          </div>
+        </div>
+
+        <!-- Instagram & Twitter -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label for="instagram_url" class="label">{{ 'profile.instagram' | translate }}</label>
+            <input
+              type="url"
+              id="instagram_url"
+              name="instagram_url"
+              [(ngModel)]="formData.instagram_url"
+              class="input"
+              [placeholder]="'profile.instagramPlaceholder' | translate"
+            />
+          </div>
+          <div>
+            <label for="twitter_url" class="label">{{ 'profile.twitter' | translate }}</label>
+            <input
+              type="url"
+              id="twitter_url"
+              name="twitter_url"
+              [(ngModel)]="formData.twitter_url"
+              class="input"
+              [placeholder]="'profile.twitterPlaceholder' | translate"
+            />
+          </div>
+        </div>
+
+        <!-- YouTube & CV -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label for="youtube_url" class="label">{{ 'profile.youtube' | translate }}</label>
+            <input
+              type="url"
+              id="youtube_url"
+              name="youtube_url"
+              [(ngModel)]="formData.youtube_url"
+              class="input"
+              [placeholder]="'profile.youtubePlaceholder' | translate"
+            />
+          </div>
+          <div>
+            <label for="cv_url" class="label">{{ 'profile.cv' | translate }}</label>
+            <input
+              type="url"
+              id="cv_url"
+              name="cv_url"
+              [(ngModel)]="formData.cv_url"
+              class="input"
+              [placeholder]="'profile.cvPlaceholder' | translate"
+            />
+          </div>
+        </div>
+      </div>
+
       <!-- Translations Card -->
       <div class="card space-y-6">
         <h2 class="text-xl font-semibold text-[var(--color-text-primary)] flex items-center gap-2">

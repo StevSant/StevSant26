@@ -7,6 +7,7 @@ import { TranslatePipe } from '@shared/pipes/translate.pipe';
 import { SafeHtmlPipe } from '@shared/pipes/safe-html.pipe';
 import { LanguageSelectorComponent } from '@shared/components/language-selector/language-selector.component';
 import { ThemeToggleComponent } from '@shared/components/theme-toggle/theme-toggle.component';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-dashboard-layout',
@@ -20,6 +21,9 @@ export class DashboardLayoutComponent {
   private translate = inject(TranslateService);
 
   sidebarOpen = signal(false);
+
+  /** In dev, portfolio lives at /portfolio; in prod, at / */
+  readonly portfolioLink = environment.production ? '/' : '/portfolio';
 
   navItems: NavItem[] = [
     {

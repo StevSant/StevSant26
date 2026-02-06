@@ -45,6 +45,16 @@ export class ProfileEditorComponent implements OnInit {
     first_name: '',
     last_name: '',
     nickname: '',
+    email: '',
+    phone: '',
+    website_url: '',
+    linkedin_url: '',
+    github_url: '',
+    twitter_url: '',
+    youtube_url: '',
+    instagram_url: '',
+    whatsapp: '',
+    cv_url: '',
   };
 
   // Translations map by language code
@@ -80,6 +90,16 @@ export class ProfileEditorComponent implements OnInit {
           first_name: data.first_name || '',
           last_name: data.last_name || '',
           nickname: data.nickname || '',
+          email: data.email || '',
+          phone: data.phone || '',
+          website_url: data.website_url || '',
+          linkedin_url: data.linkedin_url || '',
+          github_url: data.github_url || '',
+          twitter_url: data.twitter_url || '',
+          youtube_url: data.youtube_url || '',
+          instagram_url: data.instagram_url || '',
+          whatsapp: data.whatsapp || '',
+          cv_url: data.cv_url || '',
         };
 
         // Load translations into the map
@@ -195,6 +215,16 @@ export class ProfileEditorComponent implements OnInit {
         first_name: this.profile.first_name || '',
         last_name: this.profile.last_name || '',
         nickname: this.profile.nickname || '',
+        email: this.profile.email || '',
+        phone: this.profile.phone || '',
+        website_url: this.profile.website_url || '',
+        linkedin_url: this.profile.linkedin_url || '',
+        github_url: this.profile.github_url || '',
+        twitter_url: this.profile.twitter_url || '',
+        youtube_url: this.profile.youtube_url || '',
+        instagram_url: this.profile.instagram_url || '',
+        whatsapp: this.profile.whatsapp || '',
+        cv_url: this.profile.cv_url || '',
       };
 
       // Reset translations
@@ -212,6 +242,16 @@ export class ProfileEditorComponent implements OnInit {
         first_name: '',
         last_name: '',
         nickname: '',
+        email: '',
+        phone: '',
+        website_url: '',
+        linkedin_url: '',
+        github_url: '',
+        twitter_url: '',
+        youtube_url: '',
+        instagram_url: '',
+        whatsapp: '',
+        cv_url: '',
       };
       this.translations.clear();
     }
