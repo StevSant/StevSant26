@@ -9,7 +9,14 @@ CREATE TABLE profile (
   id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
   first_name TEXT,
   last_name TEXT,
-  nickname TEXT
+  nickname TEXT,
+  email TEXT,
+  phone TEXT,
+  linkedin_url TEXT,
+  github_url TEXT,
+  instagram_url TEXT,
+  whatsapp TEXT,
+  cv_url TEXT
 );
 
 -- =========================

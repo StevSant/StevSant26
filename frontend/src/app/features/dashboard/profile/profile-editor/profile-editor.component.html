@@ -148,7 +148,7 @@
           </div>
         </div>
 
-        <!-- WhatsApp & Website -->
+        <!-- WhatsApp & CV -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <label for="whatsapp" class="label">{{ 'profile.whatsapp' | translate }}</label>
@@ -162,14 +162,14 @@
             />
           </div>
           <div>
-            <label for="website_url" class="label">{{ 'profile.website' | translate }}</label>
+            <label for="cv_url" class="label">{{ 'profile.cv' | translate }}</label>
             <input
               type="url"
-              id="website_url"
-              name="website_url"
-              [(ngModel)]="formData.website_url"
+              id="cv_url"
+              name="cv_url"
+              [(ngModel)]="formData.cv_url"
               class="input"
-              [placeholder]="'profile.websitePlaceholder' | translate"
+              [placeholder]="'profile.cvPlaceholder' | translate"
             />
           </div>
         </div>
@@ -200,56 +200,17 @@
           </div>
         </div>
 
-        <!-- Instagram & Twitter -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <label for="instagram_url" class="label">{{ 'profile.instagram' | translate }}</label>
-            <input
-              type="url"
-              id="instagram_url"
-              name="instagram_url"
-              [(ngModel)]="formData.instagram_url"
-              class="input"
-              [placeholder]="'profile.instagramPlaceholder' | translate"
-            />
-          </div>
-          <div>
-            <label for="twitter_url" class="label">{{ 'profile.twitter' | translate }}</label>
-            <input
-              type="url"
-              id="twitter_url"
-              name="twitter_url"
-              [(ngModel)]="formData.twitter_url"
-              class="input"
-              [placeholder]="'profile.twitterPlaceholder' | translate"
-            />
-          </div>
-        </div>
-
-        <!-- YouTube & CV -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <label for="youtube_url" class="label">{{ 'profile.youtube' | translate }}</label>
-            <input
-              type="url"
-              id="youtube_url"
-              name="youtube_url"
-              [(ngModel)]="formData.youtube_url"
-              class="input"
-              [placeholder]="'profile.youtubePlaceholder' | translate"
-            />
-          </div>
-          <div>
-            <label for="cv_url" class="label">{{ 'profile.cv' | translate }}</label>
-            <input
-              type="url"
-              id="cv_url"
-              name="cv_url"
-              [(ngModel)]="formData.cv_url"
-              class="input"
-              [placeholder]="'profile.cvPlaceholder' | translate"
-            />
-          </div>
+        <!-- Instagram -->
+        <div>
+          <label for="instagram_url" class="label">{{ 'profile.instagram' | translate }}</label>
+          <input
+            type="url"
+            id="instagram_url"
+            name="instagram_url"
+            [(ngModel)]="formData.instagram_url"
+            class="input"
+            [placeholder]="'profile.instagramPlaceholder' | translate"
+          />
         </div>
       </div>
 
