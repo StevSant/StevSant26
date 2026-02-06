@@ -7,11 +7,12 @@ import { TranslateService } from '@core/services/translate.service';
 import { Experience, ExperienceTranslation, Image } from '@core/models';
 import { ConfirmDialogComponent } from '@shared/components/confirm-dialog/confirm-dialog.component';
 import { TranslatePipe } from '@shared/pipes/translate.pipe';
+import { ExperienceItemComponent } from './experience-item/experience-item.component';
 
 @Component({
   selector: 'app-experience-list',
   standalone: true,
-  imports: [CommonModule, RouterModule, DragDropModule, ConfirmDialogComponent, TranslatePipe],
+  imports: [CommonModule, RouterModule, DragDropModule, ConfirmDialogComponent, TranslatePipe, ExperienceItemComponent],
   templateUrl: './experience-list.component.html',
 })
 export class ExperienceListComponent implements OnInit {

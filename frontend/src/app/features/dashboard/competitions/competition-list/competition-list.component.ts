@@ -7,11 +7,12 @@ import { TranslateService } from '@core/services/translate.service';
 import { Competition, CompetitionTranslation, Image } from '@core/models';
 import { ConfirmDialogComponent } from '@shared/components/confirm-dialog/confirm-dialog.component';
 import { TranslatePipe } from '@shared/pipes/translate.pipe';
+import { CompetitionItemComponent } from './competition-item/competition-item.component';
 
 @Component({
   selector: 'app-competition-list',
   standalone: true,
-  imports: [CommonModule, RouterModule, DragDropModule, ConfirmDialogComponent, TranslatePipe],
+  imports: [CommonModule, RouterModule, DragDropModule, ConfirmDialogComponent, TranslatePipe, CompetitionItemComponent],
   templateUrl: './competition-list.component.html',
 })
 export class CompetitionListComponent implements OnInit {

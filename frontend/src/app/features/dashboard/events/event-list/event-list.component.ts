@@ -7,11 +7,12 @@ import { TranslateService } from '@core/services/translate.service';
 import { Event, EventTranslation, Image } from '@core/models';
 import { ConfirmDialogComponent } from '@shared/components/confirm-dialog/confirm-dialog.component';
 import { TranslatePipe } from '@shared/pipes/translate.pipe';
+import { EventItemComponent } from './event-item/event-item.component';
 
 @Component({
   selector: 'app-event-list',
   standalone: true,
-  imports: [CommonModule, RouterModule, DragDropModule, ConfirmDialogComponent, TranslatePipe],
+  imports: [CommonModule, RouterModule, DragDropModule, ConfirmDialogComponent, TranslatePipe, EventItemComponent],
   templateUrl: './event-list.component.html',
 })
 export class EventListComponent implements OnInit {

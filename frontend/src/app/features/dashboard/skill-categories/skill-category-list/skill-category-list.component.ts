@@ -7,11 +7,12 @@ import { TranslateService } from '@core/services/translate.service';
 import { SkillCategory, SkillCategoryTranslation } from '@core/models';
 import { ConfirmDialogComponent } from '@shared/components/confirm-dialog/confirm-dialog.component';
 import { TranslatePipe } from '@shared/pipes/translate.pipe';
+import { SkillCategoryItemComponent } from './skill-category-item/skill-category-item.component';
 
 @Component({
   selector: 'app-skill-category-list',
   standalone: true,
-  imports: [CommonModule, RouterModule, DragDropModule, ConfirmDialogComponent, TranslatePipe],
+  imports: [CommonModule, RouterModule, DragDropModule, ConfirmDialogComponent, TranslatePipe, SkillCategoryItemComponent],
   templateUrl: './skill-category-list.component.html',
 })
 export class SkillCategoryListComponent implements OnInit {

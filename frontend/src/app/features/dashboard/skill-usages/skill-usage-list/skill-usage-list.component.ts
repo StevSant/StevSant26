@@ -6,11 +6,12 @@ import { SupabaseService } from '@core/services/supabase.service';
 import { TranslateService } from '@core/services/translate.service';
 import { SkillUsage, Skill } from '@core/models';
 import { ConfirmDialogComponent } from '@shared/components/confirm-dialog/confirm-dialog.component';
+import { SkillUsageListItemComponent } from './skill-usage-list-item/skill-usage-list-item.component';
 
 @Component({
   selector: 'app-skill-usage-list',
   standalone: true,
-  imports: [CommonModule, RouterModule, DragDropModule, ConfirmDialogComponent],
+  imports: [CommonModule, RouterModule, DragDropModule, ConfirmDialogComponent, SkillUsageListItemComponent],
   templateUrl: './skill-usage-list.component.html',
 })
 export class SkillUsageListComponent implements OnInit {

@@ -1,0 +1,13 @@
+<div class="flex items-center gap-4 mb-6">
+  <a
+    [routerLink]="backRoute()"
+    class="p-2 text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-bg-tertiary)] rounded-lg transition-colors"
+  >
+    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+    </svg>
+  </a>
+  <h1 class="text-2xl font-bold text-[var(--color-text-primary)]">
+    {{ title() }}
+  </h1>
+</div>

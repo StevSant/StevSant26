@@ -7,11 +7,12 @@ import { TranslateService } from '@core/services/translate.service';
 import { Project, ProjectTranslation, Image } from '@core/models';
 import { ConfirmDialogComponent } from '@shared/components/confirm-dialog/confirm-dialog.component';
 import { TranslatePipe } from '@shared/pipes/translate.pipe';
+import { ProjectItemComponent } from './project-item/project-item.component';
 
 @Component({
   selector: 'app-project-list',
   standalone: true,
-  imports: [CommonModule, RouterModule, DragDropModule, ConfirmDialogComponent, TranslatePipe],
+  imports: [CommonModule, RouterModule, DragDropModule, ConfirmDialogComponent, TranslatePipe, ProjectItemComponent],
   templateUrl: './project-list.component.html',
 })
 export class ProjectListComponent implements OnInit {

@@ -53,12 +53,7 @@
   <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
     <div>
       <label for="started_at" class="label">{{ 'skillUsages.startDate' | translate }}</label>
-      <input
-        type="date"
-        id="started_at"
-        [(ngModel)]="formData().started_at"
-        class="input"
-      />
+      <input type="date" id="started_at" [(ngModel)]="formData().started_at" class="input" />
     </div>
     <div>
       <label for="ended_at" class="label">{{ 'skillUsages.endDate' | translate }}</label>
@@ -87,19 +82,9 @@
     <button type="button" (click)="cancel.emit()" class="btn-secondary text-sm">
       {{ 'common.cancel' | translate }}
     </button>
-    <button
-      type="button"
-      (click)="add.emit()"
-      [disabled]="saving()"
-      class="btn-primary text-sm"
-    >
+    <button type="button" (click)="add.emit()" [disabled]="saving()" class="btn-primary text-sm">
       @if (saving()) {
-        <svg
-          class="spinner"
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-        >
+        <svg class="spinner" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
           <circle
             class="opacity-25"
             cx="12"
