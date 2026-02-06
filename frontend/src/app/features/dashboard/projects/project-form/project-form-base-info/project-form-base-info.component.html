@@ -1,0 +1,32 @@
+<div class="card space-y-6">
+  <h2 class="text-lg font-semibold text-[var(--color-text-primary)]">
+    {{ 'projects.baseInfo' | translate }}
+  </h2>
+
+  <!-- URL -->
+  <div>
+    <label for="url" class="label">{{ 'projects.fields.url' | translate }}</label>
+    <input
+      type="url"
+      id="url"
+      name="url"
+      [ngModel]="url()"
+      (ngModelChange)="urlChange.emit($event)"
+      class="input"
+      placeholder="https://..."
+    />
+  </div>
+
+  <!-- Created At -->
+  <div>
+    <label for="created_at" class="label">{{ 'projects.createdAtLabel' | translate }}</label>
+    <input
+      type="date"
+      id="created_at"
+      name="created_at"
+      [ngModel]="createdAt()"
+      (ngModelChange)="createdAtChange.emit($event)"
+      class="input"
+    />
+  </div>
+</div>

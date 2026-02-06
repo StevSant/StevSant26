@@ -25,7 +25,9 @@
       </svg>
       <span>{{ 'common.saving' | translate }}</span>
     } @else {
-      <span>{{ isNew() ? ('common.create' | translate) : ('common.saveChanges' | translate) }}</span>
+      <span>{{
+        isNew() ? ('common.create' | translate) : ('common.saveChanges' | translate)
+      }}</span>
     }
   </button>
 </div>

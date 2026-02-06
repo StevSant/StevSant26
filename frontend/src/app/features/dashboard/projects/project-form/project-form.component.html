@@ -1,204 +1,37 @@
 <div class="max-w-2xl mx-auto">
-  <!-- Header -->
-  <div class="flex items-center gap-4 mb-6">
-    <a
-      routerLink="/dashboard/projects"
-      class="p-2 text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-bg-tertiary)] rounded-lg transition-colors"
-    >
-      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-      </svg>
-    </a>
-    <h1 class="text-2xl font-bold text-[var(--color-text-primary)]">
-      {{ isNew ? ('projects.create' | translate) : ('projects.edit' | translate) }}
-    </h1>
-  </div>
+  <app-form-header
+    [backRoute]="'/dashboard/projects'"
+    [title]="isNew ? ('projects.create' | translate) : ('projects.edit' | translate)"
+  />
 
-  <!-- Loading -->
   @if (loading()) {
-    <div class="flex items-center justify-center py-12">
-      <svg class="spinner-lg" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-        <circle
-          class="opacity-25"
-          cx="12"
-          cy="12"
-          r="10"
-          stroke="currentColor"
-          stroke-width="4"
-        ></circle>
-        <path
-          class="opacity-75"
-          fill="currentColor"
-          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-        ></path>
-      </svg>
-    </div>
+    <app-loading-spinner />
   } @else {
     <form (ngSubmit)="onSubmit()" class="space-y-6">
-      <!-- Base Info Card -->
-      <div class="card space-y-6">
-        <h2 class="text-lg font-semibold text-[var(--color-text-primary)]">
-          {{ 'projects.baseInfo' | translate }}
-        </h2>
+      <app-project-form-base-info
+        [url]="formData.url"
+        [createdAt]="formData.created_at"
+        (urlChange)="formData.url = $event"
+        (createdAtChange)="formData.created_at = $event"
+      />
 
-        <!-- URL -->
-        <div>
-          <label for="url" class="label">{{ 'projects.fields.url' | translate }}</label>
-          <input
-            type="url"
-            id="url"
-            name="url"
-            [(ngModel)]="formData.url"
-            class="input"
-            placeholder="https://..."
-          />
-        </div>
+      <app-project-form-translations
+        [currentEditLanguage]="currentEditLanguage()"
+        [currentTranslation]="currentTranslation"
+        (languageChange)="setEditLanguage($event)"
+        (translationChange)="updateTranslation($event.field, $event.value)"
+      />
 
-        <!-- Created At -->
-        <div>
-          <label for="created_at" class="label">{{ 'projects.createdAtLabel' | translate }}</label>
-          <input
-            type="date"
-            id="created_at"
-            name="created_at"
-            [(ngModel)]="formData.created_at"
-            class="input"
-          />
-        </div>
-      </div>
-
-      <!-- Translations Card -->
-      <div class="card space-y-6">
-        <h2 class="text-lg font-semibold text-[var(--color-text-primary)] flex items-center gap-2">
-          <svg
-            class="w-5 h-5 text-[var(--color-accent)]"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129"
-            />
-          </svg>
-          {{ 'projects.translatableContent' | translate }}
-        </h2>
-
-        <!-- Language Tabs -->
-        <app-language-tabs
-          [selectedLanguage]="currentEditLanguage()"
-          (languageChange)="setEditLanguage($event)"
-        />
-
-        <!-- Title -->
-        <div>
-          <label for="title" class="label">
-            {{ 'projects.fields.title' | translate }}
-            <span class="text-[var(--color-error)]">*</span>
-            <span class="text-xs text-[var(--color-text-muted)] ml-2"
-              >({{ currentEditLanguage() | uppercase }})</span
-            >
-          </label>
-          <input
-            type="text"
-            id="title"
-            name="title"
-            [ngModel]="currentTranslation.title"
-            (ngModelChange)="updateTranslation('title', $event)"
-            class="input"
-            [placeholder]="'projects.titlePlaceholder' | translate"
-          />
-        </div>
-
-        <!-- Description -->
-        <div>
-          <label for="description" class="label">
-            {{ 'projects.fields.description' | translate }}
-            <span class="text-xs text-[var(--color-text-muted)] ml-2"
-              >({{ currentEditLanguage() | uppercase }})</span
-            >
-          </label>
-          <textarea
-            id="description"
-            name="description"
-            [ngModel]="currentTranslation.description"
-            (ngModelChange)="updateTranslation('description', $event)"
-            rows="4"
-            class="input-textarea"
-            [placeholder]="'projects.descriptionPlaceholder' | translate"
-          ></textarea>
-        </div>
-      </div>
-
-      <!-- Source Association -->
-      <div class="card space-y-6">
-        <h2 class="text-lg font-semibold text-[var(--color-text-primary)]">
-          {{ 'projects.association' | translate }}
-        </h2>
-        <p class="text-[var(--color-text-muted)] text-sm">
-          {{ 'projects.associationHint' | translate }}
-        </p>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <!-- Source Type -->
-          <div>
-            <label for="source_type" class="label">{{
-              'projects.fields.sourceType' | translate
-            }}</label>
-            <select
-              id="source_type"
-              name="source_type"
-              [(ngModel)]="formData.source_type"
-              class="input"
-            >
-              <option [ngValue]="null">{{ 'common.noAssociation' | translate }}</option>
-              <option value="experience">
-                {{ 'projects.sourceTypes.experience' | translate }}
-              </option>
-              <option value="competition">
-                {{ 'projects.sourceTypes.competition' | translate }}
-              </option>
-              <option value="event">{{ 'projects.sourceTypes.event' | translate }}</option>
-            </select>
-          </div>
-
-          <!-- Source ID -->
-          <div>
-            <label for="source_id" class="label">{{
-              'projects.fields.sourceId' | translate
-            }}</label>
-            <input
-              type="number"
-              id="source_id"
-              name="source_id"
-              [(ngModel)]="formData.source_id"
-              [disabled]="!formData.source_type"
-              class="input"
-              placeholder="ID"
-            />
-          </div>
-        </div>
-
-        <!-- Parent Project -->
-        <div>
-          <label for="parent_project_id" class="label">{{
-            'projects.parentProject' | translate
-          }}</label>
-          <select
-            id="parent_project_id"
-            name="parent_project_id"
-            [(ngModel)]="formData.parent_project_id"
-            class="input"
-          >
-            <option [ngValue]="null">{{ 'common.none' | translate }}</option>
-            @for (project of parentProjects(); track project.id) {
-              <option [ngValue]="project.id">{{ getProjectTitle(project) }}</option>
-            }
-          </select>
-        </div>
-      </div>
+      <app-project-form-association
+        [sourceType]="formData.source_type"
+        [sourceId]="formData.source_id"
+        [parentProjectId]="formData.parent_project_id"
+        [parentProjects]="parentProjects()"
+        [getProjectTitle]="getProjectTitle.bind(this)"
+        (sourceTypeChange)="formData.source_type = $event"
+        (sourceIdChange)="formData.source_id = $event"
+        (parentProjectIdChange)="formData.parent_project_id = $event"
+      />
 
       <!-- Images -->
       <div class="card space-y-6">
@@ -220,43 +53,12 @@
         <app-skill-usage-manager #skillUsageManager sourceType="project" [sourceId]="currentId" />
       </div>
 
-      <!-- Messages -->
-      @if (error()) {
-        <div class="alert-error">
-          <p class="text-sm">{{ error() }}</p>
-        </div>
-      }
-
-      <!-- Actions -->
-      <div class="flex justify-end gap-3">
-        <a routerLink="/dashboard/projects" class="btn-secondary">{{
-          'common.cancel' | translate
-        }}</a>
-        <button type="submit" [disabled]="saving()" class="btn-primary">
-          @if (saving()) {
-            <svg class="spinner" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-              <circle
-                class="opacity-25"
-                cx="12"
-                cy="12"
-                r="10"
-                stroke="currentColor"
-                stroke-width="4"
-              ></circle>
-              <path
-                class="opacity-75"
-                fill="currentColor"
-                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-              ></path>
-            </svg>
-            <span>{{ 'common.saving' | translate }}</span>
-          } @else {
-            <span>{{
-              isNew ? ('common.create' | translate) : ('common.saveChanges' | translate)
-            }}</span>
-          }
-        </button>
-      </div>
+      <app-form-actions
+        [cancelRoute]="'/dashboard/projects'"
+        [saving]="saving()"
+        [isNew]="isNew"
+        [error]="error()"
+      />
     </form>
   }
 </div>

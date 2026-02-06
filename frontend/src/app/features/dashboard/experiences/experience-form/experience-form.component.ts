@@ -1,19 +1,22 @@
 import { Component, OnInit, signal, inject, ViewChild } from '@angular/core';
-import { CommonModule, UpperCasePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { SupabaseService } from '@core/services/supabase.service';
 import { LanguageService } from '@core/services/language.service';
 import { TranslatePipe } from '@shared/pipes/translate.pipe';
 import { Experience, ExperienceTranslation, Language } from '@core/models';
 import { ImageUploadComponent, ExistingImage } from '@shared/components/image-upload/image-upload.component';
-import { LanguageTabsComponent } from '@shared/components/language-tabs/language-tabs.component';
 import { SkillUsageManagerComponent } from '@shared/components/skill-usage-manager/skill-usage-manager.component';
+import { FormHeaderComponent } from '@shared/components/form-header/form-header.component';
+import { LoadingSpinnerComponent } from '@shared/components/loading-spinner/loading-spinner.component';
+import { FormActionsComponent } from '@shared/components/form-actions/form-actions.component';
+import { ExperienceFormBaseInfoComponent } from './experience-form-base-info/experience-form-base-info.component';
+import { ExperienceFormTranslationsComponent } from './experience-form-translations/experience-form-translations.component';
 
 @Component({
   selector: 'app-experience-form',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule, UpperCasePipe, TranslatePipe, ImageUploadComponent, LanguageTabsComponent, SkillUsageManagerComponent],
+  imports: [FormsModule, TranslatePipe, ImageUploadComponent, SkillUsageManagerComponent, FormHeaderComponent, LoadingSpinnerComponent, FormActionsComponent, ExperienceFormBaseInfoComponent, ExperienceFormTranslationsComponent],
   templateUrl: './experience-form.component.html',
 })
 export class ExperienceFormComponent implements OnInit {

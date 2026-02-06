@@ -1,20 +1,35 @@
 import { Component, OnInit, signal, inject, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { UpperCasePipe } from '@angular/common';
-import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { SupabaseService } from '@core/services/supabase.service';
 import { LanguageService } from '@core/services/language.service';
 import { TranslateService } from '@core/services/translate.service';
 import { TranslatePipe } from '@shared/pipes/translate.pipe';
 import { Project, ProjectTranslation, Language, getTranslation } from '@core/models';
 import { ImageUploadComponent, ExistingImage } from '@shared/components/image-upload/image-upload.component';
-import { LanguageTabsComponent } from '@shared/components/language-tabs/language-tabs.component';
 import { SkillUsageManagerComponent } from '@shared/components/skill-usage-manager/skill-usage-manager.component';
+import { FormHeaderComponent } from '@shared/components/form-header/form-header.component';
+import { LoadingSpinnerComponent } from '@shared/components/loading-spinner/loading-spinner.component';
+import { FormActionsComponent } from '@shared/components/form-actions/form-actions.component';
+import { ProjectFormBaseInfoComponent } from './project-form-base-info/project-form-base-info.component';
+import { ProjectFormTranslationsComponent } from './project-form-translations/project-form-translations.component';
+import { ProjectFormAssociationComponent } from './project-form-association/project-form-association.component';
 
 @Component({
   selector: 'app-project-form',
   standalone: true,
-  imports: [FormsModule, RouterModule, UpperCasePipe, TranslatePipe, ImageUploadComponent, LanguageTabsComponent, SkillUsageManagerComponent],
+  imports: [
+    FormsModule,
+    TranslatePipe,
+    ImageUploadComponent,
+    SkillUsageManagerComponent,
+    FormHeaderComponent,
+    LoadingSpinnerComponent,
+    FormActionsComponent,
+    ProjectFormBaseInfoComponent,
+    ProjectFormTranslationsComponent,
+    ProjectFormAssociationComponent,
+  ],
   templateUrl: './project-form.component.html',
 })
 export class ProjectFormComponent implements OnInit {

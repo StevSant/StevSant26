@@ -1,0 +1,111 @@
+<div class="card p-6 space-y-6">
+  <h2 class="text-lg font-semibold text-[var(--color-text-primary)]">Información Base</h2>
+
+  <div>
+    <label for="skill_id" class="label">
+      Habilidad <span class="text-[var(--color-error)]">*</span>
+    </label>
+    <select
+      id="skill_id"
+      name="skill_id"
+      [ngModel]="skillId()"
+      (ngModelChange)="skillIdChange.emit($event)"
+      required
+      class="input"
+    >
+      <option [ngValue]="0" disabled>Selecciona una habilidad</option>
+      @for (skill of skills(); track skill.id) {
+        <option [ngValue]="skill.id">{{ getSkillName()(skill) }}</option>
+      }
+    </select>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div>
+      <label for="source_type" class="label">
+        Tipo de Fuente <span class="text-[var(--color-error)]">*</span>
+      </label>
+      <select
+        id="source_type"
+        name="source_type"
+        [ngModel]="sourceType()"
+        (ngModelChange)="sourceTypeChange.emit($event)"
+        required
+        class="input"
+      >
+        <option value="project">Proyecto</option>
+        <option value="experience">Experiencia</option>
+        <option value="competition">Competencia</option>
+        <option value="event">Evento</option>
+      </select>
+    </div>
+    <div>
+      <label for="source_id" class="label">
+        ID de Fuente <span class="text-[var(--color-error)]">*</span>
+      </label>
+      <input
+        type="number"
+        id="source_id"
+        name="source_id"
+        [ngModel]="sourceId()"
+        (ngModelChange)="sourceIdChange.emit($event)"
+        required
+        class="input"
+        placeholder="ID"
+      />
+    </div>
+  </div>
+
+  <div>
+    <label for="level" class="label">Nivel de Dominio (1-5)</label>
+    <div class="flex items-center gap-2">
+      @for (i of [1, 2, 3, 4, 5]; track i) {
+        <button
+          type="button"
+          (click)="setLevel(i)"
+          class="p-1 transition-colors"
+          [class.text-[var(--color-pin)]]="level() !== null && i <= level()!"
+          [class.text-[var(--color-text-disabled)]]="level() === null || i > level()!"
+        >
+          <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+          </svg>
+        </button>
+      }
+      @if (level()) {
+        <button
+          type="button"
+          (click)="setLevel(null)"
+          class="ml-2 text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)] text-sm"
+        >
+          Limpiar
+        </button>
+      }
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div>
+      <label for="started_at" class="label">Fecha de Inicio</label>
+      <input
+        type="date"
+        id="started_at"
+        name="started_at"
+        [ngModel]="startedAt()"
+        (ngModelChange)="startedAtChange.emit($event)"
+        class="input"
+      />
+    </div>
+    <div>
+      <label for="ended_at" class="label">Fecha de Fin</label>
+      <input
+        type="date"
+        id="ended_at"
+        name="ended_at"
+        [ngModel]="endedAt()"
+        (ngModelChange)="endedAtChange.emit($event)"
+        class="input"
+      />
+    </div>
+  </div>
+</div>

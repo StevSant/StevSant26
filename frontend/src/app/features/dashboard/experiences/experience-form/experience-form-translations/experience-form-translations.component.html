@@ -1,0 +1,60 @@
+<div class="card space-y-6">
+  <h2 class="text-lg font-semibold text-[var(--color-text-primary)] flex items-center gap-2">
+    <svg
+      class="w-5 h-5 text-[var(--color-accent)]"
+      fill="none"
+      stroke="currentColor"
+      viewBox="0 0 24 24"
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+        d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129"
+      />
+    </svg>
+    {{ 'experiences.translatableContent' | translate }}
+  </h2>
+
+  <app-language-tabs
+    [selectedLanguage]="currentEditLanguage()"
+    (languageChange)="languageChange.emit($event)"
+  />
+
+  <div>
+    <label for="role" class="label">
+      {{ 'experiences.fields.role' | translate }}
+      <span class="text-[var(--color-error)]">*</span>
+      <span class="text-xs text-[var(--color-text-muted)] ml-2"
+        >({{ currentEditLanguage() | uppercase }})</span
+      >
+    </label>
+    <input
+      type="text"
+      id="role"
+      name="role"
+      [ngModel]="currentTranslation().role"
+      (ngModelChange)="onFieldChange('role', $event)"
+      class="input"
+      [placeholder]="'experiences.rolePlaceholder' | translate"
+    />
+  </div>
+
+  <div>
+    <label for="description" class="label">
+      {{ 'experiences.fields.description' | translate }}
+      <span class="text-xs text-[var(--color-text-muted)] ml-2"
+        >({{ currentEditLanguage() | uppercase }})</span
+      >
+    </label>
+    <textarea
+      id="description"
+      name="description"
+      [ngModel]="currentTranslation().description"
+      (ngModelChange)="onFieldChange('description', $event)"
+      rows="4"
+      class="input-textarea"
+      [placeholder]="'experiences.descriptionPlaceholder' | translate"
+    ></textarea>
+  </div>
+</div>

@@ -1,0 +1,50 @@
+<div class="card space-y-6">
+  <h2 class="text-lg font-semibold text-[var(--color-text-primary)]">
+    {{ 'experiences.baseInfo' | translate }}
+  </h2>
+
+  <div>
+    <label for="company" class="label">
+      {{ 'experiences.fields.company' | translate }}
+      <span class="text-[var(--color-error)]">*</span>
+    </label>
+    <input
+      type="text"
+      id="company"
+      name="company"
+      [ngModel]="company()"
+      (ngModelChange)="companyChange.emit($event)"
+      required
+      class="input"
+      [placeholder]="'experiences.companyPlaceholder' | translate"
+    />
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div>
+      <label for="start_date" class="label">{{ 'experiences.fields.startDate' | translate }}</label>
+      <input
+        type="date"
+        id="start_date"
+        name="start_date"
+        [ngModel]="startDate()"
+        (ngModelChange)="startDateChange.emit($event)"
+        class="input"
+      />
+    </div>
+    <div>
+      <label for="end_date" class="label">{{ 'experiences.fields.endDate' | translate }}</label>
+      <input
+        type="date"
+        id="end_date"
+        name="end_date"
+        [ngModel]="endDate()"
+        (ngModelChange)="endDateChange.emit($event)"
+        class="input"
+      />
+      <p class="text-xs text-[var(--color-text-disabled)] mt-1">
+        {{ 'experiences.currentJobHint' | translate }}
+      </p>
+    </div>
+  </div>
+</div>

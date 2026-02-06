@@ -1,0 +1,33 @@
+<div class="card space-y-6">
+  <h2 class="text-lg font-semibold text-[var(--color-text-primary)]">
+    {{ 'competitions.baseInfo' | translate }}
+  </h2>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div>
+      <label for="organizer" class="label">{{
+        'competitions.fields.organizer' | translate
+      }}</label>
+      <input
+        type="text"
+        id="organizer"
+        name="organizer"
+        [ngModel]="organizer()"
+        (ngModelChange)="organizerChange.emit($event)"
+        class="input"
+        [placeholder]="'competitions.organizerPlaceholder' | translate"
+      />
+    </div>
+    <div>
+      <label for="date" class="label">{{ 'competitions.fields.date' | translate }}</label>
+      <input
+        type="date"
+        id="date"
+        name="date"
+        [ngModel]="date()"
+        (ngModelChange)="dateChange.emit($event)"
+        class="input"
+      />
+    </div>
+  </div>
+</div>

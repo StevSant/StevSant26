@@ -1,153 +1,28 @@
 <div class="max-w-2xl mx-auto">
-  <div class="flex items-center gap-4 mb-6">
-    <a
-      routerLink="/dashboard/experiences"
-      class="p-2 text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-bg-tertiary)] rounded-lg transition-colors"
-    >
-      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-      </svg>
-    </a>
-    <h1 class="text-2xl font-bold text-[var(--color-text-primary)]">
-      {{ isNew ? ('experiences.create' | translate) : ('experiences.edit' | translate) }}
-    </h1>
-  </div>
+  <app-form-header
+    [backRoute]="'/dashboard/experiences'"
+    [title]="isNew ? ('experiences.create' | translate) : ('experiences.edit' | translate)"
+  />
 
   @if (loading()) {
-    <div class="flex items-center justify-center py-12">
-      <svg class="spinner-lg" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-        <circle
-          class="opacity-25"
-          cx="12"
-          cy="12"
-          r="10"
-          stroke="currentColor"
-          stroke-width="4"
-        ></circle>
-        <path
-          class="opacity-75"
-          fill="currentColor"
-          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-        ></path>
-      </svg>
-    </div>
+    <app-loading-spinner />
   } @else {
     <form (ngSubmit)="onSubmit()" class="space-y-6">
-      <!-- Base Information Card -->
-      <div class="card space-y-6">
-        <h2 class="text-lg font-semibold text-[var(--color-text-primary)]">
-          {{ 'experiences.baseInfo' | translate }}
-        </h2>
+      <app-experience-form-base-info
+        [company]="formData.company"
+        [startDate]="formData.start_date"
+        [endDate]="formData.end_date"
+        (companyChange)="formData.company = $event"
+        (startDateChange)="formData.start_date = $event"
+        (endDateChange)="formData.end_date = $event"
+      />
 
-        <div>
-          <label for="company" class="label">
-            {{ 'experiences.fields.company' | translate }}
-            <span class="text-[var(--color-error)]">*</span>
-          </label>
-          <input
-            type="text"
-            id="company"
-            name="company"
-            [(ngModel)]="formData.company"
-            required
-            class="input"
-            [placeholder]="'experiences.companyPlaceholder' | translate"
-          />
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <label for="start_date" class="label">{{
-              'experiences.fields.startDate' | translate
-            }}</label>
-            <input
-              type="date"
-              id="start_date"
-              name="start_date"
-              [(ngModel)]="formData.start_date"
-              class="input"
-            />
-          </div>
-          <div>
-            <label for="end_date" class="label">{{
-              'experiences.fields.endDate' | translate
-            }}</label>
-            <input
-              type="date"
-              id="end_date"
-              name="end_date"
-              [(ngModel)]="formData.end_date"
-              class="input"
-            />
-            <p class="text-xs text-[var(--color-text-disabled)] mt-1">
-              {{ 'experiences.currentJobHint' | translate }}
-            </p>
-          </div>
-        </div>
-      </div>
-
-      <!-- Translations Card -->
-      <div class="card space-y-6">
-        <h2 class="text-lg font-semibold text-[var(--color-text-primary)] flex items-center gap-2">
-          <svg
-            class="w-5 h-5 text-[var(--color-accent)]"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129"
-            />
-          </svg>
-          {{ 'experiences.translatableContent' | translate }}
-        </h2>
-
-        <!-- Language Tabs -->
-        <app-language-tabs
-          [selectedLanguage]="currentEditLanguage()"
-          (languageChange)="setEditLanguage($event)"
-        />
-
-        <div>
-          <label for="role" class="label">
-            {{ 'experiences.fields.role' | translate }}
-            <span class="text-[var(--color-error)]">*</span>
-            <span class="text-xs text-[var(--color-text-muted)] ml-2"
-              >({{ currentEditLanguage() | uppercase }})</span
-            >
-          </label>
-          <input
-            type="text"
-            id="role"
-            name="role"
-            [ngModel]="currentTranslation.role"
-            (ngModelChange)="updateTranslation('role', $event)"
-            class="input"
-            [placeholder]="'experiences.rolePlaceholder' | translate"
-          />
-        </div>
-
-        <div>
-          <label for="description" class="label">
-            {{ 'experiences.fields.description' | translate }}
-            <span class="text-xs text-[var(--color-text-muted)] ml-2"
-              >({{ currentEditLanguage() | uppercase }})</span
-            >
-          </label>
-          <textarea
-            id="description"
-            name="description"
-            [ngModel]="currentTranslation.description"
-            (ngModelChange)="updateTranslation('description', $event)"
-            rows="4"
-            class="input-textarea"
-            [placeholder]="'experiences.descriptionPlaceholder' | translate"
-          ></textarea>
-        </div>
-      </div>
+      <app-experience-form-translations
+        [currentEditLanguage]="currentEditLanguage()"
+        [currentTranslation]="currentTranslation"
+        (languageChange)="setEditLanguage($event)"
+        (translationChange)="updateTranslation($event.field, $event.value)"
+      />
 
       <div class="card space-y-6">
         <h2 class="text-lg font-semibold text-[var(--color-text-primary)]">
@@ -163,50 +38,16 @@
         />
       </div>
 
-      <!-- Skill Usages -->
       <div class="card">
-        <app-skill-usage-manager
-          #skillUsageManager
-          sourceType="experience"
-          [sourceId]="currentId"
-        />
+        <app-skill-usage-manager #skillUsageManager sourceType="experience" [sourceId]="currentId" />
       </div>
 
-      @if (error()) {
-        <div class="alert-error">
-          <p class="text-sm">{{ error() }}</p>
-        </div>
-      }
-
-      <div class="flex justify-end gap-3">
-        <a routerLink="/dashboard/experiences" class="btn-secondary">{{
-          'common.cancel' | translate
-        }}</a>
-        <button type="submit" [disabled]="saving()" class="btn-primary">
-          @if (saving()) {
-            <svg class="spinner" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-              <circle
-                class="opacity-25"
-                cx="12"
-                cy="12"
-                r="10"
-                stroke="currentColor"
-                stroke-width="4"
-              ></circle>
-              <path
-                class="opacity-75"
-                fill="currentColor"
-                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-              ></path>
-            </svg>
-            <span>{{ 'common.saving' | translate }}</span>
-          } @else {
-            <span>{{
-              isNew ? ('common.create' | translate) : ('common.saveChanges' | translate)
-            }}</span>
-          }
-        </button>
-      </div>
+      <app-form-actions
+        [cancelRoute]="'/dashboard/experiences'"
+        [saving]="saving()"
+        [isNew]="isNew"
+        [error]="error()"
+      />
     </form>
   }
 </div>
