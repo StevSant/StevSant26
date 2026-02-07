@@ -260,6 +260,7 @@
     }
   },
   "experiences": {
+    "present": "Presente",
     "title": "Experiencias",
     "subtitle": "Gestiona tus experiencias laborales",
     "create": "Nueva Experiencia",

@@ -2,10 +2,11 @@
   <!-- Drop Zone -->
   <div
     class="border-2 border-dashed rounded-xl p-6 text-center transition-all duration-200 cursor-pointer"
-    [class.border-[var(--color-accent)]="isDragging()"
-    [class.bg-[var(--color-accent)]/5]="isDragging()"
-    [class.border-[var(--color-border)]]="!isDragging()"
-    [class.hover:border-[var(--color-accent)]]="!isDragging()"
+    [ngClass]="
+      isDragging()
+        ? 'border-[var(--color-accent)] bg-[var(--color-accent)]/5'
+        : 'border-[var(--color-border)] hover:border-[var(--color-accent)]'
+    "
     (dragover)="onDragOver($event)"
     (dragleave)="onDragLeave($event)"
     (drop)="onDrop($event)"

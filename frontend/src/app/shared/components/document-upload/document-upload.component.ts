@@ -1,4 +1,5 @@
 import { Component, input, output, signal, inject, effect } from '@angular/core';
+import { NgClass } from '@angular/common';
 import { SupabaseService } from '@core/services/supabase.service';
 import { SourceType } from '@core/models';
 import { TranslatePipe } from '@shared/pipes/translate.pipe';
@@ -15,7 +16,7 @@ export interface ExistingDocument {
 @Component({
   selector: 'app-document-upload',
   standalone: true,
-  imports: [TranslatePipe],
+  imports: [NgClass, TranslatePipe],
   templateUrl: './document-upload.component.html',
 })
 export class DocumentUploadComponent {

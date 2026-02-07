@@ -260,6 +260,7 @@
     }
   },
   "experiences": {
+    "present": "Present",
     "title": "Experiences",
     "subtitle": "Manage your work experiences",
     "create": "New Experience",

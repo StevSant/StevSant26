@@ -578,7 +578,7 @@ export class SupabaseService {
       const filePath = folder ? `${folder}/${fileName}` : fileName;
 
       const { data, error } = await this.supabase.storage
-        .from('documents')
+        .from(environment.storageDocumentsBucket)
         .upload(filePath, file, {
           cacheControl: '3600',
           upsert: false,
@@ -595,7 +595,7 @@ export class SupabaseService {
    * Get the public URL for a document in storage
    */
   getDocumentPublicUrl(path: string): string {
-    const { data } = this.supabase.storage.from('documents').getPublicUrl(path);
+    const { data } = this.supabase.storage.from(environment.storageDocumentsBucket).getPublicUrl(path);
     return data.publicUrl;
   }
 
@@ -603,7 +603,7 @@ export class SupabaseService {
    * Delete a document from storage
    */
   async deleteDocumentFromStorage(path: string) {
-    return this.supabase.storage.from('documents').remove([path]);
+    return this.supabase.storage.from(environment.storageDocumentsBucket).remove([path]);
   }
 
   // ==================== IMAGE STORAGE OPERATIONS ====================
