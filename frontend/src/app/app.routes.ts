@@ -34,6 +34,11 @@ const portfolioChildren: Routes = [
       import('./features/portfolio/portfolio-skills/portfolio-skills.component').then((m) => m.PortfolioSkillsComponent),
   },
   {
+    path: 'education',
+    loadComponent: () =>
+      import('./features/portfolio/portfolio-education/portfolio-education.component').then((m) => m.PortfolioEducationComponent),
+  },
+  {
     path: 'competitions',
     loadComponent: () =>
       import('./features/portfolio/portfolio-competitions/portfolio-competitions.component').then((m) => m.PortfolioCompetitionsComponent),
@@ -132,6 +137,16 @@ const devRoutes: Routes = [
           import('./features/dashboard/experiences/experience-form/experience-form.component').then((m) => m.ExperienceFormComponent),
       },
       {
+        path: 'educations',
+        loadComponent: () =>
+          import('./features/dashboard/educations/education-list/education-list.component').then((m) => m.EducationListComponent),
+      },
+      {
+        path: 'educations/:id',
+        loadComponent: () =>
+          import('./features/dashboard/educations/education-form/education-form.component').then((m) => m.EducationFormComponent),
+      },
+      {
         path: 'competitions',
         loadComponent: () =>
           import('./features/dashboard/competitions/competition-list/competition-list.component').then((m) => m.CompetitionListComponent),
@@ -222,6 +237,16 @@ const prodRoutes: Routes = [
         path: 'experiences/:id',
         loadComponent: () =>
           import('./features/dashboard/experiences/experience-form/experience-form.component').then((m) => m.ExperienceFormComponent),
+      },
+      {
+        path: 'educations',
+        loadComponent: () =>
+          import('./features/dashboard/educations/education-list/education-list.component').then((m) => m.EducationListComponent),
+      },
+      {
+        path: 'educations/:id',
+        loadComponent: () =>
+          import('./features/dashboard/educations/education-form/education-form.component').then((m) => m.EducationFormComponent),
       },
       {
         path: 'competitions',

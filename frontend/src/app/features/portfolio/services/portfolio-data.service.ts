@@ -6,6 +6,7 @@ import {
   Profile,
   Project,
   Experience,
+  Education,
   Competition,
   Event,
   Skill,
@@ -41,6 +42,7 @@ export class PortfolioDataService {
   bannerUrl = signal<string | null>(null);
   projects = signal<Project[]>([]);
   experiences = signal<Experience[]>([]);
+  educations = signal<Education[]>([]);
   competitions = signal<Competition[]>([]);
   events = signal<Event[]>([]);
   skillCategories = signal<SkillCategoryWithSkills[]>([]);
@@ -66,6 +68,7 @@ export class PortfolioDataService {
       this.loadProfile(),
       this.loadProjects(),
       this.loadExperiences(),
+      this.loadEducations(),
       this.loadCompetitions(),
       this.loadEvents(),
       this.loadSkillsWithLevels(),
@@ -126,6 +129,17 @@ export class PortfolioDataService {
       .order('start_date', { ascending: false });
     if (data) {
       this.experiences.set(data as Experience[]);
+    }
+  }
+
+  private async loadEducations(): Promise<void> {
+    const { data } = await this.supabase
+      .from('education')
+      .select('*, translations:education_translation(*)')
+      .eq('is_archived', false)
+      .order('start_date', { ascending: false });
+    if (data) {
+      this.educations.set(data as Education[]);
     }
   }
 
@@ -315,6 +329,11 @@ export class PortfolioDataService {
   /** Find an experience by ID */
   getExperienceById(id: number): Experience | undefined {
     return this.experiences().find(e => e.id === id);
+  }
+
+  /** Find an education by ID */
+  getEducationById(id: number): Education | undefined {
+    return this.educations().find(e => e.id === id);
   }
 
   /** Find a competition by ID */

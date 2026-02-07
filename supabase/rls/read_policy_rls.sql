@@ -26,6 +26,12 @@ ON experience
 FOR SELECT
 USING (true);
 
+-- education
+CREATE POLICY "Public read education"
+ON education
+FOR SELECT
+USING (true);
+
 -- event
 CREATE POLICY "Public read event"
 ON event
@@ -88,6 +94,12 @@ USING (true);
 -- experience_translation
 CREATE POLICY "Public read experience_translation"
 ON experience_translation
+FOR SELECT
+USING (true);
+
+-- education_translation
+CREATE POLICY "Public read education_translation"
+ON education_translation
 FOR SELECT
 USING (true);
 

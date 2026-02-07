@@ -1,0 +1,68 @@
+<div class="max-w-2xl mx-auto">
+  <app-form-header
+    [backRoute]="'/dashboard/educations'"
+    [title]="isNew ? ('educations.create' | translate) : ('educations.edit' | translate)"
+  />
+
+  @if (loading()) {
+    <app-loading-spinner />
+  } @else {
+    <form (ngSubmit)="onSubmit()" class="space-y-6">
+      <app-education-form-base-info
+        [institution]="formData.institution"
+        [startDate]="formData.start_date"
+        [endDate]="formData.end_date"
+        [institutionImageUrl]="formData.institution_image_url"
+        (institutionChange)="formData.institution = $event"
+        (startDateChange)="formData.start_date = $event"
+        (endDateChange)="formData.end_date = $event"
+        (institutionImageUrlChange)="formData.institution_image_url = $event"
+      />
+
+      <app-education-form-translations
+        [currentEditLanguage]="currentEditLanguage()"
+        [currentTranslation]="currentTranslation"
+        (languageChange)="setEditLanguage($event)"
+        (translationChange)="updateTranslation($event.field, $event.value)"
+      />
+
+      <div class="card space-y-6">
+        <h2 class="text-lg font-semibold text-[var(--color-text-primary)]">
+          {{ 'educations.images' | translate }}
+        </h2>
+        <app-image-upload
+          folder="educations"
+          [multiple]="true"
+          [sourceType]="'education'"
+          [sourceId]="currentId"
+          [existingImages]="existingImages()"
+          (uploaded)="onImageUploaded($event)"
+        />
+      </div>
+
+      <div class="card space-y-6">
+        <h2 class="text-lg font-semibold text-[var(--color-text-primary)]">
+          {{ 'educations.documents' | translate }}
+        </h2>
+        <app-document-upload
+          folder="educations"
+          [sourceType]="'education'"
+          [sourceId]="currentId"
+          [existingDocuments]="existingDocuments()"
+          (uploaded)="onDocumentUploaded($event)"
+        />
+      </div>
+
+      <div class="card">
+        <app-skill-usage-manager #skillUsageManager sourceType="education" [sourceId]="currentId" />
+      </div>
+
+      <app-form-actions
+        [cancelRoute]="'/dashboard/educations'"
+        [saving]="saving()"
+        [isNew]="isNew"
+        [error]="error()"
+      />
+    </form>
+  }
+</div>

@@ -29,6 +29,9 @@ ON competitions_translation(language_id);
 CREATE INDEX idx_experience_translation_lang
 ON experience_translation(language_id);
 
+CREATE INDEX idx_education_translation_lang
+ON education_translation(language_id);
+
 CREATE INDEX idx_event_translation_lang
 ON event_translation(language_id);
 

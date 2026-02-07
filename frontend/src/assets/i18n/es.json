@@ -55,6 +55,7 @@
     "skillUsages": "Uso de Habilidades",
     "projects": "Proyectos",
     "experiences": "Experiencias",
+    "educations": "Formación Académica",
     "competitions": "Competencias",
     "events": "Eventos"
   },
@@ -296,6 +297,45 @@
       "message": "Esta acción eliminará permanentemente la experiencia."
     }
   },
+  "educations": {
+    "present": "Presente",
+    "title": "Formación Académica",
+    "subtitle": "Gestiona tu formación académica",
+    "create": "Nueva Formación",
+    "edit": "Editar Formación",
+    "list": "Lista de Formación Académica",
+    "baseInfo": "Información Base",
+    "translatableContent": "Contenido Traducible",
+    "images": "Imágenes",
+    "documents": "Documentos",
+    "currentStudyHint": "Deja vacío si estás cursando actualmente",
+    "degreePlaceholder": "Ej: Ingeniería en Sistemas",
+    "fieldOfStudyPlaceholder": "Ej: Ciencias de la Computación",
+    "descriptionPlaceholder": "Describe tu formación académica...",
+    "institutionPlaceholder": "Nombre de la institución",
+    "empty": "No hay formación académica",
+    "emptyHint": "Comienza agregando tu primera formación",
+    "fields": {
+      "institution": "Institución",
+      "degree": "Título / Grado",
+      "fieldOfStudy": "Campo de Estudio",
+      "description": "Descripción",
+      "startDate": "Fecha de Inicio",
+      "endDate": "Fecha de Fin",
+      "institutionImageUrl": "Imagen de la Institución"
+    },
+    "institutionImageUrlPlaceholder": "https://example.com/university-logo.png",
+    "institutionImageUrlHint": "URL del logo o foto de la institución educativa",
+    "errors": {
+      "institutionRequired": "La institución es requerida",
+      "degreeRequired": "El título es requerido en al menos un idioma",
+      "saveError": "Error al guardar la formación académica"
+    },
+    "deleteConfirm": {
+      "title": "¿Eliminar formación académica?",
+      "message": "Esta acción eliminará permanentemente la formación académica."
+    }
+  },
   "competitions": {
     "title": "Competencias",
     "subtitle": "Gestiona tus competencias y premios",
@@ -410,6 +450,7 @@
       "skills": "Habilidades",
       "competitions": "Competencias",
       "events": "Eventos",
+      "education": "Formación",
       "contact": "Contacto",
       "more": "Más",
       "cvDocuments": "Documentos CV",
@@ -422,6 +463,7 @@
       "skills": "Habilidades",
       "competitions": "Competencias y Premios",
       "events": "Eventos Asistidos",
+      "education": "Formación Académica",
       "contact": "Contáctame"
     },
     "empty": {
@@ -430,7 +472,8 @@
       "experience": "No hay experiencia para mostrar",
       "skills": "No hay habilidades para mostrar",
       "competitions": "No hay competencias para mostrar",
-      "events": "No hay eventos para mostrar"
+      "events": "No hay eventos para mostrar",
+      "education": "No hay formación académica para mostrar"
     },
     "viewProject": "Ver Proyecto",
     "viewDetails": "Ver Detalles",
@@ -489,10 +532,12 @@
     "searchExperiences": "Buscar experiencias...",
     "searchCompetitions": "Buscar competencias...",
     "searchEvents": "Buscar eventos...",
+    "searchEducations": "Buscar formación académica...",
     "category": "Categoría",
     "association": "Asociación",
     "company": "Empresa",
     "organizer": "Organizador",
+    "institution": "Institución",
     "year": "Año"
   },
   "theme": {

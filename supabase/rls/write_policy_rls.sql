@@ -30,6 +30,13 @@ FOR ALL
 USING (auth.uid() IS NOT NULL)
 WITH CHECK (auth.uid() IS NOT NULL);
 
+-- education
+CREATE POLICY "Admin write education"
+ON education
+FOR ALL
+USING (auth.uid() IS NOT NULL)
+WITH CHECK (auth.uid() IS NOT NULL);
+
 -- event
 CREATE POLICY "Admin write event"
 ON event
@@ -93,6 +100,13 @@ WITH CHECK (auth.uid() IS NOT NULL);
 -- experience_translation
 CREATE POLICY "Admin write experience_translation"
 ON experience_translation
+FOR ALL
+USING (auth.uid() IS NOT NULL)
+WITH CHECK (auth.uid() IS NOT NULL);
+
+-- education_translation
+CREATE POLICY "Admin write education_translation"
+ON education_translation
 FOR ALL
 USING (auth.uid() IS NOT NULL)
 WITH CHECK (auth.uid() IS NOT NULL);

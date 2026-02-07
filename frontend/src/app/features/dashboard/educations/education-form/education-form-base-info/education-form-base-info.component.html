@@ -1,0 +1,77 @@
+<div class="card space-y-6">
+  <h2 class="text-lg font-semibold text-[var(--color-text-primary)]">
+    {{ 'educations.baseInfo' | translate }}
+  </h2>
+
+  <div>
+    <label for="institution" class="label">
+      {{ 'educations.fields.institution' | translate }}
+      <span class="text-[var(--color-error)]">*</span>
+    </label>
+    <input
+      type="text"
+      id="institution"
+      name="institution"
+      [ngModel]="institution()"
+      (ngModelChange)="institutionChange.emit($event)"
+      required
+      class="input"
+      [placeholder]="'educations.institutionPlaceholder' | translate"
+    />
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div>
+      <label for="start_date" class="label">{{ 'educations.fields.startDate' | translate }}</label>
+      <input
+        type="date"
+        id="start_date"
+        name="start_date"
+        [ngModel]="startDate()"
+        (ngModelChange)="startDateChange.emit($event)"
+        class="input"
+      />
+    </div>
+    <div>
+      <label for="end_date" class="label">{{ 'educations.fields.endDate' | translate }}</label>
+      <input
+        type="date"
+        id="end_date"
+        name="end_date"
+        [ngModel]="endDate()"
+        (ngModelChange)="endDateChange.emit($event)"
+        class="input"
+      />
+      <p class="text-xs text-[var(--color-text-disabled)] mt-1">
+        {{ 'educations.currentStudyHint' | translate }}
+      </p>
+    </div>
+  </div>
+
+  <div>
+    <label for="institution_image_url" class="label">{{
+      'educations.fields.institutionImageUrl' | translate
+    }}</label>
+    <div class="flex items-center gap-3">
+      @if (institutionImageUrl()) {
+        <img
+          [src]="institutionImageUrl()"
+          alt="Institution image"
+          class="w-12 h-12 object-cover rounded-lg bg-[var(--color-bg-tertiary)] border border-[var(--color-border-primary)]"
+        />
+      }
+      <input
+        type="url"
+        id="institution_image_url"
+        name="institution_image_url"
+        [ngModel]="institutionImageUrl()"
+        (ngModelChange)="institutionImageUrlChange.emit($event)"
+        class="input flex-1"
+        [placeholder]="'educations.institutionImageUrlPlaceholder' | translate"
+      />
+    </div>
+    <p class="text-xs text-[var(--color-text-disabled)] mt-1">
+      {{ 'educations.institutionImageUrlHint' | translate }}
+    </p>
+  </div>
+</div>

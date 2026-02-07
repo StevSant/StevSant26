@@ -68,6 +68,20 @@ CREATE TABLE experience_translation (
 );
 
 -- =========================
+-- education_translation
+-- =========================
+CREATE TABLE education_translation (
+  id SERIAL PRIMARY KEY,
+  education_id INT REFERENCES education(id) ON DELETE CASCADE,
+  language_id INT NOT NULL REFERENCES language(id),
+  degree TEXT NOT NULL,
+  field_of_study TEXT,
+  description TEXT,
+
+  UNIQUE(education_id, language_id)
+);
+
+-- =========================
 -- event_translation
 -- =========================
 CREATE TABLE event_translation (

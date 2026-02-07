@@ -67,6 +67,20 @@ CREATE TABLE experience (
 );
 
 -- =========================
+-- Tabla: education
+-- =========================
+CREATE TABLE education (
+  id SERIAL PRIMARY KEY,
+  institution TEXT NOT NULL,
+  institution_image_url TEXT,
+  start_date DATE,
+  end_date DATE,
+  is_archived BOOLEAN DEFAULT false,
+  is_pinned BOOLEAN DEFAULT false,
+  position INT
+);
+
+-- =========================
 -- Tabla: event
 -- =========================
 CREATE TABLE event (

@@ -5,6 +5,7 @@ export * from './skill.model';
 export * from './skill-usage.model';
 export * from './competition.model';
 export * from './experience.model';
+export * from './education.model';
 export * from './event.model';
 export * from './project.model';
 export * from './image.model';

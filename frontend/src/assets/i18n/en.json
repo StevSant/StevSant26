@@ -55,6 +55,7 @@
     "skillUsages": "Skill Usages",
     "projects": "Projects",
     "experiences": "Experiences",
+    "educations": "Education",
     "competitions": "Competitions",
     "events": "Events"
   },
@@ -298,6 +299,45 @@
       "message": "This action will permanently delete the experience."
     }
   },
+  "educations": {
+    "present": "Present",
+    "title": "Education",
+    "subtitle": "Manage your academic education",
+    "create": "New Education",
+    "edit": "Edit Education",
+    "list": "Education List",
+    "baseInfo": "Base Information",
+    "translatableContent": "Translatable Content",
+    "images": "Images",
+    "documents": "Documents",
+    "currentStudyHint": "Leave empty if currently studying",
+    "degreePlaceholder": "E.g: Bachelor of Computer Science",
+    "fieldOfStudyPlaceholder": "E.g: Computer Science",
+    "descriptionPlaceholder": "Describe your academic education...",
+    "institutionPlaceholder": "Institution name",
+    "empty": "No education entries",
+    "emptyHint": "Start by adding your first education",
+    "fields": {
+      "institution": "Institution",
+      "degree": "Degree",
+      "fieldOfStudy": "Field of Study",
+      "description": "Description",
+      "startDate": "Start date",
+      "endDate": "End date",
+      "institutionImageUrl": "Institution Image"
+    },
+    "institutionImageUrlPlaceholder": "https://example.com/university-logo.png",
+    "institutionImageUrlHint": "URL of the educational institution's logo or photo",
+    "errors": {
+      "institutionRequired": "Institution is required",
+      "degreeRequired": "Degree is required in at least one language",
+      "saveError": "Error saving education"
+    },
+    "deleteConfirm": {
+      "title": "Delete education?",
+      "message": "This action will permanently delete the education entry."
+    }
+  },
   "competitions": {
     "title": "Competitions",
     "subtitle": "Manage your competitions and awards",
@@ -412,6 +452,7 @@
       "skills": "Skills",
       "competitions": "Competitions",
       "events": "Events",
+      "education": "Education",
       "contact": "Contact",
       "more": "More",
       "cvDocuments": "CV Documents",
@@ -424,6 +465,7 @@
       "skills": "Skills",
       "competitions": "Competitions & Awards",
       "events": "Events Attended",
+      "education": "Education",
       "contact": "Get in Touch"
     },
     "empty": {
@@ -432,7 +474,8 @@
       "experience": "No experience to display",
       "skills": "No skills to display",
       "competitions": "No competitions to display",
-      "events": "No events to display"
+      "events": "No events to display",
+      "education": "No education to display"
     },
     "viewProject": "View Project",
     "viewDetails": "View Details",
@@ -491,10 +534,12 @@
     "searchExperiences": "Search experiences...",
     "searchCompetitions": "Search competitions...",
     "searchEvents": "Search events...",
+    "searchEducations": "Search education...",
     "category": "Category",
     "association": "Association",
     "company": "Company",
     "organizer": "Organizer",
+    "institution": "Institution",
     "year": "Year"
   },
   "theme": {
