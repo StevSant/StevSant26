@@ -15,6 +15,7 @@ import {
   SkillUsage,
   Image,
   Document,
+  ContentSection,
   SourceType,
   getTranslation,
 } from '@core/models';
@@ -54,6 +55,8 @@ export class PortfolioDataService {
   private allImagesMap = new Map<string, Image[]>();
   /** Map: "sourceType:sourceId" → skill usages with skill data */
   private skillUsageMap = new Map<string, SkillUsage[]>();
+  /** Map: "sourceType:sourceId" → content sections */
+  private contentSectionMap = new Map<string, ContentSection[]>();
 
   currentLang = computed(() => this.languageService.currentLanguageCode());
 
@@ -74,6 +77,7 @@ export class PortfolioDataService {
       this.loadSkillsWithLevels(),
       this.loadAllImages(),
       this.loadAllSkillUsages(),
+      this.loadAllContentSections(),
     ]);
     this.loading.set(false);
     this.initialized = true;
@@ -326,6 +330,26 @@ export class PortfolioDataService {
     return this.imageMap.get(`${sourceType}:${sourceId}`)?.url ?? null;
   }
 
+  /** Bulk-load all non-archived content sections and index by entity */
+  private async loadAllContentSections(): Promise<void> {
+    const { data } = await this.supabase
+      .from('content_section')
+      .select('*, translations:content_section_translation(*, language:language(*))')
+      .eq('is_archived', false)
+      .order('position', { ascending: true });
+    if (data) {
+      for (const section of data as ContentSection[]) {
+        if (section.entity_type && section.entity_id != null) {
+          const key = `${section.entity_type}:${section.entity_id}`;
+          if (!this.contentSectionMap.has(key)) {
+            this.contentSectionMap.set(key, []);
+          }
+          this.contentSectionMap.get(key)!.push(section);
+        }
+      }
+    }
+  }
+
   /** Get ALL images for an entity */
   getAllImages(sourceType: SourceType, sourceId: number): Image[] {
     return this.allImagesMap.get(`${sourceType}:${sourceId}`) ?? [];
@@ -359,6 +383,23 @@ export class PortfolioDataService {
   /** Get skill usages for an entity */
   getSkillUsages(sourceType: SourceType, sourceId: number): SkillUsage[] {
     return this.skillUsageMap.get(`${sourceType}:${sourceId}`) ?? [];
+  }
+
+  /** Get content sections for an entity */
+  getContentSections(sourceType: SourceType, sourceId: number): ContentSection[] {
+    return this.contentSectionMap.get(`${sourceType}:${sourceId}`) ?? [];
+  }
+
+  /** Get translated content section title */
+  getSectionTitle(section: ContentSection): string {
+    const translation = getTranslation(section.translations as any[], this.currentLang());
+    return (translation as any)?.title || '';
+  }
+
+  /** Get translated content section body */
+  getSectionBody(section: ContentSection): string {
+    const translation = getTranslation(section.translations as any[], this.currentLang());
+    return (translation as any)?.body || '';
   }
 
   /** Get translated skill name from a SkillUsage */

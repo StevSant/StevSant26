@@ -57,6 +57,15 @@
         <app-skill-usage-manager #skillUsageManager sourceType="education" [sourceId]="currentId" />
       </div>
 
+      <!-- Content Sections -->
+      <div class="card">
+        <app-content-section-manager
+          #contentSectionManager
+          sourceType="education"
+          [sourceId]="currentId"
+        />
+      </div>
+
       <app-form-actions
         [cancelRoute]="'/dashboard/educations'"
         [saving]="saving()"

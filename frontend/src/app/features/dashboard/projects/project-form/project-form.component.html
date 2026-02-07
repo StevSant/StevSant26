@@ -53,6 +53,15 @@
         <app-skill-usage-manager #skillUsageManager sourceType="project" [sourceId]="currentId" />
       </div>
 
+      <!-- Content Sections -->
+      <div class="card">
+        <app-content-section-manager
+          #contentSectionManager
+          sourceType="project"
+          [sourceId]="currentId"
+        />
+      </div>
+
       <app-form-actions
         [cancelRoute]="'/dashboard/projects'"
         [saving]="saving()"

@@ -101,6 +101,11 @@
             </div>
           </div>
         }
+
+        <!-- Content Sections -->
+        <div class="mb-10">
+          <app-portfolio-content-sections sourceType="experience" [sourceId]="exp.id" />
+        </div>
       </article>
     } @else if (!data.loading()) {
       <div class="text-center py-20">

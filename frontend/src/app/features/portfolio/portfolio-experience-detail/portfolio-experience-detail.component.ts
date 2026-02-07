@@ -3,12 +3,13 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { PortfolioDataService } from '../services/portfolio-data.service';
 import { TranslatePipe } from '@shared/pipes/translate.pipe';
+import { PortfolioContentSectionsComponent } from '../components/portfolio-content-sections/portfolio-content-sections.component';
 import { Experience } from '@core/models';
 
 @Component({
   selector: 'app-portfolio-experience-detail',
   standalone: true,
-  imports: [CommonModule, RouterModule, TranslatePipe],
+  imports: [CommonModule, RouterModule, TranslatePipe, PortfolioContentSectionsComponent],
   templateUrl: './portfolio-experience-detail.component.html',
 })
 export class PortfolioExperienceDetailComponent implements OnInit {

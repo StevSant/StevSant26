@@ -3,12 +3,13 @@ import { CommonModule, DatePipe } from '@angular/common';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { PortfolioDataService } from '../services/portfolio-data.service';
 import { TranslatePipe } from '@shared/pipes/translate.pipe';
+import { PortfolioContentSectionsComponent } from '../components/portfolio-content-sections/portfolio-content-sections.component';
 import { Project } from '@core/models';
 
 @Component({
   selector: 'app-portfolio-project-detail',
   standalone: true,
-  imports: [CommonModule, DatePipe, RouterModule, TranslatePipe],
+  imports: [CommonModule, DatePipe, RouterModule, TranslatePipe, PortfolioContentSectionsComponent],
   templateUrl: './portfolio-project-detail.component.html',
 })
 export class PortfolioProjectDetailComponent implements OnInit {

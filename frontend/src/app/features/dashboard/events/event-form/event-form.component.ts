@@ -8,6 +8,7 @@ import { Event, EventTranslation, Language } from '@core/models';
 import { ImageUploadComponent, ExistingImage } from '@shared/components/image-upload/image-upload.component';
 import { DocumentUploadComponent, ExistingDocument } from '@shared/components/document-upload/document-upload.component';
 import { SkillUsageManagerComponent } from '@shared/components/skill-usage-manager/skill-usage-manager.component';
+import { ContentSectionManagerComponent } from '@shared/components/content-section-manager/content-section-manager.component';
 import { FormHeaderComponent } from '@shared/components/form-header/form-header.component';
 import { LoadingSpinnerComponent } from '@shared/components/loading-spinner/loading-spinner.component';
 import { FormActionsComponent } from '@shared/components/form-actions/form-actions.component';
@@ -17,7 +18,7 @@ import { EventFormTranslationsComponent } from './event-form-translations/event-
 @Component({
   selector: 'app-event-form',
   standalone: true,
-  imports: [FormsModule, TranslatePipe, ImageUploadComponent, DocumentUploadComponent, SkillUsageManagerComponent, FormHeaderComponent, LoadingSpinnerComponent, FormActionsComponent, EventFormBaseInfoComponent, EventFormTranslationsComponent],
+  imports: [FormsModule, TranslatePipe, ImageUploadComponent, DocumentUploadComponent, SkillUsageManagerComponent, ContentSectionManagerComponent, FormHeaderComponent, LoadingSpinnerComponent, FormActionsComponent, EventFormBaseInfoComponent, EventFormTranslationsComponent],
   templateUrl: './event-form.component.html',
 })
 export class EventFormComponent implements OnInit {
@@ -27,6 +28,7 @@ export class EventFormComponent implements OnInit {
   private router = inject(Router);
 
   @ViewChild('skillUsageManager') skillUsageManager!: SkillUsageManagerComponent;
+  @ViewChild('contentSectionManager') contentSectionManager!: ContentSectionManagerComponent;
 
   loading = signal(true);
   saving = signal(false);
@@ -193,6 +195,9 @@ export class EventFormComponent implements OnInit {
         // Save pending skill usages
         if (this.skillUsageManager?.hasPendingUsages()) {
           await this.skillUsageManager.savePendingUsages(entityId);
+        }
+        if (this.contentSectionManager?.hasPendingItems()) {
+          await this.contentSectionManager.savePendingItems(entityId);
         }
       }
 

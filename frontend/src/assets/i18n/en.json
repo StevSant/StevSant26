@@ -555,5 +555,38 @@
     "lightElegant": "Light Elegant",
     "midnightBlue": "Midnight Blue",
     "warmSepia": "Warm Sepia"
+  },
+  "contentSections": {
+    "title": "Content Sections",
+    "add": "Add Section",
+    "edit": "Edit Section",
+    "empty": "No content sections yet",
+    "emptyHint": "Add sections to describe details like problems solved, decisions made, and impact",
+    "fields": {
+      "sectionKey": "Section Type",
+      "icon": "Icon (emoji or URL)",
+      "title": "Title",
+      "titlePlaceholder": "Section title...",
+      "body": "Content",
+      "bodyPlaceholder": "Write the section content..."
+    },
+    "keys": {
+      "problem": "Problem Solved",
+      "technical_decisions": "Technical Decisions",
+      "tradeoffs": "Trade-offs",
+      "impact": "Impact",
+      "lessons_learned": "Lessons Learned",
+      "architecture": "Architecture",
+      "challenges": "Challenges",
+      "results": "Results",
+      "methodology": "Methodology",
+      "custom": "Custom"
+    },
+    "errors": {
+      "loadError": "Error loading content sections",
+      "saveError": "Error saving content section",
+      "deleteError": "Error deleting content section",
+      "titleRequired": "Title is required in at least one language"
+    }
   }
 }

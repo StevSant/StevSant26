@@ -1,0 +1,97 @@
+<div class="card border border-[var(--color-accent)]/30 space-y-4">
+  <h4 class="text-sm font-semibold text-[var(--color-text-primary)]">
+    {{ 'contentSections.add' | translate }}
+  </h4>
+
+  <!-- Section Key Selector -->
+  <div>
+    <label class="label">{{ 'contentSections.fields.sectionKey' | translate }}</label>
+    <select
+      class="input"
+      [ngModel]="formData().section_key"
+      (ngModelChange)="onSectionKeyChange($event)"
+    >
+      @for (option of sectionKeyOptions; track option.value) {
+        <option [value]="option.value">{{ option.icon }} {{ option.labelKey | translate }}</option>
+      }
+    </select>
+  </div>
+
+  <!-- Custom Icon (optional) -->
+  <div>
+    <label class="label">{{ 'contentSections.fields.icon' | translate }}</label>
+    <input
+      type="text"
+      class="input"
+      [ngModel]="formData().icon"
+      (ngModelChange)="onIconChange($event)"
+      placeholder="🎯"
+      maxlength="4"
+    />
+  </div>
+
+  <!-- Language Tabs + Translation Fields -->
+  <app-language-tabs
+    [selectedLanguage]="currentEditLanguage()"
+    (languageChange)="onLanguageChange($event)"
+  />
+
+  <div>
+    <label class="label">{{ 'contentSections.fields.title' | translate }}</label>
+    <input
+      type="text"
+      class="input"
+      [ngModel]="currentTranslation.title"
+      (ngModelChange)="onFieldChange('title', $event)"
+      [placeholder]="'contentSections.fields.titlePlaceholder' | translate"
+    />
+  </div>
+
+  <div>
+    <label class="label">{{ 'contentSections.fields.body' | translate }}</label>
+    <textarea
+      class="input min-h-[120px]"
+      [ngModel]="currentTranslation.body"
+      (ngModelChange)="onFieldChange('body', $event)"
+      [placeholder]="'contentSections.fields.bodyPlaceholder' | translate"
+      rows="5"
+    ></textarea>
+  </div>
+
+  <!-- Actions -->
+  <div class="flex justify-end gap-2">
+    <button
+      type="button"
+      class="btn-secondary text-sm"
+      (click)="cancel.emit()"
+      [disabled]="saving()"
+    >
+      {{ 'common.cancel' | translate }}
+    </button>
+    <button type="button" class="btn-primary text-sm" (click)="add.emit()" [disabled]="saving()">
+      @if (saving()) {
+        <svg
+          class="spinner-sm inline mr-1"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+        >
+          <circle
+            class="opacity-25"
+            cx="12"
+            cy="12"
+            r="10"
+            stroke="currentColor"
+            stroke-width="4"
+          ></circle>
+          <path
+            class="opacity-75"
+            fill="currentColor"
+            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+          ></path>
+        </svg>
+      }
+      {{ 'common.save' | translate }}
+    </button>
+  </div>
+</div>

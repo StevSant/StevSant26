@@ -61,6 +61,15 @@
         />
       </div>
 
+      <!-- Content Sections -->
+      <div class="card">
+        <app-content-section-manager
+          #contentSectionManager
+          sourceType="experience"
+          [sourceId]="currentId"
+        />
+      </div>
+
       <app-form-actions
         [cancelRoute]="'/dashboard/experiences'"
         [saving]="saving()"

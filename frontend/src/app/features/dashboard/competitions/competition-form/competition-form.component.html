@@ -57,6 +57,15 @@
         />
       </div>
 
+      <!-- Content Sections -->
+      <div class="card">
+        <app-content-section-manager
+          #contentSectionManager
+          sourceType="competition"
+          [sourceId]="currentId"
+        />
+      </div>
+
       <app-form-actions
         [cancelRoute]="'/dashboard/competitions'"
         [saving]="saving()"

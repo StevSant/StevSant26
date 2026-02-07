@@ -51,6 +51,15 @@
         <app-skill-usage-manager #skillUsageManager sourceType="event" [sourceId]="currentId" />
       </div>
 
+      <!-- Content Sections -->
+      <div class="card">
+        <app-content-section-manager
+          #contentSectionManager
+          sourceType="event"
+          [sourceId]="currentId"
+        />
+      </div>
+
       <app-form-actions
         [cancelRoute]="'/dashboard/events'"
         [saving]="saving()"

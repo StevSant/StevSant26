@@ -8,6 +8,7 @@ import { TranslatePipe } from '@shared/pipes/translate.pipe';
 import { Project, ProjectTranslation, Language, getTranslation } from '@core/models';
 import { ImageUploadComponent, ExistingImage } from '@shared/components/image-upload/image-upload.component';
 import { SkillUsageManagerComponent } from '@shared/components/skill-usage-manager/skill-usage-manager.component';
+import { ContentSectionManagerComponent } from '@shared/components/content-section-manager/content-section-manager.component';
 import { FormHeaderComponent } from '@shared/components/form-header/form-header.component';
 import { LoadingSpinnerComponent } from '@shared/components/loading-spinner/loading-spinner.component';
 import { FormActionsComponent } from '@shared/components/form-actions/form-actions.component';
@@ -23,6 +24,7 @@ import { ProjectFormAssociationComponent } from './project-form-association/proj
     TranslatePipe,
     ImageUploadComponent,
     SkillUsageManagerComponent,
+    ContentSectionManagerComponent,
     FormHeaderComponent,
     LoadingSpinnerComponent,
     FormActionsComponent,
@@ -40,6 +42,7 @@ export class ProjectFormComponent implements OnInit {
   private router = inject(Router);
 
   @ViewChild('skillUsageManager') skillUsageManager!: SkillUsageManagerComponent;
+  @ViewChild('contentSectionManager') contentSectionManager!: ContentSectionManagerComponent;
 
   loading = signal(true);
   saving = signal(false);
@@ -223,6 +226,9 @@ export class ProjectFormComponent implements OnInit {
         // Save pending skill usages
         if (this.skillUsageManager?.hasPendingUsages()) {
           await this.skillUsageManager.savePendingUsages(entityId);
+        }
+        if (this.contentSectionManager?.hasPendingItems()) {
+          await this.contentSectionManager.savePendingItems(entityId);
         }
       }
 

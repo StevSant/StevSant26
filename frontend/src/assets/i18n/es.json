@@ -553,5 +553,38 @@
     "lightElegant": "Elegante Claro",
     "midnightBlue": "Azul Medianoche",
     "warmSepia": "Sepia Cálido"
+  },
+  "contentSections": {
+    "title": "Secciones de Contenido",
+    "add": "Agregar Sección",
+    "edit": "Editar Sección",
+    "empty": "No hay secciones de contenido aún",
+    "emptyHint": "Agrega secciones para describir detalles como problemas resueltos, decisiones tomadas e impacto",
+    "fields": {
+      "sectionKey": "Tipo de Sección",
+      "icon": "Ícono (emoji o URL)",
+      "title": "Título",
+      "titlePlaceholder": "Título de la sección...",
+      "body": "Contenido",
+      "bodyPlaceholder": "Escribe el contenido de la sección..."
+    },
+    "keys": {
+      "problem": "Problema Resuelto",
+      "technical_decisions": "Decisiones Técnicas",
+      "tradeoffs": "Compromisos",
+      "impact": "Impacto",
+      "lessons_learned": "Lecciones Aprendidas",
+      "architecture": "Arquitectura",
+      "challenges": "Desafíos",
+      "results": "Resultados",
+      "methodology": "Metodología",
+      "custom": "Personalizado"
+    },
+    "errors": {
+      "loadError": "Error al cargar las secciones de contenido",
+      "saveError": "Error al guardar la sección de contenido",
+      "deleteError": "Error al eliminar la sección de contenido",
+      "titleRequired": "El título es requerido en al menos un idioma"
+    }
   }
 }

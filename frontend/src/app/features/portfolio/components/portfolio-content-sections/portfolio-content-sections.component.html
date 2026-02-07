@@ -1,0 +1,24 @@
+@if (sections.length > 0) {
+  <div class="space-y-8">
+    @for (section of sections; track section.id) {
+      <div class="mb-6">
+        <h2
+          class="text-xs uppercase tracking-[0.2em] text-(--color-text-muted) mb-3 font-medium flex items-center gap-2"
+        >
+          @if (section.icon) {
+            <span>{{ section.icon }}</span>
+          }
+          {{
+            data.getSectionTitle(section) ||
+              ('contentSections.keys.' + section.section_key | translate)
+          }}
+        </h2>
+        @if (data.getSectionBody(section)) {
+          <div class="text-(--color-text-secondary) leading-relaxed whitespace-pre-line">
+            {{ data.getSectionBody(section) }}
+          </div>
+        }
+      </div>
+    }
+  </div>
+}

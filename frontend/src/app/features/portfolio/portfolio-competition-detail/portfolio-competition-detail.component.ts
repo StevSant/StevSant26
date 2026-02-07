@@ -3,12 +3,13 @@ import { CommonModule, DatePipe } from '@angular/common';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { PortfolioDataService } from '../services/portfolio-data.service';
 import { TranslatePipe } from '@shared/pipes/translate.pipe';
+import { PortfolioContentSectionsComponent } from '../components/portfolio-content-sections/portfolio-content-sections.component';
 import { Competition } from '@core/models';
 
 @Component({
   selector: 'app-portfolio-competition-detail',
   standalone: true,
-  imports: [CommonModule, DatePipe, RouterModule, TranslatePipe],
+  imports: [CommonModule, DatePipe, RouterModule, TranslatePipe, PortfolioContentSectionsComponent],
   templateUrl: './portfolio-competition-detail.component.html',
 })
 export class PortfolioCompetitionDetailComponent implements OnInit {
