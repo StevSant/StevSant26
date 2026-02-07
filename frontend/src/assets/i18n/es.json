@@ -433,12 +433,34 @@
     "sendEmail": "Enviar Email",
     "downloadCV": "Descargar CV",
     "allRightsReserved": "Todos los derechos reservados.",
+    "home": {
+      "viewProjects": "Ver Proyectos",
+      "getInTouch": "Contáctame",
+      "featuredProjects": "Proyectos Destacados",
+      "viewAllProjects": "Ver todos los proyectos",
+      "viewAllSkills": "Ver todas las habilidades"
+    },
+    "footer": {
+      "backToTop": "Volver arriba"
+    },
+    "contact": {
+      "name": "Nombre",
+      "email": "Correo electrónico",
+      "message": "Mensaje",
+      "namePlaceholder": "Tu nombre",
+      "emailPlaceholder": "tu@correo.com",
+      "messagePlaceholder": "Escribe tu mensaje aquí...",
+      "send": "Enviar Mensaje",
+      "sent": "¡Mensaje preparado! Se abrirá tu cliente de correo.",
+      "orFindMe": "O encuéntrame en"
+    },
     "filter": {
       "searchPlaceholder": "Buscar...",
       "searchProjects": "Buscar proyectos...",
       "searchExperience": "Buscar experiencia...",
       "searchSkills": "Buscar habilidades...",
       "searchCompetitions": "Buscar competencias...",
+      "searchEvents": "Buscar eventos...",
       "skills": "Habilidades",
       "company": "Empresa",
       "category": "Categoría",

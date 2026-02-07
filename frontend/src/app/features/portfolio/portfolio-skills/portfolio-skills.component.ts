@@ -3,11 +3,12 @@ import { CommonModule } from '@angular/common';
 import { PortfolioDataService, SkillCategoryWithSkills } from '../services/portfolio-data.service';
 import { TranslatePipe } from '@shared/pipes/translate.pipe';
 import { PortfolioFilterComponent, FilterOption } from '@shared/components/portfolio-filter/portfolio-filter.component';
+import { ScrollRevealDirective } from '@shared/directives/scroll-reveal.directive';
 
 @Component({
   selector: 'app-portfolio-skills',
   standalone: true,
-  imports: [CommonModule, TranslatePipe, PortfolioFilterComponent],
+  imports: [CommonModule, TranslatePipe, PortfolioFilterComponent, ScrollRevealDirective],
   templateUrl: './portfolio-skills.component.html',
 })
 export class PortfolioSkillsComponent implements OnInit {

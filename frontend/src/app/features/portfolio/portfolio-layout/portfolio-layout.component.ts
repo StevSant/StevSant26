@@ -2,6 +2,7 @@ import { Component, OnInit, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { ThemeService } from '@core/services/theme.service';
+import { SeoService } from '@core/services/seo.service';
 import { TranslatePipe } from '@shared/pipes/translate.pipe';
 import { LanguageSelectorComponent } from '@shared/components/language-selector/language-selector.component';
 import { ThemeToggleComponent } from '@shared/components/theme-toggle/theme-toggle.component';
@@ -29,6 +30,7 @@ export class PortfolioLayoutComponent implements OnInit {
   protected data = inject(PortfolioDataService);
   // Theme service injected to ensure initialization
   protected themeService = inject(ThemeService);
+  private seoService = inject(SeoService);
 
   mobileMenuOpen = signal(false);
   moreMenuOpen = signal(false);
@@ -38,6 +40,15 @@ export class PortfolioLayoutComponent implements OnInit {
 
   async ngOnInit(): Promise<void> {
     await this.data.initialize();
+    const profile = this.data.profile();
+    if (profile) {
+      const fullName = `${profile.first_name || ''} ${profile.last_name || ''}`.trim();
+      this.seoService.updateMeta({
+        title: fullName || undefined,
+        description: `Portfolio of ${fullName}. Projects, skills, and professional experience.`,
+        image: this.data.avatarUrl() || undefined,
+      });
+    }
   }
 
   toggleMobileMenu(): void {
