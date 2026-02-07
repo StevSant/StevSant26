@@ -268,6 +268,7 @@
     "baseInfo": "Información Base",
     "translatableContent": "Contenido Traducible",
     "images": "Imágenes",
+    "documents": "Documentos",
     "currentJobHint": "Deja vacío si es tu empleo actual",
     "rolePlaceholder": "Tu cargo o posición",
     "descriptionPlaceholder": "Describe tus responsabilidades y logros...",
@@ -303,6 +304,7 @@
     "baseInfo": "Información Base",
     "translatableContent": "Contenido Traducible",
     "images": "Imágenes",
+    "documents": "Documentos",
     "namePlaceholder": "Nombre de la competencia",
     "resultPlaceholder": "Ej: 1er lugar, Finalista, Mención honorífica",
     "descriptionPlaceholder": "Describe la competencia y tu participación...",
@@ -336,6 +338,7 @@
     "baseInfo": "Información Base",
     "translatableContent": "Contenido Traducible",
     "images": "Imágenes del Evento",
+    "documents": "Documentos del Evento",
     "namePlaceholder": "Nombre del evento",
     "descriptionPlaceholder": "Describe el evento...",
     "empty": "No hay eventos",
@@ -375,6 +378,17 @@
     "errorSize": "El archivo es demasiado grande. Máximo 10MB.",
     "errorUpload": "Error al subir la imagen. Por favor intenta de nuevo.",
     "errorDelete": "Error al eliminar la imagen."
+  },
+  "documentUpload": {
+    "clickToUpload": "Haz clic para subir documentos",
+    "orDragDrop": "o arrastra y suelta",
+    "uploading": "Subiendo documento...",
+    "maxSize": "PDF, DOC, DOCX, XLS, XLSX, PPT, PPTX, JPG, PNG, WebP hasta 20MB",
+    "existingDocuments": "Documentos guardados",
+    "errorType": "Tipo de archivo no permitido",
+    "errorSize": "El archivo es demasiado grande. Máximo 20MB.",
+    "errorUpload": "Error al subir el documento. Por favor intenta de nuevo.",
+    "errorDelete": "Error al eliminar el documento."
   },
   "confirmDialog": {
     "defaultTitle": "¿Estás seguro?",

@@ -13,7 +13,7 @@ import {
   SkillCategoryTranslation,
   SkillUsage,
   Image,
-  CvDocument,
+  Document,
   SourceType,
   getTranslation,
 } from '@core/models';
@@ -44,7 +44,7 @@ export class PortfolioDataService {
   competitions = signal<Competition[]>([]);
   events = signal<Event[]>([]);
   skillCategories = signal<SkillCategoryWithSkills[]>([]);
-  cvDocuments = signal<CvDocument[]>([]);
+  cvDocuments = signal<Document[]>([]);
 
   /** Map: "sourceType:sourceId" → first image */
   private imageMap = new Map<string, Image>();
@@ -96,11 +96,13 @@ export class PortfolioDataService {
     }
 
     const { data: cvData } = await this.supabase
-      .from('cv_document')
+      .from('document')
       .select('*, language:language(*)')
+      .eq('source_type', 'profile')
+      .eq('is_archived', false)
       .order('position', { ascending: true });
     if (cvData) {
-      this.cvDocuments.set(cvData as CvDocument[]);
+      this.cvDocuments.set(cvData as Document[]);
     }
   }
 

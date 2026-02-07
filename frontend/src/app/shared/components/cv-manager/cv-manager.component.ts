@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { SupabaseService } from '@core/services/supabase.service';
 import { LanguageService } from '@core/services/language.service';
-import { CvDocument, Language } from '@core/models';
+import { Document, Language } from '@core/models';
 import { TranslatePipe } from '@shared/pipes/translate.pipe';
 
 @Component({
@@ -16,7 +16,7 @@ export class CvManagerComponent implements OnInit {
   private supabase = inject(SupabaseService);
   private languageService = inject(LanguageService);
 
-  cvDocuments = signal<CvDocument[]>([]);
+  cvDocuments = signal<Document[]>([]);
   uploading = signal(false);
   error = signal<string | null>(null);
   success = signal<string | null>(null);
@@ -41,17 +41,15 @@ export class CvManagerComponent implements OnInit {
   }
 
   async loadCvDocuments(): Promise<void> {
-    const userId = this.supabase.user()?.id;
-    if (!userId) return;
-
     const { data, error } = await this.supabase
-      .from('cv_document')
+      .from('document')
       .select('*, language:language(*)')
-      .eq('profile_id', userId)
+      .eq('source_type', 'profile')
+      .eq('is_archived', false)
       .order('position', { ascending: true });
 
     if (data) {
-      this.cvDocuments.set(data as CvDocument[]);
+      this.cvDocuments.set(data as Document[]);
     }
     if (error) {
       console.error('Error loading CV documents:', error);
@@ -79,19 +77,19 @@ export class CvManagerComponent implements OnInit {
     this.error.set(null);
 
     try {
-      // Upload file to storage
-      const { path, error: uploadError } = await this.supabase.uploadFile(file, 'cv');
+      // Upload file to documents storage bucket
+      const { path, error: uploadError } = await this.supabase.uploadDocument(file, 'cv');
       if (uploadError || !path) throw uploadError || new Error('Upload failed');
 
-      const url = this.supabase.getPublicUrl(path);
-      const userId = this.supabase.user()?.id;
-      if (!userId) throw new Error('Not authenticated');
+      const url = this.supabase.getDocumentPublicUrl(path);
 
-      // Create cv_document record
-      const { error: insertError } = await this.supabase.from('cv_document').insert({
-        profile_id: userId,
+      // Create document record with source_type = 'profile'
+      const { error: insertError } = await this.supabase.from('document').insert({
+        source_type: 'profile',
         url,
         file_name: file.name,
+        file_type: file.type,
+        file_size: file.size,
         label: this.newCvLabel || null,
         language_id: this.newCvLanguageId || null,
         position: this.cvDocuments().length,
@@ -114,19 +112,19 @@ export class CvManagerComponent implements OnInit {
     }
   }
 
-  async deleteCv(cv: CvDocument): Promise<void> {
+  async deleteCv(cv: Document): Promise<void> {
     if (!confirm('¿Eliminar este CV?')) return;
 
     try {
-      // Extract storage path from URL to delete the file
-      const urlParts = cv.url.split('/storage/v1/object/public/');
+      // Extract storage path from URL to delete the file from documents bucket
+      const urlParts = cv.url.split('/storage/v1/object/public/documents/');
       if (urlParts.length > 1) {
-        const storagePath = urlParts[1].split('/').slice(1).join('/');
-        await this.supabase.deleteFromStorage(storagePath);
+        const storagePath = urlParts[1];
+        await this.supabase.deleteDocumentFromStorage(storagePath);
       }
 
       // Delete the record
-      await this.supabase.from('cv_document').delete().eq('id', cv.id);
+      await this.supabase.from('document').delete().eq('id', cv.id);
 
       await this.loadCvDocuments();
       this.success.set('CV eliminado');
@@ -137,11 +135,11 @@ export class CvManagerComponent implements OnInit {
     }
   }
 
-  getLanguageName(cv: CvDocument): string {
+  getLanguageName(cv: Document): string {
     return cv.language?.name || '';
   }
 
-  getDisplayName(cv: CvDocument): string {
+  getDisplayName(cv: Document): string {
     const parts: string[] = [];
     if (cv.label) parts.push(cv.label);
     if (cv.language?.name) parts.push(cv.language.name);

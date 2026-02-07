@@ -40,6 +40,19 @@
         />
       </div>
 
+      <div class="card space-y-6">
+        <h2 class="text-lg font-semibold text-[var(--color-text-primary)]">
+          {{ 'experiences.documents' | translate }}
+        </h2>
+        <app-document-upload
+          folder="experiences"
+          [sourceType]="'experience'"
+          [sourceId]="currentId"
+          [existingDocuments]="existingDocuments()"
+          (uploaded)="onDocumentUploaded($event)"
+        />
+      </div>
+
       <div class="card">
         <app-skill-usage-manager
           #skillUsageManager

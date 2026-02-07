@@ -36,6 +36,19 @@
         />
       </div>
 
+      <div class="card space-y-6">
+        <h2 class="text-lg font-semibold text-[var(--color-text-primary)]">
+          {{ 'competitions.documents' | translate }}
+        </h2>
+        <app-document-upload
+          folder="competitions"
+          [sourceType]="'competition'"
+          [sourceId]="currentId"
+          [existingDocuments]="existingDocuments()"
+          (uploaded)="onDocumentUploaded($event)"
+        />
+      </div>
+
       <div class="card">
         <app-skill-usage-manager
           #skillUsageManager

@@ -6,6 +6,7 @@ import { LanguageService } from '@core/services/language.service';
 import { TranslatePipe } from '@shared/pipes/translate.pipe';
 import { Competition, CompetitionTranslation, Language } from '@core/models';
 import { ImageUploadComponent, ExistingImage } from '@shared/components/image-upload/image-upload.component';
+import { DocumentUploadComponent, ExistingDocument } from '@shared/components/document-upload/document-upload.component';
 import { SkillUsageManagerComponent } from '@shared/components/skill-usage-manager/skill-usage-manager.component';
 import { FormHeaderComponent } from '@shared/components/form-header/form-header.component';
 import { LoadingSpinnerComponent } from '@shared/components/loading-spinner/loading-spinner.component';
@@ -16,7 +17,7 @@ import { CompetitionFormTranslationsComponent } from './competition-form-transla
 @Component({
   selector: 'app-competition-form',
   standalone: true,
-  imports: [FormsModule, TranslatePipe, ImageUploadComponent, SkillUsageManagerComponent, FormHeaderComponent, LoadingSpinnerComponent, FormActionsComponent, CompetitionFormBaseInfoComponent, CompetitionFormTranslationsComponent],
+  imports: [FormsModule, TranslatePipe, ImageUploadComponent, DocumentUploadComponent, SkillUsageManagerComponent, FormHeaderComponent, LoadingSpinnerComponent, FormActionsComponent, CompetitionFormBaseInfoComponent, CompetitionFormTranslationsComponent],
   templateUrl: './competition-form.component.html',
 })
 export class CompetitionFormComponent implements OnInit {
@@ -41,6 +42,12 @@ export class CompetitionFormComponent implements OnInit {
 
   // Existing images loaded from database
   existingImages = signal<ExistingImage[]>([]);
+
+  // Pending documents to save after entity creation
+  pendingDocuments = signal<{ path: string; url: string; file_name: string; file_type: string; file_size: number }[]>([]);
+
+  // Existing documents loaded from database
+  existingDocuments = signal<ExistingDocument[]>([]);
 
   // Base fields (non-translatable)
   formData = {
@@ -109,6 +116,12 @@ export class CompetitionFormComponent implements OnInit {
           const { data: images } = await this.supabase.getImagesBySource('competition', this.currentId!);
           if (images) {
             this.existingImages.set(images as ExistingImage[]);
+          }
+
+          // Load existing documents
+          const { data: documents } = await this.supabase.getDocumentsBySource('competition', this.currentId!);
+          if (documents) {
+            this.existingDocuments.set(documents as ExistingDocument[]);
           }
         }
       }
@@ -183,6 +196,7 @@ export class CompetitionFormComponent implements OnInit {
       const entityId = this.isNew ? (result.data as { id: number })?.id : this.currentId!;
       if (entityId) {
         await this.savePendingImages(entityId);
+        await this.savePendingDocuments(entityId);
         // Save pending skill usages
         if (this.skillUsageManager?.hasPendingUsages()) {
           await this.skillUsageManager.savePendingUsages(entityId);
@@ -214,6 +228,48 @@ export class CompetitionFormComponent implements OnInit {
       }
     }
     this.pendingImages.set([]);
+  }
+
+  private async savePendingDocuments(entityId: number): Promise<void> {
+    const documents = this.pendingDocuments();
+    for (let i = 0; i < documents.length; i++) {
+      const doc = documents[i];
+      try {
+        await this.supabase.create('document', {
+          url: doc.url,
+          file_name: doc.file_name,
+          file_type: doc.file_type,
+          file_size: doc.file_size,
+          source_type: 'competition',
+          source_id: entityId,
+          position: i,
+        });
+      } catch (err) {
+        console.error('Error saving document:', err);
+      }
+    }
+    this.pendingDocuments.set([]);
+  }
+
+  async onDocumentUploaded(data: { path: string; url: string; file_name: string; file_type: string; file_size: number }): Promise<void> {
+    if (this.currentId) {
+      try {
+        await this.supabase.create('document', {
+          url: data.url,
+          file_name: data.file_name,
+          file_type: data.file_type,
+          file_size: data.file_size,
+          source_type: 'competition',
+          source_id: this.currentId,
+          position: 0,
+        });
+      } catch (err) {
+        console.error('Error saving document:', err);
+        this.error.set('Error al guardar el documento');
+      }
+    } else {
+      this.pendingDocuments.update(docs => [...docs, data]);
+    }
   }
 
   async onImageUploaded(data: { path: string; url: string }): Promise<void> {

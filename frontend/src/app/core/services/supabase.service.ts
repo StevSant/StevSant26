@@ -553,6 +553,61 @@ export class SupabaseService {
       .limit(1);
   }
 
+  // ==================== DOCUMENT OPERATIONS ====================
+
+  /**
+   * Get documents by source type and source id
+   */
+  async getDocumentsBySource(sourceType: string, sourceId: number) {
+    return this.supabase
+      .from('document')
+      .select('*')
+      .eq('source_type', sourceType)
+      .eq('source_id', sourceId)
+      .eq('is_archived', false)
+      .order('position', { ascending: true });
+  }
+
+  /**
+   * Upload a document to Supabase Storage (documents bucket)
+   */
+  async uploadDocument(file: File, folder: string = ''): Promise<{ path: string | null; error: Error | null }> {
+    try {
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${Date.now()}-${Math.random().toString(36).substring(2, 9)}.${fileExt}`;
+      const filePath = folder ? `${folder}/${fileName}` : fileName;
+
+      const { data, error } = await this.supabase.storage
+        .from('documents')
+        .upload(filePath, file, {
+          cacheControl: '3600',
+          upsert: false,
+        });
+
+      if (error) throw error;
+      return { path: data.path, error: null };
+    } catch (error) {
+      return { path: null, error: error as Error };
+    }
+  }
+
+  /**
+   * Get the public URL for a document in storage
+   */
+  getDocumentPublicUrl(path: string): string {
+    const { data } = this.supabase.storage.from('documents').getPublicUrl(path);
+    return data.publicUrl;
+  }
+
+  /**
+   * Delete a document from storage
+   */
+  async deleteDocumentFromStorage(path: string) {
+    return this.supabase.storage.from('documents').remove([path]);
+  }
+
+  // ==================== IMAGE STORAGE OPERATIONS ====================
+
   /**
    * Upload a file to Supabase Storage
    * @param file The file to upload
@@ -566,7 +621,7 @@ export class SupabaseService {
       const filePath = folder ? `${folder}/${fileName}` : fileName;
 
       const { data, error } = await this.supabase.storage
-        .from(environment.storageBucket)
+        .from(environment.storageImagesBucket)
         .upload(filePath, file, {
           cacheControl: '3600',
           upsert: false,
@@ -583,7 +638,7 @@ export class SupabaseService {
    * Get the public URL for a file in storage
    */
   getPublicUrl(path: string): string {
-    const { data } = this.supabase.storage.from(environment.storageBucket).getPublicUrl(path);
+    const { data } = this.supabase.storage.from(environment.storageImagesBucket).getPublicUrl(path);
     return data.publicUrl;
   }
 
@@ -591,14 +646,14 @@ export class SupabaseService {
    * Delete a file from storage
    */
   async deleteFromStorage(path: string) {
-    return this.supabase.storage.from(environment.storageBucket).remove([path]);
+    return this.supabase.storage.from(environment.storageImagesBucket).remove([path]);
   }
 
   /**
    * Download a file from storage
    */
   async downloadImage(path: string): Promise<string | null> {
-    const { data, error } = await this.supabase.storage.from(environment.storageBucket).download(path);
+    const { data, error } = await this.supabase.storage.from(environment.storageImagesBucket).download(path);
     if (error || !data) return null;
     return URL.createObjectURL(data);
   }
@@ -607,7 +662,7 @@ export class SupabaseService {
    * List files in a folder
    */
   async listFiles(folder: string) {
-    return this.supabase.storage.from(environment.storageBucket).list(folder, {
+    return this.supabase.storage.from(environment.storageImagesBucket).list(folder, {
       limit: 100,
       offset: 0,
       sortBy: { column: 'created_at', order: 'desc' },

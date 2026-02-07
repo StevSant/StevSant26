@@ -19,20 +19,6 @@ CREATE TABLE profile (
 );
 
 -- =========================
--- Tabla: cv_document
--- =========================
-CREATE TABLE cv_document (
-  id SERIAL PRIMARY KEY,
-  profile_id UUID NOT NULL REFERENCES profile(id) ON DELETE CASCADE,
-  url TEXT NOT NULL,
-  file_name TEXT,
-  label TEXT,
-  language_id INT REFERENCES language(id) ON DELETE SET NULL,
-  position INT DEFAULT 0,
-  created_at TIMESTAMP DEFAULT NOW()
-);
-
--- =========================
 -- Tabla: skill_category
 -- =========================
 CREATE TABLE skill_category (
@@ -113,6 +99,25 @@ CREATE TABLE image (
   id SERIAL PRIMARY KEY,
   url TEXT NOT NULL,
   alt_text TEXT,
+  created_at TIMESTAMP DEFAULT NOW(),
+  source_id INT,
+  source_type TEXT,
+  is_archived BOOLEAN DEFAULT false,
+  is_pinned BOOLEAN DEFAULT false,
+  position INT
+);
+
+-- =========================
+-- Tabla: document (polimórfica)
+-- =========================
+CREATE TABLE document (
+  id SERIAL PRIMARY KEY,
+  url TEXT NOT NULL,
+  file_name TEXT,
+  file_type TEXT,
+  file_size BIGINT,
+  label TEXT,
+  language_id INT REFERENCES language(id) ON DELETE SET NULL,
   created_at TIMESTAMP DEFAULT NOW(),
   source_id INT,
   source_type TEXT,

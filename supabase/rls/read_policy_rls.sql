@@ -50,16 +50,15 @@ ON skill_usages
 FOR SELECT
 USING (true);
 
--- profile
-CREATE POLICY "Public read profile"
-ON profile
+-- document
+CREATE POLICY "Public read document"
+ON document
 FOR SELECT
 USING (true);
 
-
--- cv_document
-CREATE POLICY "cv_document_read"
-ON cv_document
+-- profile
+CREATE POLICY "Public read profile"
+ON profile
 FOR SELECT
 USING (true);
 

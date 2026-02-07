@@ -1,0 +1,189 @@
+<div class="space-y-4">
+  <!-- Drop Zone -->
+  <div
+    class="border-2 border-dashed rounded-xl p-6 text-center transition-all duration-200 cursor-pointer"
+    [class.border-[var(--color-accent)]="isDragging()"
+    [class.bg-[var(--color-accent)]/5]="isDragging()"
+    [class.border-[var(--color-border)]]="!isDragging()"
+    [class.hover:border-[var(--color-accent)]]="!isDragging()"
+    (dragover)="onDragOver($event)"
+    (dragleave)="onDragLeave($event)"
+    (drop)="onDrop($event)"
+    (click)="fileInput.click()"
+  >
+    <input
+      #fileInput
+      type="file"
+      class="hidden"
+      multiple
+      accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.jpg,.jpeg,.png,.webp"
+      (change)="onFileSelect($event)"
+    />
+
+    @if (uploading()) {
+      <div class="flex flex-col items-center gap-2">
+        <div
+          class="w-8 h-8 border-2 border-[var(--color-accent)] border-t-transparent rounded-full animate-spin"
+        ></div>
+        <p class="text-sm text-[var(--color-text-secondary)]">
+          {{ 'documentUpload.uploading' | translate }}
+        </p>
+      </div>
+    } @else {
+      <div class="flex flex-col items-center gap-2">
+        <svg
+          class="w-10 h-10 text-[var(--color-text-tertiary)]"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="1.5"
+            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+          />
+        </svg>
+        <p class="text-sm text-[var(--color-text-secondary)]">
+          <span class="text-[var(--color-accent)] font-medium">{{
+            'documentUpload.clickToUpload' | translate
+          }}</span>
+          {{ 'documentUpload.orDragDrop' | translate }}
+        </p>
+        <p class="text-xs text-[var(--color-text-tertiary)]">
+          {{ 'documentUpload.maxSize' | translate }}
+        </p>
+      </div>
+    }
+  </div>
+
+  <!-- Error Message -->
+  @if (error()) {
+    <div class="alert-error">
+      <p>{{ error() }}</p>
+    </div>
+  }
+
+  <!-- Uploaded Documents List (new uploads, not yet saved) -->
+  @if (uploadedDocuments().length > 0) {
+    <div class="space-y-2">
+      @for (doc of uploadedDocuments(); track doc.path) {
+        <div
+          class="flex items-center gap-3 p-3 rounded-lg bg-[var(--color-bg-secondary)] border border-[var(--color-border)]"
+        >
+          <span class="text-2xl">{{ getFileIcon(doc.file_type) }}</span>
+          <div class="flex-1 min-w-0">
+            <p class="text-sm font-medium text-[var(--color-text-primary)] truncate">
+              {{ doc.file_name }}
+            </p>
+            <p class="text-xs text-[var(--color-text-tertiary)]">
+              {{ getFileExtension(doc.file_name) }} · {{ formatFileSize(doc.file_size) }}
+            </p>
+          </div>
+          <div class="flex items-center gap-1">
+            <button
+              type="button"
+              class="p-1.5 rounded-lg text-[var(--color-text-tertiary)] hover:text-[var(--color-accent)] hover:bg-[var(--color-accent)]/10 transition-colors"
+              (click)="openDocument(doc.url)"
+              title="Ver documento"
+            >
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+                />
+              </svg>
+            </button>
+            <button
+              type="button"
+              class="p-1.5 rounded-lg text-[var(--color-text-tertiary)] hover:text-red-500 hover:bg-red-500/10 transition-colors"
+              (click)="removeUploadedDocument(doc.path, $event)"
+            >
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                />
+              </svg>
+            </button>
+          </div>
+        </div>
+      }
+    </div>
+  }
+
+  <!-- Existing Documents List (from DB) -->
+  @if (loadedExistingDocuments().length > 0) {
+    <div class="space-y-2">
+      <h3 class="text-sm font-medium text-[var(--color-text-secondary)]">
+        {{ 'documentUpload.existingDocuments' | translate }}
+      </h3>
+      @for (doc of loadedExistingDocuments(); track doc.id) {
+        <div
+          class="flex items-center gap-3 p-3 rounded-lg bg-[var(--color-bg-secondary)] border border-[var(--color-border)]"
+        >
+          <span class="text-2xl">{{ getFileIcon(doc.file_type) }}</span>
+          <div class="flex-1 min-w-0">
+            <p class="text-sm font-medium text-[var(--color-text-primary)] truncate">
+              {{ doc.file_name || 'Documento' }}
+            </p>
+            <div class="flex items-center gap-2">
+              @if (doc.file_type) {
+                <span class="text-xs text-[var(--color-text-tertiary)]">
+                  {{ getFileExtension(doc.file_name) }}
+                </span>
+              }
+              @if (doc.file_size) {
+                <span class="text-xs text-[var(--color-text-tertiary)]">
+                  · {{ formatFileSize(doc.file_size) }}
+                </span>
+              }
+              @if (doc.label) {
+                <span
+                  class="text-xs px-1.5 py-0.5 rounded bg-[var(--color-accent)]/10 text-[var(--color-accent)]"
+                >
+                  {{ doc.label }}
+                </span>
+              }
+            </div>
+          </div>
+          <div class="flex items-center gap-1">
+            <button
+              type="button"
+              class="p-1.5 rounded-lg text-[var(--color-text-tertiary)] hover:text-[var(--color-accent)] hover:bg-[var(--color-accent)]/10 transition-colors"
+              (click)="openDocument(doc.url)"
+              title="Ver documento"
+            >
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+                />
+              </svg>
+            </button>
+            <button
+              type="button"
+              class="p-1.5 rounded-lg text-[var(--color-text-tertiary)] hover:text-red-500 hover:bg-red-500/10 transition-colors"
+              (click)="removeExistingDocument(doc.id, $event)"
+            >
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                />
+              </svg>
+            </button>
+          </div>
+        </div>
+      }
+    </div>
+  }
+</div>

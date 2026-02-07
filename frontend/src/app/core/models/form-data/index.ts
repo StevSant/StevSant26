@@ -8,3 +8,4 @@ export * from './experience-form-data.model';
 export * from './event-form-data.model';
 export * from './project-form-data.model';
 export * from './image-form-data.model';
+export * from './document-form-data.model';

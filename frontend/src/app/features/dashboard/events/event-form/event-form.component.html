@@ -34,6 +34,19 @@
         />
       </div>
 
+      <div class="card space-y-6">
+        <h2 class="text-lg font-semibold text-[var(--color-text-primary)]">
+          {{ 'events.documents' | translate }}
+        </h2>
+        <app-document-upload
+          folder="events"
+          [sourceType]="'event'"
+          [sourceId]="currentId"
+          [existingDocuments]="existingDocuments()"
+          (uploaded)="onDocumentUploaded($event)"
+        />
+      </div>
+
       <div class="card">
         <app-skill-usage-manager #skillUsageManager sourceType="event" [sourceId]="currentId" />
       </div>
