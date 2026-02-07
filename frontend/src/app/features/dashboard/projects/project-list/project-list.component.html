@@ -35,6 +35,15 @@
     </div>
   </div>
 
+  <!-- Filters -->
+  <app-dashboard-filter
+    [searchPlaceholder]="'dashboardFilter.searchProjects'"
+    [filterOptions]="sourceTypeFilterOptions"
+    [filterLabel]="'dashboardFilter.association'"
+    (searchChange)="onSearchChange($event)"
+    (filterChange)="onSourceTypeFilterChange($event)"
+  />
+
   <!-- Loading State -->
   @if (loading()) {
     <div class="flex items-center justify-center py-12">

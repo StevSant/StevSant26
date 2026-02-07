@@ -7,12 +7,13 @@ import { TranslateService } from '@core/services/translate.service';
 import { Competition, CompetitionTranslation, Image } from '@core/models';
 import { ConfirmDialogComponent } from '@shared/components/confirm-dialog/confirm-dialog.component';
 import { TranslatePipe } from '@shared/pipes/translate.pipe';
+import { DashboardFilterComponent, DashboardFilterOption } from '@shared/components/dashboard-filter/dashboard-filter.component';
 import { CompetitionItemComponent } from './competition-item/competition-item.component';
 
 @Component({
   selector: 'app-competition-list',
   standalone: true,
-  imports: [CommonModule, RouterModule, DragDropModule, ConfirmDialogComponent, TranslatePipe, CompetitionItemComponent],
+  imports: [CommonModule, RouterModule, DragDropModule, ConfirmDialogComponent, TranslatePipe, DashboardFilterComponent, CompetitionItemComponent],
   templateUrl: './competition-list.component.html',
 })
 export class CompetitionListComponent implements OnInit {
@@ -25,6 +26,11 @@ export class CompetitionListComponent implements OnInit {
   items = signal<Competition[]>([]);
   itemToDelete: Competition | null = null;
   imageMap = new Map<number, string>();
+
+  // Filter state
+  searchText = signal('');
+  selectedOrganizer = signal('');
+  organizerFilterOptions = signal<DashboardFilterOption[]>([]);
 
   async ngOnInit(): Promise<void> { await this.loadItems(); }
 
@@ -39,6 +45,7 @@ export class CompetitionListComponent implements OnInit {
       );
       if (error) throw error;
       this.items.set(data || []);
+      this.buildOrganizerOptions(data || []);
       await this.loadImages(data || []);
     } catch (err) { console.error('Error loading competitions:', err); }
     finally { this.loading.set(false); }
@@ -74,6 +81,19 @@ export class CompetitionListComponent implements OnInit {
   }
 
   /**
+   * Build unique organizer filter options
+   */
+  private buildOrganizerOptions(competitions: Competition[]): void {
+    const organizers = new Set<string>();
+    for (const comp of competitions) {
+      if (comp.organizer) organizers.add(comp.organizer);
+    }
+    this.organizerFilterOptions.set(
+      Array.from(organizers).sort().map(o => ({ label: o, value: o }))
+    );
+  }
+
+  /**
    * Get the translated result for a competition
    */
   getItemResult(item: Competition): string | null {
@@ -90,8 +110,31 @@ export class CompetitionListComponent implements OnInit {
 
   filteredItems(): Competition[] {
     const all = this.items();
-    return this.showArchived() ? all.filter((i) => i.is_archived) : all.filter((i) => !i.is_archived);
+    let filtered = this.showArchived() ? all.filter((i) => i.is_archived) : all.filter((i) => !i.is_archived);
+
+    // Filter by organizer
+    const organizer = this.selectedOrganizer();
+    if (organizer) {
+      filtered = filtered.filter(i => i.organizer === organizer);
+    }
+
+    // Filter by search text
+    const search = this.searchText().toLowerCase().trim();
+    if (search) {
+      filtered = filtered.filter(i => {
+        const name = this.getItemName(i).toLowerCase();
+        const desc = (this.getItemDescription(i) || '').toLowerCase();
+        const org = (i.organizer || '').toLowerCase();
+        const result = (this.getItemResult(i) || '').toLowerCase();
+        return name.includes(search) || desc.includes(search) || org.includes(search) || result.includes(search);
+      });
+    }
+
+    return filtered;
   }
+
+  onSearchChange(text: string): void { this.searchText.set(text); }
+  onOrganizerFilterChange(value: string): void { this.selectedOrganizer.set(value); }
 
   toggleShowArchived(): void { this.showArchived.update((v) => !v); }
 

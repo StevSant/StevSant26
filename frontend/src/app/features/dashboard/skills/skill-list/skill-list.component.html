@@ -34,6 +34,15 @@
     </div>
   </div>
 
+  <!-- Filters -->
+  <app-dashboard-filter
+    [searchPlaceholder]="'dashboardFilter.searchSkills'"
+    [filterOptions]="categoryFilterOptions()"
+    [filterLabel]="'dashboardFilter.category'"
+    (searchChange)="onSearchChange($event)"
+    (filterChange)="onCategoryFilterChange($event)"
+  />
+
   @if (loading()) {
     <div class="flex items-center justify-center py-12">
       <svg class="spinner-lg" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">

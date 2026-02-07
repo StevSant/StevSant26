@@ -7,12 +7,13 @@ import { TranslateService } from '@core/services/translate.service';
 import { Project, ProjectTranslation, Image } from '@core/models';
 import { ConfirmDialogComponent } from '@shared/components/confirm-dialog/confirm-dialog.component';
 import { TranslatePipe } from '@shared/pipes/translate.pipe';
+import { DashboardFilterComponent, DashboardFilterOption } from '@shared/components/dashboard-filter/dashboard-filter.component';
 import { ProjectItemComponent } from './project-item/project-item.component';
 
 @Component({
   selector: 'app-project-list',
   standalone: true,
-  imports: [CommonModule, RouterModule, DragDropModule, ConfirmDialogComponent, TranslatePipe, ProjectItemComponent],
+  imports: [CommonModule, RouterModule, DragDropModule, ConfirmDialogComponent, TranslatePipe, DashboardFilterComponent, ProjectItemComponent],
   templateUrl: './project-list.component.html',
 })
 export class ProjectListComponent implements OnInit {
@@ -27,7 +28,18 @@ export class ProjectListComponent implements OnInit {
   itemToDelete: Project | null = null;
   imageMap = new Map<number, string>();
 
+  // Filter state
+  searchText = signal('');
+  selectedSourceType = signal('');
+  sourceTypeFilterOptions: DashboardFilterOption[] = [];
+
   async ngOnInit(): Promise<void> {
+    this.sourceTypeFilterOptions = [
+      { label: this.translateService.instant('projects.sourceTypes.experience'), value: 'experience' },
+      { label: this.translateService.instant('projects.sourceTypes.competition'), value: 'competition' },
+      { label: this.translateService.instant('projects.sourceTypes.event'), value: 'event' },
+      { label: this.translateService.instant('projects.noSource'), value: 'none' },
+    ];
     await this.loadItems();
   }
 
@@ -90,8 +102,31 @@ export class ProjectListComponent implements OnInit {
 
   filteredItems(): Project[] {
     const all = this.items();
-    return this.showArchived() ? all.filter((i) => i.is_archived) : all.filter((i) => !i.is_archived);
+    let filtered = this.showArchived() ? all.filter((i) => i.is_archived) : all.filter((i) => !i.is_archived);
+
+    // Filter by source type
+    const sourceType = this.selectedSourceType();
+    if (sourceType === 'none') {
+      filtered = filtered.filter(i => !i.source_type);
+    } else if (sourceType) {
+      filtered = filtered.filter(i => i.source_type === sourceType);
+    }
+
+    // Filter by search text
+    const search = this.searchText().toLowerCase().trim();
+    if (search) {
+      filtered = filtered.filter(i => {
+        const title = this.getItemTitle(i).toLowerCase();
+        const desc = (this.getItemDescription(i) || '').toLowerCase();
+        return title.includes(search) || desc.includes(search);
+      });
+    }
+
+    return filtered;
   }
+
+  onSearchChange(text: string): void { this.searchText.set(text); }
+  onSourceTypeFilterChange(value: string): void { this.selectedSourceType.set(value); }
 
   toggleShowArchived(): void {
     this.showArchived.update((v) => !v);

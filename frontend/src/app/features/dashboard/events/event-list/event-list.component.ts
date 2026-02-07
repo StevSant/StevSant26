@@ -7,12 +7,13 @@ import { TranslateService } from '@core/services/translate.service';
 import { Event, EventTranslation, Image } from '@core/models';
 import { ConfirmDialogComponent } from '@shared/components/confirm-dialog/confirm-dialog.component';
 import { TranslatePipe } from '@shared/pipes/translate.pipe';
+import { DashboardFilterComponent, DashboardFilterOption } from '@shared/components/dashboard-filter/dashboard-filter.component';
 import { EventItemComponent } from './event-item/event-item.component';
 
 @Component({
   selector: 'app-event-list',
   standalone: true,
-  imports: [CommonModule, RouterModule, DragDropModule, ConfirmDialogComponent, TranslatePipe, EventItemComponent],
+  imports: [CommonModule, RouterModule, DragDropModule, ConfirmDialogComponent, TranslatePipe, DashboardFilterComponent, EventItemComponent],
   templateUrl: './event-list.component.html',
 })
 export class EventListComponent implements OnInit {
@@ -26,6 +27,11 @@ export class EventListComponent implements OnInit {
   items = signal<Event[]>([]);
   itemToDelete: Event | null = null;
   imageMap = new Map<number, string>();
+
+  // Filter state
+  searchText = signal('');
+  selectedYear = signal('');
+  yearFilterOptions = signal<DashboardFilterOption[]>([]);
 
   async ngOnInit(): Promise<void> {
     await this.loadItems();
@@ -42,12 +48,29 @@ export class EventListComponent implements OnInit {
       );
       if (error) throw error;
       this.items.set(data || []);
+      this.buildYearOptions(data || []);
       await this.loadImages(data || []);
     } catch (err) {
       console.error('Error loading events:', err);
     } finally {
       this.loading.set(false);
     }
+  }
+
+  /**
+   * Build unique year filter options from event dates
+   */
+  private buildYearOptions(events: Event[]): void {
+    const years = new Set<string>();
+    for (const evt of events) {
+      if (evt.assisted_at) {
+        const year = new Date(evt.assisted_at).getFullYear().toString();
+        years.add(year);
+      }
+    }
+    this.yearFilterOptions.set(
+      Array.from(years).sort((a, b) => b.localeCompare(a)).map(y => ({ label: y, value: y }))
+    );
   }
 
   /**
@@ -87,8 +110,32 @@ export class EventListComponent implements OnInit {
 
   filteredItems(): Event[] {
     const all = this.items();
-    return this.showArchived() ? all.filter((i) => i.is_archived) : all.filter((i) => !i.is_archived);
+    let filtered = this.showArchived() ? all.filter((i) => i.is_archived) : all.filter((i) => !i.is_archived);
+
+    // Filter by year
+    const year = this.selectedYear();
+    if (year) {
+      filtered = filtered.filter(i => {
+        if (!i.assisted_at) return false;
+        return new Date(i.assisted_at).getFullYear().toString() === year;
+      });
+    }
+
+    // Filter by search text
+    const search = this.searchText().toLowerCase().trim();
+    if (search) {
+      filtered = filtered.filter(i => {
+        const name = this.getItemName(i).toLowerCase();
+        const desc = (this.getItemDescription(i) || '').toLowerCase();
+        return name.includes(search) || desc.includes(search);
+      });
+    }
+
+    return filtered;
   }
+
+  onSearchChange(text: string): void { this.searchText.set(text); }
+  onYearFilterChange(value: string): void { this.selectedYear.set(value); }
 
   toggleShowArchived(): void {
     this.showArchived.update((v) => !v);

@@ -7,12 +7,13 @@ import { TranslateService } from '@core/services/translate.service';
 import { Experience, ExperienceTranslation, Image } from '@core/models';
 import { ConfirmDialogComponent } from '@shared/components/confirm-dialog/confirm-dialog.component';
 import { TranslatePipe } from '@shared/pipes/translate.pipe';
+import { DashboardFilterComponent, DashboardFilterOption } from '@shared/components/dashboard-filter/dashboard-filter.component';
 import { ExperienceItemComponent } from './experience-item/experience-item.component';
 
 @Component({
   selector: 'app-experience-list',
   standalone: true,
-  imports: [CommonModule, RouterModule, DragDropModule, ConfirmDialogComponent, TranslatePipe, ExperienceItemComponent],
+  imports: [CommonModule, RouterModule, DragDropModule, ConfirmDialogComponent, TranslatePipe, DashboardFilterComponent, ExperienceItemComponent],
   templateUrl: './experience-list.component.html',
 })
 export class ExperienceListComponent implements OnInit {
@@ -25,6 +26,11 @@ export class ExperienceListComponent implements OnInit {
   items = signal<Experience[]>([]);
   itemToDelete: Experience | null = null;
   imageMap = new Map<number, string>();
+
+  // Filter state
+  searchText = signal('');
+  selectedCompany = signal('');
+  companyFilterOptions = signal<DashboardFilterOption[]>([]);
 
   async ngOnInit(): Promise<void> { await this.loadItems(); }
 
@@ -39,9 +45,23 @@ export class ExperienceListComponent implements OnInit {
       );
       if (error) throw error;
       this.items.set(data || []);
+      this.buildCompanyOptions(data || []);
       await this.loadImages(data || []);
     } catch (err) { console.error('Error loading experiences:', err); }
     finally { this.loading.set(false); }
+  }
+
+  /**
+   * Build unique company filter options
+   */
+  private buildCompanyOptions(experiences: Experience[]): void {
+    const companies = new Set<string>();
+    for (const exp of experiences) {
+      if (exp.company) companies.add(exp.company);
+    }
+    this.companyFilterOptions.set(
+      Array.from(companies).sort().map(c => ({ label: c, value: c }))
+    );
   }
 
   /**
@@ -75,8 +95,29 @@ export class ExperienceListComponent implements OnInit {
 
   filteredItems(): Experience[] {
     const all = this.items();
-    return this.showArchived() ? all.filter((i) => i.is_archived) : all.filter((i) => !i.is_archived);
+    let filtered = this.showArchived() ? all.filter((i) => i.is_archived) : all.filter((i) => !i.is_archived);
+
+    // Filter by company
+    const company = this.selectedCompany();
+    if (company) {
+      filtered = filtered.filter(i => i.company === company);
+    }
+
+    // Filter by search text
+    const search = this.searchText().toLowerCase().trim();
+    if (search) {
+      filtered = filtered.filter(i => {
+        const role = this.getItemRole(i).toLowerCase();
+        const comp = (i.company || '').toLowerCase();
+        return role.includes(search) || comp.includes(search);
+      });
+    }
+
+    return filtered;
   }
+
+  onSearchChange(text: string): void { this.searchText.set(text); }
+  onCompanyFilterChange(value: string): void { this.selectedCompany.set(value); }
 
   toggleShowArchived(): void { this.showArchived.update((v) => !v); }
 

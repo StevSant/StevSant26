@@ -1,19 +1,75 @@
-INSERT INTO experience (id, company, start_date, end_date, position)
+INSERT INTO experience (
+  company,
+  start_date,
+  end_date,
+  is_archived,
+  is_pinned,
+  position,
+  company_image_url
+)
+VALUES (
+  'Club IA ULEAM',
+  '2025-02-01',
+  NULL,
+  false,
+  true,
+  1,
+  'https://media.licdn.com/dms/image/v2/D4E0BAQFQbfP6wYLPfQ/company-logo_200_200/B4EZpwVGiAKoAM-/0/1762821172224?e=1772064000&v=beta&t=os0g6Gz9W6DJMl_eV9OvaCuOS9lWRiBi5Tp3o6MsGHE'
+),
+(
+  'Personal Projects',
+  '2023-09-15',
+  NULL,
+  false,
+  true,
+  2,
+  NULL
+);
+
+
+INSERT INTO experience_translation (
+  experience_id,
+  language_id,
+  role,
+  description
+)
 VALUES
-(1, 'TechCorp', '2023-01-01', '2024-01-01', 1),
-(2, 'StartupX', '2024-02-01', NULL, 2)
-ON CONFLICT DO NOTHING;
 
+-- ======================
+-- ESPAÑOL
+-- ======================
+(
+  (SELECT id FROM experience WHERE company = 'Club IA ULEAM'),
+  (SELECT id FROM language WHERE code = 'es'),
+  'Content Manager',
+  'Responsable de la creación y gestión de contenidos del Club IA ULEAM. Planifico y preparo talleres, apoyo en la definición de temáticas para eventos y colaboro en la organización de actividades enfocadas en inteligencia artificial, desarrollo de software y tecnologías emergentes.'
+),
 
-INSERT INTO experience_translation (experience_id, language_id, role, description)
-SELECT
-  e.id,
-  l.id,
-  CASE
-    WHEN l.code='es' THEN 'Desarrollador'
-    WHEN l.code='en' THEN 'Developer'
-  END,
-  'Trabajo en desarrollo de software'
-FROM experience e
-CROSS JOIN language l
-ON CONFLICT DO NOTHING;
+-- ======================
+-- ENGLISH
+-- ======================
+(
+  (SELECT id FROM experience WHERE company = 'Club IA ULEAM'),
+  (SELECT id FROM language WHERE code = 'en'),
+  'Content Manager',
+  'Responsible for content creation and management at Club IA ULEAM. I design and prepare workshops, contribute to defining event topics, and support the organization of activities focused on artificial intelligence, software development, and emerging technologies.'
+),
+-- ======================
+-- ESPAÑOL
+-- ======================
+(
+  (SELECT id FROM experience WHERE company = 'Personal Projects'),
+  (SELECT id FROM language WHERE code = 'es'),
+  'Full Stack & Backend Developer',
+  'Desarrollo continuo de proyectos personales enfocados en backend y full stack desde septiembre de 2023. Diseño y construcción de APIs REST, autenticación, lógica de negocio, bases de datos relacionales y no relacionales, así como interfaces frontend. Uso de tecnologías modernas como Django, FastAPI, NestJS, Angular, PostgreSQL, Supabase, Docker y herramientas asistidas por IA para acelerar el desarrollo y mejorar la calidad del código.'
+),
+
+-- ======================
+-- ENGLISH
+-- ======================
+(
+  (SELECT id FROM experience WHERE company = 'Personal Projects'),
+  (SELECT id FROM language WHERE code = 'en'),
+  'Full Stack & Backend Developer',
+  'Ongoing development of personal projects focused on backend and full stack development since September 2023. Design and implementation of REST APIs, authentication systems, business logic, relational and non-relational databases, and frontend interfaces. Working with modern technologies such as Django, FastAPI, NestJS, Angular, PostgreSQL, Supabase, Docker, and AI-assisted tools to improve development speed and code quality.'
+);

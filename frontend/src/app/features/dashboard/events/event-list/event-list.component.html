@@ -35,6 +35,15 @@
     </div>
   </div>
 
+  <!-- Filters -->
+  <app-dashboard-filter
+    [searchPlaceholder]="'dashboardFilter.searchEvents'"
+    [filterOptions]="yearFilterOptions()"
+    [filterLabel]="'dashboardFilter.year'"
+    (searchChange)="onSearchChange($event)"
+    (filterChange)="onYearFilterChange($event)"
+  />
+
   <!-- Loading State -->
   @if (loading()) {
     <div class="flex items-center justify-center py-12">

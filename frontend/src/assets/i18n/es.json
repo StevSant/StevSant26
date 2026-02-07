@@ -467,6 +467,19 @@
       "noResults": "No se encontraron resultados"
     }
   },
+  "dashboardFilter": {
+    "all": "Todos",
+    "searchSkills": "Buscar habilidades...",
+    "searchProjects": "Buscar proyectos...",
+    "searchExperiences": "Buscar experiencias...",
+    "searchCompetitions": "Buscar competencias...",
+    "searchEvents": "Buscar eventos...",
+    "category": "Categoría",
+    "association": "Asociación",
+    "company": "Empresa",
+    "organizer": "Organizador",
+    "year": "Año"
+  },
   "theme": {
     "switchTheme": "Cambiar Tema",
     "darkElegant": "Elegante Oscuro",

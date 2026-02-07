@@ -10,3 +10,4 @@ export * from './form-header/form-header.component';
 export * from './form-actions/form-actions.component';
 export * from './loading-spinner/loading-spinner.component';
 export * from './portfolio-filter/portfolio-filter.component';
+export * from './dashboard-filter/dashboard-filter.component';

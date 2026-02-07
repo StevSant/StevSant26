@@ -469,6 +469,19 @@
       "noResults": "No results found"
     }
   },
+  "dashboardFilter": {
+    "all": "All",
+    "searchSkills": "Search skills...",
+    "searchProjects": "Search projects...",
+    "searchExperiences": "Search experiences...",
+    "searchCompetitions": "Search competitions...",
+    "searchEvents": "Search events...",
+    "category": "Category",
+    "association": "Association",
+    "company": "Company",
+    "organizer": "Organizer",
+    "year": "Year"
+  },
   "theme": {
     "switchTheme": "Switch Theme",
     "darkElegant": "Dark Elegant",

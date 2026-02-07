@@ -34,6 +34,15 @@
     </div>
   </div>
 
+  <!-- Filters -->
+  <app-dashboard-filter
+    [searchPlaceholder]="'dashboardFilter.searchCompetitions'"
+    [filterOptions]="organizerFilterOptions()"
+    [filterLabel]="'dashboardFilter.organizer'"
+    (searchChange)="onSearchChange($event)"
+    (filterChange)="onOrganizerFilterChange($event)"
+  />
+
   @if (loading()) {
     <div class="flex items-center justify-center py-12">
       <svg class="spinner-lg" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
