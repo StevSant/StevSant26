@@ -500,6 +500,13 @@
       "viewAllProjects": "View all projects",
       "viewAllSkills": "View all skills"
     },
+    "skillLevel": {
+      "beginner": "Beginner",
+      "basic": "Basic",
+      "intermediate": "Intermediate",
+      "advanced": "Advanced",
+      "expert": "Expert"
+    },
     "footer": {
       "backToTop": "Back to top"
     },

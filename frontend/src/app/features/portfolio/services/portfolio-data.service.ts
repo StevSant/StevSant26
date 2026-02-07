@@ -247,6 +247,16 @@ export class PortfolioDataService {
     return (translation as any)?.name || 'Other';
   }
 
+  getCategoryApproach(category: SkillCategoryWithSkills): string {
+    const translation = getTranslation(category.translations as any[], this.currentLang());
+    return (translation as any)?.approach || '';
+  }
+
+  getSkillDescription(skill: SkillWithLevel): string {
+    const translation = getTranslation(skill.translations as any[], this.currentLang());
+    return (translation as any)?.description || '';
+  }
+
   getStarArray(level: number): boolean[] {
     return Array(5).fill(false).map((_, i) => i < level);
   }

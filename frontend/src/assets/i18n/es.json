@@ -498,6 +498,13 @@
       "viewAllProjects": "Ver todos los proyectos",
       "viewAllSkills": "Ver todas las habilidades"
     },
+    "skillLevel": {
+      "beginner": "Principiante",
+      "basic": "Básico",
+      "intermediate": "Intermedio",
+      "advanced": "Avanzado",
+      "expert": "Experto"
+    },
     "footer": {
       "backToTop": "Volver arriba"
     },
