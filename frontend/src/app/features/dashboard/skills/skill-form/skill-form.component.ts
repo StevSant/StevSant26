@@ -35,6 +35,7 @@ export class SkillFormComponent implements OnInit {
   // Base fields (non-translatable)
   formData = {
     skill_category_id: null as number | null,
+    icon_url: '' as string,
   };
 
   // Translations map by language code
@@ -93,6 +94,7 @@ export class SkillFormComponent implements OnInit {
         if (data) {
           this.formData = {
             skill_category_id: data.skill_category_id,
+            icon_url: data.icon_url || '',
           };
 
           // Load translations
@@ -141,6 +143,7 @@ export class SkillFormComponent implements OnInit {
     try {
       const basePayload = {
         skill_category_id: this.formData.skill_category_id,
+        icon_url: this.formData.icon_url || null,
       };
 
       const translationsPayload = Array.from(this.translations.entries()).map(([lang, t]) => ({

@@ -55,6 +55,30 @@
             }
           </select>
         </div>
+
+        <div>
+          <label for="icon_url" class="label">{{ 'skills.fields.iconUrl' | translate }}</label>
+          <div class="flex items-center gap-3">
+            @if (formData.icon_url) {
+              <img
+                [src]="formData.icon_url"
+                alt="Skill icon"
+                class="w-10 h-10 object-contain rounded-md bg-[var(--color-bg-tertiary)] p-1"
+              />
+            }
+            <input
+              type="url"
+              id="icon_url"
+              name="icon_url"
+              [(ngModel)]="formData.icon_url"
+              class="input flex-1"
+              [placeholder]="'skills.iconUrlPlaceholder' | translate"
+            />
+          </div>
+          <p class="text-xs text-[var(--color-text-disabled)] mt-1">
+            {{ 'skills.iconUrlHint' | translate }}
+          </p>
+        </div>
       </div>
 
       <!-- Translations Card -->

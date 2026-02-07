@@ -48,6 +48,7 @@ CREATE TABLE skill_category (
 CREATE TABLE skill (
   id SERIAL PRIMARY KEY,
   skill_category_id INT REFERENCES skill_category(id) ON DELETE SET NULL,
+  icon_url TEXT,
   is_archived BOOLEAN DEFAULT false,
   is_pinned BOOLEAN DEFAULT false,
   position INT
@@ -75,7 +76,8 @@ CREATE TABLE experience (
   end_date DATE,
   is_archived BOOLEAN DEFAULT false,
   is_pinned BOOLEAN DEFAULT false,
-  position INT
+  position INT,
+  company_image_url TEXT,
 );
 
 -- =========================

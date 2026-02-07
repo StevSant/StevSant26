@@ -18,6 +18,7 @@ export interface SkillTranslation {
  */
 export interface Skill extends BaseEntity {
   skill_category_id: number | null;
+  icon_url?: string | null;
   skill_category?: SkillCategory;
   translations?: SkillTranslation[];
 }

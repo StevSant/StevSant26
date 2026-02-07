@@ -47,6 +47,7 @@ export class ExperienceFormComponent implements OnInit {
     company: '',
     start_date: '',
     end_date: '',
+    company_image_url: '',
   };
 
   // Translations map by language code
@@ -91,6 +92,7 @@ export class ExperienceFormComponent implements OnInit {
             company: data.company || '',
             start_date: data.start_date?.split('T')[0] || '',
             end_date: data.end_date?.split('T')[0] || '',
+            company_image_url: data.company_image_url || '',
           };
 
           // Load translations
@@ -152,6 +154,7 @@ export class ExperienceFormComponent implements OnInit {
         company: this.formData.company,
         start_date: this.formData.start_date || null,
         end_date: this.formData.end_date || null,
+        company_image_url: this.formData.company_image_url || null,
       };
 
       const translationsPayload = Array.from(this.translations.entries()).map(([lang, t]) => ({

@@ -47,4 +47,31 @@
       </p>
     </div>
   </div>
+
+  <div>
+    <label for="company_image_url" class="label">{{
+      'experiences.fields.companyImageUrl' | translate
+    }}</label>
+    <div class="flex items-center gap-3">
+      @if (companyImageUrl()) {
+        <img
+          [src]="companyImageUrl()"
+          alt="Company image"
+          class="w-12 h-12 object-cover rounded-lg bg-[var(--color-bg-tertiary)] border border-[var(--color-border-primary)]"
+        />
+      }
+      <input
+        type="url"
+        id="company_image_url"
+        name="company_image_url"
+        [ngModel]="companyImageUrl()"
+        (ngModelChange)="companyImageUrlChange.emit($event)"
+        class="input flex-1"
+        [placeholder]="'experiences.companyImageUrlPlaceholder' | translate"
+      />
+    </div>
+    <p class="text-xs text-[var(--color-text-disabled)] mt-1">
+      {{ 'experiences.companyImageUrlHint' | translate }}
+    </p>
+  </div>
 </div>

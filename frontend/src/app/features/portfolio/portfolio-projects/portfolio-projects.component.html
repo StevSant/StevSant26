@@ -12,44 +12,36 @@
         {{ 'portfolio.empty.projects' | translate }}
       </p>
     } @else {
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        @for (project of data.projects(); track project.id) {
-          <div
-            class="group bg-(--color-bg-secondary) rounded-lg overflow-hidden border border-(--color-card-border) hover:border-(--color-accent)/30 transition-all duration-500 hover:shadow-xl flex flex-col"
-          >
-            <!-- Image -->
-            @if (data.getFirstImageUrl('project', project.id)) {
-              <div class="relative h-44 overflow-hidden">
-                <img
-                  [src]="data.getFirstImageUrl('project', project.id)"
-                  [alt]="data.getEntityTranslation(project, 'title')"
-                  class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                />
-                @if (project.is_pinned) {
-                  <span
-                    class="absolute top-2 right-2 text-(--color-pin) bg-(--color-bg-primary)/80 rounded-full p-1"
-                  >
-                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                      <path
-                        d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
-                      />
-                    </svg>
-                  </span>
-                }
-              </div>
-            }
+      <app-portfolio-filter
+        placeholder="portfolio.filter.searchProjects"
+        [filterOptions]="skillFilterOptions()"
+        filterLabel="portfolio.filter.skills"
+        (searchChange)="onSearchChange($event)"
+        (filterChange)="onSkillFilterChange($event)"
+      />
 
-            <div class="flex flex-col flex-1 p-6">
-              <div class="flex-1">
-                <!-- Title + Pin (no image case) -->
-                <div class="flex items-start justify-between mb-2">
-                  <h3
-                    class="text-lg font-medium text-(--color-text-primary) group-hover:text-(--color-accent) transition-colors tracking-tight"
-                  >
-                    {{ data.getEntityTranslation(project, 'title') }}
-                  </h3>
-                  @if (project.is_pinned && !data.getFirstImageUrl('project', project.id)) {
-                    <span class="text-(--color-pin) opacity-70">
+      @if (filteredProjects().length === 0) {
+        <p class="text-(--color-text-muted) text-center italic font-light py-8">
+          {{ 'portfolio.filter.noResults' | translate }}
+        </p>
+      } @else {
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          @for (project of filteredProjects(); track project.id) {
+            <div
+              class="group bg-(--color-bg-secondary) rounded-lg overflow-hidden border border-(--color-card-border) hover:border-(--color-accent)/30 transition-all duration-500 hover:shadow-xl flex flex-col"
+            >
+              <!-- Image -->
+              @if (data.getFirstImageUrl('project', project.id)) {
+                <div class="relative h-44 overflow-hidden">
+                  <img
+                    [src]="data.getFirstImageUrl('project', project.id)"
+                    [alt]="data.getEntityTranslation(project, 'title')"
+                    class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  />
+                  @if (project.is_pinned) {
+                    <span
+                      class="absolute top-2 right-2 text-(--color-pin) bg-(--color-bg-primary)/80 rounded-full p-1"
+                    >
                       <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                         <path
                           d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
@@ -58,85 +50,118 @@
                     </span>
                   }
                 </div>
+              }
 
-                <!-- Date -->
-                @if (project.created_at) {
-                  <p class="text-xs text-(--color-text-muted) uppercase tracking-wider mb-3">
-                    {{ project.created_at | date: 'mediumDate' }}
-                  </p>
-                }
-
-                <!-- Description -->
-                @if (data.getEntityTranslation(project, 'description')) {
-                  <p
-                    class="text-sm text-(--color-text-muted) line-clamp-3 mb-4 leading-relaxed font-light"
-                  >
-                    {{ data.getEntityTranslation(project, 'description') }}
-                  </p>
-                }
-
-                <!-- Skills -->
-                @if (data.getSkillUsages('project', project.id).length > 0) {
-                  <div class="flex flex-wrap gap-1.5 mb-4">
-                    @for (
-                      usage of data.getSkillUsages('project', project.id).slice(0, 6);
-                      track usage.id
-                    ) {
-                      <span
-                        class="px-2 py-0.5 text-xs rounded-full bg-(--color-bg-tertiary) text-(--color-text-secondary) border border-(--color-border-primary)"
-                      >
-                        {{ data.getSkillName(usage) }}
-                      </span>
-                    }
-                    @if (data.getSkillUsages('project', project.id).length > 6) {
-                      <span
-                        class="px-2 py-0.5 text-xs rounded-full bg-(--color-bg-tertiary) text-(--color-text-muted)"
-                      >
-                        +{{ data.getSkillUsages('project', project.id).length - 6 }}
+              <div class="flex flex-col flex-1 p-6">
+                <div class="flex-1">
+                  <!-- Title + Pin (no image case) -->
+                  <div class="flex items-start justify-between mb-2">
+                    <h3
+                      class="text-lg font-medium text-(--color-text-primary) group-hover:text-(--color-accent) transition-colors tracking-tight"
+                    >
+                      {{ data.getEntityTranslation(project, 'title') }}
+                    </h3>
+                    @if (project.is_pinned && !data.getFirstImageUrl('project', project.id)) {
+                      <span class="text-(--color-pin) opacity-70">
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                          <path
+                            d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
+                          />
+                        </svg>
                       </span>
                     }
                   </div>
-                }
-              </div>
 
-              <!-- Footer links -->
-              <div class="flex items-center gap-3 mt-auto pt-4 border-t border-(--color-divider)">
-                @if (project.url) {
+                  <!-- Date -->
+                  @if (project.created_at) {
+                    <p class="text-xs text-(--color-text-muted) uppercase tracking-wider mb-3">
+                      {{ project.created_at | date: 'mediumDate' }}
+                    </p>
+                  }
+
+                  <!-- Description -->
+                  @if (data.getEntityTranslation(project, 'description')) {
+                    <p
+                      class="text-sm text-(--color-text-muted) line-clamp-3 mb-4 leading-relaxed font-light"
+                    >
+                      {{ data.getEntityTranslation(project, 'description') }}
+                    </p>
+                  }
+
+                  <!-- Skills -->
+                  @if (data.getSkillUsages('project', project.id).length > 0) {
+                    <div class="flex flex-wrap gap-1.5 mb-4">
+                      @for (
+                        usage of data.getSkillUsages('project', project.id).slice(0, 6);
+                        track usage.id
+                      ) {
+                        <span
+                          class="px-2 py-0.5 text-xs rounded-full bg-(--color-bg-tertiary) text-(--color-text-secondary) border border-(--color-border-primary) inline-flex items-center gap-1"
+                        >
+                          @if (data.getSkillIconUrl(usage)) {
+                            <img
+                              [src]="data.getSkillIconUrl(usage)"
+                              class="w-3.5 h-3.5 object-contain"
+                            />
+                          }
+                          {{ data.getSkillName(usage) }}
+                        </span>
+                      }
+                      @if (data.getSkillUsages('project', project.id).length > 6) {
+                        <span
+                          class="px-2 py-0.5 text-xs rounded-full bg-(--color-bg-tertiary) text-(--color-text-muted)"
+                        >
+                          +{{ data.getSkillUsages('project', project.id).length - 6 }}
+                        </span>
+                      }
+                    </div>
+                  }
+                </div>
+
+                <!-- Footer links -->
+                <div class="flex items-center gap-3 mt-auto pt-4 border-t border-(--color-divider)">
+                  @if (project.url) {
+                    <a
+                      [href]="project.url"
+                      target="_blank"
+                      class="text-xs uppercase tracking-widest text-(--color-accent) hover:text-(--color-accent-hover) flex items-center gap-1.5 transition-colors"
+                    >
+                      <svg
+                        class="w-3.5 h-3.5"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+                        />
+                      </svg>
+                      {{ 'portfolio.viewProject' | translate }}
+                    </a>
+                  }
                   <a
-                    [href]="project.url"
-                    target="_blank"
-                    class="text-xs uppercase tracking-widest text-(--color-accent) hover:text-(--color-accent-hover) flex items-center gap-1.5 transition-colors"
+                    [routerLink]="[project.id]"
+                    class="text-xs uppercase tracking-widest text-(--color-text-muted) hover:text-(--color-accent) flex items-center gap-1.5 transition-colors ml-auto"
                   >
+                    {{ 'portfolio.viewDetails' | translate }}
                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path
                         stroke-linecap="round"
                         stroke-linejoin="round"
                         stroke-width="2"
-                        d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+                        d="M9 5l7 7-7 7"
                       />
                     </svg>
-                    {{ 'portfolio.viewProject' | translate }}
                   </a>
-                }
-                <a
-                  [routerLink]="[project.id]"
-                  class="text-xs uppercase tracking-widest text-(--color-text-muted) hover:text-(--color-accent) flex items-center gap-1.5 transition-colors ml-auto"
-                >
-                  {{ 'portfolio.viewDetails' | translate }}
-                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M9 5l7 7-7 7"
-                    />
-                  </svg>
-                </a>
+                </div>
               </div>
             </div>
-          </div>
-        }
-      </div>
+          }
+        </div>
+      }
     }
   </div>
 </section>

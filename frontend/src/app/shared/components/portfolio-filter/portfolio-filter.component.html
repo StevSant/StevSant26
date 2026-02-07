@@ -1,0 +1,66 @@
+<div class="mb-8 space-y-4">
+  <!-- Search bar -->
+  <div class="relative max-w-md mx-auto">
+    <svg
+      class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-(--color-text-muted)"
+      fill="none"
+      stroke="currentColor"
+      viewBox="0 0 24 24"
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+      />
+    </svg>
+    <input
+      type="text"
+      [ngModel]="searchText()"
+      (ngModelChange)="onSearchInput($event)"
+      [placeholder]="placeholder() | translate"
+      class="w-full pl-10 pr-8 py-2.5 text-sm bg-(--color-bg-secondary) border border-(--color-border-primary) rounded-lg text-(--color-text-primary) placeholder:text-(--color-text-muted) focus:outline-none focus:border-(--color-accent)/50 transition-colors"
+    />
+    @if (searchText()) {
+      <button
+        type="button"
+        (click)="clearSearch()"
+        class="absolute right-2.5 top-1/2 -translate-y-1/2 text-(--color-text-muted) hover:text-(--color-text-primary) transition-colors"
+      >
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M6 18L18 6M6 6l12 12"
+          />
+        </svg>
+      </button>
+    }
+  </div>
+
+  <!-- Filter chips -->
+  @if (filterOptions().length > 0) {
+    <div class="flex flex-wrap justify-center gap-2">
+      @if (filterLabel()) {
+        <span class="text-xs text-(--color-text-muted) uppercase tracking-wider self-center mr-1">
+          {{ filterLabel() | translate }}:
+        </span>
+      }
+      @for (option of filterOptions(); track option.value) {
+        <button
+          type="button"
+          (click)="onFilterSelect(option.value)"
+          class="px-3 py-1 text-xs rounded-full border transition-all duration-200"
+          [class]="
+            selectedFilter() === option.value
+              ? 'bg-(--color-accent) text-white border-(--color-accent)'
+              : 'bg-(--color-bg-secondary) text-(--color-text-secondary) border-(--color-border-primary) hover:border-(--color-accent)/40'
+          "
+        >
+          {{ option.label }}
+        </button>
+      }
+    </div>
+  }
+</div>

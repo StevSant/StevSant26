@@ -12,7 +12,9 @@ export class ExperienceFormBaseInfoComponent {
   company = input<string>('');
   startDate = input<string>('');
   endDate = input<string>('');
+  companyImageUrl = input<string>('');
   companyChange = output<string>();
   startDateChange = output<string>();
   endDateChange = output<string>();
+  companyImageUrlChange = output<string>();
 }

@@ -336,4 +336,35 @@ export class PortfolioDataService {
     const translation = getTranslation(usage.skill.translations as any[], this.currentLang());
     return (translation as any)?.name || '';
   }
+
+  /** Get the icon_url from a SkillUsage's skill */
+  getSkillIconUrl(usage: SkillUsage): string | null {
+    return usage.skill?.icon_url ?? null;
+  }
+
+  /** Get the icon_url for a SkillWithLevel */
+  getSkillIcon(skill: SkillWithLevel): string | null {
+    return skill.icon_url ?? null;
+  }
+
+  /** Get all unique skill names across all usages (for filter pills) */
+  getAllSkillNames(): string[] {
+    const names = new Set<string>();
+    for (const usages of this.skillUsageMap.values()) {
+      for (const usage of usages) {
+        const name = this.getSkillName(usage);
+        if (name) names.add(name);
+      }
+    }
+    return Array.from(names).sort();
+  }
+
+  /** Get all unique companies from experiences */
+  getAllCompanies(): string[] {
+    const companies = new Set<string>();
+    for (const exp of this.experiences()) {
+      if (exp.company) companies.add(exp.company);
+    }
+    return Array.from(companies).sort();
+  }
 }

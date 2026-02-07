@@ -196,6 +196,8 @@
       "iconUrl": "URL del icono"
     },
     "noCategory": "Sin categoría",
+    "iconUrlPlaceholder": "https://cdn.example.com/icons/python.svg",
+    "iconUrlHint": "URL de un ícono o imagen que represente la habilidad (SVG o PNG recomendado)",
     "deleteConfirm": {
       "title": "¿Eliminar habilidad?",
       "message": "Esta acción eliminará permanentemente la habilidad."
@@ -277,8 +279,11 @@
       "role": "Cargo",
       "description": "Descripción",
       "startDate": "Fecha de Inicio",
-      "endDate": "Fecha de Fin"
+      "endDate": "Fecha de Fin",
+      "companyImageUrl": "Imagen de la Empresa"
     },
+    "companyImageUrlPlaceholder": "https://example.com/company-logo.png",
+    "companyImageUrlHint": "URL de una foto o logo de la empresa/lugar de trabajo",
     "errors": {
       "companyRequired": "La empresa es requerida",
       "roleRequired": "El rol es requerido en al menos un idioma",
@@ -427,7 +432,18 @@
     "contactMessage": "¿Interesado en trabajar juntos? ¡No dudes en contactarme!",
     "sendEmail": "Enviar Email",
     "downloadCV": "Descargar CV",
-    "allRightsReserved": "Todos los derechos reservados."
+    "allRightsReserved": "Todos los derechos reservados.",
+    "filter": {
+      "searchPlaceholder": "Buscar...",
+      "searchProjects": "Buscar proyectos...",
+      "searchExperience": "Buscar experiencia...",
+      "searchSkills": "Buscar habilidades...",
+      "searchCompetitions": "Buscar competencias...",
+      "skills": "Habilidades",
+      "company": "Empresa",
+      "category": "Categoría",
+      "noResults": "No se encontraron resultados"
+    }
   },
   "theme": {
     "switchTheme": "Cambiar Tema",

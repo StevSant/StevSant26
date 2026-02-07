@@ -17,6 +17,7 @@ export interface ExperienceTranslation {
  */
 export interface Experience extends BaseEntity {
   company: string;
+  company_image_url?: string | null;
   start_date: string | null;
   end_date: string | null;
   translations?: ExperienceTranslation[];

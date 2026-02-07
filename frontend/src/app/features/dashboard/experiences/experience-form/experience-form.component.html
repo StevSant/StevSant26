@@ -12,9 +12,11 @@
         [company]="formData.company"
         [startDate]="formData.start_date"
         [endDate]="formData.end_date"
+        [companyImageUrl]="formData.company_image_url"
         (companyChange)="formData.company = $event"
         (startDateChange)="formData.start_date = $event"
         (endDateChange)="formData.end_date = $event"
+        (companyImageUrlChange)="formData.company_image_url = $event"
       />
 
       <app-experience-form-translations

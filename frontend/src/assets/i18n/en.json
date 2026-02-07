@@ -196,6 +196,8 @@
       "iconUrl": "Icon URL"
     },
     "noCategory": "No category",
+    "iconUrlPlaceholder": "https://cdn.example.com/icons/python.svg",
+    "iconUrlHint": "URL of an icon or image representing the skill (SVG or PNG recommended)",
     "deleteConfirm": {
       "title": "Delete skill?",
       "message": "This action will permanently delete the skill."
@@ -279,8 +281,11 @@
       "startDate": "Start date",
       "endDate": "End date",
       "location": "Location",
-      "url": "URL"
+      "url": "URL",
+      "companyImageUrl": "Company Image"
     },
+    "companyImageUrlPlaceholder": "https://example.com/company-logo.png",
+    "companyImageUrlHint": "URL of a photo or logo of the company/workplace",
     "errors": {
       "companyRequired": "Company is required",
       "roleRequired": "Role is required in at least one language",
@@ -429,7 +434,18 @@
     "contactMessage": "Interested in working together? Feel free to reach out!",
     "sendEmail": "Send Email",
     "downloadCV": "Download CV",
-    "allRightsReserved": "All rights reserved."
+    "allRightsReserved": "All rights reserved.",
+    "filter": {
+      "searchPlaceholder": "Search...",
+      "searchProjects": "Search projects...",
+      "searchExperience": "Search experience...",
+      "searchSkills": "Search skills...",
+      "searchCompetitions": "Search competitions...",
+      "skills": "Skills",
+      "company": "Company",
+      "category": "Category",
+      "noResults": "No results found"
+    }
   },
   "theme": {
     "switchTheme": "Switch Theme",
