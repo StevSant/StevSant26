@@ -1,0 +1,32 @@
+<div class="space-y-4">
+  <h2 class="text-xl font-semibold text-[var(--color-text-primary)]">
+    {{ 'preview.featuredProjects' | translate }}
+  </h2>
+  @if (projects().length === 0) {
+    <p class="text-[var(--color-text-muted)] italic">{{ 'preview.noProjects' | translate }}</p>
+  } @else {
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      @for (project of projects(); track project.id) {
+        <div class="card hover:border-[var(--color-accent)] transition-colors cursor-pointer">
+          <h3 class="font-semibold text-[var(--color-text-primary)]">
+            {{ getEntityTranslation()(project, 'title') }}
+          </h3>
+          @if (getEntityTranslation()(project, 'description')) {
+            <p class="text-sm text-[var(--color-text-muted)] mt-2 line-clamp-3">
+              {{ getEntityTranslation()(project, 'description') }}
+            </p>
+          }
+          @if (project.url) {
+            <a
+              [href]="project.url"
+              target="_blank"
+              class="inline-block mt-3 text-sm text-[var(--color-accent)] hover:underline"
+            >
+              {{ 'preview.viewMore' | translate }} →
+            </a>
+          }
+        </div>
+      }
+    </div>
+  }
+</div>

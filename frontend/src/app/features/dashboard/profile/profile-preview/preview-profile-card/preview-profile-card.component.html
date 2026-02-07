@@ -1,0 +1,43 @@
+@if (profile()) {
+  <div class="card overflow-hidden">
+    @if (bannerUrl()) {
+      <div class="-mx-6 -mt-6 mb-6">
+        <img [src]="bannerUrl()" alt="Banner" class="w-full h-48 object-cover" />
+      </div>
+    }
+
+    <div class="flex flex-col md:flex-row gap-6">
+      @if (avatarUrl()) {
+        <div class="flex-shrink-0" [class.-mt-20]="bannerUrl()" [class.ml-4]="bannerUrl()">
+          <img
+            [src]="avatarUrl()"
+            alt="Avatar"
+            class="w-32 h-32 rounded-full object-cover border-4 border-[var(--color-accent)]"
+            [class.shadow-lg]="bannerUrl()"
+          />
+        </div>
+      }
+
+      <div class="flex-1 space-y-4">
+        <div>
+          <h2 class="text-2xl font-bold text-[var(--color-text-primary)]">
+            {{ profile()?.first_name }} {{ profile()?.last_name }}
+          </h2>
+          @if (headline()) {
+            <p class="text-[var(--color-accent)]">{{ headline() }}</p>
+          }
+          @if (profile()?.nickname) {
+            <p class="text-[var(--color-text-muted)]">&#64;{{ profile()?.nickname }}</p>
+          }
+        </div>
+
+        @if (bio()) {
+          <div
+            class="prose prose-sm max-w-none text-[var(--color-text-secondary)]"
+            [innerHTML]="bio() | safeHtml"
+          ></div>
+        }
+      </div>
+    </div>
+  </div>
+}

@@ -1,0 +1,23 @@
+<div class="space-y-4">
+  <h2 class="text-xl font-semibold text-[var(--color-text-primary)]">
+    {{ 'preview.allEvents' | translate }}
+  </h2>
+  @if (events().length === 0) {
+    <p class="text-[var(--color-text-muted)] italic">{{ 'preview.noEvents' | translate }}</p>
+  } @else {
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      @for (event of events(); track event.id) {
+        <div class="card">
+          <h3 class="font-semibold text-[var(--color-text-primary)]">
+            {{ getEntityTranslation()(event, 'name') }}
+          </h3>
+          @if (event.assisted_at) {
+            <p class="text-sm text-[var(--color-text-muted)] mt-1">
+              {{ event.assisted_at | date }}
+            </p>
+          }
+        </div>
+      }
+    </div>
+  }
+</div>

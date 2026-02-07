@@ -1,0 +1,31 @@
+<div class="space-y-4">
+  <h2 class="text-xl font-semibold text-[var(--color-text-primary)]">
+    {{ 'preview.allCompetitions' | translate }}
+  </h2>
+  @if (competitions().length === 0) {
+    <p class="text-[var(--color-text-muted)] italic">{{ 'preview.noCompetitions' | translate }}</p>
+  } @else {
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      @for (comp of competitions(); track comp.id) {
+        <div class="card">
+          <div class="flex justify-between items-start">
+            <h3 class="font-semibold text-[var(--color-text-primary)]">
+              {{ getEntityTranslation()(comp, 'name') }}
+            </h3>
+            @if (comp.date) {
+              <span class="text-sm text-[var(--color-text-muted)]">{{ comp.date | date }}</span>
+            }
+          </div>
+          @if (getEntityTranslation()(comp, 'result')) {
+            <p class="text-[var(--color-accent)] font-medium mt-1">
+              {{ getEntityTranslation()(comp, 'result') }}
+            </p>
+          }
+          @if (comp.organizer) {
+            <p class="text-sm text-[var(--color-text-muted)] mt-1">{{ comp.organizer }}</p>
+          }
+        </div>
+      }
+    </div>
+  }
+</div>

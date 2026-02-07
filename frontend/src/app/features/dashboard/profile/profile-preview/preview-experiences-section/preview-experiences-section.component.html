@@ -1,0 +1,31 @@
+<div class="space-y-4">
+  <h2 class="text-xl font-semibold text-[var(--color-text-primary)]">
+    {{ 'preview.allExperiences' | translate }}
+  </h2>
+  @if (experiences().length === 0) {
+    <p class="text-[var(--color-text-muted)] italic">{{ 'preview.noExperiences' | translate }}</p>
+  } @else {
+    <div class="space-y-4">
+      @for (exp of experiences(); track exp.id) {
+        <div class="card">
+          <div class="flex justify-between items-start">
+            <div>
+              <h3 class="font-semibold text-[var(--color-text-primary)]">
+                {{ getEntityTranslation()(exp, 'role') }}
+              </h3>
+              <p class="text-[var(--color-accent)]">{{ exp.company }}</p>
+            </div>
+            <span class="text-sm text-[var(--color-text-muted)]">
+              {{ formatDateRange()(exp.start_date, exp.end_date) }}
+            </span>
+          </div>
+          @if (getEntityTranslation()(exp, 'description')) {
+            <p class="text-sm text-[var(--color-text-secondary)] mt-3">
+              {{ getEntityTranslation()(exp, 'description') }}
+            </p>
+          }
+        </div>
+      }
+    </div>
+  }
+</div>

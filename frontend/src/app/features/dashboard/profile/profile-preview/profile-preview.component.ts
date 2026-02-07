@@ -1,10 +1,8 @@
 import { Component, OnInit, signal, inject, computed } from '@angular/core';
-import { CommonModule, DatePipe } from '@angular/common';
-import { RouterModule } from '@angular/router';
 import { SupabaseService } from '@core/services/supabase.service';
 import { LanguageService } from '@core/services/language.service';
 import { TranslatePipe } from '@shared/pipes/translate.pipe';
-import { SafeHtmlPipe } from '@shared/pipes/safe-html.pipe';
+import { LoadingSpinnerComponent } from '@shared/components/loading-spinner/loading-spinner.component';
 import {
   Profile,
   Project,
@@ -16,6 +14,12 @@ import {
   SkillCategoryTranslation,
   getTranslation,
 } from '@core/models';
+import { PreviewProfileCardComponent } from './preview-profile-card/preview-profile-card.component';
+import { PreviewProjectsSectionComponent } from './preview-projects-section/preview-projects-section.component';
+import { PreviewExperiencesSectionComponent } from './preview-experiences-section/preview-experiences-section.component';
+import { PreviewCompetitionsSectionComponent } from './preview-competitions-section/preview-competitions-section.component';
+import { PreviewEventsSectionComponent } from './preview-events-section/preview-events-section.component';
+import { PreviewSkillsSectionComponent } from './preview-skills-section/preview-skills-section.component';
 
 interface SkillWithLevel extends Skill {
   calculatedLevel: number;
@@ -29,7 +33,7 @@ interface SkillCategoryWithSkills extends SkillCategory {
 @Component({
   selector: 'app-profile-preview',
   standalone: true,
-  imports: [CommonModule, RouterModule, DatePipe, TranslatePipe, SafeHtmlPipe],
+  imports: [TranslatePipe, LoadingSpinnerComponent, PreviewProfileCardComponent, PreviewProjectsSectionComponent, PreviewExperiencesSectionComponent, PreviewCompetitionsSectionComponent, PreviewEventsSectionComponent, PreviewSkillsSectionComponent],
   templateUrl: './profile-preview.component.html',
 })
 export class ProfilePreviewComponent implements OnInit {
