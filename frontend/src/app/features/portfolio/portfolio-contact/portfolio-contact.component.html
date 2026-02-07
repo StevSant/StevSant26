@@ -1,16 +1,18 @@
-<section appScrollReveal class="py-24 px-4 sm:px-6 lg:px-8">
+<section appScrollReveal class="py-12 sm:py-16 lg:py-24 px-4 sm:px-6 lg:px-8">
   <div class="max-w-4xl mx-auto text-center">
     <h2 class="text-sm uppercase tracking-[0.3em] text-(--color-text-muted) mb-3 font-medium">
       {{ 'portfolio.sections.contact' | translate }}
     </h2>
-    <div class="w-12 h-px bg-(--color-accent) mx-auto mb-10 opacity-60"></div>
-    <p class="text-(--color-text-secondary) text-lg font-light leading-relaxed mb-12">
+    <div class="w-12 h-px bg-(--color-accent) mx-auto mb-6 sm:mb-8 lg:mb-10 opacity-60"></div>
+    <p
+      class="text-(--color-text-secondary) text-base sm:text-lg font-light leading-relaxed mb-8 sm:mb-12"
+    >
       {{ 'portfolio.contactMessage' | translate }}
     </p>
 
     <!-- Contact Form -->
     @if (data.profile()?.email) {
-      <div class="max-w-lg mx-auto mb-16">
+      <div class="max-w-lg mx-auto mb-10 sm:mb-16">
         <form (ngSubmit)="sendMessage()" class="space-y-4 text-left">
           <div>
             <label
@@ -87,7 +89,7 @@
     }
 
     <!-- Divider -->
-    <div class="max-w-xs mx-auto mb-12">
+    <div class="max-w-xs mx-auto mb-8 sm:mb-12">
       <div class="flex items-center gap-4">
         <div class="flex-1 h-px bg-(--color-divider)"></div>
         <span class="text-xs uppercase tracking-widest text-(--color-text-muted)">
@@ -97,14 +99,14 @@
       </div>
     </div>
 
-    <div class="flex flex-wrap justify-center gap-4">
+    <div class="flex flex-wrap justify-center gap-3 sm:gap-4">
       <!-- Email -->
       @if (data.profile()?.email) {
         <a
           [href]="'mailto:' + data.profile()!.email"
           target="_blank"
           rel="noopener noreferrer"
-          class="inline-flex items-center gap-2 px-5 py-3 rounded-full border border-(--color-divider) text-(--color-text-secondary) hover:text-(--color-accent) hover:border-(--color-accent) transition-all duration-300 text-sm tracking-wide"
+          class="inline-flex items-center gap-2 px-4 py-2.5 sm:px-5 sm:py-3 rounded-full border border-(--color-divider) text-(--color-text-secondary) hover:text-(--color-accent) hover:border-(--color-accent) transition-all duration-300 text-sm tracking-wide"
         >
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
@@ -124,7 +126,7 @@
           [href]="'https://wa.me/' + data.profile()!.whatsapp!.replace('+', '').replace(/\\s/g, '')"
           target="_blank"
           rel="noopener noreferrer"
-          class="inline-flex items-center gap-2 px-5 py-3 rounded-full border border-(--color-divider) text-(--color-text-secondary) hover:text-green-500 hover:border-green-500 transition-all duration-300 text-sm tracking-wide"
+          class="inline-flex items-center gap-2 px-4 py-2.5 sm:px-5 sm:py-3 rounded-full border border-(--color-divider) text-(--color-text-secondary) hover:text-green-500 hover:border-green-500 transition-all duration-300 text-sm tracking-wide"
         >
           <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
             <path
@@ -141,7 +143,7 @@
           [href]="data.profile()!.linkedin_url!"
           target="_blank"
           rel="noopener noreferrer"
-          class="inline-flex items-center gap-2 px-5 py-3 rounded-full border border-(--color-divider) text-(--color-text-secondary) hover:text-blue-600 hover:border-blue-600 transition-all duration-300 text-sm tracking-wide"
+          class="inline-flex items-center gap-2 px-4 py-2.5 sm:px-5 sm:py-3 rounded-full border border-(--color-divider) text-(--color-text-secondary) hover:text-blue-600 hover:border-blue-600 transition-all duration-300 text-sm tracking-wide"
         >
           <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
             <path
@@ -158,7 +160,7 @@
           [href]="data.profile()!.github_url!"
           target="_blank"
           rel="noopener noreferrer"
-          class="inline-flex items-center gap-2 px-5 py-3 rounded-full border border-(--color-divider) text-(--color-text-secondary) hover:text-(--color-text-primary) hover:border-(--color-text-primary) transition-all duration-300 text-sm tracking-wide"
+          class="inline-flex items-center gap-2 px-4 py-2.5 sm:px-5 sm:py-3 rounded-full border border-(--color-divider) text-(--color-text-secondary) hover:text-(--color-text-primary) hover:border-(--color-text-primary) transition-all duration-300 text-sm tracking-wide"
         >
           <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
             <path
@@ -175,7 +177,7 @@
           [href]="data.profile()!.instagram_url!"
           target="_blank"
           rel="noopener noreferrer"
-          class="inline-flex items-center gap-2 px-5 py-3 rounded-full border border-(--color-divider) text-(--color-text-secondary) hover:text-pink-500 hover:border-pink-500 transition-all duration-300 text-sm tracking-wide"
+          class="inline-flex items-center gap-2 px-4 py-2.5 sm:px-5 sm:py-3 rounded-full border border-(--color-divider) text-(--color-text-secondary) hover:text-pink-500 hover:border-pink-500 transition-all duration-300 text-sm tracking-wide"
         >
           <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
             <path

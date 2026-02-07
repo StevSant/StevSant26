@@ -1,9 +1,9 @@
-<section class="py-24 px-4 sm:px-6 lg:px-8">
+<section class="py-12 sm:py-16 lg:py-24 px-4 sm:px-6 lg:px-8">
   <div class="max-w-4xl mx-auto">
     <!-- Back link -->
     <a
       routerLink="../"
-      class="inline-flex items-center gap-2 text-sm text-(--color-text-muted) hover:text-(--color-accent) transition-colors mb-8"
+      class="inline-flex items-center gap-2 text-sm text-(--color-text-muted) hover:text-(--color-accent) transition-colors mb-6 sm:mb-8"
     >
       <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
@@ -14,8 +14,10 @@
     @if (competition(); as comp) {
       <article>
         <!-- Header -->
-        <div class="mb-8">
-          <h1 class="text-3xl font-semibold text-(--color-text-primary) tracking-tight mb-2">
+        <div class="mb-6 sm:mb-8">
+          <h1
+            class="text-2xl sm:text-3xl font-semibold text-(--color-text-primary) tracking-tight mb-2"
+          >
             {{ data.getEntityTranslation(comp, 'name') }}
           </h1>
           @if (data.getEntityTranslation(comp, 'result')) {

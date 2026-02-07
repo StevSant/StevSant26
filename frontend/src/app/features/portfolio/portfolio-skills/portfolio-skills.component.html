@@ -1,11 +1,11 @@
-<section appScrollReveal class="py-24 px-4 sm:px-6 lg:px-8">
+<section appScrollReveal class="py-12 sm:py-16 lg:py-24 px-4 sm:px-6 lg:px-8">
   <div class="max-w-6xl mx-auto">
     <h2
       class="text-sm uppercase tracking-[0.3em] text-(--color-text-muted) mb-3 text-center font-medium"
     >
       {{ 'portfolio.sections.skills' | translate }}
     </h2>
-    <div class="w-12 h-px bg-(--color-accent) mx-auto mb-14 opacity-60"></div>
+    <div class="w-12 h-px bg-(--color-accent) mx-auto mb-8 sm:mb-10 lg:mb-14 opacity-60"></div>
 
     @if (data.skillCategories().length === 0) {
       <p class="text-(--color-text-muted) text-center italic font-light">
@@ -25,12 +25,14 @@
           {{ 'portfolio.filter.noResults' | translate }}
         </p>
       } @else {
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 lg:gap-8">
           @for (category of filteredCategories(); track category.id) {
             <div
-              class="bg-(--color-bg-secondary) rounded-lg p-6 border border-(--color-card-border)"
+              class="bg-(--color-bg-secondary) rounded-lg p-4 sm:p-6 border border-(--color-card-border)"
             >
-              <h3 class="text-sm uppercase tracking-[0.2em] text-(--color-accent) mb-6 font-medium">
+              <h3
+                class="text-sm uppercase tracking-[0.2em] text-(--color-accent) mb-4 sm:mb-6 font-medium"
+              >
                 {{ data.getCategoryName(category) }}
               </h3>
               <div class="space-y-4">

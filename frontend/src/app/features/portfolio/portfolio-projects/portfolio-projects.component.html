@@ -1,11 +1,11 @@
-<section appScrollReveal class="py-24 px-4 sm:px-6 lg:px-8">
+<section appScrollReveal class="py-12 sm:py-16 lg:py-24 px-4 sm:px-6 lg:px-8">
   <div class="max-w-6xl mx-auto">
     <h2
       class="text-sm uppercase tracking-[0.3em] text-(--color-text-muted) mb-3 text-center font-medium"
     >
       {{ 'portfolio.sections.projects' | translate }}
     </h2>
-    <div class="w-12 h-px bg-(--color-accent) mx-auto mb-14 opacity-60"></div>
+    <div class="w-12 h-px bg-(--color-accent) mx-auto mb-8 sm:mb-10 lg:mb-14 opacity-60"></div>
 
     @if (data.projects().length === 0) {
       <p class="text-(--color-text-muted) text-center italic font-light">
@@ -25,14 +25,14 @@
           {{ 'portfolio.filter.noResults' | translate }}
         </p>
       } @else {
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
           @for (project of filteredProjects(); track project.id) {
             <div
               class="group bg-(--color-bg-secondary) rounded-lg overflow-hidden border border-(--color-card-border) hover:border-(--color-accent)/30 transition-all duration-500 hover:shadow-xl flex flex-col"
             >
               <!-- Image -->
               @if (data.getFirstImageUrl('project', project.id)) {
-                <div class="relative h-44 overflow-hidden">
+                <div class="relative h-36 sm:h-44 overflow-hidden">
                   <img
                     [src]="data.getFirstImageUrl('project', project.id)"
                     [alt]="data.getEntityTranslation(project, 'title')"
@@ -52,7 +52,7 @@
                 </div>
               }
 
-              <div class="flex flex-col flex-1 p-6">
+              <div class="flex flex-col flex-1 p-4 sm:p-6">
                 <div class="flex-1">
                   <!-- Title + Pin (no image case) -->
                   <div class="flex items-start justify-between mb-2">
