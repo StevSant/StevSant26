@@ -41,7 +41,7 @@
     <input
       type="text"
       class="input"
-      [ngModel]="currentTranslation.title"
+      [ngModel]="currentTitle()"
       (ngModelChange)="onFieldChange('title', $event)"
       [placeholder]="'contentSections.fields.titlePlaceholder' | translate"
     />
@@ -51,7 +51,7 @@
     <label class="label">{{ 'contentSections.fields.body' | translate }}</label>
     <textarea
       class="input min-h-[120px]"
-      [ngModel]="currentTranslation.body"
+      [ngModel]="currentBody()"
       (ngModelChange)="onFieldChange('body', $event)"
       [placeholder]="'contentSections.fields.bodyPlaceholder' | translate"
       rows="5"

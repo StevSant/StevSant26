@@ -570,6 +570,7 @@
     },
     "keys": {
       "problem": "Problema Resuelto",
+      "mistakes": "Errores que Cometí",
       "technical_decisions": "Decisiones Técnicas",
       "tradeoffs": "Compromisos",
       "impact": "Impacto",

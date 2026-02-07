@@ -80,14 +80,30 @@
 
     <!-- Sections List -->
     @if (sections().length > 0) {
-      <div class="space-y-2">
+      <div cdkDropList (cdkDropListDropped)="drop($event)" class="space-y-2">
         @for (section of sections(); track section.id ?? $index) {
-          <app-content-section-item
-            [section]="section"
-            [displayTitle]="getItemTitle(section)"
-            (edit)="openEditForm($event)"
-            (remove)="removeSection($event)"
-          />
+          <div cdkDrag [cdkDragDisabled]="showAddForm()">
+            <app-content-section-item
+              [section]="section"
+              [displayTitle]="getItemTitle(section)"
+              [showDragHandle]="!showAddForm()"
+              (edit)="openEditForm($event)"
+              (remove)="removeSection($event)"
+            />
+            <!-- Section Images -->
+            @if (section.id) {
+              <div class="ml-8 mt-1 mb-2">
+                <app-image-upload
+                  folder="content-sections"
+                  [multiple]="true"
+                  [sourceType]="'content_section'"
+                  [sourceId]="section.id"
+                  [existingImages]="getExistingImages(section.id)"
+                  (uploaded)="onSectionImageUploaded(section.id!, $event)"
+                />
+              </div>
+            }
+          </div>
         }
       </div>
     } @else if (!showAddForm()) {

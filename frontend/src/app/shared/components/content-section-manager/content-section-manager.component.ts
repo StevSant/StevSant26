@@ -1,15 +1,18 @@
 import { Component, input, signal, inject, effect, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
 import { TranslatePipe } from '@shared/pipes/translate.pipe';
 import { TranslateService } from '@core/services/translate.service';
 import { LanguageService } from '@core/services/language.service';
 import { ContentSectionService } from '@core/services/content-section.service';
-import { ContentSection, ContentSectionKey, SourceType, Language, getTranslation } from '@core/models';
+import { SupabaseService } from '@core/services/supabase.service';
+import { ContentSection, ContentSectionKey, SourceType, Language, getTranslation, Image } from '@core/models';
 import { ContentSectionFormData } from '@core/models';
 import { ContentSectionItem } from './content-section-item.model';
 import { ContentSectionAddFormComponent } from './content-section-add-form/content-section-add-form.component';
 import { ContentSectionItemComponent } from './content-section-item/content-section-item.component';
+import { ImageUploadComponent, ExistingImage } from '@shared/components/image-upload/image-upload.component';
 
 @Component({
   selector: 'app-content-section-manager',
@@ -17,9 +20,11 @@ import { ContentSectionItemComponent } from './content-section-item/content-sect
   imports: [
     CommonModule,
     FormsModule,
+    DragDropModule,
     TranslatePipe,
     ContentSectionAddFormComponent,
     ContentSectionItemComponent,
+    ImageUploadComponent,
   ],
   templateUrl: './content-section-manager.component.html',
 })
@@ -27,6 +32,7 @@ export class ContentSectionManagerComponent implements OnInit {
   private contentSectionService = inject(ContentSectionService);
   private languageService = inject(LanguageService);
   private translateService = inject(TranslateService);
+  private supabase = inject(SupabaseService);
 
   /** The entity type this manager is attached to */
   sourceType = input.required<SourceType>();
@@ -42,6 +48,12 @@ export class ContentSectionManagerComponent implements OnInit {
   showAddForm = signal(false);
   editingId = signal<number | null>(null);
   currentEditLanguage = signal<string>('es');
+
+  /** Image state per section (keyed by section id) */
+  sectionImages = signal<Map<number, ExistingImage[]>>(new Map());
+
+  /** Pending images for sections that haven't been saved yet */
+  pendingImagesBySection = signal<Map<number, { path: string; url: string }[]>>(new Map());
 
   /** Form data for add/edit */
   formData: ContentSectionItem = this.createEmptyItem();
@@ -75,7 +87,9 @@ export class ContentSectionManagerComponent implements OnInit {
     this.loading.set(true);
     try {
       const data = await this.contentSectionService.getByEntity(this.sourceType(), entityId);
-      this.sections.set(data.map(s => this.mapToItem(s)));
+      const items = data.map(s => this.mapToItem(s));
+      this.sections.set(items);
+      await this.loadSectionImages(items);
     } catch (err) {
       this.error.set(this.translateService.instant('contentSections.errors.loadError'));
       console.error('Load content sections error:', err);
@@ -270,5 +284,81 @@ export class ContentSectionManagerComponent implements OnInit {
   /** Check if there are pending items to save */
   hasPendingItems(): boolean {
     return this.pendingItems().length > 0;
+  }
+
+  // ─── Drag & Drop ────────────────────────────────────
+
+  async drop(event: CdkDragDrop<ContentSectionItem[]>): Promise<void> {
+    const items = [...this.sections()];
+    moveItemInArray(items, event.previousIndex, event.currentIndex);
+    // Update positions locally
+    items.forEach((item, index) => (item.position = index));
+    this.sections.set(items);
+
+    // Persist if items have IDs
+    const savedIds = items.filter(i => i.id).map(i => i.id!);
+    if (savedIds.length > 0) {
+      try {
+        await this.contentSectionService.reorder(savedIds);
+      } catch (err) {
+        console.error('Error reordering sections:', err);
+        this.error.set(this.translateService.instant('contentSections.errors.saveError'));
+      }
+    }
+  }
+
+  // ─── Image helpers ──────────────────────────────────
+
+  /** Load images for all sections */
+  private async loadSectionImages(sectionItems: ContentSectionItem[]): Promise<void> {
+    const ids = sectionItems.filter(i => i.id).map(i => i.id!);
+    if (ids.length === 0) return;
+
+    const { data } = await this.supabase
+      .from('image')
+      .select('*')
+      .eq('source_type', 'content_section')
+      .in('source_id', ids)
+      .eq('is_archived', false)
+      .order('position', { ascending: true });
+
+    const imageMap = new Map<number, ExistingImage[]>();
+    if (data) {
+      for (const img of data as any[]) {
+        const sectionId = img.source_id as number;
+        if (!imageMap.has(sectionId)) {
+          imageMap.set(sectionId, []);
+        }
+        imageMap.get(sectionId)!.push({
+          id: img.id,
+          url: img.url,
+          alt_text: img.alt_text,
+        });
+      }
+    }
+    this.sectionImages.set(imageMap);
+  }
+
+  /** Get existing images for a section */
+  getExistingImages(sectionId: number | undefined): ExistingImage[] {
+    if (!sectionId) return [];
+    return this.sectionImages().get(sectionId) || [];
+  }
+
+  /** Handle image upload for a saved section */
+  async onSectionImageUploaded(sectionId: number, data: { path: string; url: string }): Promise<void> {
+    try {
+      const existingImages = this.getExistingImages(sectionId);
+      await this.supabase.create('image', {
+        url: data.url,
+        source_type: 'content_section',
+        source_id: sectionId,
+        position: existingImages.length,
+      });
+      // Reload images
+      await this.loadSectionImages(this.sections());
+    } catch (err) {
+      console.error('Error saving section image:', err);
+    }
   }
 }

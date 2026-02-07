@@ -1,4 +1,4 @@
-import { Component, input, output, inject } from '@angular/core';
+import { Component, input, output, inject, computed } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TranslatePipe } from '@shared/pipes/translate.pipe';
 import { TranslateService } from '@core/services/translate.service';
@@ -29,9 +29,18 @@ export class ContentSectionAddFormComponent {
 
   readonly sectionKeyOptions: SectionKeyOption[] = SECTION_KEY_OPTIONS;
 
-  get currentTranslation(): { title: string; body: string } {
-    return this.formData().translations.get(this.currentEditLanguage()) || { title: '', body: '' };
-  }
+  /** Reactive computed for current translation — updates when language or formData changes */
+  currentTitle = computed(() => {
+    const lang = this.currentEditLanguage();
+    const data = this.formData();
+    return data.translations.get(lang)?.title || '';
+  });
+
+  currentBody = computed(() => {
+    const lang = this.currentEditLanguage();
+    const data = this.formData();
+    return data.translations.get(lang)?.body || '';
+  });
 
   getSectionKeyLabel(key: ContentSectionKey): string {
     const option = this.sectionKeyOptions.find(o => o.value === key);

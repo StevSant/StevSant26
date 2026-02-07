@@ -37,3 +37,9 @@ ON event_translation(language_id);
 
 CREATE INDEX idx_project_translation_lang
 ON project_translation(language_id);
+
+CREATE INDEX IF NOT EXISTS idx_content_section_entity
+  ON content_section (entity_type, entity_id);
+
+CREATE INDEX IF NOT EXISTS idx_content_section_translation_section
+  ON content_section_translation (content_section_id);

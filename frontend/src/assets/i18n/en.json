@@ -572,6 +572,7 @@
     },
     "keys": {
       "problem": "Problem Solved",
+      "mistakes": "Mistakes I Made",
       "technical_decisions": "Technical Decisions",
       "tradeoffs": "Trade-offs",
       "impact": "Impact",

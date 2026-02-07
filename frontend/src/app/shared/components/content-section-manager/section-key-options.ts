@@ -14,6 +14,7 @@ export interface SectionKeyOption {
  */
 export const SECTION_KEY_OPTIONS: SectionKeyOption[] = [
   { value: 'problem', labelKey: 'contentSections.keys.problem', icon: '🎯' },
+  { value: 'mistakes', labelKey: 'contentSections.keys.mistakes', icon: '❌' },
   { value: 'technical_decisions', labelKey: 'contentSections.keys.technical_decisions', icon: '⚙️' },
   { value: 'tradeoffs', labelKey: 'contentSections.keys.tradeoffs', icon: '⚖️' },
   { value: 'impact', labelKey: 'contentSections.keys.impact', icon: '📊' },

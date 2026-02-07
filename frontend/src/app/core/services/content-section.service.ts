@@ -118,7 +118,8 @@ export class ContentSectionService {
    */
   async reorder(orderedIds: number[]): Promise<void> {
     const updates = orderedIds.map((id, index) => ({ id, position: index }));
-    const { error } = await this.supabase.updatePositions('content_section', updates);
-    if (error) throw error;
+    const results = await this.supabase.updatePositions('content_section', updates);
+    const failed = results.find(r => r.error);
+    if (failed?.error) throw failed.error;
   }
 }

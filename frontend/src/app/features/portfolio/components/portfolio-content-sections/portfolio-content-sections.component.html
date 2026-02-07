@@ -18,6 +18,22 @@
             {{ data.getSectionBody(section) }}
           </div>
         }
+
+        <!-- Section Images -->
+        @if (getSectionImages(section.id).length > 0) {
+          <div class="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
+            @for (img of getSectionImages(section.id); track img.id) {
+              <div class="rounded-lg overflow-hidden border border-(--color-border-primary)">
+                <img
+                  [src]="img.url"
+                  [alt]="img.alt_text || data.getSectionTitle(section) || ''"
+                  class="w-full h-auto object-cover"
+                  loading="lazy"
+                />
+              </div>
+            }
+          </div>
+        }
       </div>
     }
   </div>

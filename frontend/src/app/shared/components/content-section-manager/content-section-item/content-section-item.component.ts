@@ -1,4 +1,5 @@
 import { Component, input, output, inject } from '@angular/core';
+import { CdkDragHandle } from '@angular/cdk/drag-drop';
 import { TranslatePipe } from '@shared/pipes/translate.pipe';
 import { TranslateService } from '@core/services/translate.service';
 import { ContentSectionItem } from '../content-section-item.model';
@@ -7,7 +8,7 @@ import { SECTION_KEY_OPTIONS } from '../section-key-options';
 @Component({
   selector: 'app-content-section-item',
   standalone: true,
-  imports: [TranslatePipe],
+  imports: [TranslatePipe, CdkDragHandle],
   templateUrl: './content-section-item.component.html',
 })
 export class ContentSectionItemComponent {
@@ -15,6 +16,7 @@ export class ContentSectionItemComponent {
 
   section = input.required<ContentSectionItem>();
   displayTitle = input<string>('');
+  showDragHandle = input<boolean>(false);
 
   edit = output<ContentSectionItem>();
   remove = output<ContentSectionItem>();

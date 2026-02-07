@@ -108,6 +108,11 @@
             </div>
           </div>
         }
+
+        <!-- Content Sections -->
+        <div class="mb-10">
+          <app-portfolio-content-sections sourceType="competition" [sourceId]="comp.id" />
+        </div>
       </article>
     } @else if (!data.loading()) {
       <div class="text-center py-20">

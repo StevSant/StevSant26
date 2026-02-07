@@ -18,6 +18,7 @@ export interface ContentSectionTranslation {
  */
 export type ContentSectionKey =
   | 'problem'
+  | 'mistakes'
   | 'technical_decisions'
   | 'tradeoffs'
   | 'impact'
