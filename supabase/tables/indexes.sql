@@ -11,6 +11,9 @@ ON image(source_type, source_id);
 CREATE INDEX idx_document_source
 ON document(source_type, source_id);
 
+CREATE INDEX IF NOT EXISTS idx_education_type
+ON education(education_type);
+
 CREATE INDEX idx_skill_usage_source
 ON skill_usages(source_type, source_id);
 

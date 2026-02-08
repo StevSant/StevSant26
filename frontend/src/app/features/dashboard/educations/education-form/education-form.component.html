@@ -9,14 +9,20 @@
   } @else {
     <form (ngSubmit)="onSubmit()" class="space-y-6">
       <app-education-form-base-info
+        [educationType]="formData.education_type"
         [institution]="formData.institution"
         [startDate]="formData.start_date"
         [endDate]="formData.end_date"
         [institutionImageUrl]="formData.institution_image_url"
+        [credentialUrl]="formData.credential_url"
+        [credentialId]="formData.credential_id"
+        (educationTypeChange)="formData.education_type = $event"
         (institutionChange)="formData.institution = $event"
         (startDateChange)="formData.start_date = $event"
         (endDateChange)="formData.end_date = $event"
         (institutionImageUrlChange)="formData.institution_image_url = $event"
+        (credentialUrlChange)="formData.credential_url = $event"
+        (credentialIdChange)="formData.credential_id = $event"
       />
 
       <app-education-form-translations

@@ -30,7 +30,13 @@ export class EducationListComponent implements OnInit {
   // Filter state
   searchText = signal('');
   selectedInstitution = signal('');
+  selectedType = signal('');
   institutionFilterOptions = signal<DashboardFilterOption[]>([]);
+  typeFilterOptions = signal<DashboardFilterOption[]>([
+    { label: 'educations.types.formal', value: 'formal' },
+    { label: 'educations.types.course', value: 'course' },
+    { label: 'educations.types.certification', value: 'certification' },
+  ]);
 
   async ngOnInit(): Promise<void> { await this.loadItems(); }
 
@@ -94,6 +100,10 @@ export class EducationListComponent implements OnInit {
     if (institution) {
       filtered = filtered.filter(i => i.institution === institution);
     }
+    const type = this.selectedType();
+    if (type) {
+      filtered = filtered.filter(i => i.education_type === type);
+    }
     const search = this.searchText().toLowerCase().trim();
     if (search) {
       filtered = filtered.filter(i => {
@@ -107,6 +117,7 @@ export class EducationListComponent implements OnInit {
 
   onSearchChange(text: string): void { this.searchText.set(text); }
   onInstitutionFilterChange(value: string): void { this.selectedInstitution.set(value); }
+  onTypeFilterChange(value: string): void { this.selectedType.set(value); }
   toggleShowArchived(): void { this.showArchived.update((v) => !v); }
 
   async drop(event: CdkDragDrop<Education[]>): Promise<void> {

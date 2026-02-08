@@ -55,7 +55,7 @@
     "skillUsages": "Uso de Habilidades",
     "projects": "Proyectos",
     "experiences": "Experiencias",
-    "educations": "Formación Académica",
+    "educations": "Formación y Capacitación",
     "competitions": "Competencias",
     "events": "Eventos"
   },
@@ -299,30 +299,46 @@
   },
   "educations": {
     "present": "Presente",
-    "title": "Formación Académica",
-    "subtitle": "Gestiona tu formación académica",
-    "create": "Nueva Formación",
-    "edit": "Editar Formación",
-    "list": "Lista de Formación Académica",
+    "title": "Formación y Capacitación",
+    "subtitle": "Gestiona tu formación académica, cursos y certificaciones",
+    "create": "Nueva Entrada",
+    "edit": "Editar Entrada",
+    "list": "Lista de Formación",
     "baseInfo": "Información Base",
     "translatableContent": "Contenido Traducible",
     "images": "Imágenes",
     "documents": "Documentos",
     "currentStudyHint": "Deja vacío si estás cursando actualmente",
+    "expirationHint": "Deja vacío si no tiene fecha de vencimiento",
     "degreePlaceholder": "Ej: Ingeniería en Sistemas",
     "fieldOfStudyPlaceholder": "Ej: Ciencias de la Computación",
     "descriptionPlaceholder": "Describe tu formación académica...",
     "institutionPlaceholder": "Nombre de la institución",
+    "platformPlaceholder": "Ej: Udemy, Coursera, Platzi",
+    "issuerPlaceholder": "Ej: AWS, Google, Microsoft",
+    "credentialIdPlaceholder": "Ej: UC-abc123",
+    "credentialUrlPlaceholder": "https://example.com/verify/abc123",
+    "viewCredential": "Ver Credencial",
+    "itemSingular": "entrada",
+    "itemPlural": "entradas",
     "empty": "No hay formación académica",
     "emptyHint": "Comienza agregando tu primera formación",
+    "types": {
+      "formal": "Educación Formal",
+      "course": "Cursos",
+      "certification": "Certificaciones"
+    },
     "fields": {
+      "educationType": "Tipo",
       "institution": "Institución",
       "degree": "Título / Grado",
       "fieldOfStudy": "Campo de Estudio",
       "description": "Descripción",
       "startDate": "Fecha de Inicio",
       "endDate": "Fecha de Fin",
-      "institutionImageUrl": "Imagen de la Institución"
+      "institutionImageUrl": "Imagen de la Institución",
+      "credentialUrl": "URL de Credencial",
+      "credentialId": "ID de Credencial"
     },
     "institutionImageUrlPlaceholder": "https://example.com/university-logo.png",
     "institutionImageUrlHint": "URL del logo o foto de la institución educativa",
@@ -332,8 +348,8 @@
       "saveError": "Error al guardar la formación académica"
     },
     "deleteConfirm": {
-      "title": "¿Eliminar formación académica?",
-      "message": "Esta acción eliminará permanentemente la formación académica."
+      "title": "¿Eliminar entrada?",
+      "message": "Esta acción eliminará permanentemente esta entrada."
     }
   },
   "competitions": {
@@ -463,7 +479,7 @@
       "skills": "Habilidades",
       "competitions": "Competencias y Premios",
       "events": "Eventos Asistidos",
-      "education": "Formación Académica",
+      "education": "Formación y Capacitación",
       "contact": "Contáctame"
     },
     "empty": {

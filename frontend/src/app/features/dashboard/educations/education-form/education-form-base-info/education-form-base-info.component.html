@@ -1,12 +1,68 @@
 <div class="card space-y-6">
-  <h2 class="text-lg font-semibold text-[var(--color-text-primary)]">
+  <h2 class="text-lg font-semibold text-(--color-text-primary)">
     {{ 'educations.baseInfo' | translate }}
   </h2>
+
+  <!-- Education Type Selector -->
+  <div>
+    <label class="label">
+      {{ 'educations.fields.educationType' | translate }}
+      <span class="text-(--color-error)">*</span>
+    </label>
+    <div class="grid grid-cols-3 gap-3">
+      @for (type of educationTypes; track type) {
+        <button
+          type="button"
+          (click)="educationTypeChange.emit(type)"
+          class="flex flex-col items-center gap-2 p-3 rounded-lg border-2 transition-all duration-200"
+          [class]="
+            educationType() === type
+              ? 'border-(--color-accent) bg-(--color-accent)/10 text-(--color-accent)'
+              : 'border-(--color-border-primary) bg-(--color-bg-tertiary) text-(--color-text-muted) hover:border-(--color-text-disabled)'
+          "
+        >
+          @switch (type) {
+            @case ('formal') {
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14zm-4 6v-7.5l4-2.222"
+                />
+              </svg>
+            }
+            @case ('course') {
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
+                />
+              </svg>
+            }
+            @case ('certification') {
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"
+                />
+              </svg>
+            }
+          }
+          <span class="text-xs font-medium">{{ 'educations.types.' + type | translate }}</span>
+        </button>
+      }
+    </div>
+  </div>
 
   <div>
     <label for="institution" class="label">
       {{ 'educations.fields.institution' | translate }}
-      <span class="text-[var(--color-error)]">*</span>
+      <span class="text-(--color-error)">*</span>
     </label>
     <input
       type="text"
@@ -16,7 +72,13 @@
       (ngModelChange)="institutionChange.emit($event)"
       required
       class="input"
-      [placeholder]="'educations.institutionPlaceholder' | translate"
+      [placeholder]="
+        educationType() === 'formal'
+          ? ('educations.institutionPlaceholder' | translate)
+          : educationType() === 'course'
+            ? ('educations.platformPlaceholder' | translate)
+            : ('educations.issuerPlaceholder' | translate)
+      "
     />
   </div>
 
@@ -42,11 +104,49 @@
         (ngModelChange)="endDateChange.emit($event)"
         class="input"
       />
-      <p class="text-xs text-[var(--color-text-disabled)] mt-1">
-        {{ 'educations.currentStudyHint' | translate }}
+      <p class="text-xs text-(--color-text-disabled) mt-1">
+        @if (educationType() === 'formal') {
+          {{ 'educations.currentStudyHint' | translate }}
+        } @else if (educationType() === 'certification') {
+          {{ 'educations.expirationHint' | translate }}
+        }
       </p>
     </div>
   </div>
+
+  <!-- Credential fields (for course & certification) -->
+  @if (educationType() === 'course' || educationType() === 'certification') {
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div>
+        <label for="credential_id" class="label">{{
+          'educations.fields.credentialId' | translate
+        }}</label>
+        <input
+          type="text"
+          id="credential_id"
+          name="credential_id"
+          [ngModel]="credentialId()"
+          (ngModelChange)="credentialIdChange.emit($event)"
+          class="input"
+          [placeholder]="'educations.credentialIdPlaceholder' | translate"
+        />
+      </div>
+      <div>
+        <label for="credential_url" class="label">{{
+          'educations.fields.credentialUrl' | translate
+        }}</label>
+        <input
+          type="url"
+          id="credential_url"
+          name="credential_url"
+          [ngModel]="credentialUrl()"
+          (ngModelChange)="credentialUrlChange.emit($event)"
+          class="input"
+          [placeholder]="'educations.credentialUrlPlaceholder' | translate"
+        />
+      </div>
+    </div>
+  }
 
   <div>
     <label for="institution_image_url" class="label">{{
@@ -57,7 +157,7 @@
         <img
           [src]="institutionImageUrl()"
           alt="Institution image"
-          class="w-12 h-12 object-cover rounded-lg bg-[var(--color-bg-tertiary)] border border-[var(--color-border-primary)]"
+          class="w-12 h-12 object-cover rounded-lg bg-(--color-bg-tertiary) border border-(--color-border-primary)"
         />
       }
       <input
@@ -70,7 +170,7 @@
         [placeholder]="'educations.institutionImageUrlPlaceholder' | translate"
       />
     </div>
-    <p class="text-xs text-[var(--color-text-disabled)] mt-1">
+    <p class="text-xs text-(--color-text-disabled) mt-1">
       {{ 'educations.institutionImageUrlHint' | translate }}
     </p>
   </div>

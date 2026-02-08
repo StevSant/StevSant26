@@ -4,7 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { SupabaseService } from '@core/services/supabase.service';
 import { LanguageService } from '@core/services/language.service';
 import { TranslatePipe } from '@shared/pipes/translate.pipe';
-import { Education, EducationTranslation, Language } from '@core/models';
+import { Education, EducationTranslation, EducationType, Language } from '@core/models';
 import { ImageUploadComponent, ExistingImage } from '@shared/components/image-upload/image-upload.component';
 import { DocumentUploadComponent, ExistingDocument } from '@shared/components/document-upload/document-upload.component';
 import { SkillUsageManagerComponent } from '@shared/components/skill-usage-manager/skill-usage-manager.component';
@@ -42,11 +42,16 @@ export class EducationFormComponent implements OnInit {
   pendingDocuments = signal<{ path: string; url: string; file_name: string; file_type: string; file_size: number }[]>([]);
   existingDocuments = signal<ExistingDocument[]>([]);
 
+  educationTypes: EducationType[] = ['formal', 'course', 'certification'];
+
   formData = {
+    education_type: 'formal' as EducationType,
     institution: '',
     start_date: '',
     end_date: '',
     institution_image_url: '',
+    credential_url: '',
+    credential_id: '',
   };
 
   translations: Map<string, { degree: string; field_of_study: string; description: string }> = new Map();
@@ -81,10 +86,13 @@ export class EducationFormComponent implements OnInit {
         if (error) throw error;
         if (data) {
           this.formData = {
+            education_type: data.education_type || 'formal',
             institution: data.institution || '',
             start_date: data.start_date?.split('T')[0] || '',
             end_date: data.end_date?.split('T')[0] || '',
             institution_image_url: data.institution_image_url || '',
+            credential_url: data.credential_url || '',
+            credential_id: data.credential_id || '',
           };
           if (data.translations) {
             for (const t of data.translations as EducationTranslation[]) {
@@ -129,10 +137,13 @@ export class EducationFormComponent implements OnInit {
     this.error.set(null);
     try {
       const basePayload = {
+        education_type: this.formData.education_type,
         institution: this.formData.institution,
         start_date: this.formData.start_date || null,
         end_date: this.formData.end_date || null,
         institution_image_url: this.formData.institution_image_url || null,
+        credential_url: this.formData.credential_url || null,
+        credential_id: this.formData.credential_id || null,
       };
       const translationsPayload = Array.from(this.translations.entries()).map(([lang, t]) => ({
         language: lang,

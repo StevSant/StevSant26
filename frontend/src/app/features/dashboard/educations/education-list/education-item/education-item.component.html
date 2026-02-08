@@ -33,7 +33,30 @@
 
   <!-- Content -->
   <div class="flex-1 min-w-0">
-    <h3 class="text-[var(--color-text-primary)] font-medium truncate">{{ degree() }}</h3>
+    <div class="flex items-center gap-2">
+      <h3 class="text-[var(--color-text-primary)] font-medium truncate">{{ degree() }}</h3>
+      <!-- Type badge -->
+      <span
+        class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-medium shrink-0"
+        [class]="
+          item().education_type === 'formal'
+            ? 'bg-blue-500/10 text-blue-400'
+            : item().education_type === 'course'
+              ? 'bg-emerald-500/10 text-emerald-400'
+              : 'bg-amber-500/10 text-amber-400'
+        "
+      >
+        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            [attr.d]="getTypeIcon(item().education_type)"
+          />
+        </svg>
+        {{ 'educations.types.' + item().education_type | translate }}
+      </span>
+    </div>
     <p class="text-[var(--color-text-muted)] text-sm truncate">{{ item().institution }}</p>
     <p class="text-[var(--color-text-disabled)] text-xs mt-1">
       {{ item().start_date | date: 'yyyy' }}

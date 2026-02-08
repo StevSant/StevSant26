@@ -82,7 +82,11 @@ CREATE TABLE education (
   end_date DATE,
   is_archived BOOLEAN DEFAULT false,
   is_pinned BOOLEAN DEFAULT false,
-  position INT
+  position INT,
+  education_type TEXT NOT NULL DEFAULT 'formal'
+    CHECK (education_type IN ('formal', 'course', 'certification')),
+  credential_url TEXT,
+  credential_id TEXT
 );
 
 -- =========================
