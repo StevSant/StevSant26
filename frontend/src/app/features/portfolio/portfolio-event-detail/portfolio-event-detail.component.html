@@ -72,9 +72,18 @@
         <!-- Description -->
         @if (data.getEntityTranslation(evt, 'description')) {
           <div class="mb-10">
-            <p class="text-(--color-text-secondary) leading-relaxed whitespace-pre-line">
-              {{ data.getEntityTranslation(evt, 'description') }}
-            </p>
+            <h2
+              class="text-xs uppercase tracking-[0.2em] text-(--color-text-muted) mb-4 font-medium"
+            >
+              {{ 'portfolio.about' | translate }}
+            </h2>
+            <div class="max-w-prose">
+              <p
+                class="text-(--color-text-secondary) leading-relaxed whitespace-pre-line text-base"
+              >
+                {{ data.getEntityTranslation(evt, 'description') }}
+              </p>
+            </div>
           </div>
         }
 

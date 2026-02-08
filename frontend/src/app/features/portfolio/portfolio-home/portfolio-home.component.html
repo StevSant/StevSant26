@@ -146,7 +146,7 @@
         @for (project of pinnedProjects(); track project.id) {
           <a
             [routerLink]="['projects', project.id]"
-            class="group bg-(--color-bg-secondary) rounded-lg overflow-hidden border border-(--color-card-border) hover:border-(--color-accent)/30 transition-all duration-500 flex flex-col"
+            class="group bg-(--color-bg-secondary) rounded-xl overflow-hidden border border-(--color-card-border) hover:border-(--color-accent)/30 transition-all duration-300 flex flex-col shadow-sm hover:shadow-xl hover:-translate-y-1"
           >
             @if (data.getFirstImageUrl('project', project.id)) {
               <div class="relative h-32 sm:h-40 overflow-hidden">
@@ -231,7 +231,7 @@
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
         @for (category of topSkillCategories(); track category.id) {
           <div
-            class="bg-(--color-bg-secondary) rounded-lg p-4 sm:p-6 border border-(--color-card-border)"
+            class="bg-(--color-bg-secondary) rounded-xl p-4 sm:p-6 border border-(--color-card-border) shadow-sm hover:shadow-lg hover:border-(--color-accent)/30 transition-all duration-300"
           >
             <h3
               class="text-sm font-medium text-(--color-text-primary) mb-4 tracking-wide uppercase"
