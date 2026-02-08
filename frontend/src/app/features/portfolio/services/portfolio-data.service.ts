@@ -86,7 +86,7 @@ export class PortfolioDataService {
   private async loadProfile(): Promise<void> {
     const { data } = await this.supabase
       .from('profile')
-      .select('*, translations:profile_translation(*)')
+      .select('*, translations:profile_translation(*, language:language(*))')
       .limit(1);
     if (data && data.length > 0) {
       this.profile.set(data[0] as Profile);
@@ -116,7 +116,7 @@ export class PortfolioDataService {
   private async loadProjects(): Promise<void> {
     const { data } = await this.supabase
       .from('project')
-      .select('*, translations:project_translation(*)')
+      .select('*, translations:project_translation(*, language:language(*))')
       .eq('is_archived', false)
       .order('is_pinned', { ascending: false })
       .order('position', { ascending: true });
@@ -128,7 +128,7 @@ export class PortfolioDataService {
   private async loadExperiences(): Promise<void> {
     const { data } = await this.supabase
       .from('experience')
-      .select('*, translations:experience_translation(*)')
+      .select('*, translations:experience_translation(*, language:language(*))')
       .eq('is_archived', false)
       .order('start_date', { ascending: false });
     if (data) {
@@ -139,7 +139,7 @@ export class PortfolioDataService {
   private async loadEducations(): Promise<void> {
     const { data } = await this.supabase
       .from('education')
-      .select('*, translations:education_translation(*)')
+      .select('*, translations:education_translation(*, language:language(*))')
       .eq('is_archived', false)
       .order('start_date', { ascending: false });
     if (data) {
@@ -150,7 +150,7 @@ export class PortfolioDataService {
   private async loadCompetitions(): Promise<void> {
     const { data } = await this.supabase
       .from('competitions')
-      .select('*, translations:competitions_translation(*)')
+      .select('*, translations:competitions_translation(*, language:language(*))')
       .eq('is_archived', false)
       .order('date', { ascending: false });
     if (data) {
@@ -161,7 +161,7 @@ export class PortfolioDataService {
   private async loadEvents(): Promise<void> {
     const { data } = await this.supabase
       .from('event')
-      .select('*, translations:event_translation(*)')
+      .select('*, translations:event_translation(*, language:language(*))')
       .eq('is_archived', false)
       .order('assisted_at', { ascending: false });
     if (data) {
@@ -174,8 +174,8 @@ export class PortfolioDataService {
       .from('skill')
       .select(`
         *,
-        translations:skill_translation(*),
-        category:skill_category(*, translations:skill_category_translation(*))
+        translations:skill_translation(*, language:language(*)),
+        category:skill_category(*, translations:skill_category_translation(*, language:language(*)))
       `)
       .eq('is_archived', false);
 
@@ -267,11 +267,13 @@ export class PortfolioDataService {
 
   formatDateRange(startDate: string | null, endDate: string | null): string {
     if (!startDate) return '';
-    const start = new Date(startDate).toLocaleDateString();
+    const locale = this.currentLang() === 'es' ? 'es-ES' : 'en-US';
+    const start = new Date(startDate).toLocaleDateString(locale, { month: 'short', year: 'numeric' });
     if (!endDate) {
-      return `${start} - Present`;
+      const present = this.currentLang() === 'es' ? 'Presente' : 'Present';
+      return `${start} - ${present}`;
     }
-    return `${start} - ${new Date(endDate).toLocaleDateString()}`;
+    return `${start} - ${new Date(endDate).toLocaleDateString(locale, { month: 'short', year: 'numeric' })}`;
   }
 
   /** Bulk-load all non-archived images and index by source */
@@ -307,7 +309,7 @@ export class PortfolioDataService {
         *,
         skill:skill(
           *,
-          translations:skill_translation(*)
+          translations:skill_translation(*, language:language(*))
         )
       `)
       .eq('is_archived', false)

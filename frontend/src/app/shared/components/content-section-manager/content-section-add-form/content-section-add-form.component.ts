@@ -19,6 +19,7 @@ export class ContentSectionAddFormComponent {
   formData = input.required<ContentSectionItem>();
   saving = input<boolean>(false);
   currentEditLanguage = input<string>('es');
+  currentTranslation = input.required<{ title: string; body: string }>();
 
   add = output<void>();
   cancel = output<void>();
@@ -28,19 +29,6 @@ export class ContentSectionAddFormComponent {
   translationChange = output<{ field: 'title' | 'body'; value: string }>();
 
   readonly sectionKeyOptions: SectionKeyOption[] = SECTION_KEY_OPTIONS;
-
-  /** Reactive computed for current translation — updates when language or formData changes */
-  currentTitle = computed(() => {
-    const lang = this.currentEditLanguage();
-    const data = this.formData();
-    return data.translations.get(lang)?.title || '';
-  });
-
-  currentBody = computed(() => {
-    const lang = this.currentEditLanguage();
-    const data = this.formData();
-    return data.translations.get(lang)?.body || '';
-  });
 
   getSectionKeyLabel(key: ContentSectionKey): string {
     const option = this.sectionKeyOptions.find(o => o.value === key);

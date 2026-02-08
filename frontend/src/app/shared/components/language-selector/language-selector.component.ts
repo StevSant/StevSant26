@@ -1,5 +1,6 @@
 import { Component, inject, signal } from '@angular/core';
 import { TranslateService } from '@core/services/translate.service';
+import { LanguageService } from '@core/services/language.service';
 
 @Component({
   selector: 'app-language-selector',
@@ -8,6 +9,7 @@ import { TranslateService } from '@core/services/translate.service';
 })
 export class LanguageSelectorComponent {
   protected translateService = inject(TranslateService);
+  private languageService = inject(LanguageService);
 
   isOpen = signal(false);
 
@@ -26,6 +28,7 @@ export class LanguageSelectorComponent {
 
   selectLanguage(code: string): void {
     this.translateService.setLanguage(code);
+    this.languageService.setLanguage(code);
     this.closeDropdown();
   }
 }

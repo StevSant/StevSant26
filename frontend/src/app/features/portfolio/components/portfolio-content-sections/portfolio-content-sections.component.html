@@ -1,35 +1,94 @@
 @if (sections.length > 0) {
-  <div class="space-y-8">
-    @for (section of sections; track section.id) {
-      <div class="mb-6">
-        <h2
-          class="text-xs uppercase tracking-[0.2em] text-(--color-text-muted) mb-3 font-medium flex items-center gap-2"
-        >
-          @if (section.icon) {
-            <span>{{ section.icon }}</span>
-          }
-          {{
-            data.getSectionTitle(section) ||
-              ('contentSections.keys.' + section.section_key | translate)
-          }}
-        </h2>
-        @if (data.getSectionBody(section)) {
-          <div class="text-(--color-text-secondary) leading-relaxed whitespace-pre-line">
-            {{ data.getSectionBody(section) }}
-          </div>
+  <div>
+    <!-- Tabs -->
+    @if (showTabs) {
+      <div class="flex flex-wrap gap-1.5 mb-6 border-b border-(--color-divider) pb-3">
+        @for (group of sectionGroups; track group.key; let i = $index) {
+          <button
+            type="button"
+            (click)="selectTab(i)"
+            class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs sm:text-sm rounded-full transition-all duration-200 font-medium tracking-wide"
+            [class]="
+              activeTabIndex() === i
+                ? 'bg-(--color-accent)/15 text-(--color-accent) border border-(--color-accent)/30'
+                : 'text-(--color-text-muted) hover:text-(--color-text-primary) hover:bg-(--color-bg-tertiary) border border-transparent'
+            "
+          >
+            <span class="text-sm">{{ group.icon }}</span>
+            {{ group.label }}
+            @if (group.sections.length > 1) {
+              <span
+                class="ml-0.5 text-[10px] px-1.5 py-0.5 rounded-full"
+                [class]="
+                  activeTabIndex() === i
+                    ? 'bg-(--color-accent)/20 text-(--color-accent)'
+                    : 'bg-(--color-bg-tertiary) text-(--color-text-muted)'
+                "
+              >
+                {{ group.sections.length }}
+              </span>
+            }
+          </button>
+        }
+      </div>
+    }
+
+    <!-- Active group content -->
+    @if (activeGroup; as group) {
+      <div class="space-y-6">
+        <!-- Group header (only if single group, since tab already shows the label) -->
+        @if (!showTabs) {
+          <h2
+            class="text-xs uppercase tracking-[0.2em] text-(--color-text-muted) mb-3 font-medium flex items-center gap-2"
+          >
+            <span>{{ group.icon }}</span>
+            {{ group.label }}
+          </h2>
         }
 
-        <!-- Section Images -->
-        @if (getSectionImages(section.id).length > 0) {
-          <div class="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
-            @for (img of getSectionImages(section.id); track img.id) {
-              <div class="rounded-lg overflow-hidden border border-(--color-border-primary)">
-                <img
-                  [src]="img.url"
-                  [alt]="img.alt_text || data.getSectionTitle(section) || ''"
-                  class="w-full h-auto object-cover"
-                  loading="lazy"
-                />
+        @for (section of group.sections; track section.id) {
+          <div class="mb-4">
+            <!-- Section title (use translated title if available, fallback to i18n key) -->
+            @if (data.getSectionTitle(section)) {
+              <h3
+                class="text-sm font-medium text-(--color-text-primary) mb-2 flex items-center gap-2"
+              >
+                @if (section.icon && showTabs) {
+                  <span>{{ section.icon }}</span>
+                }
+                {{ data.getSectionTitle(section) }}
+              </h3>
+            }
+
+            <!-- Section body -->
+            @if (data.getSectionBody(section)) {
+              <div
+                class="text-(--color-text-secondary) leading-relaxed whitespace-pre-line text-sm"
+              >
+                {{ data.getSectionBody(section) }}
+              </div>
+            }
+
+            <!-- Section images -->
+            @if (getSectionImages(section.id).length > 0) {
+              <div
+                class="mt-4 grid gap-3 justify-center"
+                [class]="
+                  getSectionImages(section.id).length === 1
+                    ? 'grid-cols-1 max-w-md mx-auto'
+                    : 'grid-cols-1 sm:grid-cols-2'
+                "
+              >
+                @for (img of getSectionImages(section.id); track img.id) {
+                  <div class="rounded-lg overflow-hidden border border-(--color-border-primary)">
+                    <img
+                      [src]="img.url"
+                      [alt]="img.alt_text || data.getSectionTitle(section) || ''"
+                      class="w-full h-auto object-cover"
+                      loading="lazy"
+                    />
+                  </div>
+                }
               </div>
             }
           </div>

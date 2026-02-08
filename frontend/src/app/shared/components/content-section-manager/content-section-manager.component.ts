@@ -1,4 +1,4 @@
-import { Component, input, signal, inject, effect, OnInit } from '@angular/core';
+import { Component, input, signal, inject, effect, OnInit, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
@@ -13,6 +13,7 @@ import { ContentSectionItem } from './content-section-item.model';
 import { ContentSectionAddFormComponent } from './content-section-add-form/content-section-add-form.component';
 import { ContentSectionItemComponent } from './content-section-item/content-section-item.component';
 import { ImageUploadComponent, ExistingImage } from '@shared/components/image-upload/image-upload.component';
+import { SECTION_KEY_OPTIONS } from './section-key-options';
 
 @Component({
   selector: 'app-content-section-manager',
@@ -54,6 +55,23 @@ export class ContentSectionManagerComponent implements OnInit {
 
   /** Pending images for sections that haven't been saved yet */
   pendingImagesBySection = signal<Map<number, { path: string; url: string }[]>>(new Map());
+
+  /** Active section-key filter (null = show all) */
+  activeFilter = signal<ContentSectionKey | null>(null);
+
+  /** Available filter keys based on existing sections */
+  availableFilters = computed(() => {
+    const keys = new Set(this.sections().map(s => s.section_key));
+    return SECTION_KEY_OPTIONS.filter(opt => keys.has(opt.value));
+  });
+
+  /** Filtered sections list */
+  filteredSections = computed(() => {
+    const filter = this.activeFilter();
+    const all = this.sections();
+    if (!filter) return all;
+    return all.filter(s => s.section_key === filter);
+  });
 
   /** Form data for add/edit */
   formData: ContentSectionItem = this.createEmptyItem();
@@ -154,6 +172,16 @@ export class ContentSectionManagerComponent implements OnInit {
 
   // ─── Display helper ─────────────────────────────────
 
+  /** Current translation being edited – resolves the map entry for the active language */
+  get currentTranslation(): { title: string; body: string } {
+    return (
+      this.formData.translations.get(this.currentEditLanguage()) || {
+        title: '',
+        body: '',
+      }
+    );
+  }
+
   getItemTitle(item: ContentSectionItem): string {
     const lang = this.translateService.currentLang();
     const trans = item.translations.get(lang) || item.translations.values().next().value;
@@ -162,9 +190,14 @@ export class ContentSectionManagerComponent implements OnInit {
 
   // ─── Form interactions ──────────────────────────────
 
+  setFilter(key: ContentSectionKey | null): void {
+    this.activeFilter.set(this.activeFilter() === key ? null : key);
+  }
+
   openAddForm(): void {
     this.formData = this.createEmptyItem();
     this.editingId.set(null);
+    this.currentEditLanguage.set('es');
     this.showAddForm.set(true);
     this.error.set(null);
   }
@@ -181,6 +214,7 @@ export class ContentSectionManagerComponent implements OnInit {
       isEditing: true,
     };
     this.editingId.set(item.id ?? null);
+    this.currentEditLanguage.set('es');
     this.showAddForm.set(true);
     this.error.set(null);
   }

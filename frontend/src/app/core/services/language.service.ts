@@ -63,15 +63,25 @@ export class LanguageService {
    * Load saved language from localStorage
    */
   private loadSavedLanguage(): void {
+    // First check own storage key
     const saved = localStorage.getItem(LANGUAGE_STORAGE_KEY);
     if (saved && this.isValidLanguage(saved)) {
       this.currentLanguageCode.set(saved);
-    } else {
-      // Try to detect browser language
-      const browserLang = navigator.language.split('-')[0];
-      if (this.isValidLanguage(browserLang)) {
-        this.currentLanguageCode.set(browserLang);
-      }
+      return;
+    }
+
+    // Fall back to TranslateService's storage key for synchronization
+    const appLang = localStorage.getItem('app_language');
+    if (appLang && (this.isValidLanguage(appLang) || ['es', 'en'].includes(appLang))) {
+      this.currentLanguageCode.set(appLang);
+      localStorage.setItem(LANGUAGE_STORAGE_KEY, appLang);
+      return;
+    }
+
+    // Try to detect browser language
+    const browserLang = navigator.language.split('-')[0];
+    if (this.isValidLanguage(browserLang)) {
+      this.currentLanguageCode.set(browserLang);
     }
   }
 
@@ -86,7 +96,12 @@ export class LanguageService {
    * Set the current language
    */
   setLanguage(languageCode: string): void {
-    if (this.isValidLanguage(languageCode)) {
+    // If supported languages are loaded, validate; otherwise accept 'es' and 'en' as known codes
+    const isValid = this.supportedLanguages().length > 0
+      ? this.isValidLanguage(languageCode)
+      : ['es', 'en'].includes(languageCode);
+
+    if (isValid) {
       this.currentLanguageCode.set(languageCode);
       if (isPlatformBrowser(this.platformId)) {
         localStorage.setItem(LANGUAGE_STORAGE_KEY, languageCode);

@@ -62,6 +62,7 @@
         [formData]="formData"
         [saving]="saving()"
         [currentEditLanguage]="currentEditLanguage()"
+        [currentTranslation]="currentTranslation"
         (add)="saveSection()"
         (cancel)="cancelForm()"
         (sectionKeyChange)="onSectionKeyChange($event)"
@@ -78,10 +79,42 @@
       </div>
     }
 
+    <!-- Section Key Filters -->
+    @if (availableFilters().length > 1) {
+      <div class="flex flex-wrap gap-2">
+        <button
+          type="button"
+          (click)="setFilter(null)"
+          class="px-3 py-1 text-xs font-medium rounded-full border transition-colors"
+          [class]="
+            activeFilter() === null
+              ? 'bg-[var(--color-accent)] text-white border-[var(--color-accent)]'
+              : 'bg-[var(--color-bg-tertiary)] text-[var(--color-text-muted)] border-[var(--color-border-primary)] hover:border-[var(--color-accent)]/50'
+          "
+        >
+          {{ 'dashboardFilter.all' | translate }} ({{ sections().length }})
+        </button>
+        @for (opt of availableFilters(); track opt.value) {
+          <button
+            type="button"
+            (click)="setFilter(opt.value)"
+            class="px-3 py-1 text-xs font-medium rounded-full border transition-colors"
+            [class]="
+              activeFilter() === opt.value
+                ? 'bg-[var(--color-accent)] text-white border-[var(--color-accent)]'
+                : 'bg-[var(--color-bg-tertiary)] text-[var(--color-text-muted)] border-[var(--color-border-primary)] hover:border-[var(--color-accent)]/50'
+            "
+          >
+            {{ opt.icon }} {{ opt.labelKey | translate }}
+          </button>
+        }
+      </div>
+    }
+
     <!-- Sections List -->
-    @if (sections().length > 0) {
+    @if (filteredSections().length > 0) {
       <div cdkDropList (cdkDropListDropped)="drop($event)" class="space-y-2">
-        @for (section of sections(); track section.id ?? $index) {
+        @for (section of filteredSections(); track section.id ?? $index) {
           <div cdkDrag [cdkDragDisabled]="showAddForm()">
             <app-content-section-item
               [section]="section"

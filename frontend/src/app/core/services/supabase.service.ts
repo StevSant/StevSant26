@@ -485,10 +485,10 @@ export class SupabaseService {
       .from('skill')
       .select(`
         *,
-        translations:skill_translation(*),
+        translations:skill_translation(*, language:language(*)),
         skill_category(
           *,
-          translations:skill_category_translation(*)
+          translations:skill_category_translation(*, language:language(*))
         )
       `)
       .order('position', { ascending: true });
@@ -517,9 +517,9 @@ export class SupabaseService {
         *,
         skill:skill(
           *,
-          translations:skill_translation(*)
+          translations:skill_translation(*, language:language(*))
         ),
-        translations:skill_usages_translation(*)
+        translations:skill_usages_translation(*, language:language(*))
       `)
       .order('position', { ascending: true });
     return { data: result.data as T[] | null, error: result.error };
