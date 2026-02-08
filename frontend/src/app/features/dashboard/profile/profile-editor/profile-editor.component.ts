@@ -48,8 +48,14 @@ export class ProfileEditorComponent implements OnInit {
   // Existing avatar URL loaded from database
   existingAvatarUrl = signal<string | null>(null);
 
+  // Existing avatar ID for deletion
+  existingAvatarId = signal<number | null>(null);
+
   // Existing banner URL loaded from database
   existingBannerUrl = signal<string | null>(null);
+
+  // Existing banner ID for deletion
+  existingBannerId = signal<number | null>(null);
 
   // Base profile fields
   formData = {
@@ -163,12 +169,20 @@ export class ProfileEditorComponent implements OnInit {
         console.log('loadProfile avatar query result:', { avatarImages, avatarError });
         if (avatarImages && avatarImages.length > 0) {
           this.existingAvatarUrl.set(avatarImages[0].url);
+          this.existingAvatarId.set(avatarImages[0].id);
+        } else {
+          this.existingAvatarUrl.set(null);
+          this.existingAvatarId.set(null);
         }
 
         // Load existing banner
         const { data: bannerImages } = await this.supabase.getImagesBySourceType('profile_banner');
         if (bannerImages && bannerImages.length > 0) {
           this.existingBannerUrl.set(bannerImages[0].url);
+          this.existingBannerId.set(bannerImages[0].id);
+        } else {
+          this.existingBannerUrl.set(null);
+          this.existingBannerId.set(null);
         }
       } else {
         this.profileExists = false;
@@ -347,6 +361,12 @@ export class ProfileEditorComponent implements OnInit {
     if (this.profileExists) {
       // If profile exists, save the avatar immediately
       try {
+        // First archive any existing avatar
+        const existingId = this.existingAvatarId();
+        if (existingId) {
+          await this.supabase.update('image', existingId, { is_archived: true });
+        }
+
         const result = await this.supabase.create('image', {
           url: data.url,
           source_type: 'profile',
@@ -357,8 +377,9 @@ export class ProfileEditorComponent implements OnInit {
 
         if (result.error) throw result.error;
 
-        // Update the existing avatar URL to show the new image
+        // Update the existing avatar URL and ID to show the new image
         this.existingAvatarUrl.set(data.url);
+        this.existingAvatarId.set(result.data?.id ?? null);
         this.success.set('Avatar actualizado correctamente');
         setTimeout(() => this.success.set(null), 3000);
       } catch (err) {
@@ -373,9 +394,29 @@ export class ProfileEditorComponent implements OnInit {
     }
   }
 
+  async onAvatarRemoved(imageId: number): Promise<void> {
+    console.log('Avatar removed, imageId:', imageId);
+    try {
+      await this.supabase.update('image', imageId, { is_archived: true });
+      this.existingAvatarUrl.set(null);
+      this.existingAvatarId.set(null);
+      this.success.set('Avatar eliminado correctamente');
+      setTimeout(() => this.success.set(null), 3000);
+    } catch (err) {
+      console.error('Error removing avatar:', err);
+      this.error.set('Error al eliminar el avatar');
+    }
+  }
+
   async onBannerUploaded(data: { path: string; url: string }): Promise<void> {
     if (this.profileExists) {
       try {
+        // First archive any existing banner
+        const existingId = this.existingBannerId();
+        if (existingId) {
+          await this.supabase.update('image', existingId, { is_archived: true });
+        }
+
         const result = await this.supabase.create('image', {
           url: data.url,
           source_type: 'profile_banner',
@@ -386,6 +427,7 @@ export class ProfileEditorComponent implements OnInit {
         if (result.error) throw result.error;
 
         this.existingBannerUrl.set(data.url);
+        this.existingBannerId.set(result.data?.id ?? null);
         this.success.set('Banner actualizado correctamente');
         setTimeout(() => this.success.set(null), 3000);
       } catch (err) {
@@ -395,6 +437,20 @@ export class ProfileEditorComponent implements OnInit {
     } else {
       this.pendingBanner.set(data);
       this.existingBannerUrl.set(data.url);
+    }
+  }
+
+  async onBannerRemoved(imageId: number): Promise<void> {
+    console.log('Banner removed, imageId:', imageId);
+    try {
+      await this.supabase.update('image', imageId, { is_archived: true });
+      this.existingBannerUrl.set(null);
+      this.existingBannerId.set(null);
+      this.success.set('Banner eliminado correctamente');
+      setTimeout(() => this.success.set(null), 3000);
+    } catch (err) {
+      console.error('Error removing banner:', err);
+      this.error.set('Error al eliminar el banner');
     }
   }
 }

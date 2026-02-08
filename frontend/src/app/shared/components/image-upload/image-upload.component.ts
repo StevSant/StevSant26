@@ -37,12 +37,14 @@ export class ImageUploadComponent {
   isAvatar = input<boolean>(false);
   isBanner = input<boolean>(false);
   existingImageUrl = input<string | null>(null);
+  existingImageId = input<number | null>(null);
   existingImages = input<ExistingImage[]>([]);
 
   // Signal outputs
   uploaded = output<{ path: string; url: string }>();
   removed = output<string>();
   imageDeleted = output<number>();
+  existingImageRemoved = output<number>();
 
   // Internal signals
   uploading = signal(false);
@@ -221,7 +223,17 @@ export class ImageUploadComponent {
   }
 
   onRemovePreview(): void {
-    this.previewUrl.set(null);
+    // If there's a preview, just clear it
+    if (this.previewUrl()) {
+      this.previewUrl.set(null);
+      return;
+    }
+
+    // If there's an existing image with ID, emit event to archive it in database
+    const existingId = this.existingImageId();
+    if (existingId) {
+      this.existingImageRemoved.emit(existingId);
+    }
   }
 
   processDroppedFiles(files: File[]): void {

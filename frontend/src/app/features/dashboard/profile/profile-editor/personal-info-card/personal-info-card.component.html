@@ -24,7 +24,9 @@
       [altText]="'Foto de perfil'"
       [isAvatar]="true"
       [existingImageUrl]="existingAvatarUrl()"
+      [existingImageId]="existingAvatarId()"
       (uploaded)="onAvatarUploaded($event)"
+      (existingImageRemoved)="onAvatarRemoved($event)"
     />
   </div>
 
@@ -36,7 +38,9 @@
       [altText]="'Banner de perfil'"
       [isBanner]="true"
       [existingImageUrl]="existingBannerUrl()"
+      [existingImageId]="existingBannerId()"
       (uploaded)="onBannerUploaded($event)"
+      (existingImageRemoved)="onBannerRemoved($event)"
     />
   </div>
 

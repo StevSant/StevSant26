@@ -1,9 +1,28 @@
-INSERT INTO skill_usages (id, skill_id, source_id, source_type, level)
+-- ================================================
+-- SKILL USAGES SEED FILE
+-- Uses 'code' field for stable references
+-- ================================================
+
+-- Insert skill usages using code-based references
+INSERT INTO skill_usages (skill_id, source_id, source_type, level)
 VALUES
-(1, 1, 1, 'project', 5),
-(2, 3, 1, 'project', 4)
+(
+  (SELECT id FROM skill WHERE code = 'django'),
+  (SELECT id FROM project WHERE code = 'portfolio'),
+  'project',
+  5
+),
+(
+  (SELECT id FROM skill WHERE code = 'angular'),
+  (SELECT id FROM project WHERE code = 'portfolio'),
+  'project',
+  4
+)
 ON CONFLICT DO NOTHING;
 
+-- ======================
+-- TRANSLATIONS
+-- ======================
 
 INSERT INTO skill_usages_translation (skill_usages_id, language_id, notes)
 SELECT

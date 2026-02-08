@@ -24,9 +24,13 @@
       <app-personal-info-card
         [formData]="personalInfoData"
         [existingAvatarUrl]="existingAvatarUrl()"
+        [existingAvatarId]="existingAvatarId()"
         [existingBannerUrl]="existingBannerUrl()"
+        [existingBannerId]="existingBannerId()"
         (avatarUploaded)="onAvatarUploaded($event)"
+        (avatarRemoved)="onAvatarRemoved($event)"
         (bannerUploaded)="onBannerUploaded($event)"
+        (bannerRemoved)="onBannerRemoved($event)"
         (formDataChange)="onPersonalInfoChange($event)"
       />
 

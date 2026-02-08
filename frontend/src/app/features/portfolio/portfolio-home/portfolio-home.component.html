@@ -4,10 +4,14 @@
 >
   <!-- Banner Background -->
   @if (data.bannerUrl()) {
-    <div class="absolute inset-0 z-0">
-      <img [src]="data.bannerUrl()" alt="Banner" class="w-full h-full object-cover opacity-30" />
+    <div
+      class="absolute inset-0 z-0 cursor-pointer"
+      (dblclick)="openImageModal(data.bannerUrl()!, 'Banner')"
+      title="Doble clic para ver en grande"
+    >
+      <img [src]="data.bannerUrl()" alt="Banner" class="w-full h-full object-cover" />
       <div
-        class="absolute inset-0"
+        class="absolute inset-0 opacity-70"
         style="
           background: linear-gradient(
             to bottom,
@@ -23,11 +27,15 @@
     <div class="flex flex-col md:flex-row items-center gap-6 sm:gap-10 md:gap-16">
       <!-- Avatar -->
       @if (data.avatarUrl()) {
-        <div class="shrink-0">
+        <div
+          class="shrink-0 cursor-pointer"
+          (dblclick)="openImageModal(data.avatarUrl()!, 'Avatar')"
+          title="Doble clic para ver en grande"
+        >
           <img
             [src]="data.avatarUrl()"
             alt="Avatar"
-            class="w-32 h-32 sm:w-44 sm:h-44 md:w-56 md:h-56 rounded-full object-cover shadow-2xl ring-2 ring-(--color-accent)/20 ring-offset-4 ring-offset-(--color-bg-primary)"
+            class="w-32 h-32 sm:w-44 sm:h-44 md:w-56 md:h-56 rounded-full object-cover shadow-2xl ring-2 ring-(--color-accent)/20 ring-offset-4 ring-offset-(--color-bg-primary) hover:ring-4 hover:ring-(--color-accent)/40 transition-all"
           />
         </div>
       }
@@ -100,7 +108,7 @@
 
 <!-- About Section -->
 <section appScrollReveal class="py-12 sm:py-16 lg:py-24 px-4 sm:px-6 lg:px-8">
-  <div class="max-w-4xl mx-auto">
+  <div class="max-w-3xl mx-auto">
     <h2
       class="text-sm uppercase tracking-[0.3em] text-(--color-text-muted) mb-3 text-center font-medium"
     >
@@ -109,7 +117,7 @@
     <div class="w-12 h-px bg-(--color-accent) mx-auto mb-6 sm:mb-8 lg:mb-10 opacity-60"></div>
     @if (data.getProfileBio()) {
       <div
-        class="prose prose-lg max-w-none text-(--color-text-secondary) text-center leading-relaxed"
+        class="text-(--color-text-secondary) text-center text-base sm:text-lg leading-relaxed"
         [innerHTML]="data.getProfileBio() | safeHtml"
       ></div>
     } @else {
@@ -271,4 +279,38 @@
       </div>
     </div>
   </section>
+}
+
+<!-- Image Modal -->
+@if (showImageModal()) {
+  <div
+    class="modal-backdrop fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm"
+    (click)="onModalBackdropClick($event)"
+    (keydown.escape)="closeImageModal()"
+  >
+    <div class="relative max-w-[90vw] max-h-[90vh]">
+      <!-- Close button -->
+      <button
+        type="button"
+        (click)="closeImageModal()"
+        class="absolute -top-12 right-0 p-2 text-white hover:text-(--color-accent) transition-colors"
+        aria-label="Cerrar"
+      >
+        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M6 18L18 6M6 6l12 12"
+          />
+        </svg>
+      </button>
+      <!-- Image -->
+      <img
+        [src]="modalImageUrl()"
+        [alt]="modalImageAlt()"
+        class="max-w-full max-h-[85vh] object-contain rounded-lg shadow-2xl"
+      />
+    </div>
+  </div>
 }

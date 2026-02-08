@@ -23,6 +23,7 @@ CREATE TABLE profile (
 -- =========================
 CREATE TABLE skill_category (
   id SERIAL PRIMARY KEY,
+  code TEXT UNIQUE NOT NULL,
   is_archived BOOLEAN DEFAULT false,
   is_pinned BOOLEAN DEFAULT false,
   position INT
@@ -33,6 +34,7 @@ CREATE TABLE skill_category (
 -- =========================
 CREATE TABLE skill (
   id SERIAL PRIMARY KEY,
+  code TEXT UNIQUE NOT NULL,
   skill_category_id INT REFERENCES skill_category(id) ON DELETE SET NULL,
   icon_url TEXT,
   is_archived BOOLEAN DEFAULT false,
@@ -45,6 +47,7 @@ CREATE TABLE skill (
 -- =========================
 CREATE TABLE competitions (
   id SERIAL PRIMARY KEY,
+  code TEXT UNIQUE NOT NULL,
   organizer TEXT,
   date DATE,
   is_archived BOOLEAN DEFAULT false,
@@ -57,13 +60,14 @@ CREATE TABLE competitions (
 -- =========================
 CREATE TABLE experience (
   id SERIAL PRIMARY KEY,
+  code TEXT UNIQUE NOT NULL,
   company TEXT NOT NULL,
   start_date DATE,
   end_date DATE,
   is_archived BOOLEAN DEFAULT false,
   is_pinned BOOLEAN DEFAULT false,
   position INT,
-  company_image_url TEXT,
+  company_image_url TEXT
 );
 
 -- =========================
@@ -71,6 +75,7 @@ CREATE TABLE experience (
 -- =========================
 CREATE TABLE education (
   id SERIAL PRIMARY KEY,
+  code TEXT UNIQUE NOT NULL,
   institution TEXT NOT NULL,
   institution_image_url TEXT,
   start_date DATE,
@@ -85,6 +90,7 @@ CREATE TABLE education (
 -- =========================
 CREATE TABLE event (
   id SERIAL PRIMARY KEY,
+  code TEXT UNIQUE NOT NULL,
   assisted_at DATE,
   is_archived BOOLEAN DEFAULT false,
   is_pinned BOOLEAN DEFAULT false,
@@ -96,6 +102,7 @@ CREATE TABLE event (
 -- =========================
 CREATE TABLE project (
   id SERIAL PRIMARY KEY,
+  code TEXT UNIQUE NOT NULL,
   url TEXT,
   created_at DATE DEFAULT NOW(),
   parent_project_id INT REFERENCES project(id) ON DELETE SET NULL,

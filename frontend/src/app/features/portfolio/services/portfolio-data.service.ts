@@ -239,11 +239,44 @@ export class PortfolioDataService {
     return (translation as any)?.[field] || '';
   }
 
+  /**
+   * Get entity translation formatted as HTML (preserving line breaks)
+   */
+  getEntityTranslationHtml(entity: any, field: string): string {
+    const text = this.getEntityTranslation(entity, field);
+    return this.formatTextToHtml(text);
+  }
+
   getProfileBio(): string {
     const p = this.profile();
     if (!p) return '';
     const translation = getTranslation(p.translations, this.currentLang());
-    return translation?.about || '';
+    const about = translation?.about || '';
+    // Convert double newlines to paragraph breaks and single newlines to <br>
+    return this.formatTextToHtml(about);
+  }
+
+  /**
+   * Converts plain text with newlines to HTML with proper paragraph/line break formatting
+   */
+  private formatTextToHtml(text: string): string {
+    if (!text) return '';
+
+    // Split by double newlines (paragraphs)
+    const paragraphs = text.split(/\n\n+/);
+
+    if (paragraphs.length > 1) {
+      // Multiple paragraphs: wrap each in <p> tags with margin
+      return paragraphs
+        .map(
+          (p, i) =>
+            `<p style="margin-bottom: ${i < paragraphs.length - 1 ? '1.5rem' : '0'}">${p.replace(/\n/g, '<br>')}</p>`
+        )
+        .join('');
+    } else {
+      // Single paragraph: just convert newlines to <br>
+      return text.replace(/\n/g, '<br>');
+    }
   }
 
   getCategoryName(category: SkillCategoryWithSkills): string {
