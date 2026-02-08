@@ -2,6 +2,8 @@ import { Component, inject, OnInit, computed, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { PortfolioDataService } from '../services/portfolio-data.service';
+import { SeoService } from '@core/services/seo.service';
+import { TranslateService } from '@core/services/translate.service';
 import { TranslatePipe } from '@shared/pipes/translate.pipe';
 import { SafeHtmlPipe } from '@shared/pipes/safe-html.pipe';
 import { ScrollRevealDirective } from '@shared/directives/scroll-reveal.directive';
@@ -14,6 +16,8 @@ import { ScrollRevealDirective } from '@shared/directives/scroll-reveal.directiv
 })
 export class PortfolioHomeComponent implements OnInit {
   protected data = inject(PortfolioDataService);
+  private seoService = inject(SeoService);
+  private translate = inject(TranslateService);
 
   // Image modal state
   showImageModal = signal(false);
@@ -30,6 +34,30 @@ export class PortfolioHomeComponent implements OnInit {
 
   async ngOnInit(): Promise<void> {
     await this.data.initialize();
+    this.updateSeo();
+  }
+
+  private updateSeo(): void {
+    const profile = this.data.profile();
+    const fullName = profile ? `${profile.first_name || ''} ${profile.last_name || ''}`.trim() : '';
+    const siteUrl = this.seoService.getSiteUrl();
+    const locale = this.translate.currentLang() === 'es' ? 'es_ES' : 'en_US';
+
+    this.seoService.updateMeta({
+      title: this.translate.instant('seo.home.title'),
+      description: this.translate.instant('seo.home.description'),
+      image: this.data.avatarUrl() || undefined,
+      url: siteUrl,
+      locale,
+      author: fullName,
+      keywords: this.translate.instant('seo.keywords.home'),
+    });
+
+    this.seoService.setJsonLd(
+      this.seoService.buildBreadcrumbSchema([
+        { name: this.translate.instant('seo.home.title'), url: siteUrl },
+      ])
+    );
   }
 
   openImageModal(url: string, alt: string): void {

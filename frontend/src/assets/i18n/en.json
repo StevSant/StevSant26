@@ -606,5 +606,49 @@
       "deleteError": "Error deleting content section",
       "titleRequired": "Title is required in at least one language"
     }
+  },
+  "seo": {
+    "home": {
+      "title": "Home",
+      "description": "Welcome to my professional portfolio. Explore my software projects, technical skills, work experience, education, and more."
+    },
+    "projects": {
+      "title": "Projects",
+      "description": "Browse my software development projects — web applications, mobile apps, tools and more built with modern technologies."
+    },
+    "experience": {
+      "title": "Work Experience",
+      "description": "My professional work experience in software development, including roles, responsibilities, and companies."
+    },
+    "skills": {
+      "title": "Technical Skills",
+      "description": "My technical skills and proficiency levels across programming languages, frameworks, tools, and technologies."
+    },
+    "education": {
+      "title": "Education & Training",
+      "description": "My academic background, certifications, courses, and professional training in software development."
+    },
+    "competitions": {
+      "title": "Competitions & Awards",
+      "description": "Hackathons, coding competitions, and awards I have participated in and achieved."
+    },
+    "events": {
+      "title": "Events",
+      "description": "Tech conferences, meetups, and professional events I have attended and participated in."
+    },
+    "contact": {
+      "title": "Contact",
+      "description": "Get in touch with me for professional inquiries, collaboration opportunities, or questions."
+    },
+    "keywords": {
+      "home": "portfolio, software developer, projects, skills, experience",
+      "projects": "software projects, web development, mobile apps, open source",
+      "experience": "work experience, software engineer, developer, professional",
+      "skills": "programming languages, frameworks, tools, technologies, skills",
+      "education": "education, certifications, courses, training, university",
+      "competitions": "hackathons, competitions, awards, coding challenges",
+      "events": "tech events, conferences, meetups, workshops",
+      "contact": "contact, email, collaboration, hire developer"
+    }
   }
 }

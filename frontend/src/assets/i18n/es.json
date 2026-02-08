@@ -604,5 +604,49 @@
       "deleteError": "Error al eliminar la sección de contenido",
       "titleRequired": "El título es requerido en al menos un idioma"
     }
+  },
+  "seo": {
+    "home": {
+      "title": "Inicio",
+      "description": "Bienvenido a mi portafolio profesional. Explora mis proyectos de software, habilidades técnicas, experiencia laboral, formación y más."
+    },
+    "projects": {
+      "title": "Proyectos",
+      "description": "Explora mis proyectos de desarrollo de software — aplicaciones web, móviles, herramientas y más con tecnologías modernas."
+    },
+    "experience": {
+      "title": "Experiencia Laboral",
+      "description": "Mi experiencia profesional en desarrollo de software, incluyendo roles, responsabilidades y empresas."
+    },
+    "skills": {
+      "title": "Habilidades Técnicas",
+      "description": "Mis habilidades técnicas y niveles de competencia en lenguajes de programación, frameworks, herramientas y tecnologías."
+    },
+    "education": {
+      "title": "Formación y Capacitación",
+      "description": "Mi formación académica, certificaciones, cursos y capacitación profesional en desarrollo de software."
+    },
+    "competitions": {
+      "title": "Competencias y Premios",
+      "description": "Hackathons, competencias de programación y premios en los que he participado."
+    },
+    "events": {
+      "title": "Eventos",
+      "description": "Conferencias tecnológicas, meetups y eventos profesionales en los que he participado."
+    },
+    "contact": {
+      "title": "Contacto",
+      "description": "Ponte en contacto conmigo para consultas profesionales, oportunidades de colaboración o preguntas."
+    },
+    "keywords": {
+      "home": "portafolio, desarrollador de software, proyectos, habilidades, experiencia",
+      "projects": "proyectos de software, desarrollo web, aplicaciones móviles, código abierto",
+      "experience": "experiencia laboral, ingeniero de software, desarrollador, profesional",
+      "skills": "lenguajes de programación, frameworks, herramientas, tecnologías, habilidades",
+      "education": "educación, certificaciones, cursos, capacitación, universidad",
+      "competitions": "hackathons, competencias, premios, desafíos de programación",
+      "events": "eventos tecnológicos, conferencias, meetups, talleres",
+      "contact": "contacto, email, colaboración, contratar desarrollador"
+    }
   }
 }

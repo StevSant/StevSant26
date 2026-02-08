@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { ThemeService } from '@core/services/theme.service';
 import { SeoService } from '@core/services/seo.service';
+import { TranslateService } from '@core/services/translate.service';
 import { TranslatePipe } from '@shared/pipes/translate.pipe';
 import { LanguageSelectorComponent } from '@shared/components/language-selector/language-selector.component';
 import { ThemeToggleComponent } from '@shared/components/theme-toggle/theme-toggle.component';
@@ -31,6 +32,7 @@ export class PortfolioLayoutComponent implements OnInit {
   // Theme service injected to ensure initialization
   protected themeService = inject(ThemeService);
   private seoService = inject(SeoService);
+  private translate = inject(TranslateService);
 
   mobileMenuOpen = signal(false);
   moreMenuOpen = signal(false);
@@ -40,14 +42,43 @@ export class PortfolioLayoutComponent implements OnInit {
 
   async ngOnInit(): Promise<void> {
     await this.data.initialize();
+
+    // Update lang attribute based on current language
+    this.seoService.updateLang(this.translate.currentLang());
+
     const profile = this.data.profile();
     if (profile) {
       const fullName = `${profile.first_name || ''} ${profile.last_name || ''}`.trim();
+      const siteUrl = this.seoService.getSiteUrl();
+      const locale = this.translate.currentLang() === 'es' ? 'es_ES' : 'en_US';
+
       this.seoService.updateMeta({
         title: fullName || undefined,
         description: `Portfolio of ${fullName}. Projects, skills, and professional experience.`,
         image: this.data.avatarUrl() || undefined,
+        url: siteUrl,
+        locale,
+        author: fullName,
+        keywords: 'portfolio, software developer, projects, skills, experience',
       });
+
+      // Build social links for sameAs
+      const sameAs: string[] = [];
+      if (profile.linkedin_url) sameAs.push(profile.linkedin_url);
+      if (profile.github_url) sameAs.push(profile.github_url);
+      if (profile.instagram_url) sameAs.push(profile.instagram_url);
+
+      // Set JSON-LD structured data
+      this.seoService.setJsonLd([
+        this.seoService.buildWebSiteSchema(fullName || 'StevSant'),
+        this.seoService.buildPersonSchema({
+          name: fullName,
+          email: profile.email,
+          url: siteUrl,
+          image: this.data.avatarUrl(),
+          sameAs,
+        }),
+      ]);
     }
   }
 

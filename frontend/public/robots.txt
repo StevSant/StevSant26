@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /login
+Disallow: /dashboard/
+
+Sitemap: https://stevsant.vercel.app/sitemap.xml

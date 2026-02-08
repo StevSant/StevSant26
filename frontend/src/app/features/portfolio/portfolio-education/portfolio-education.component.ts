@@ -2,6 +2,8 @@ import { Component, inject, OnInit, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { PortfolioDataService } from '../services/portfolio-data.service';
+import { SeoService } from '@core/services/seo.service';
+import { TranslateService } from '@core/services/translate.service';
 import { TranslatePipe } from '@shared/pipes/translate.pipe';
 import { ScrollRevealDirective } from '@shared/directives/scroll-reveal.directive';
 import { Education, EducationType } from '@core/models';
@@ -19,6 +21,8 @@ interface EducationGroup {
 })
 export class PortfolioEducationComponent implements OnInit {
   protected data = inject(PortfolioDataService);
+  private seoService = inject(SeoService);
+  private translate = inject(TranslateService);
 
   /** All educations sorted oldest first */
   sortedEducations = computed(() => {
@@ -49,6 +53,21 @@ export class PortfolioEducationComponent implements OnInit {
 
   async ngOnInit(): Promise<void> {
     await this.data.initialize();
+    const siteUrl = this.seoService.getSiteUrl();
+    const locale = this.translate.currentLang() === 'es' ? 'es_ES' : 'en_US';
+    this.seoService.updateMeta({
+      title: this.translate.instant('seo.education.title'),
+      description: this.translate.instant('seo.education.description'),
+      url: `${siteUrl}/education`,
+      locale,
+      keywords: this.translate.instant('seo.keywords.education'),
+    });
+    this.seoService.setJsonLd(
+      this.seoService.buildBreadcrumbSchema([
+        { name: this.translate.instant('seo.home.title'), url: siteUrl },
+        { name: this.translate.instant('seo.education.title'), url: `${siteUrl}/education` },
+      ])
+    );
   }
 
   isOngoing(edu: Education): boolean {

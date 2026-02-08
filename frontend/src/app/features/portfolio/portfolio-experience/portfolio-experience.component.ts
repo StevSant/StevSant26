@@ -2,6 +2,8 @@ import { Component, inject, OnInit, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { PortfolioDataService } from '../services/portfolio-data.service';
+import { SeoService } from '@core/services/seo.service';
+import { TranslateService } from '@core/services/translate.service';
 import { TranslatePipe } from '@shared/pipes/translate.pipe';
 import { PortfolioFilterComponent, FilterOption } from '@shared/components/portfolio-filter/portfolio-filter.component';
 import { ScrollRevealDirective } from '@shared/directives/scroll-reveal.directive';
@@ -15,6 +17,8 @@ import { Experience } from '@core/models';
 })
 export class PortfolioExperienceComponent implements OnInit {
   protected data = inject(PortfolioDataService);
+  private seoService = inject(SeoService);
+  private translateService = inject(TranslateService);
 
   searchText = signal('');
   selectedCompany = signal('');
@@ -107,5 +111,20 @@ export class PortfolioExperienceComponent implements OnInit {
 
   async ngOnInit(): Promise<void> {
     await this.data.initialize();
+    const siteUrl = this.seoService.getSiteUrl();
+    const locale = this.translateService.currentLang() === 'es' ? 'es_ES' : 'en_US';
+    this.seoService.updateMeta({
+      title: this.translateService.instant('seo.experience.title'),
+      description: this.translateService.instant('seo.experience.description'),
+      url: `${siteUrl}/experience`,
+      locale,
+      keywords: this.translateService.instant('seo.keywords.experience'),
+    });
+    this.seoService.setJsonLd(
+      this.seoService.buildBreadcrumbSchema([
+        { name: this.translateService.instant('seo.home.title'), url: siteUrl },
+        { name: this.translateService.instant('seo.experience.title'), url: `${siteUrl}/experience` },
+      ])
+    );
   }
 }

@@ -1,6 +1,7 @@
 import { Component, inject, OnInit, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PortfolioDataService, SkillCategoryWithSkills, SkillWithLevel } from '../services/portfolio-data.service';
+import { SeoService } from '@core/services/seo.service';
 import { TranslatePipe } from '@shared/pipes/translate.pipe';
 import { TranslateService } from '@core/services/translate.service';
 import { PortfolioFilterComponent, FilterOption } from '@shared/components/portfolio-filter/portfolio-filter.component';
@@ -15,6 +16,7 @@ import { ScrollRevealDirective } from '@shared/directives/scroll-reveal.directiv
 export class PortfolioSkillsComponent implements OnInit {
   protected data = inject(PortfolioDataService);
   private translate = inject(TranslateService);
+  private seoService = inject(SeoService);
 
   searchText = signal('');
   selectedCategory = signal('');
@@ -79,5 +81,20 @@ export class PortfolioSkillsComponent implements OnInit {
 
   async ngOnInit(): Promise<void> {
     await this.data.initialize();
+    const siteUrl = this.seoService.getSiteUrl();
+    const locale = this.translate.currentLang() === 'es' ? 'es_ES' : 'en_US';
+    this.seoService.updateMeta({
+      title: this.translate.instant('seo.skills.title'),
+      description: this.translate.instant('seo.skills.description'),
+      url: `${siteUrl}/skills`,
+      locale,
+      keywords: this.translate.instant('seo.keywords.skills'),
+    });
+    this.seoService.setJsonLd(
+      this.seoService.buildBreadcrumbSchema([
+        { name: this.translate.instant('seo.home.title'), url: siteUrl },
+        { name: this.translate.instant('seo.skills.title'), url: `${siteUrl}/skills` },
+      ])
+    );
   }
 }
