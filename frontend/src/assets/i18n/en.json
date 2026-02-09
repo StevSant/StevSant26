@@ -134,7 +134,11 @@
     "jobTitlePlaceholder": "E.g.: Systems Engineer",
     "availability": "Available for work",
     "availableYes": "Available",
-    "availableNo": "Busy"
+    "availableNo": "Busy",
+    "locationSearch": "Location",
+    "locationSearchPlaceholder": "Search for a city or place...",
+    "locationNoResults": "No places found. Try a different search.",
+    "locationAdjust": "Manually adjust details"
   },
   "cv": {
     "title": "CV Documents",
@@ -534,8 +538,10 @@
       "viewAllSkills": "View all skills",
       "map": {
         "basedIn": "Based in",
-        "available": "Available",
-        "unavailable": "Busy"
+        "available": "Available for hire",
+        "unavailable": "Not available",
+        "timezone": "Timezone",
+        "coordinates": "Coordinates"
       }
     },
     "skillLevel": {

@@ -27,8 +27,6 @@ export class PortfolioMapCardComponent implements OnInit, OnDestroy {
   @Input() timezone = '';
   /** Job title / role */
   @Input() jobTitle = '';
-  /** Whether the person is available for work */
-  @Input() isAvailable = true;
   /** Latitude for the globe marker */
   @Input() latitude = 0;
   /** Longitude for the globe marker */
@@ -45,6 +43,31 @@ export class PortfolioMapCardComponent implements OnInit, OnDestroy {
     }
     if (this.city) return this.city;
     return '';
+  });
+
+  /** Friendly timezone display, e.g. "America/Guayaquil" → "GMT-5" */
+  timezoneDisplay = computed(() => {
+    if (!this.timezone) return '';
+    try {
+      const now = new Date();
+      const short = new Intl.DateTimeFormat('en-US', {
+        timeZone: this.timezone,
+        timeZoneName: 'shortOffset',
+      }).formatToParts(now).find(p => p.type === 'timeZoneName')?.value || '';
+      // e.g. "GMT-5" — also show friendly name
+      const friendly = this.timezone.replace(/_/g, ' ').split('/').pop() || '';
+      return short ? `${friendly} (${short})` : friendly;
+    } catch {
+      return this.timezone.replace(/_/g, ' ').split('/').pop() || '';
+    }
+  });
+
+  /** Formatted coordinates, e.g. "0.95°S, 80.73°W" */
+  coordsDisplay = computed(() => {
+    if (!this.latitude && !this.longitude) return '';
+    const latDir = this.latitude >= 0 ? 'N' : 'S';
+    const lngDir = this.longitude >= 0 ? 'E' : 'W';
+    return `${Math.abs(this.latitude).toFixed(2)}°${latDir}, ${Math.abs(this.longitude).toFixed(2)}°${lngDir}`;
   });
 
   ngOnInit(): void {

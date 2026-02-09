@@ -134,7 +134,11 @@
     "jobTitlePlaceholder": "Ej: Ingeniero de Sistemas",
     "availability": "Disponible para trabajar",
     "availableYes": "Disponible",
-    "availableNo": "Ocupado"
+    "availableNo": "Ocupado",
+    "locationSearch": "Ubicación",
+    "locationSearchPlaceholder": "Buscar una ciudad o lugar...",
+    "locationNoResults": "No se encontraron lugares. Intenta otra búsqueda.",
+    "locationAdjust": "Ajustar detalles manualmente"
   },
   "cv": {
     "title": "Documentos CV",
@@ -532,8 +536,10 @@
       "viewAllSkills": "Ver todas las habilidades",
       "map": {
         "basedIn": "Ubicado en",
-        "available": "Disponible",
-        "unavailable": "Ocupado"
+        "available": "Disponible para trabajar",
+        "unavailable": "No disponible",
+        "timezone": "Zona horaria",
+        "coordinates": "Coordenadas"
       }
     },
     "skillLevel": {

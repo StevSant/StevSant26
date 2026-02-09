@@ -48,9 +48,41 @@
           {{ data.profile()?.first_name }} {{ data.profile()?.last_name }}
         </h1>
         @if (data.profile()?.nickname) {
-          <p class="text-(--color-text-muted) text-lg mb-6 font-light">
+          <p class="text-(--color-text-muted) text-lg mb-4 font-light">
             &#64;{{ data.profile()?.nickname }}
           </p>
+        }
+
+        <!-- Availability badge -->
+        @if (data.profile()?.is_available !== undefined) {
+          <div class="flex justify-center md:justify-start mb-5">
+            <div
+              class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider border"
+              [class]="
+                data.profile()?.is_available
+                  ? 'bg-(--color-success-bg) text-(--color-success) border-(--color-success-border)'
+                  : 'bg-(--color-bg-tertiary) text-(--color-text-muted) border-(--color-border-primary)'
+              "
+            >
+              <span class="relative flex h-2 w-2">
+                @if (data.profile()?.is_available) {
+                  <span
+                    class="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 bg-(--color-success)"
+                  ></span>
+                }
+                <span
+                  class="relative inline-flex rounded-full h-2 w-2"
+                  [class]="data.profile()?.is_available ? 'bg-(--color-success)' : 'bg-(--color-text-disabled)'"
+                ></span>
+              </span>
+              {{
+                (data.profile()?.is_available
+                  ? 'portfolio.home.map.available'
+                  : 'portfolio.home.map.unavailable'
+                ) | translate
+              }}
+            </div>
+          </div>
         }
 
         <!-- CTA Buttons -->
@@ -106,47 +138,54 @@
   <div class="h-px bg-(--color-divider)"></div>
 </div>
 
-<!-- About Section -->
+<!-- About & Map Section -->
 <section appScrollReveal class="py-12 sm:py-16 lg:py-24 px-4 sm:px-6 lg:px-8">
-  <div class="max-w-3xl mx-auto">
+  <div class="max-w-6xl mx-auto">
     <h2
       class="text-sm uppercase tracking-[0.3em] text-(--color-text-muted) mb-3 text-center font-medium"
     >
       {{ 'portfolio.sections.about' | translate }}
     </h2>
-    <div class="w-12 h-px bg-(--color-accent) mx-auto mb-6 sm:mb-8 lg:mb-10 opacity-60"></div>
-    @if (data.getProfileBio()) {
+    <div class="w-12 h-px bg-(--color-accent) mx-auto mb-8 sm:mb-10 lg:mb-14 opacity-60"></div>
+
+    <div
+      class="flex flex-col items-center gap-8 lg:gap-14"
+      [class]="hasLocationData() ? 'lg:flex-row lg:items-start' : ''"
+    >
+      <!-- About text -->
       <div
-        class="text-(--color-text-secondary) text-center text-base sm:text-lg leading-relaxed"
-        [innerHTML]="data.getProfileBio() | safeHtml"
-      ></div>
-    } @else {
-      <p class="text-(--color-text-muted) text-center italic font-light">
-        {{ 'portfolio.empty.about' | translate }}
-      </p>
-    }
+        class="flex-1 w-full"
+        [class]="hasLocationData() ? 'lg:max-w-none' : 'max-w-3xl mx-auto'"
+      >
+        @if (data.getProfileBio()) {
+          <div
+            class="text-(--color-text-secondary) text-base sm:text-lg leading-relaxed"
+            [class]="hasLocationData() ? 'text-center lg:text-left' : 'text-center'"
+            [innerHTML]="data.getProfileBio() | safeHtml"
+          ></div>
+        } @else {
+          <p class="text-(--color-text-muted) text-center italic font-light">
+            {{ 'portfolio.empty.about' | translate }}
+          </p>
+        }
+      </div>
+
+      <!-- Map card -->
+      @if (hasLocationData()) {
+        <div class="w-full max-w-sm shrink-0">
+          <app-portfolio-map-card
+            [city]="data.profile()?.city || ''"
+            [countryCode]="data.profile()?.country_code || ''"
+            [timezone]="data.profile()?.timezone || ''"
+            [jobTitle]="profileJobTitle()"
+            [latitude]="data.profile()?.latitude || 0"
+            [longitude]="data.profile()?.longitude || 0"
+          />
+        </div>
+      }
+    </div>
   </div>
 </section>
-
-<!-- Map & Location Card -->
-@if (hasLocationData()) {
-  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="h-px bg-(--color-divider)"></div>
-  </div>
-  <section appScrollReveal class="py-12 sm:py-16 lg:py-24 px-4 sm:px-6 lg:px-8">
-    <div class="max-w-md mx-auto">
-      <app-portfolio-map-card
-        [city]="data.profile()?.city || ''"
-        [countryCode]="data.profile()?.country_code || ''"
-        [timezone]="data.profile()?.timezone || ''"
-        [jobTitle]="profileJobTitle()"
-        [isAvailable]="data.profile()?.is_available ?? true"
-        [latitude]="data.profile()?.latitude || 0"
-        [longitude]="data.profile()?.longitude || 0"
-      />
-    </div>
-  </section>
-}
 
 <!-- Featured Projects Section -->
 @if (pinnedProjects().length > 0) {

@@ -11,50 +11,56 @@ import {
   SimpleChanges,
 } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
+import { isLand } from './world-map-data';
 
-interface DotPoint {
+interface Dot3D {
   x: number;
   y: number;
   z: number;
-  lat: number;
-  lng: number;
 }
 
 @Component({
   selector: 'app-globe',
   standalone: true,
-  template: `<canvas #globeCanvas class="w-full h-full"></canvas>`,
+  template: `<canvas #globeCanvas></canvas>`,
+  styles: [
+    `
+      :host {
+        display: block;
+        width: 100%;
+        height: 100%;
+        position: relative;
+      }
+      canvas {
+        display: block;
+        width: 100%;
+        height: 100%;
+      }
+    `,
+  ],
 })
 export class GlobeComponent implements AfterViewInit, OnDestroy, OnChanges {
-  @ViewChild('globeCanvas', { static: true }) canvasRef!: ElementRef<HTMLCanvasElement>;
+  @ViewChild('globeCanvas', { static: true })
+  canvasRef!: ElementRef<HTMLCanvasElement>;
 
-  /** Latitude of the marker location */
-  @Input() latitude = 10.39;
-  /** Longitude of the marker location */
-  @Input() longitude = -75.51;
-  /** Color for globe dots (CSS color) */
-  @Input() dotColor = 'rgba(255, 255, 255, 0.35)';
-  /** Color for the marker dot */
-  @Input() markerColor = '#ffffff';
-  /** Whether the globe auto-rotates */
+  @Input() latitude = 0;
+  @Input() longitude = 0;
+  @Input() markerColor = '#22c55e';
   @Input() autoRotate = true;
 
   private platformId = inject(PLATFORM_ID);
   private ctx!: CanvasRenderingContext2D;
   private animationId = 0;
-  private dots: DotPoint[] = [];
+  private landDots: Dot3D[] = [];
+  private gridDots: Dot3D[] = [];
   private rotation = 0;
-  private targetRotation = 0;
   private globeRadius = 0;
   private centerX = 0;
   private centerY = 0;
   private dpr = 1;
   private resizeObserver?: ResizeObserver;
   private isInitialized = false;
-
-  // Marker animation
   private markerPulse = 0;
-  private markerGlowIntensity = 0;
 
   ngAfterViewInit(): void {
     if (!isPlatformBrowser(this.platformId)) return;
@@ -71,10 +77,7 @@ export class GlobeComponent implements AfterViewInit, OnDestroy, OnChanges {
     this.isInitialized = true;
     this.animate();
 
-    this.resizeObserver = new ResizeObserver(() => {
-      this.setupCanvas();
-      this.generateDots();
-    });
+    this.resizeObserver = new ResizeObserver(() => this.setupCanvas());
     this.resizeObserver.observe(canvas.parentElement || canvas);
   }
 
@@ -85,176 +88,210 @@ export class GlobeComponent implements AfterViewInit, OnDestroy, OnChanges {
   }
 
   ngOnDestroy(): void {
-    if (this.animationId) {
-      cancelAnimationFrame(this.animationId);
-    }
+    if (this.animationId) cancelAnimationFrame(this.animationId);
     this.resizeObserver?.disconnect();
   }
 
   private setupCanvas(): void {
     const canvas = this.canvasRef.nativeElement;
-    const parent = canvas.parentElement;
-    if (!parent) return;
+    const { width: w, height: h } = canvas.getBoundingClientRect();
+    if (w === 0 || h === 0) return;
 
-    const size = Math.min(parent.clientWidth, parent.clientHeight);
-    canvas.width = size * this.dpr;
-    canvas.height = size * this.dpr;
-    canvas.style.width = `${size}px`;
-    canvas.style.height = `${size}px`;
+    canvas.width = w * this.dpr;
+    canvas.height = h * this.dpr;
 
-    this.globeRadius = (size * 0.38) * this.dpr;
-    this.centerX = (canvas.width) / 2;
-    this.centerY = (canvas.height) / 2;
+    const minDim = Math.min(w, h);
+    this.globeRadius = minDim * 0.44 * this.dpr;
+    this.centerX = canvas.width / 2;
+    this.centerY = canvas.height / 2;
   }
 
+  /**
+   * Correct rotation to place the marker's longitude at front-center.
+   * Formula: R = π/2 − longitude(rad) places the point at (cos θ, 0, sin θ)
+   * exactly at rx = 0, rz = 1 (front center).
+   */
   private setInitialRotation(): void {
-    // Rotate so that the marker's longitude faces front
-    this.targetRotation = (-this.longitude * Math.PI) / 180;
-    this.rotation = this.targetRotation;
+    const lngRad = (this.longitude * Math.PI) / 180;
+    this.rotation = Math.PI / 2 - lngRad;
   }
 
   private generateDots(): void {
-    this.dots = [];
-    const numRows = 60;
+    this.gridDots = [];
+    this.landDots = [];
 
-    for (let lat = -90; lat <= 90; lat += 180 / numRows) {
+    // 1) Sparse grid dots — give the sphere its shape (ocean wireframe)
+    const gridStep = 8;
+    for (let lat = -80; lat <= 80; lat += gridStep) {
       const latRad = (lat * Math.PI) / 180;
-      const circumference = Math.cos(latRad);
-      const numDotsInRow = Math.max(1, Math.floor(circumference * numRows * 2));
-
-      for (let i = 0; i < numDotsInRow; i++) {
-        const lng = (i / numDotsInRow) * 360 - 180;
+      const cosLat = Math.cos(latRad);
+      const lngStep = gridStep / Math.max(cosLat, 0.3);
+      for (let lng = -180; lng < 180; lng += lngStep) {
+        if (isLand(lat, lng)) continue; // skip; land gets its own brighter dots
         const lngRad = (lng * Math.PI) / 180;
-
-        this.dots.push({
-          x: Math.cos(latRad) * Math.cos(lngRad),
+        this.gridDots.push({
+          x: cosLat * Math.cos(lngRad),
           y: Math.sin(latRad),
-          z: Math.cos(latRad) * Math.sin(lngRad),
-          lat,
-          lng,
+          z: cosLat * Math.sin(lngRad),
+        });
+      }
+    }
+
+    // 2) Dense land dots — continent shapes
+    const landStep = 2;
+    for (let lat = -85; lat <= 85; lat += landStep) {
+      const latRad = (lat * Math.PI) / 180;
+      const cosLat = Math.cos(latRad);
+      const lngStep = landStep / Math.max(cosLat, 0.25);
+      for (let lng = -180; lng < 180; lng += lngStep) {
+        if (!isLand(lat, lng)) continue;
+        const lngRad = (lng * Math.PI) / 180;
+        this.landDots.push({
+          x: cosLat * Math.cos(lngRad),
+          y: Math.sin(latRad),
+          z: cosLat * Math.sin(lngRad),
         });
       }
     }
   }
 
-  private projectPoint(
+  private project(
     x: number,
     y: number,
     z: number,
-    rotY: number
+    rotY: number,
   ): { px: number; py: number; visible: boolean; depth: number } {
-    // Apply Y-axis rotation
     const cosR = Math.cos(rotY);
     const sinR = Math.sin(rotY);
     const rx = x * cosR - z * sinR;
     const rz = x * sinR + z * cosR;
 
-    // Apply slight tilt (15 degrees) for visual depth
+    // Slight tilt for perspective
     const tilt = -0.25;
     const cosT = Math.cos(tilt);
     const sinT = Math.sin(tilt);
     const ry = y * cosT - rz * sinT;
     const fz = y * sinT + rz * cosT;
 
-    // Only render front-facing dots
-    const visible = fz > -0.15;
-
     return {
-      px: this.centerX + rx * this.globeRadius,
+      px: this.centerX - rx * this.globeRadius,
       py: this.centerY - ry * this.globeRadius,
-      visible,
+      visible: fz > -0.05,
       depth: fz,
     };
   }
 
   private animate = (): void => {
     this.animationId = requestAnimationFrame(this.animate);
-
-    if (this.autoRotate) {
-      this.rotation += 0.002;
-    }
-
-    this.markerPulse += 0.04;
-    this.markerGlowIntensity = 0.5 + Math.sin(this.markerPulse) * 0.5;
-
+    if (this.autoRotate) this.rotation += 0.001;
+    this.markerPulse += 0.03;
     this.draw();
   };
 
   private draw(): void {
     const canvas = this.canvasRef.nativeElement;
     const ctx = this.ctx;
+    if (!ctx) return;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    // Sort dots by depth for proper rendering
-    const projected = this.dots.map((dot) => ({
-      ...this.projectPoint(dot.x, dot.y, dot.z, this.rotation),
-      dot,
-    }));
+    const cx = this.centerX;
+    const cy = this.centerY;
+    const r = this.globeRadius;
+    const s = this.dpr;
 
-    projected.sort((a, b) => a.depth - b.depth);
+    // ── Subtle atmosphere ────────────────────────────────────────
+    const atmo = ctx.createRadialGradient(cx, cy, r * 0.9, cx, cy, r * 1.12);
+    atmo.addColorStop(0, 'rgba(100, 200, 255, 0.02)');
+    atmo.addColorStop(1, 'transparent');
+    ctx.fillStyle = atmo;
+    ctx.beginPath();
+    ctx.arc(cx, cy, r * 1.12, 0, Math.PI * 2);
+    ctx.fill();
 
-    // Draw dots
-    for (const p of projected) {
+    // ── Globe outline ────────────────────────────────────────────
+    ctx.beginPath();
+    ctx.arc(cx, cy, r, 0, Math.PI * 2);
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.05)';
+    ctx.lineWidth = 1 * s;
+    ctx.stroke();
+
+    // ── Ocean grid dots (very faint, define sphere shape) ────────
+    for (const d of this.gridDots) {
+      const p = this.project(d.x, d.y, d.z, this.rotation);
       if (!p.visible) continue;
-
-      const alpha = 0.1 + (p.depth + 1) * 0.35;
-      const size = (0.8 + (p.depth + 1) * 0.6) * this.dpr;
-
+      const dn = (p.depth + 1) / 2;
       ctx.beginPath();
-      ctx.arc(p.px, p.py, size, 0, Math.PI * 2);
-      ctx.fillStyle = this.dotColor.replace(
-        /[\d.]+\)$/,
-        `${Math.min(alpha, 0.6)})`
-      );
+      ctx.arc(p.px, p.py, 0.4 * s, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(255, 255, 255, ${0.02 + dn * 0.05})`;
       ctx.fill();
     }
 
-    // Draw marker
+    // ── Land dots (brighter, denser — form continent shapes) ────
+    for (const d of this.landDots) {
+      const p = this.project(d.x, d.y, d.z, this.rotation);
+      if (!p.visible) continue;
+      const dn = (p.depth + 1) / 2;
+      const alpha = 0.12 + dn * 0.5;
+      const size = (0.5 + dn * 0.9) * s;
+      ctx.beginPath();
+      ctx.arc(p.px, p.py, size, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(255, 255, 255, ${alpha})`;
+      ctx.fill();
+    }
+
+    // ── Marker ───────────────────────────────────────────────────
     this.drawMarker();
   }
 
   private drawMarker(): void {
     const latRad = (this.latitude * Math.PI) / 180;
     const lngRad = (this.longitude * Math.PI) / 180;
+    const cosLat = Math.cos(latRad);
 
-    const mx = Math.cos(latRad) * Math.cos(lngRad);
-    const my = Math.sin(latRad);
-    const mz = Math.cos(latRad) * Math.sin(lngRad);
-
-    const p = this.projectPoint(mx, my, mz, this.rotation);
+    const p = this.project(
+      cosLat * Math.cos(lngRad),
+      Math.sin(latRad),
+      cosLat * Math.sin(lngRad),
+      this.rotation,
+    );
     if (!p.visible) return;
 
     const ctx = this.ctx;
-    const baseSize = 3.5 * this.dpr;
-    const pulseSize = baseSize + Math.sin(this.markerPulse) * 1.5 * this.dpr;
+    const s = this.dpr;
+    const pulse = Math.sin(this.markerPulse);
+    const pn = 0.5 + pulse * 0.5;
 
-    // Outer glow ring
-    const glowRadius = pulseSize * 3;
-    const glow = ctx.createRadialGradient(p.px, p.py, 0, p.px, p.py, glowRadius);
-    glow.addColorStop(0, `rgba(255, 255, 255, ${0.15 * this.markerGlowIntensity})`);
-    glow.addColorStop(1, 'rgba(255, 255, 255, 0)');
+    // Glow
+    const gr = (16 + pulse * 5) * s;
+    const grad = ctx.createRadialGradient(p.px, p.py, 0, p.px, p.py, gr);
+    grad.addColorStop(0, `rgba(34, 197, 94, ${0.3 * pn})`);
+    grad.addColorStop(1, 'rgba(34, 197, 94, 0)');
     ctx.beginPath();
-    ctx.arc(p.px, p.py, glowRadius, 0, Math.PI * 2);
-    ctx.fillStyle = glow;
+    ctx.arc(p.px, p.py, gr, 0, Math.PI * 2);
+    ctx.fillStyle = grad;
     ctx.fill();
 
     // Pulse ring
-    const ringSize = pulseSize * 2;
+    const rr = (8 + pulse * 3) * s;
     ctx.beginPath();
-    ctx.arc(p.px, p.py, ringSize, 0, Math.PI * 2);
-    ctx.strokeStyle = `rgba(255, 255, 255, ${0.2 * this.markerGlowIntensity})`;
-    ctx.lineWidth = 1 * this.dpr;
+    ctx.arc(p.px, p.py, rr, 0, Math.PI * 2);
+    ctx.strokeStyle = `rgba(34, 197, 94, ${0.35 * pn})`;
+    ctx.lineWidth = 1.5 * s;
     ctx.stroke();
 
-    // Core marker dot
+    // Core dot
+    const cr = 3.5 * s;
     ctx.beginPath();
-    ctx.arc(p.px, p.py, baseSize, 0, Math.PI * 2);
+    ctx.arc(p.px, p.py, cr, 0, Math.PI * 2);
     ctx.fillStyle = this.markerColor;
+    ctx.shadowColor = this.markerColor;
+    ctx.shadowBlur = 12 * s;
     ctx.fill();
+    ctx.shadowBlur = 0;
 
     // Inner highlight
     ctx.beginPath();
-    ctx.arc(p.px, p.py, baseSize * 0.4, 0, Math.PI * 2);
+    ctx.arc(p.px, p.py, cr * 0.35, 0, Math.PI * 2);
     ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
     ctx.fill();
   }
