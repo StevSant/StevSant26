@@ -1,11 +1,14 @@
 import { Component, input, output, signal, computed, inject, effect } from '@angular/core';
 import { SupabaseService } from '@core/services/supabase.service';
+import { TranslateService } from '@core/services/translate.service';
+import { MAX_IMAGE_SIZE_BYTES } from '@shared/config/constants';
 import { SourceType } from '@core/models';
 import { ImageUploadAvatarComponent } from './image-upload-avatar/image-upload-avatar.component';
 import { ImageUploadBannerComponent } from './image-upload-banner/image-upload-banner.component';
 import { ImageUploadStandardComponent } from './image-upload-standard/image-upload-standard.component';
 import { ImageUploadGalleryComponent } from './image-upload-gallery/image-upload-gallery.component';
 import { ImageUploadModalComponent } from './image-upload-modal/image-upload-modal.component';
+import { LoggerService } from '@core/services/logger.service';
 
 export interface ExistingImage {
   id: number;
@@ -27,6 +30,8 @@ export interface ExistingImage {
 })
 export class ImageUploadComponent {
   private supabase = inject(SupabaseService);
+  private t = inject(TranslateService);
+  private logger = inject(LoggerService);
 
   // Signal inputs
   folder = input<string>('');
@@ -71,7 +76,7 @@ export class ImageUploadComponent {
   // Computed
   currentImageUrl = computed(() => this.previewUrl() || this.existingImageUrl());
 
-  private readonly MAX_SIZE = 10 * 1024 * 1024; // 10MB
+  private readonly MAX_SIZE = MAX_IMAGE_SIZE_BYTES;
   private readonly ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
 
   onDragOver(event: DragEvent): void {
@@ -111,13 +116,13 @@ export class ImageUploadComponent {
     for (const file of files) {
       // Validate file type
       if (!this.ALLOWED_TYPES.includes(file.type)) {
-        this.error.set(`Tipo de archivo no permitido: ${file.type}`);
+        this.error.set(this.t.instant('errors.fileTypeNotAllowed', { type: file.type }));
         continue;
       }
 
       // Validate file size
       if (file.size > this.MAX_SIZE) {
-        this.error.set(`El archivo es demasiado grande. Máximo 10MB.`);
+        this.error.set(this.t.instant('errors.fileTooLarge', { max: '10MB' }));
         continue;
       }
 
@@ -160,9 +165,9 @@ export class ImageUploadComponent {
         this.uploaded.emit({ path, url });
       }
     } catch (err) {
-      this.error.set('Error al subir la imagen. Por favor intenta de nuevo.');
+      this.error.set(this.t.instant('errors.imageUploadFailed'));
       this.previewUrl.set(null);
-      console.error('Upload error:', err);
+      this.logger.error('Upload error:', err);
     } finally {
       this.uploading.set(false);
       this.uploadProgress.set(null);
@@ -182,8 +187,8 @@ export class ImageUploadComponent {
       this.uploadedImages.update((images) => images.filter((img) => img.path !== path));
       this.removed.emit(path);
     } catch (err) {
-      this.error.set('Error al eliminar la imagen.');
-      console.error('Delete error:', err);
+      this.error.set(this.t.instant('errors.imageDeleteFailed'));
+      this.logger.error('Delete error:', err);
     }
   }
 
@@ -196,8 +201,8 @@ export class ImageUploadComponent {
       this.loadedExistingImages.update((images) => images.filter((img) => img.id !== imageId));
       this.imageDeleted.emit(imageId);
     } catch (err) {
-      this.error.set('Error al eliminar la imagen.');
-      console.error('Delete error:', err);
+      this.error.set(this.t.instant('errors.imageDeleteFailed'));
+      this.logger.error('Delete error:', err);
     }
   }
 
@@ -246,8 +251,8 @@ export class ImageUploadComponent {
       this.uploadedImages.update((images) => images.filter((img) => img.path !== path));
       this.removed.emit(path);
     } catch (err) {
-      this.error.set('Error al eliminar la imagen.');
-      console.error('Delete error:', err);
+      this.error.set(this.t.instant('errors.imageDeleteFailed'));
+      this.logger.error('Delete error:', err);
     }
   }
 
@@ -257,8 +262,8 @@ export class ImageUploadComponent {
       this.loadedExistingImages.update((images) => images.filter((img) => img.id !== imageId));
       this.imageDeleted.emit(imageId);
     } catch (err) {
-      this.error.set('Error al eliminar la imagen.');
-      console.error('Delete error:', err);
+      this.error.set(this.t.instant('errors.imageDeleteFailed'));
+      this.logger.error('Delete error:', err);
     }
   }
 }

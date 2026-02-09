@@ -4,9 +4,11 @@ import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { SupabaseService } from '@core/services/supabase.service';
 import { LanguageService } from '@core/services/language.service';
+import { TranslateService } from '@core/services/translate.service';
 import { TranslatePipe } from '@shared/pipes/translate.pipe';
 import { SkillCategory, SkillCategoryTranslation, Language } from '@core/models';
 import { LanguageTabsComponent } from '@shared/components/language-tabs/language-tabs.component';
+import { LoggerService } from '@core/services/logger.service';
 
 @Component({
   selector: 'app-skill-category-form',
@@ -17,6 +19,8 @@ import { LanguageTabsComponent } from '@shared/components/language-tabs/language
 export class SkillCategoryFormComponent implements OnInit {
   private supabase = inject(SupabaseService);
   private languageService = inject(LanguageService);
+  private t = inject(TranslateService);
+  private logger = inject(LoggerService);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
 
@@ -82,8 +86,8 @@ export class SkillCategoryFormComponent implements OnInit {
         }
       }
     } catch (err) {
-      this.error.set('Error al cargar los datos');
-      console.error('Load error:', err);
+      this.error.set(this.t.instant('errors.dataLoadFailed'));
+      this.logger.error('Load error:', err);
     } finally {
       this.loading.set(false);
     }
@@ -103,7 +107,7 @@ export class SkillCategoryFormComponent implements OnInit {
     // Validate that at least one language has a name
     const hasName = Array.from(this.translations.values()).some((t) => t.name.trim());
     if (!hasName) {
-      this.error.set('El nombre es requerido en al menos un idioma');
+      this.error.set(this.t.instant('validation.nameRequiredOneLanguage'));
       return;
     }
 
@@ -142,8 +146,8 @@ export class SkillCategoryFormComponent implements OnInit {
       if (result.error) throw result.error;
       this.router.navigate(['/dashboard/skill-categories']);
     } catch (err) {
-      this.error.set('Error al guardar la categoría');
-      console.error('Save error:', err);
+      this.error.set(this.t.instant('errors.categorySaveFailed'));
+      this.logger.error('Save error:', err);
     } finally {
       this.saving.set(false);
     }

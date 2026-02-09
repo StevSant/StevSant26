@@ -1,4 +1,4 @@
-import { Component, OnInit, signal, ViewChild, inject } from '@angular/core';
+import { Component, OnInit, signal, viewChild, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
@@ -9,6 +9,7 @@ import { ConfirmDialogComponent } from '@shared/components/confirm-dialog/confir
 import { TranslatePipe } from '@shared/pipes/translate.pipe';
 import { DashboardFilterComponent, DashboardFilterOption } from '@shared/components/dashboard-filter/dashboard-filter.component';
 import { ProjectItemComponent } from './project-item/project-item.component';
+import { LoggerService } from '@core/services/logger.service';
 
 @Component({
   selector: 'app-project-list',
@@ -19,8 +20,9 @@ import { ProjectItemComponent } from './project-item/project-item.component';
 export class ProjectListComponent implements OnInit {
   private supabase = inject(SupabaseService);
   private translateService = inject(TranslateService);
+  private logger = inject(LoggerService);
 
-  @ViewChild('confirmDialog') confirmDialog!: ConfirmDialogComponent;
+  confirmDialog = viewChild.required<ConfirmDialogComponent>('confirmDialog');
 
   loading = signal(true);
   showArchived = signal(false);
@@ -56,7 +58,7 @@ export class ProjectListComponent implements OnInit {
       this.items.set(data || []);
       await this.loadImages(data || []);
     } catch (err) {
-      console.error('Error loading projects:', err);
+      this.logger.error('Error loading projects:', err);
     } finally {
       this.loading.set(false);
     }
@@ -147,7 +149,7 @@ export class ProjectListComponent implements OnInit {
       // Reload to get fresh data
       await this.loadItems();
     } catch (err) {
-      console.error('Error updating positions:', err);
+      this.logger.error('Error updating positions:', err);
     }
   }
 
@@ -156,7 +158,7 @@ export class ProjectListComponent implements OnInit {
       await this.supabase.togglePin('project', item.id, !item.is_pinned);
       await this.loadItems();
     } catch (err) {
-      console.error('Error toggling pin:', err);
+      this.logger.error('Error toggling pin:', err);
     }
   }
 
@@ -169,13 +171,13 @@ export class ProjectListComponent implements OnInit {
       }
       await this.loadItems();
     } catch (err) {
-      console.error('Error toggling archive:', err);
+      this.logger.error('Error toggling archive:', err);
     }
   }
 
   confirmDelete(item: Project): void {
     this.itemToDelete = item;
-    this.confirmDialog.open();
+    this.confirmDialog().open();
   }
 
   async deleteItem(): Promise<void> {
@@ -184,7 +186,7 @@ export class ProjectListComponent implements OnInit {
       await this.supabase.delete('project', this.itemToDelete.id);
       await this.loadItems();
     } catch (err) {
-      console.error('Error deleting item:', err);
+      this.logger.error('Error deleting item:', err);
     } finally {
       this.itemToDelete = null;
     }

@@ -1,4 +1,4 @@
-import { Component, OnInit, signal, ViewChild, inject } from '@angular/core';
+import { Component, OnInit, signal, viewChild, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
@@ -9,6 +9,7 @@ import { ConfirmDialogComponent } from '@shared/components/confirm-dialog/confir
 import { TranslatePipe } from '@shared/pipes/translate.pipe';
 import { DashboardFilterComponent, DashboardFilterOption } from '@shared/components/dashboard-filter/dashboard-filter.component';
 import { CompetitionItemComponent } from './competition-item/competition-item.component';
+import { LoggerService } from '@core/services/logger.service';
 
 @Component({
   selector: 'app-competition-list',
@@ -19,8 +20,9 @@ import { CompetitionItemComponent } from './competition-item/competition-item.co
 export class CompetitionListComponent implements OnInit {
   private supabase = inject(SupabaseService);
   private translateService = inject(TranslateService);
+  private logger = inject(LoggerService);
 
-  @ViewChild('confirmDialog') confirmDialog!: ConfirmDialogComponent;
+  confirmDialog = viewChild.required<ConfirmDialogComponent>('confirmDialog');
   loading = signal(true);
   showArchived = signal(false);
   items = signal<Competition[]>([]);
@@ -47,7 +49,7 @@ export class CompetitionListComponent implements OnInit {
       this.items.set(data || []);
       this.buildOrganizerOptions(data || []);
       await this.loadImages(data || []);
-    } catch (err) { console.error('Error loading competitions:', err); }
+    } catch (err) { this.logger.error('Error loading competitions:', err); }
     finally { this.loading.set(false); }
   }
 
@@ -143,12 +145,12 @@ export class CompetitionListComponent implements OnInit {
     moveItemInArray(filtered, event.previousIndex, event.currentIndex);
     const updates = filtered.map((item, index) => ({ id: item.id, position: index }));
     try { await this.supabase.updatePositions('competitions', updates); await this.loadItems(); }
-    catch (err) { console.error('Error updating positions:', err); }
+    catch (err) { this.logger.error('Error updating positions:', err); }
   }
 
   async togglePin(item: Competition): Promise<void> {
     try { await this.supabase.togglePin('competitions', item.id, !item.is_pinned); await this.loadItems(); }
-    catch (err) { console.error('Error toggling pin:', err); }
+    catch (err) { this.logger.error('Error toggling pin:', err); }
   }
 
   async toggleArchive(item: Competition): Promise<void> {
@@ -156,15 +158,15 @@ export class CompetitionListComponent implements OnInit {
       if (item.is_archived) { await this.supabase.unarchive('competitions', item.id); }
       else { await this.supabase.archive('competitions', item.id); }
       await this.loadItems();
-    } catch (err) { console.error('Error toggling archive:', err); }
+    } catch (err) { this.logger.error('Error toggling archive:', err); }
   }
 
-  confirmDelete(item: Competition): void { this.itemToDelete = item; this.confirmDialog.open(); }
+  confirmDelete(item: Competition): void { this.itemToDelete = item; this.confirmDialog().open(); }
 
   async deleteItem(): Promise<void> {
     if (!this.itemToDelete) return;
     try { await this.supabase.delete('competitions', this.itemToDelete.id); await this.loadItems(); }
-    catch (err) { console.error('Error deleting item:', err); }
+    catch (err) { this.logger.error('Error deleting item:', err); }
     finally { this.itemToDelete = null; }
   }
 }

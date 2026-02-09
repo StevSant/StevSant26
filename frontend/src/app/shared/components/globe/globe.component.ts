@@ -1,14 +1,13 @@
 import {
   Component,
   ElementRef,
-  ViewChild,
   AfterViewInit,
   OnDestroy,
-  Input,
   PLATFORM_ID,
   inject,
-  OnChanges,
-  SimpleChanges,
+  input,
+  viewChild,
+  effect,
 } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { isLand } from './world-map-data';
@@ -39,14 +38,13 @@ interface Dot3D {
     `,
   ],
 })
-export class GlobeComponent implements AfterViewInit, OnDestroy, OnChanges {
-  @ViewChild('globeCanvas', { static: true })
-  canvasRef!: ElementRef<HTMLCanvasElement>;
+export class GlobeComponent implements AfterViewInit, OnDestroy {
+  canvasRef = viewChild.required<ElementRef<HTMLCanvasElement>>('globeCanvas');
 
-  @Input() latitude = 0;
-  @Input() longitude = 0;
-  @Input() markerColor = '#22c55e';
-  @Input() autoRotate = true;
+  latitude = input(0);
+  longitude = input(0);
+  markerColor = input('#22c55e');
+  autoRotate = input(true);
 
   private platformId = inject(PLATFORM_ID);
   private ctx!: CanvasRenderingContext2D;
@@ -65,7 +63,7 @@ export class GlobeComponent implements AfterViewInit, OnDestroy, OnChanges {
   ngAfterViewInit(): void {
     if (!isPlatformBrowser(this.platformId)) return;
 
-    const canvas = this.canvasRef.nativeElement;
+    const canvas = this.canvasRef().nativeElement;
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
     this.ctx = ctx;
@@ -81,11 +79,14 @@ export class GlobeComponent implements AfterViewInit, OnDestroy, OnChanges {
     this.resizeObserver.observe(canvas.parentElement || canvas);
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
-    if (this.isInitialized && (changes['latitude'] || changes['longitude'])) {
+  private latLngEffect = effect(() => {
+    // Track the signals
+    this.latitude();
+    this.longitude();
+    if (this.isInitialized) {
       this.setInitialRotation();
     }
-  }
+  });
 
   ngOnDestroy(): void {
     if (this.animationId) cancelAnimationFrame(this.animationId);
@@ -93,7 +94,7 @@ export class GlobeComponent implements AfterViewInit, OnDestroy, OnChanges {
   }
 
   private setupCanvas(): void {
-    const canvas = this.canvasRef.nativeElement;
+    const canvas = this.canvasRef().nativeElement;
     const { width: w, height: h } = canvas.getBoundingClientRect();
     if (w === 0 || h === 0) return;
 
@@ -112,7 +113,7 @@ export class GlobeComponent implements AfterViewInit, OnDestroy, OnChanges {
    * exactly at rx = 0, rz = 1 (front center).
    */
   private setInitialRotation(): void {
-    const lngRad = (this.longitude * Math.PI) / 180;
+    const lngRad = (this.longitude() * Math.PI) / 180;
     this.rotation = Math.PI / 2 - lngRad;
   }
 
@@ -183,13 +184,13 @@ export class GlobeComponent implements AfterViewInit, OnDestroy, OnChanges {
 
   private animate = (): void => {
     this.animationId = requestAnimationFrame(this.animate);
-    if (this.autoRotate) this.rotation += 0.001;
+    if (this.autoRotate()) this.rotation += 0.001;
     this.markerPulse += 0.03;
     this.draw();
   };
 
   private draw(): void {
-    const canvas = this.canvasRef.nativeElement;
+    const canvas = this.canvasRef().nativeElement;
     const ctx = this.ctx;
     if (!ctx) return;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -244,8 +245,8 @@ export class GlobeComponent implements AfterViewInit, OnDestroy, OnChanges {
   }
 
   private drawMarker(): void {
-    const latRad = (this.latitude * Math.PI) / 180;
-    const lngRad = (this.longitude * Math.PI) / 180;
+    const latRad = (this.latitude() * Math.PI) / 180;
+    const lngRad = (this.longitude() * Math.PI) / 180;
     const cosLat = Math.cos(latRad);
 
     const p = this.project(
@@ -283,8 +284,8 @@ export class GlobeComponent implements AfterViewInit, OnDestroy, OnChanges {
     const cr = 3.5 * s;
     ctx.beginPath();
     ctx.arc(p.px, p.py, cr, 0, Math.PI * 2);
-    ctx.fillStyle = this.markerColor;
-    ctx.shadowColor = this.markerColor;
+    ctx.fillStyle = this.markerColor();
+    ctx.shadowColor = this.markerColor();
     ctx.shadowBlur = 12 * s;
     ctx.fill();
     ctx.shadowBlur = 0;

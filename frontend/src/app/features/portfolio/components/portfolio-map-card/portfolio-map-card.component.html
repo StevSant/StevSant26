@@ -7,8 +7,8 @@
     <!-- Globe canvas -->
     <div class="absolute inset-0 z-0">
       <app-globe
-        [latitude]="latitude"
-        [longitude]="longitude"
+        [latitude]="latitude()"
+        [longitude]="longitude()"
         [markerColor]="'#22c55e'"
         [autoRotate]="true"
       />
@@ -21,14 +21,14 @@
     ></div>
 
     <!-- Job title badge (top-left) -->
-    @if (jobTitle) {
+    @if (jobTitle()) {
       <div class="absolute top-0 left-0 right-0 z-20 p-3 sm:p-4">
         <div class="flex items-center gap-2">
           <span class="relative flex h-2 w-2">
             <span class="relative inline-flex rounded-full h-2 w-2 bg-(--color-accent)"></span>
           </span>
           <span class="text-xs sm:text-sm font-medium text-(--color-text-secondary) tracking-wide">
-            {{ jobTitle }}
+            {{ jobTitle() }}
           </span>
         </div>
       </div>
@@ -82,7 +82,18 @@
       <div class="flex flex-col items-end gap-1 text-right shrink-0">
         @if (timezoneDisplay()) {
           <div class="flex items-center gap-1.5 text-[10px] sm:text-xs text-(--color-text-muted)">
-            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="shrink-0">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="12"
+              height="12"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="shrink-0"
+            >
               <circle cx="12" cy="12" r="10"></circle>
               <polyline points="12 6 12 12 16 14"></polyline>
             </svg>
@@ -91,7 +102,18 @@
         }
         @if (coordsDisplay()) {
           <div class="flex items-center gap-1.5 text-[10px] sm:text-xs text-(--color-text-muted)">
-            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="shrink-0">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="12"
+              height="12"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="shrink-0"
+            >
               <circle cx="12" cy="12" r="3"></circle>
               <path d="M12 2v4m0 12v4m10-10h-4M6 12H2"></path>
             </svg>

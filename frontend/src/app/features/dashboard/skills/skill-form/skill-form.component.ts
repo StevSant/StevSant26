@@ -8,6 +8,7 @@ import { TranslateService } from '@core/services/translate.service';
 import { TranslatePipe } from '@shared/pipes/translate.pipe';
 import { Skill, SkillTranslation, SkillCategory, Language } from '@core/models';
 import { LanguageTabsComponent } from '@shared/components/language-tabs/language-tabs.component';
+import { LoggerService } from '@core/services/logger.service';
 
 @Component({
   selector: 'app-skill-form',
@@ -19,6 +20,7 @@ export class SkillFormComponent implements OnInit {
   private supabase = inject(SupabaseService);
   private languageService = inject(LanguageService);
   private translateService = inject(TranslateService);
+  private logger = inject(LoggerService);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
 
@@ -112,8 +114,8 @@ export class SkillFormComponent implements OnInit {
         }
       }
     } catch (err) {
-      this.error.set('Error al cargar los datos');
-      console.error('Load error:', err);
+      this.error.set(this.translateService.instant('errors.dataLoadFailed'));
+      this.logger.error('Load error:', err);
     } finally {
       this.loading.set(false);
     }
@@ -133,7 +135,7 @@ export class SkillFormComponent implements OnInit {
     // Validate that at least one language has a name
     const hasName = Array.from(this.translations.values()).some((t) => t.name.trim());
     if (!hasName) {
-      this.error.set('El nombre es requerido en al menos un idioma');
+      this.error.set(this.translateService.instant('validation.nameRequiredOneLanguage'));
       return;
     }
 
@@ -175,8 +177,8 @@ export class SkillFormComponent implements OnInit {
       if (result.error) throw result.error;
       this.router.navigate(['/dashboard/skills']);
     } catch (err) {
-      this.error.set('Error al guardar la habilidad');
-      console.error('Save error:', err);
+      this.error.set(this.translateService.instant('errors.skillSaveFailed'));
+      this.logger.error('Save error:', err);
     } finally {
       this.saving.set(false);
     }

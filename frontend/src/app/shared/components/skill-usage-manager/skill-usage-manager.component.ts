@@ -8,6 +8,7 @@ import { SkillUsage, Skill, SourceType, Language } from '@core/models';
 import { TranslatePipe } from '../../pipes/translate.pipe';
 import { SkillUsageAddFormComponent } from './skill-usage-add-form/skill-usage-add-form.component';
 import { SkillUsageItemComponent } from './skill-usage-item/skill-usage-item.component';
+import { LoggerService } from '@core/services/logger.service';
 
 export interface SkillUsageItem {
   id?: number;
@@ -31,6 +32,7 @@ export class SkillUsageManagerComponent implements OnInit {
   private supabase = inject(SupabaseService);
   private languageService = inject(LanguageService);
   private translateService = inject(TranslateService);
+  private logger = inject(LoggerService);
 
   // Signal inputs
   sourceType = input.required<SourceType>();
@@ -86,7 +88,7 @@ export class SkillUsageManagerComponent implements OnInit {
       );
       this.skills.set(data || []);
     } catch (err) {
-      console.error('Error loading skills:', err);
+      this.logger.error('Error loading skills:', err);
     }
   }
 
@@ -129,7 +131,7 @@ export class SkillUsageManagerComponent implements OnInit {
       this.skillUsages.set(usages);
     } catch (err) {
       this.error.set(this.translateService.instant('skillUsages.errors.loadError'));
-      console.error('Load error:', err);
+      this.logger.error('Load error:', err);
     } finally {
       this.loading.set(false);
     }
@@ -246,7 +248,7 @@ export class SkillUsageManagerComponent implements OnInit {
       await this.loadSkillUsages(sourceId);
     } catch (err) {
       this.error.set(this.translateService.instant('skillUsages.errors.saveError'));
-      console.error('Save error:', err);
+      this.logger.error('Save error:', err);
     } finally {
       this.saving.set(false);
     }
@@ -260,7 +262,7 @@ export class SkillUsageManagerComponent implements OnInit {
         this.skillUsages.update(usages => usages.filter(u => u.id !== usage.id));
       } catch (err) {
         this.error.set(this.translateService.instant('skillUsages.errors.deleteError'));
-        console.error('Delete error:', err);
+        this.logger.error('Delete error:', err);
       }
     } else {
       // Pending usage - remove from list

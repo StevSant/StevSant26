@@ -1,8 +1,11 @@
 import { Component, input, output, signal, inject, effect } from '@angular/core';
 import { NgClass } from '@angular/common';
 import { SupabaseService } from '@core/services/supabase.service';
+import { TranslateService } from '@core/services/translate.service';
 import { SourceType } from '@core/models';
+import { MAX_DOCUMENT_SIZE_BYTES } from '@shared/config/constants';
 import { TranslatePipe } from '@shared/pipes/translate.pipe';
+import { LoggerService } from '@core/services/logger.service';
 
 export interface ExistingDocument {
   id: number;
@@ -21,6 +24,8 @@ export interface ExistingDocument {
 })
 export class DocumentUploadComponent {
   private supabase = inject(SupabaseService);
+  private t = inject(TranslateService);
+  private logger = inject(LoggerService);
 
   // Signal inputs
   folder = input<string>('');
@@ -39,7 +44,7 @@ export class DocumentUploadComponent {
   uploadedDocuments = signal<{ path: string; url: string; file_name: string; file_type: string; file_size: number }[]>([]);
   loadedExistingDocuments = signal<ExistingDocument[]>([]);
 
-  private readonly MAX_SIZE = 20 * 1024 * 1024; // 20MB
+  private readonly MAX_SIZE = MAX_DOCUMENT_SIZE_BYTES;
   private readonly ALLOWED_TYPES = [
     'application/pdf',
     'application/msword',
@@ -98,12 +103,12 @@ export class DocumentUploadComponent {
 
     for (const file of files) {
       if (!this.ALLOWED_TYPES.includes(file.type)) {
-        this.error.set(`Tipo de archivo no permitido: ${file.type}`);
+        this.error.set(this.t.instant('errors.fileTypeNotAllowed', { type: file.type }));
         continue;
       }
 
       if (file.size > this.MAX_SIZE) {
-        this.error.set(`El archivo es demasiado grande. Máximo 20MB.`);
+        this.error.set(this.t.instant('errors.fileTooLarge', { max: '20MB' }));
         continue;
       }
 
@@ -134,8 +139,8 @@ export class DocumentUploadComponent {
         this.uploaded.emit(docData);
       }
     } catch (err) {
-      this.error.set('Error al subir el documento. Por favor intenta de nuevo.');
-      console.error('Upload error:', err);
+      this.error.set(this.t.instant('errors.documentUploadFailed'));
+      this.logger.error('Upload error:', err);
     } finally {
       this.uploading.set(false);
     }
@@ -148,8 +153,8 @@ export class DocumentUploadComponent {
       await this.supabase.deleteDocumentFromStorage(path);
       this.uploadedDocuments.update((docs) => docs.filter((d) => d.path !== path));
     } catch (err) {
-      this.error.set('Error al eliminar el documento.');
-      console.error('Delete error:', err);
+      this.error.set(this.t.instant('errors.documentDeleteFailed'));
+      this.logger.error('Delete error:', err);
     }
   }
 
@@ -161,8 +166,8 @@ export class DocumentUploadComponent {
       this.loadedExistingDocuments.update((docs) => docs.filter((d) => d.id !== documentId));
       this.documentDeleted.emit(documentId);
     } catch (err) {
-      this.error.set('Error al eliminar el documento.');
-      console.error('Delete error:', err);
+      this.error.set(this.t.instant('errors.documentDeleteFailed'));
+      this.logger.error('Delete error:', err);
     }
   }
 

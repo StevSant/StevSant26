@@ -1,4 +1,4 @@
-import { Component, OnInit, signal, ViewChild, inject } from '@angular/core';
+import { Component, OnInit, signal, viewChild, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
@@ -9,6 +9,7 @@ import { ConfirmDialogComponent } from '@shared/components/confirm-dialog/confir
 import { TranslatePipe } from '@shared/pipes/translate.pipe';
 import { DashboardFilterComponent, DashboardFilterOption } from '@shared/components/dashboard-filter/dashboard-filter.component';
 import { EventItemComponent } from './event-item/event-item.component';
+import { LoggerService } from '@core/services/logger.service';
 
 @Component({
   selector: 'app-event-list',
@@ -19,8 +20,9 @@ import { EventItemComponent } from './event-item/event-item.component';
 export class EventListComponent implements OnInit {
   private supabase = inject(SupabaseService);
   private translateService = inject(TranslateService);
+  private logger = inject(LoggerService);
 
-  @ViewChild('confirmDialog') confirmDialog!: ConfirmDialogComponent;
+  confirmDialog = viewChild.required<ConfirmDialogComponent>('confirmDialog');
 
   loading = signal(true);
   showArchived = signal(false);
@@ -51,7 +53,7 @@ export class EventListComponent implements OnInit {
       this.buildYearOptions(data || []);
       await this.loadImages(data || []);
     } catch (err) {
-      console.error('Error loading events:', err);
+      this.logger.error('Error loading events:', err);
     } finally {
       this.loading.set(false);
     }
@@ -149,7 +151,7 @@ export class EventListComponent implements OnInit {
       await this.supabase.updatePositions('event', updates);
       await this.loadItems();
     } catch (err) {
-      console.error('Error updating positions:', err);
+      this.logger.error('Error updating positions:', err);
     }
   }
 
@@ -158,7 +160,7 @@ export class EventListComponent implements OnInit {
       await this.supabase.togglePin('event', item.id, !item.is_pinned);
       await this.loadItems();
     } catch (err) {
-      console.error('Error toggling pin:', err);
+      this.logger.error('Error toggling pin:', err);
     }
   }
 
@@ -171,13 +173,13 @@ export class EventListComponent implements OnInit {
       }
       await this.loadItems();
     } catch (err) {
-      console.error('Error toggling archive:', err);
+      this.logger.error('Error toggling archive:', err);
     }
   }
 
   confirmDelete(item: Event): void {
     this.itemToDelete = item;
-    this.confirmDialog.open();
+    this.confirmDialog().open();
   }
 
   async deleteItem(): Promise<void> {
@@ -186,7 +188,7 @@ export class EventListComponent implements OnInit {
       await this.supabase.delete('event', this.itemToDelete.id);
       await this.loadItems();
     } catch (err) {
-      console.error('Error deleting item:', err);
+      this.logger.error('Error deleting item:', err);
     } finally {
       this.itemToDelete = null;
     }

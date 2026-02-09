@@ -2,6 +2,7 @@ import { Injectable, signal, computed, inject, PLATFORM_ID, ApplicationRef } fro
 import { isPlatformBrowser } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
+import { LoggerService } from './logger.service';
 
 export type TranslationData = Record<string, unknown>;
 
@@ -16,6 +17,7 @@ export class TranslateService {
   private http = inject(HttpClient);
   private platformId = inject(PLATFORM_ID);
   private appRef = inject(ApplicationRef);
+  private logger = inject(LoggerService);
 
   private translations = signal<Map<string, TranslationData>>(new Map());
   private currentLangSignal = signal<string>(DEFAULT_LANG);
@@ -60,7 +62,7 @@ export class TranslateService {
    */
   async setLanguage(lang: string): Promise<void> {
     if (!SUPPORTED_LANGS.includes(lang)) {
-      console.warn(`Language "${lang}" is not supported. Using default.`);
+      this.logger.warn(`Language "${lang}" is not supported. Using default.`);
       lang = DEFAULT_LANG;
     }
 
@@ -108,7 +110,7 @@ export class TranslateService {
       // Force change detection to update all pipes
       this.appRef.tick();
     } catch (error) {
-      console.error(`Failed to load translations for "${lang}":`, error);
+      this.logger.error(`Failed to load translations for "${lang}":`, error);
     } finally {
       this.loadingSignal.set(false);
     }

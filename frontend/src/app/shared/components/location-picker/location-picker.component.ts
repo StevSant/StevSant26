@@ -6,12 +6,14 @@ import {
   PLATFORM_ID,
   OnDestroy,
   ElementRef,
-  ViewChild,
+  viewChild,
   input,
 } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { LOCATION_SEARCH_DEBOUNCE_MS, LOCATION_SEARCH_MAX_RESULTS, NOMINATIM_API_URL } from '@shared/config/constants';
 import { TranslatePipe } from '@shared/pipes/translate.pipe';
+import { LoggerService } from '@core/services/logger.service';
 
 export interface LocationResult {
   city: string;
@@ -114,7 +116,7 @@ const COUNTRY_TIMEZONES: Record<string, string[]> = {
   templateUrl: './location-picker.component.html',
 })
 export class LocationPickerComponent implements OnDestroy {
-  @ViewChild('searchInput') searchInput!: ElementRef<HTMLInputElement>;
+  searchInput = viewChild<ElementRef<HTMLInputElement>>('searchInput');
 
   /** Current selected location display text */
   currentLocation = input<string>('');
@@ -123,6 +125,7 @@ export class LocationPickerComponent implements OnDestroy {
   locationSelected = output<LocationResult>();
 
   private platformId = inject(PLATFORM_ID);
+  private logger = inject(LoggerService);
   private searchTimeout: ReturnType<typeof setTimeout> | null = null;
   private abortController: AbortController | null = null;
 
@@ -147,7 +150,7 @@ export class LocationPickerComponent implements OnDestroy {
     }
 
     // Debounce 400ms
-    this.searchTimeout = setTimeout(() => this.searchLocation(query.trim()), 400);
+    this.searchTimeout = setTimeout(() => this.searchLocation(query.trim()), LOCATION_SEARCH_DEBOUNCE_MS);
   }
 
   private async searchLocation(query: string): Promise<void> {
@@ -158,7 +161,7 @@ export class LocationPickerComponent implements OnDestroy {
     this.abortController = new AbortController();
 
     try {
-      const url = `https://nominatim.openstreetmap.org/search?format=json&addressdetails=1&limit=6&q=${encodeURIComponent(query)}`;
+      const url = `${NOMINATIM_API_URL}/search?format=json&addressdetails=1&limit=${LOCATION_SEARCH_MAX_RESULTS}&q=${encodeURIComponent(query)}`;
       const response = await fetch(url, {
         signal: this.abortController.signal,
         headers: { 'Accept-Language': 'en' },
@@ -168,7 +171,7 @@ export class LocationPickerComponent implements OnDestroy {
       this.noResults.set(data.length === 0);
     } catch (err: any) {
       if (err?.name !== 'AbortError') {
-        console.error('Location search error:', err);
+        this.logger.error('Location search error:', err);
         this.results.set([]);
       }
     } finally {

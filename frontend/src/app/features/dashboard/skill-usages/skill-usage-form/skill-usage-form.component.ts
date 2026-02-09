@@ -9,6 +9,7 @@ import { FormHeaderComponent } from '@shared/components/form-header/form-header.
 import { LoadingSpinnerComponent } from '@shared/components/loading-spinner/loading-spinner.component';
 import { SkillUsageFormBaseInfoComponent } from './skill-usage-form-base-info/skill-usage-form-base-info.component';
 import { SkillUsageFormTranslationsComponent } from './skill-usage-form-translations/skill-usage-form-translations.component';
+import { LoggerService } from '@core/services/logger.service';
 
 @Component({
   selector: 'app-skill-usage-form',
@@ -20,6 +21,7 @@ export class SkillUsageFormComponent implements OnInit {
   private supabase = inject(SupabaseService);
   private languageService = inject(LanguageService);
   private translateService = inject(TranslateService);
+  private logger = inject(LoggerService);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
 
@@ -120,8 +122,8 @@ export class SkillUsageFormComponent implements OnInit {
         }
       }
     } catch (err) {
-      this.error.set('Error al cargar los datos');
-      console.error('Load error:', err);
+      this.error.set(this.translateService.instant('errors.dataLoadFailed'));
+      this.logger.error('Load error:', err);
     } finally {
       this.loading.set(false);
     }
@@ -143,7 +145,7 @@ export class SkillUsageFormComponent implements OnInit {
 
   async onSubmit(): Promise<void> {
     if (!this.formData.skill_id || !this.formData.source_id) {
-      this.error.set('La habilidad y el ID de fuente son requeridos');
+      this.error.set(this.translateService.instant('validation.skillAndSourceRequired'));
       return;
     }
 
@@ -188,8 +190,8 @@ export class SkillUsageFormComponent implements OnInit {
       if (result.error) throw result.error;
       this.router.navigate(['/dashboard/skill-usages']);
     } catch (err) {
-      this.error.set('Error al guardar el vínculo');
-      console.error('Save error:', err);
+      this.error.set(this.translateService.instant('errors.skillUsageSaveFailed'));
+      this.logger.error('Save error:', err);
     } finally {
       this.saving.set(false);
     }

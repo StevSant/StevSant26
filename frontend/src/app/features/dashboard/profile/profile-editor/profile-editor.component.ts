@@ -3,13 +3,17 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { SupabaseService } from '@core/services/supabase.service';
 import { LanguageService } from '@core/services/language.service';
+import { TranslateService } from '@core/services/translate.service';
 import { Profile, ProfileTranslation, Language } from '@core/models';
 import { CvManagerComponent } from '@shared/components/cv-manager/cv-manager.component';
+import { SUCCESS_MESSAGE_DURATION_MS } from '@shared/config/constants';
 import { TranslatePipe } from '@shared/pipes/translate.pipe';
 import { PersonalInfoCardComponent } from './personal-info-card/personal-info-card.component';
 import { SocialLinksCardComponent } from './social-links-card/social-links-card.component';
 import { ProfileTranslationsCardComponent } from './profile-translations-card/profile-translations-card.component';
 import { LocationAvailabilityCardComponent, LocationAvailabilityData } from './location-availability-card/location-availability-card.component';
+import { ProfileImageManager } from './profile-image-manager';
+import { LoggerService } from '@core/services/logger.service';
 
 @Component({
   selector: 'app-profile-editor',
@@ -29,6 +33,8 @@ import { LocationAvailabilityCardComponent, LocationAvailabilityData } from './l
 export class ProfileEditorComponent implements OnInit {
   private supabase = inject(SupabaseService);
   private languageService = inject(LanguageService);
+  private t = inject(TranslateService);
+  private logger = inject(LoggerService);
 
   loading = signal(true);
   saving = signal(false);
@@ -38,46 +44,21 @@ export class ProfileEditorComponent implements OnInit {
   profile: Profile | null = null;
   profileExists = false;
 
-  // Current language for editing translations
   currentEditLanguage = signal<string>('es');
 
-  // Pending avatar to save after profile creation
-  pendingAvatar = signal<{ path: string; url: string } | null>(null);
+  // Image managers for avatar and banner
+  avatarManager = new ProfileImageManager(this.supabase, this.t, 'profile', 'Avatar de perfil');
+  bannerManager = new ProfileImageManager(this.supabase, this.t, 'profile_banner', 'Banner de perfil');
 
-  // Pending banner to save after profile creation
-  pendingBanner = signal<{ path: string; url: string } | null>(null);
+  // Expose signals for template bindings
+  get pendingAvatar() { return this.avatarManager.pending; }
+  get pendingBanner() { return this.bannerManager.pending; }
+  get existingAvatarUrl() { return this.avatarManager.existingUrl; }
+  get existingAvatarId() { return this.avatarManager.existingId; }
+  get existingBannerUrl() { return this.bannerManager.existingUrl; }
+  get existingBannerId() { return this.bannerManager.existingId; }
 
-  // Existing avatar URL loaded from database
-  existingAvatarUrl = signal<string | null>(null);
-
-  // Existing avatar ID for deletion
-  existingAvatarId = signal<number | null>(null);
-
-  // Existing banner URL loaded from database
-  existingBannerUrl = signal<string | null>(null);
-
-  // Existing banner ID for deletion
-  existingBannerId = signal<number | null>(null);
-
-  // Base profile fields
-  formData = {
-    first_name: '',
-    last_name: '',
-    nickname: '',
-    email: '',
-    phone: '',
-    linkedin_url: '',
-    github_url: '',
-    instagram_url: '',
-    whatsapp: '',
-    city: '',
-    country_code: '',
-    timezone: '',
-    latitude: null as number | null,
-    longitude: null as number | null,
-    job_title: '',
-    is_available: true,
-  };
+  formData = this.getEmptyFormData();
 
   // Computed sub-data objects for child components
   get personalInfoData() {
@@ -112,39 +93,23 @@ export class ProfileEditorComponent implements OnInit {
   }
 
   onPersonalInfoChange(data: { first_name: string; last_name: string; nickname: string }): void {
-    this.formData.first_name = data.first_name;
-    this.formData.last_name = data.last_name;
-    this.formData.nickname = data.nickname;
+    Object.assign(this.formData, data);
   }
 
   onSocialLinksChange(data: { email: string; phone: string; whatsapp: string; linkedin_url: string; github_url: string; instagram_url: string }): void {
-    this.formData.email = data.email;
-    this.formData.phone = data.phone;
-    this.formData.whatsapp = data.whatsapp;
-    this.formData.linkedin_url = data.linkedin_url;
-    this.formData.github_url = data.github_url;
-    this.formData.instagram_url = data.instagram_url;
+    Object.assign(this.formData, data);
   }
 
   onLocationAvailabilityChange(data: LocationAvailabilityData): void {
-    this.formData.city = data.city;
-    this.formData.country_code = data.country_code;
-    this.formData.timezone = data.timezone;
-    this.formData.latitude = data.latitude;
-    this.formData.longitude = data.longitude;
-    this.formData.job_title = data.job_title;
-    this.formData.is_available = data.is_available;
+    Object.assign(this.formData, data);
   }
 
-  // Translations map by language code
   translations: Map<string, { about: string }> = new Map();
 
-  // Get available languages from service
   get supportedLanguages(): Language[] {
     return this.languageService.supportedLanguages();
   }
 
-  // Get current translation being edited
   get currentTranslation(): { about: string } {
     return this.translations.get(this.currentEditLanguage()) || { about: '' };
   }
@@ -165,73 +130,17 @@ export class ProfileEditorComponent implements OnInit {
       if (data) {
         this.profile = data;
         this.profileExists = true;
-        this.formData = {
-          first_name: data.first_name || '',
-          last_name: data.last_name || '',
-          nickname: data.nickname || '',
-          email: data.email || '',
-          phone: data.phone || '',
-          linkedin_url: data.linkedin_url || '',
-          github_url: data.github_url || '',
-          instagram_url: data.instagram_url || '',
-          whatsapp: data.whatsapp || '',
-          city: data.city || '',
-          country_code: data.country_code || '',
-          timezone: data.timezone || '',
-          latitude: data.latitude ?? null,
-          longitude: data.longitude ?? null,
-          job_title: data.job_title || '',
-          is_available: data.is_available ?? true,
-        };
-
-        // Load translations into the map
-        this.translations.clear();
-        if (data.translations) {
-          for (const t of data.translations as ProfileTranslation[]) {
-            const langCode = t.language?.code;
-            if (langCode) {
-              this.translations.set(langCode, { about: t.about || '' });
-            }
-          }
-        }
-
-        // Initialize empty translations for languages without data
-        for (const lang of this.supportedLanguages) {
-          if (!this.translations.has(lang.code)) {
-            this.translations.set(lang.code, { about: '' });
-          }
-        }
-
-        // Load existing avatar
-        const { data: avatarImages, error: avatarError } = await this.supabase.getImagesBySourceType('profile');
-        console.log('loadProfile avatar query result:', { avatarImages, avatarError });
-        if (avatarImages && avatarImages.length > 0) {
-          this.existingAvatarUrl.set(avatarImages[0].url);
-          this.existingAvatarId.set(avatarImages[0].id);
-        } else {
-          this.existingAvatarUrl.set(null);
-          this.existingAvatarId.set(null);
-        }
-
-        // Load existing banner
-        const { data: bannerImages } = await this.supabase.getImagesBySourceType('profile_banner');
-        if (bannerImages && bannerImages.length > 0) {
-          this.existingBannerUrl.set(bannerImages[0].url);
-          this.existingBannerId.set(bannerImages[0].id);
-        } else {
-          this.existingBannerUrl.set(null);
-          this.existingBannerId.set(null);
-        }
+        this.formData = this.mapProfileToFormData(data);
+        this.loadTranslationsFromProfile(data);
+        await this.avatarManager.load();
+        await this.bannerManager.load();
       } else {
         this.profileExists = false;
-        // Initialize empty translations
-        for (const lang of this.supportedLanguages) {
-          this.translations.set(lang.code, { about: '' });
-        }
+        this.initEmptyTranslations();
       }
     } catch (err) {
-      this.error.set('Error al cargar el perfil');
-      console.error('Load profile error:', err);
+      this.error.set(this.t.instant('errors.profileLoadFailed'));
+      this.logger.error('Load profile error:', err);
     } finally {
       this.loading.set(false);
     }
@@ -253,19 +162,11 @@ export class ProfileEditorComponent implements OnInit {
     this.success.set(null);
 
     try {
-      let result;
-
-      // Save base profile fields
-      if (this.profileExists) {
-        result = await this.supabase.updateProfile(this.formData);
-      } else {
-        result = await this.supabase.createProfile(this.formData);
-        this.profileExists = true;
-      }
-
-      if (result.error) {
-        throw result.error;
-      }
+      const result = this.profileExists
+        ? await this.supabase.updateProfile(this.formData)
+        : await this.supabase.createProfile(this.formData);
+      if (!this.profileExists) this.profileExists = true;
+      if (result.error) throw result.error;
 
       // Save translations
       for (const [langCode, translation] of this.translations) {
@@ -275,234 +176,149 @@ export class ProfileEditorComponent implements OnInit {
             about: translation.about,
           });
           if (translationError) {
-            console.error(`Error saving ${langCode} translation:`, translationError);
+            this.logger.error(`Error saving ${langCode} translation:`, translationError);
           }
         }
       }
 
-      // Save pending avatar if any
-      await this.savePendingAvatar();
-
-      // Save pending banner if any
-      await this.savePendingBanner();
-
-      // Reload profile to get updated data
+      await this.avatarManager.savePending();
+      await this.bannerManager.savePending();
       await this.loadProfile();
-      this.success.set('Perfil actualizado correctamente');
-
-      setTimeout(() => this.success.set(null), 3000);
+      this.showSuccess(this.t.instant('success.profileUpdated'));
     } catch (err) {
-      this.error.set('Error al guardar el perfil');
-      console.error('Save profile error:', err);
+      this.error.set(this.t.instant('errors.profileSaveFailed'));
+      this.logger.error('Save profile error:', err);
     } finally {
       this.saving.set(false);
     }
   }
 
   resetForm(): void {
-    if (this.profile) {
-      this.formData = {
-        first_name: this.profile.first_name || '',
-        last_name: this.profile.last_name || '',
-        nickname: this.profile.nickname || '',
-        email: this.profile.email || '',
-        phone: this.profile.phone || '',
-        linkedin_url: this.profile.linkedin_url || '',
-        github_url: this.profile.github_url || '',
-        instagram_url: this.profile.instagram_url || '',
-        whatsapp: this.profile.whatsapp || '',
-        city: this.profile.city || '',
-        country_code: this.profile.country_code || '',
-        timezone: this.profile.timezone || '',
-        latitude: this.profile.latitude ?? null,
-        longitude: this.profile.longitude ?? null,
-        job_title: this.profile.job_title || '',
-        is_available: this.profile.is_available ?? true,
-      };
+    this.formData = this.profile
+      ? this.mapProfileToFormData(this.profile)
+      : this.getEmptyFormData();
 
-      // Reset translations
-      this.translations.clear();
-      if (this.profile.translations) {
-        for (const t of this.profile.translations as ProfileTranslation[]) {
-          const langCode = t.language?.code;
-          if (langCode) {
-            this.translations.set(langCode, { about: t.about || '' });
-          }
+    this.translations.clear();
+    if (this.profile?.translations) {
+      for (const t of this.profile.translations as ProfileTranslation[]) {
+        const langCode = t.language?.code;
+        if (langCode) {
+          this.translations.set(langCode, { about: t.about || '' });
         }
       }
-    } else {
-      this.formData = {
-        first_name: '',
-        last_name: '',
-        nickname: '',
-        email: '',
-        phone: '',
-        linkedin_url: '',
-        github_url: '',
-        instagram_url: '',
-        whatsapp: '',
-        city: '',
-        country_code: '',
-        timezone: '',
-        latitude: null,
-        longitude: null,
-        job_title: '',
-        is_available: true,
-      };
-      this.translations.clear();
     }
+    this.initEmptyTranslations();
+    this.error.set(null);
+    this.success.set(null);
+  }
 
-    // Initialize empty translations for languages without data
+  async onAvatarUploaded(data: { path: string; url: string }): Promise<void> {
+    try {
+      const result = await this.avatarManager.onUploaded(data, this.profileExists);
+      if (result) this.showSuccess(result.success);
+    } catch (err) {
+      this.logger.error('Error saving avatar:', err);
+      this.error.set(this.t.instant('errors.avatarSaveFailed'));
+    }
+  }
+
+  async onAvatarRemoved(imageId: number): Promise<void> {
+    try {
+      const msg = await this.avatarManager.onRemoved(imageId);
+      this.showSuccess(msg);
+    } catch (err) {
+      this.logger.error('Error removing avatar:', err);
+      this.error.set(this.t.instant('errors.avatarDeleteFailed'));
+    }
+  }
+
+  async onBannerUploaded(data: { path: string; url: string }): Promise<void> {
+    try {
+      const result = await this.bannerManager.onUploaded(data, this.profileExists);
+      if (result) this.showSuccess(result.success);
+    } catch (err) {
+      this.logger.error('Error saving banner:', err);
+      this.error.set(this.t.instant('errors.bannerSaveFailed'));
+    }
+  }
+
+  async onBannerRemoved(imageId: number): Promise<void> {
+    try {
+      const msg = await this.bannerManager.onRemoved(imageId);
+      this.showSuccess(msg);
+    } catch (err) {
+      this.logger.error('Error removing banner:', err);
+      this.error.set(this.t.instant('errors.bannerDeleteFailed'));
+    }
+  }
+
+  // --- Private helpers ---
+
+  private getEmptyFormData() {
+    return {
+      first_name: '',
+      last_name: '',
+      nickname: '',
+      email: '',
+      phone: '',
+      linkedin_url: '',
+      github_url: '',
+      instagram_url: '',
+      whatsapp: '',
+      city: '',
+      country_code: '',
+      timezone: '',
+      latitude: null as number | null,
+      longitude: null as number | null,
+      job_title: '',
+      is_available: true,
+    };
+  }
+
+  private mapProfileToFormData(p: Profile) {
+    return {
+      first_name: p.first_name || '',
+      last_name: p.last_name || '',
+      nickname: p.nickname || '',
+      email: p.email || '',
+      phone: p.phone || '',
+      linkedin_url: p.linkedin_url || '',
+      github_url: p.github_url || '',
+      instagram_url: p.instagram_url || '',
+      whatsapp: p.whatsapp || '',
+      city: p.city || '',
+      country_code: p.country_code || '',
+      timezone: p.timezone || '',
+      latitude: p.latitude ?? null,
+      longitude: p.longitude ?? null,
+      job_title: p.job_title || '',
+      is_available: p.is_available ?? true,
+    };
+  }
+
+  private loadTranslationsFromProfile(data: Profile): void {
+    this.translations.clear();
+    if (data.translations) {
+      for (const t of data.translations as ProfileTranslation[]) {
+        const langCode = t.language?.code;
+        if (langCode) {
+          this.translations.set(langCode, { about: t.about || '' });
+        }
+      }
+    }
+    this.initEmptyTranslations();
+  }
+
+  private initEmptyTranslations(): void {
     for (const lang of this.supportedLanguages) {
       if (!this.translations.has(lang.code)) {
         this.translations.set(lang.code, { about: '' });
       }
     }
-
-    this.error.set(null);
-    this.success.set(null);
   }
 
-  private async savePendingAvatar(): Promise<void> {
-    const avatar = this.pendingAvatar();
-    console.log('savePendingAvatar called, avatar:', avatar);
-    if (!avatar) return;
-
-    try {
-      const result = await this.supabase.create('image', {
-        url: avatar.url,
-        source_type: 'profile',
-        alt_text: 'Avatar de perfil',
-        position: 0,
-      });
-      console.log('savePendingAvatar result:', result);
-
-      if (result.error) throw result.error;
-
-      this.existingAvatarUrl.set(avatar.url);
-      this.pendingAvatar.set(null);
-    } catch (err) {
-      console.error('Error saving avatar:', err);
-    }
-  }
-
-  private async savePendingBanner(): Promise<void> {
-    const banner = this.pendingBanner();
-    if (!banner) return;
-
-    try {
-      const result = await this.supabase.create('image', {
-        url: banner.url,
-        source_type: 'profile_banner',
-        alt_text: 'Banner de perfil',
-        position: 0,
-      });
-
-      if (result.error) throw result.error;
-
-      this.existingBannerUrl.set(banner.url);
-      this.pendingBanner.set(null);
-    } catch (err) {
-      console.error('Error saving banner:', err);
-    }
-  }
-
-  async onAvatarUploaded(data: { path: string; url: string }): Promise<void> {
-    console.log('Avatar uploaded, profileExists:', this.profileExists, 'data:', data);
-
-    if (this.profileExists) {
-      // If profile exists, save the avatar immediately
-      try {
-        // First archive any existing avatar
-        const existingId = this.existingAvatarId();
-        if (existingId) {
-          await this.supabase.update('image', existingId, { is_archived: true });
-        }
-
-        const result = await this.supabase.create('image', {
-          url: data.url,
-          source_type: 'profile',
-          alt_text: 'Avatar de perfil',
-          position: 0,
-        });
-        console.log('Avatar save result:', result);
-
-        if (result.error) throw result.error;
-
-        // Update the existing avatar URL and ID to show the new image
-        this.existingAvatarUrl.set(data.url);
-        this.existingAvatarId.set(result.data?.id ?? null);
-        this.success.set('Avatar actualizado correctamente');
-        setTimeout(() => this.success.set(null), 3000);
-      } catch (err) {
-        console.error('Error saving avatar:', err);
-        this.error.set('Error al guardar el avatar');
-      }
-    } else {
-      // Queue for saving after profile creation and also update the preview
-      console.log('Profile does not exist, queueing avatar');
-      this.pendingAvatar.set(data);
-      this.existingAvatarUrl.set(data.url);
-    }
-  }
-
-  async onAvatarRemoved(imageId: number): Promise<void> {
-    console.log('Avatar removed, imageId:', imageId);
-    try {
-      await this.supabase.update('image', imageId, { is_archived: true });
-      this.existingAvatarUrl.set(null);
-      this.existingAvatarId.set(null);
-      this.success.set('Avatar eliminado correctamente');
-      setTimeout(() => this.success.set(null), 3000);
-    } catch (err) {
-      console.error('Error removing avatar:', err);
-      this.error.set('Error al eliminar el avatar');
-    }
-  }
-
-  async onBannerUploaded(data: { path: string; url: string }): Promise<void> {
-    if (this.profileExists) {
-      try {
-        // First archive any existing banner
-        const existingId = this.existingBannerId();
-        if (existingId) {
-          await this.supabase.update('image', existingId, { is_archived: true });
-        }
-
-        const result = await this.supabase.create('image', {
-          url: data.url,
-          source_type: 'profile_banner',
-          alt_text: 'Banner de perfil',
-          position: 0,
-        });
-
-        if (result.error) throw result.error;
-
-        this.existingBannerUrl.set(data.url);
-        this.existingBannerId.set(result.data?.id ?? null);
-        this.success.set('Banner actualizado correctamente');
-        setTimeout(() => this.success.set(null), 3000);
-      } catch (err) {
-        console.error('Error saving banner:', err);
-        this.error.set('Error al guardar el banner');
-      }
-    } else {
-      this.pendingBanner.set(data);
-      this.existingBannerUrl.set(data.url);
-    }
-  }
-
-  async onBannerRemoved(imageId: number): Promise<void> {
-    console.log('Banner removed, imageId:', imageId);
-    try {
-      await this.supabase.update('image', imageId, { is_archived: true });
-      this.existingBannerUrl.set(null);
-      this.existingBannerId.set(null);
-      this.success.set('Banner eliminado correctamente');
-      setTimeout(() => this.success.set(null), 3000);
-    } catch (err) {
-      console.error('Error removing banner:', err);
-      this.error.set('Error al eliminar el banner');
-    }
+  private showSuccess(msg: string): void {
+    this.success.set(msg);
+    setTimeout(() => this.success.set(null), SUCCESS_MESSAGE_DURATION_MS);
   }
 }

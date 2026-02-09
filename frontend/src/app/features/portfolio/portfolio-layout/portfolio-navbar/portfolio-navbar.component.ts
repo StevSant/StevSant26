@@ -4,7 +4,7 @@ import { RouterModule } from '@angular/router';
 import { TranslatePipe } from '@shared/pipes/translate.pipe';
 import { LanguageSelectorComponent } from '@shared/components/language-selector/language-selector.component';
 import { ThemeToggleComponent } from '@shared/components/theme-toggle/theme-toggle.component';
-import { PortfolioDataService } from '../services/portfolio-data.service';
+import { PortfolioDataService } from '../../services/portfolio-data.service';
 
 @Component({
   selector: 'app-portfolio-navbar',

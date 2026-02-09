@@ -1,4 +1,4 @@
-import { Component, OnInit, signal, ViewChild, inject } from '@angular/core';
+import { Component, OnInit, signal, viewChild, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
@@ -9,6 +9,7 @@ import { ConfirmDialogComponent } from '@shared/components/confirm-dialog/confir
 import { TranslatePipe } from '@shared/pipes/translate.pipe';
 import { DashboardFilterComponent, DashboardFilterOption } from '@shared/components/dashboard-filter/dashboard-filter.component';
 import { ExperienceItemComponent } from './experience-item/experience-item.component';
+import { LoggerService } from '@core/services/logger.service';
 
 @Component({
   selector: 'app-experience-list',
@@ -19,8 +20,9 @@ import { ExperienceItemComponent } from './experience-item/experience-item.compo
 export class ExperienceListComponent implements OnInit {
   private supabase = inject(SupabaseService);
   private translateService = inject(TranslateService);
+  private logger = inject(LoggerService);
 
-  @ViewChild('confirmDialog') confirmDialog!: ConfirmDialogComponent;
+  confirmDialog = viewChild.required<ConfirmDialogComponent>('confirmDialog');
   loading = signal(true);
   showArchived = signal(false);
   items = signal<Experience[]>([]);
@@ -47,7 +49,7 @@ export class ExperienceListComponent implements OnInit {
       this.items.set(data || []);
       this.buildCompanyOptions(data || []);
       await this.loadImages(data || []);
-    } catch (err) { console.error('Error loading experiences:', err); }
+    } catch (err) { this.logger.error('Error loading experiences:', err); }
     finally { this.loading.set(false); }
   }
 
@@ -126,12 +128,12 @@ export class ExperienceListComponent implements OnInit {
     moveItemInArray(filtered, event.previousIndex, event.currentIndex);
     const updates = filtered.map((item, index) => ({ id: item.id, position: index }));
     try { await this.supabase.updatePositions('experience', updates); await this.loadItems(); }
-    catch (err) { console.error('Error updating positions:', err); }
+    catch (err) { this.logger.error('Error updating positions:', err); }
   }
 
   async togglePin(item: Experience): Promise<void> {
     try { await this.supabase.togglePin('experience', item.id, !item.is_pinned); await this.loadItems(); }
-    catch (err) { console.error('Error toggling pin:', err); }
+    catch (err) { this.logger.error('Error toggling pin:', err); }
   }
 
   async toggleArchive(item: Experience): Promise<void> {
@@ -139,15 +141,15 @@ export class ExperienceListComponent implements OnInit {
       if (item.is_archived) { await this.supabase.unarchive('experience', item.id); }
       else { await this.supabase.archive('experience', item.id); }
       await this.loadItems();
-    } catch (err) { console.error('Error toggling archive:', err); }
+    } catch (err) { this.logger.error('Error toggling archive:', err); }
   }
 
-  confirmDelete(item: Experience): void { this.itemToDelete = item; this.confirmDialog.open(); }
+  confirmDelete(item: Experience): void { this.itemToDelete = item; this.confirmDialog().open(); }
 
   async deleteItem(): Promise<void> {
     if (!this.itemToDelete) return;
     try { await this.supabase.delete('experience', this.itemToDelete.id); await this.loadItems(); }
-    catch (err) { console.error('Error deleting item:', err); }
+    catch (err) { this.logger.error('Error deleting item:', err); }
     finally { this.itemToDelete = null; }
   }
 }

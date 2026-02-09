@@ -2,6 +2,7 @@ import { Component, signal, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { SupabaseService } from '@core/services/supabase.service';
+import { TranslateService } from '@core/services/translate.service';
 import { TranslatePipe } from '@shared/pipes/translate.pipe';
 import { LanguageSelectorComponent } from '@shared/components/language-selector/language-selector.component';
 import { ThemeToggleComponent } from '@shared/components/theme-toggle/theme-toggle.component';
@@ -15,6 +16,7 @@ import { ThemeToggleComponent } from '@shared/components/theme-toggle/theme-togg
 export class LoginComponent {
   private supabase = inject(SupabaseService);
   private router = inject(Router);
+  private t = inject(TranslateService);
 
   email = '';
   password = '';
@@ -23,7 +25,7 @@ export class LoginComponent {
 
   async onSubmit(): Promise<void> {
     if (!this.email || !this.password) {
-      this.error.set('Por favor ingresa tu correo y contraseña');
+      this.error.set(this.t.instant('errors.loginRequiredFields'));
       return;
     }
 
@@ -40,18 +42,19 @@ export class LoginComponent {
 
       this.router.navigate(['/dashboard']);
     } catch (err) {
-      this.error.set('Ocurrió un error inesperado. Por favor intenta de nuevo.');
+      this.error.set(this.t.instant('errors.unexpectedError'));
     } finally {
       this.loading.set(false);
     }
   }
 
   private getErrorMessage(message: string): string {
-    const errorMessages: Record<string, string> = {
-      'Invalid login credentials': 'Credenciales inválidas. Verifica tu correo y contraseña.',
-      'Email not confirmed': 'Tu correo no ha sido confirmado. Revisa tu bandeja de entrada.',
-      'Too many requests': 'Demasiados intentos. Por favor espera un momento.',
+    const errorMap: Record<string, string> = {
+      'Invalid login credentials': 'errors.invalidCredentials',
+      'Email not confirmed': 'errors.emailNotConfirmed',
+      'Too many requests': 'errors.tooManyRequests',
     };
-    return errorMessages[message] || message;
+    const key = errorMap[message];
+    return key ? this.t.instant(key) : message;
   }
 }

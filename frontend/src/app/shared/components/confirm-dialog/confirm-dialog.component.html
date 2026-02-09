@@ -66,16 +66,16 @@
 
       <!-- Title -->
       <h3 class="text-xl font-semibold text-(--color-text-primary) text-center mb-2">
-        {{ title() }}
+        {{ displayTitle }}
       </h3>
 
       <!-- Message -->
-      <p class="text-(--color-text-muted) text-center mb-6">{{ message() }}</p>
+      <p class="text-(--color-text-muted) text-center mb-6">{{ displayMessage }}</p>
 
       <!-- Actions -->
       <div class="flex gap-3">
         <button type="button" (click)="onCancel()" class="flex-1 btn-secondary">
-          {{ cancelText() }}
+          {{ displayCancelText }}
         </button>
         <button
           type="button"
@@ -89,7 +89,7 @@
           [class.hover:bg-(--color-accent-hover)]="variant() === 'info'"
           [class.text-(--color-text-primary)]="true"
         >
-          {{ confirmText() }}
+          {{ displayConfirmText }}
         </button>
       </div>
     </div>

@@ -1,12 +1,12 @@
 import {
   Component,
-  Input,
   OnInit,
   OnDestroy,
   signal,
   computed,
   PLATFORM_ID,
   inject,
+  input,
 } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { GlobeComponent } from '@shared/components/globe/globe.component';
@@ -20,17 +20,17 @@ import { TranslatePipe } from '@shared/pipes/translate.pipe';
 })
 export class PortfolioMapCardComponent implements OnInit, OnDestroy {
   /** City name to display */
-  @Input() city = '';
+  city = input('');
   /** Country code (ISO 2-letter) */
-  @Input() countryCode = '';
+  countryCode = input('');
   /** IANA timezone string, e.g. "America/Bogota" */
-  @Input() timezone = '';
+  timezone = input('');
   /** Job title / role */
-  @Input() jobTitle = '';
+  jobTitle = input('');
   /** Latitude for the globe marker */
-  @Input() latitude = 0;
+  latitude = input(0);
   /** Longitude for the globe marker */
-  @Input() longitude = 0;
+  longitude = input(0);
 
   private platformId = inject(PLATFORM_ID);
   private timeInterval: ReturnType<typeof setInterval> | null = null;
@@ -38,36 +38,36 @@ export class PortfolioMapCardComponent implements OnInit, OnDestroy {
   currentTime = signal('--:-- --');
 
   displayLocation = computed(() => {
-    if (this.city && this.countryCode) {
-      return `${this.city}, ${this.countryCode.toUpperCase()}`;
+    if (this.city() && this.countryCode()) {
+      return `${this.city()}, ${this.countryCode().toUpperCase()}`;
     }
-    if (this.city) return this.city;
+    if (this.city()) return this.city();
     return '';
   });
 
   /** Friendly timezone display, e.g. "America/Guayaquil" → "GMT-5" */
   timezoneDisplay = computed(() => {
-    if (!this.timezone) return '';
+    if (!this.timezone()) return '';
     try {
       const now = new Date();
       const short = new Intl.DateTimeFormat('en-US', {
-        timeZone: this.timezone,
+        timeZone: this.timezone(),
         timeZoneName: 'shortOffset',
       }).formatToParts(now).find(p => p.type === 'timeZoneName')?.value || '';
       // e.g. "GMT-5" — also show friendly name
-      const friendly = this.timezone.replace(/_/g, ' ').split('/').pop() || '';
+      const friendly = this.timezone().replace(/_/g, ' ').split('/').pop() || '';
       return short ? `${friendly} (${short})` : friendly;
     } catch {
-      return this.timezone.replace(/_/g, ' ').split('/').pop() || '';
+      return this.timezone().replace(/_/g, ' ').split('/').pop() || '';
     }
   });
 
   /** Formatted coordinates, e.g. "0.95°S, 80.73°W" */
   coordsDisplay = computed(() => {
-    if (!this.latitude && !this.longitude) return '';
-    const latDir = this.latitude >= 0 ? 'N' : 'S';
-    const lngDir = this.longitude >= 0 ? 'E' : 'W';
-    return `${Math.abs(this.latitude).toFixed(2)}°${latDir}, ${Math.abs(this.longitude).toFixed(2)}°${lngDir}`;
+    if (!this.latitude() && !this.longitude()) return '';
+    const latDir = this.latitude() >= 0 ? 'N' : 'S';
+    const lngDir = this.longitude() >= 0 ? 'E' : 'W';
+    return `${Math.abs(this.latitude()).toFixed(2)}°${latDir}, ${Math.abs(this.longitude()).toFixed(2)}°${lngDir}`;
   });
 
   ngOnInit(): void {
@@ -90,7 +90,7 @@ export class PortfolioMapCardComponent implements OnInit, OnDestroy {
         minute: '2-digit',
         second: '2-digit',
         hour12: true,
-        timeZone: this.timezone || undefined,
+        timeZone: this.timezone() || undefined,
       };
       this.currentTime.set(
         new Intl.DateTimeFormat('en-US', options).format(now)

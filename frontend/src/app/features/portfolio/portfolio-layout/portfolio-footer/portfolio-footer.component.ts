@@ -2,7 +2,7 @@ import { Component, input, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { TranslatePipe } from '@shared/pipes/translate.pipe';
-import { PortfolioDataService } from '../services/portfolio-data.service';
+import { PortfolioDataService } from '../../services/portfolio-data.service';
 
 @Component({
   selector: 'app-portfolio-footer',

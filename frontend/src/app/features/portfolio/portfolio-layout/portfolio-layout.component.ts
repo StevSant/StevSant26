@@ -8,9 +8,9 @@ import { TranslatePipe } from '@shared/pipes/translate.pipe';
 import { LanguageSelectorComponent } from '@shared/components/language-selector/language-selector.component';
 import { ThemeToggleComponent } from '@shared/components/theme-toggle/theme-toggle.component';
 import { PortfolioDataService } from '../services/portfolio-data.service';
-import { PortfolioNavbarComponent } from './portfolio-navbar.component';
-import { PortfolioMobileMenuComponent } from './portfolio-mobile-menu.component';
-import { PortfolioFooterComponent } from './portfolio-footer.component';
+import { PortfolioNavbarComponent } from './portfolio-navbar/portfolio-navbar.component';
+import { PortfolioMobileMenuComponent } from './portfolio-mobile-menu/portfolio-mobile-menu.component';
+import { PortfolioFooterComponent } from './portfolio-footer/portfolio-footer.component';
 
 @Component({
   selector: 'app-portfolio-layout',

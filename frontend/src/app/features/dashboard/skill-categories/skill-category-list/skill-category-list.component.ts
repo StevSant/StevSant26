@@ -1,4 +1,4 @@
-import { Component, OnInit, signal, ViewChild, inject } from '@angular/core';
+import { Component, OnInit, signal, viewChild, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
@@ -8,6 +8,7 @@ import { SkillCategory, SkillCategoryTranslation } from '@core/models';
 import { ConfirmDialogComponent } from '@shared/components/confirm-dialog/confirm-dialog.component';
 import { TranslatePipe } from '@shared/pipes/translate.pipe';
 import { SkillCategoryItemComponent } from './skill-category-item/skill-category-item.component';
+import { LoggerService } from '@core/services/logger.service';
 
 @Component({
   selector: 'app-skill-category-list',
@@ -18,8 +19,9 @@ import { SkillCategoryItemComponent } from './skill-category-item/skill-category
 export class SkillCategoryListComponent implements OnInit {
   private supabase = inject(SupabaseService);
   private translateService = inject(TranslateService);
+  private logger = inject(LoggerService);
 
-  @ViewChild('confirmDialog') confirmDialog!: ConfirmDialogComponent;
+  confirmDialog = viewChild.required<ConfirmDialogComponent>('confirmDialog');
   loading = signal(true);
   showArchived = signal(false);
   items = signal<SkillCategory[]>([]);
@@ -41,7 +43,7 @@ export class SkillCategoryListComponent implements OnInit {
       if (error) throw error;
       this.items.set(data || []);
     } catch (err) {
-      console.error('Error loading skill categories:', err);
+      this.logger.error('Error loading skill categories:', err);
     } finally {
       this.loading.set(false);
     }
@@ -82,7 +84,7 @@ export class SkillCategoryListComponent implements OnInit {
       await this.supabase.updatePositions('skill_category', updates);
       await this.loadItems();
     } catch (err) {
-      console.error('Error updating positions:', err);
+      this.logger.error('Error updating positions:', err);
     }
   }
 
@@ -91,7 +93,7 @@ export class SkillCategoryListComponent implements OnInit {
       await this.supabase.togglePin('skill_category', item.id, !item.is_pinned);
       await this.loadItems();
     } catch (err) {
-      console.error('Error toggling pin:', err);
+      this.logger.error('Error toggling pin:', err);
     }
   }
 
@@ -104,13 +106,13 @@ export class SkillCategoryListComponent implements OnInit {
       }
       await this.loadItems();
     } catch (err) {
-      console.error('Error toggling archive:', err);
+      this.logger.error('Error toggling archive:', err);
     }
   }
 
   confirmDelete(item: SkillCategory): void {
     this.itemToDelete = item;
-    this.confirmDialog.open();
+    this.confirmDialog().open();
   }
 
   async deleteItem(): Promise<void> {
@@ -119,7 +121,7 @@ export class SkillCategoryListComponent implements OnInit {
       await this.supabase.delete('skill_category', this.itemToDelete.id);
       await this.loadItems();
     } catch (err) {
-      console.error('Error deleting item:', err);
+      this.logger.error('Error deleting item:', err);
     } finally {
       this.itemToDelete = null;
     }

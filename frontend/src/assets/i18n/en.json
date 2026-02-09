@@ -677,5 +677,62 @@
       "events": "tech events, conferences, meetups, workshops",
       "contact": "contact, email, collaboration, hire developer"
     }
+  },
+  "errors": {
+    "dataLoadFailed": "Error loading data",
+    "saveFailed": "Error saving",
+    "profileLoadFailed": "Error loading profile",
+    "profileSaveFailed": "Error saving profile",
+    "avatarSaveFailed": "Error saving avatar",
+    "avatarDeleteFailed": "Error deleting avatar",
+    "bannerSaveFailed": "Error saving banner",
+    "bannerDeleteFailed": "Error deleting banner",
+    "imageSaveFailed": "Error saving image",
+    "imageDeleteFailed": "Error deleting image",
+    "imageUploadFailed": "Error uploading image. Please try again.",
+    "documentSaveFailed": "Error saving document",
+    "documentDeleteFailed": "Error deleting document",
+    "documentUploadFailed": "Error uploading document. Please try again.",
+    "projectSaveFailed": "Error saving project",
+    "experienceSaveFailed": "Error saving experience",
+    "eventSaveFailed": "Error saving event",
+    "competitionSaveFailed": "Error saving competition",
+    "educationSaveFailed": "Error saving education",
+    "skillSaveFailed": "Error saving skill",
+    "categorySaveFailed": "Error saving category",
+    "skillUsageSaveFailed": "Error saving link",
+    "cvUploadFailed": "Error uploading CV",
+    "cvDeleteFailed": "Error deleting CV",
+    "cvInvalidFileType": "Only PDF or Word files (.doc, .docx) are allowed",
+    "fileTooLarge": "File is too large. Maximum {{max}}.",
+    "fileTypeNotAllowed": "File type not allowed: {{type}}",
+    "loginRequiredFields": "Please enter your email and password",
+    "unexpectedError": "An unexpected error occurred. Please try again.",
+    "invalidCredentials": "Invalid credentials. Check your email and password.",
+    "emailNotConfirmed": "Your email has not been confirmed. Check your inbox.",
+    "tooManyRequests": "Too many attempts. Please wait a moment."
+  },
+  "validation": {
+    "nameRequiredOneLanguage": "Name is required in at least one language",
+    "titleRequiredOneLanguage": "Title is required in at least one language",
+    "degreeRequiredOneLanguage": "Degree is required in at least one language",
+    "institutionRequired": "Institution is required",
+    "companyRequired": "Company is required",
+    "roleRequiredOneLanguage": "Role is required in at least one language",
+    "skillAndSourceRequired": "Skill and source ID are required"
+  },
+  "success": {
+    "profileUpdated": "Profile updated successfully",
+    "imageUpdated": "{{name}} updated successfully",
+    "imageDeleted": "{{name}} deleted successfully",
+    "cvUploaded": "CV uploaded successfully",
+    "cvDeleted": "CV deleted"
+  },
+  "confirmDialog": {
+    "defaultTitle": "Are you sure?",
+    "defaultMessage": "This action cannot be undone.",
+    "confirm": "Confirm",
+    "cancel": "Cancel",
+    "deleteCv": "Delete this CV?"
   }
 }

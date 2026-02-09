@@ -5,6 +5,7 @@ import { PortfolioDataService } from '../services/portfolio-data.service';
 import { SeoService } from '@core/services/seo.service';
 import { TranslateService } from '@core/services/translate.service';
 import { TranslatePipe } from '@shared/pipes/translate.pipe';
+import { MESSAGE_SENT_DISPLAY_MS } from '@shared/config/constants';
 import { ScrollRevealDirective } from '@shared/directives/scroll-reveal.directive';
 
 @Component({
@@ -33,7 +34,7 @@ export class PortfolioContactComponent implements OnInit {
     );
     window.open(`mailto:${email}?subject=${subject}&body=${body}`, '_self');
     this.messageSent.set(true);
-    setTimeout(() => this.messageSent.set(false), 4000);
+    setTimeout(() => this.messageSent.set(false), MESSAGE_SENT_DISPLAY_MS);
   }
 
   async ngOnInit(): Promise<void> {

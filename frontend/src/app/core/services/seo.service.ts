@@ -2,6 +2,7 @@ import { Injectable, inject, PLATFORM_ID, Inject } from '@angular/core';
 import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import { Meta, Title } from '@angular/platform-browser';
 import { APP_NAME } from '@shared/config/app_name';
+import { environment } from '../../../environments/environment';
 
 export interface SeoMetaOptions {
   title?: string;
@@ -28,7 +29,7 @@ export class SeoService {
 
   private defaultTitle = APP_NAME;
   private defaultDescription = 'Professional portfolio showcasing projects, skills, and experience.';
-  private siteUrl = 'https://stevsant.vercel.app';
+  private siteUrl = environment.siteUrl;
 
   /**
    * Update page title and meta tags for SEO / Open Graph / Twitter Cards

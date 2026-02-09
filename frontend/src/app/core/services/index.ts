@@ -1,7 +1,15 @@
 // Core services barrel export
+export * from './supabase-client.service';
+export * from './auth.service';
+export * from './crud.service';
+export * from './profile.service';
+export * from './translation-data.service';
+export * from './storage.service';
+export * from './document-storage.service';
 export * from './supabase.service';
 export * from './language.service';
 export * from './translate.service';
 export * from './theme.service';
 export * from './seo.service';
 export * from './content-section.service';
+export * from './logger.service';

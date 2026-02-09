@@ -1,4 +1,5 @@
-import { Component, input, output, signal } from '@angular/core';
+import { Component, inject, input, output, signal } from '@angular/core';
+import { TranslateService } from '@core/services/translate.service';
 
 @Component({
   selector: 'app-confirm-dialog',
@@ -7,11 +8,13 @@ import { Component, input, output, signal } from '@angular/core';
   styleUrl: './confirm-dialog.component.css',
 })
 export class ConfirmDialogComponent {
-  // Signal inputs
-  title = input<string>('¿Estás seguro?');
-  message = input<string>('Esta acción no se puede deshacer.');
-  confirmText = input<string>('Confirmar');
-  cancelText = input<string>('Cancelar');
+  private t = inject(TranslateService);
+
+  // Signal inputs — callers can override; defaults come from i18n
+  title = input<string>('');
+  message = input<string>('');
+  confirmText = input<string>('');
+  cancelText = input<string>('');
   variant = input<'danger' | 'warning' | 'info'>('danger');
 
   // Signal outputs
@@ -19,6 +22,12 @@ export class ConfirmDialogComponent {
   cancelled = output<void>();
 
   isOpen = signal(false);
+
+  /** Resolve display value: use caller-provided text or fall back to i18n key */
+  get displayTitle(): string { return this.title() || this.t.instant('confirmDialog.defaultTitle'); }
+  get displayMessage(): string { return this.message() || this.t.instant('confirmDialog.defaultMessage'); }
+  get displayConfirmText(): string { return this.confirmText() || this.t.instant('confirmDialog.confirm'); }
+  get displayCancelText(): string { return this.cancelText() || this.t.instant('confirmDialog.cancel'); }
 
   open(): void {
     this.isOpen.set(true);

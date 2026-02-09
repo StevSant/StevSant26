@@ -1,4 +1,4 @@
-import { Component, OnInit, signal, ViewChild, inject } from '@angular/core';
+import { Component, OnInit, signal, viewChild, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
@@ -7,6 +7,7 @@ import { TranslateService } from '@core/services/translate.service';
 import { SkillUsage, Skill } from '@core/models';
 import { ConfirmDialogComponent } from '@shared/components/confirm-dialog/confirm-dialog.component';
 import { SkillUsageListItemComponent } from './skill-usage-list-item/skill-usage-list-item.component';
+import { LoggerService } from '@core/services/logger.service';
 
 @Component({
   selector: 'app-skill-usage-list',
@@ -17,8 +18,9 @@ import { SkillUsageListItemComponent } from './skill-usage-list-item/skill-usage
 export class SkillUsageListComponent implements OnInit {
   private supabase = inject(SupabaseService);
   private translateService = inject(TranslateService);
+  private logger = inject(LoggerService);
 
-  @ViewChild('confirmDialog') confirmDialog!: ConfirmDialogComponent;
+  confirmDialog = viewChild.required<ConfirmDialogComponent>('confirmDialog');
   loading = signal(true);
   showArchived = signal(false);
   items = signal<SkillUsage[]>([]);
@@ -32,7 +34,7 @@ export class SkillUsageListComponent implements OnInit {
       const { data, error } = await this.supabase.getSkillUsagesWithSkills<SkillUsage>();
       if (error) throw error;
       this.items.set(data || []);
-    } catch (err) { console.error('Error loading skill usages:', err); }
+    } catch (err) { this.logger.error('Error loading skill usages:', err); }
     finally { this.loading.set(false); }
   }
 
@@ -58,7 +60,7 @@ export class SkillUsageListComponent implements OnInit {
     moveItemInArray(filtered, event.previousIndex, event.currentIndex);
     const updates = filtered.map((item, index) => ({ id: item.id, position: index }));
     try { await this.supabase.updatePositions('skill_usages', updates); await this.loadItems(); }
-    catch (err) { console.error('Error updating positions:', err); }
+    catch (err) { this.logger.error('Error updating positions:', err); }
   }
 
   async toggleArchive(item: SkillUsage): Promise<void> {
@@ -66,15 +68,15 @@ export class SkillUsageListComponent implements OnInit {
       if (item.is_archived) { await this.supabase.unarchive('skill_usages', item.id); }
       else { await this.supabase.archive('skill_usages', item.id); }
       await this.loadItems();
-    } catch (err) { console.error('Error toggling archive:', err); }
+    } catch (err) { this.logger.error('Error toggling archive:', err); }
   }
 
-  confirmDelete(item: SkillUsage): void { this.itemToDelete = item; this.confirmDialog.open(); }
+  confirmDelete(item: SkillUsage): void { this.itemToDelete = item; this.confirmDialog().open(); }
 
   async deleteItem(): Promise<void> {
     if (!this.itemToDelete) return;
     try { await this.supabase.delete('skill_usages', this.itemToDelete.id); await this.loadItems(); }
-    catch (err) { console.error('Error deleting item:', err); }
+    catch (err) { this.logger.error('Error deleting item:', err); }
     finally { this.itemToDelete = null; }
   }
 }

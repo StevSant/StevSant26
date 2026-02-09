@@ -675,5 +675,62 @@
       "events": "eventos tecnológicos, conferencias, meetups, talleres",
       "contact": "contacto, email, colaboración, contratar desarrollador"
     }
+  },
+  "errors": {
+    "dataLoadFailed": "Error al cargar los datos",
+    "saveFailed": "Error al guardar",
+    "profileLoadFailed": "Error al cargar el perfil",
+    "profileSaveFailed": "Error al guardar el perfil",
+    "avatarSaveFailed": "Error al guardar el avatar",
+    "avatarDeleteFailed": "Error al eliminar el avatar",
+    "bannerSaveFailed": "Error al guardar el banner",
+    "bannerDeleteFailed": "Error al eliminar el banner",
+    "imageSaveFailed": "Error al guardar la imagen",
+    "imageDeleteFailed": "Error al eliminar la imagen",
+    "imageUploadFailed": "Error al subir la imagen. Por favor intenta de nuevo.",
+    "documentSaveFailed": "Error al guardar el documento",
+    "documentDeleteFailed": "Error al eliminar el documento",
+    "documentUploadFailed": "Error al subir el documento. Por favor intenta de nuevo.",
+    "projectSaveFailed": "Error al guardar el proyecto",
+    "experienceSaveFailed": "Error al guardar la experiencia",
+    "eventSaveFailed": "Error al guardar el evento",
+    "competitionSaveFailed": "Error al guardar la competencia",
+    "educationSaveFailed": "Error al guardar la formación académica",
+    "skillSaveFailed": "Error al guardar la habilidad",
+    "categorySaveFailed": "Error al guardar la categoría",
+    "skillUsageSaveFailed": "Error al guardar el vínculo",
+    "cvUploadFailed": "Error al subir el CV",
+    "cvDeleteFailed": "Error al eliminar el CV",
+    "cvInvalidFileType": "Solo se permiten archivos PDF o Word (.doc, .docx)",
+    "fileTooLarge": "El archivo es demasiado grande. Máximo {{max}}.",
+    "fileTypeNotAllowed": "Tipo de archivo no permitido: {{type}}",
+    "loginRequiredFields": "Por favor ingresa tu correo y contraseña",
+    "unexpectedError": "Ocurrió un error inesperado. Por favor intenta de nuevo.",
+    "invalidCredentials": "Credenciales inválidas. Verifica tu correo y contraseña.",
+    "emailNotConfirmed": "Tu correo no ha sido confirmado. Revisa tu bandeja de entrada.",
+    "tooManyRequests": "Demasiados intentos. Por favor espera un momento."
+  },
+  "validation": {
+    "nameRequiredOneLanguage": "El nombre es requerido en al menos un idioma",
+    "titleRequiredOneLanguage": "El título es requerido en al menos un idioma",
+    "degreeRequiredOneLanguage": "El título/grado es requerido en al menos un idioma",
+    "institutionRequired": "La institución es requerida",
+    "companyRequired": "La empresa es requerida",
+    "roleRequiredOneLanguage": "El rol es requerido en al menos un idioma",
+    "skillAndSourceRequired": "La habilidad y el ID de fuente son requeridos"
+  },
+  "success": {
+    "profileUpdated": "Perfil actualizado correctamente",
+    "imageUpdated": "{{name}} actualizado correctamente",
+    "imageDeleted": "{{name}} eliminado correctamente",
+    "cvUploaded": "CV subido correctamente",
+    "cvDeleted": "CV eliminado"
+  },
+  "confirmDialog": {
+    "defaultTitle": "¿Estás seguro?",
+    "defaultMessage": "Esta acción no se puede deshacer.",
+    "confirm": "Confirmar",
+    "cancel": "Cancelar",
+    "deleteCv": "¿Eliminar este CV?"
   }
 }

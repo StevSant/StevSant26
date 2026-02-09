@@ -3,8 +3,11 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { SupabaseService } from '@core/services/supabase.service';
 import { LanguageService } from '@core/services/language.service';
+import { TranslateService } from '@core/services/translate.service';
 import { Document, Language } from '@core/models';
+import { MAX_CV_SIZE_BYTES, SUCCESS_MESSAGE_DURATION_MS } from '@shared/config/constants';
 import { TranslatePipe } from '@shared/pipes/translate.pipe';
+import { LoggerService } from '@core/services/logger.service';
 
 @Component({
   selector: 'app-cv-manager',
@@ -15,6 +18,8 @@ import { TranslatePipe } from '@shared/pipes/translate.pipe';
 export class CvManagerComponent implements OnInit {
   private supabase = inject(SupabaseService);
   private languageService = inject(LanguageService);
+  private t = inject(TranslateService);
+  private logger = inject(LoggerService);
 
   cvDocuments = signal<Document[]>([]);
   uploading = signal(false);
@@ -25,7 +30,7 @@ export class CvManagerComponent implements OnInit {
   newCvLabel = '';
   newCvLanguageId: number | null = null;
 
-  private readonly MAX_SIZE = 15 * 1024 * 1024; // 15MB
+  private readonly MAX_SIZE = MAX_CV_SIZE_BYTES;
   private readonly ALLOWED_TYPES = [
     'application/pdf',
     'application/msword',
@@ -52,7 +57,7 @@ export class CvManagerComponent implements OnInit {
       this.cvDocuments.set(data as Document[]);
     }
     if (error) {
-      console.error('Error loading CV documents:', error);
+      this.logger.error('Error loading CV documents:', error);
     }
   }
 
@@ -65,11 +70,11 @@ export class CvManagerComponent implements OnInit {
 
     // Validate
     if (!this.ALLOWED_TYPES.includes(file.type)) {
-      this.error.set('Solo se permiten archivos PDF o Word (.doc, .docx)');
+      this.error.set(this.t.instant('errors.cvInvalidFileType'));
       return;
     }
     if (file.size > this.MAX_SIZE) {
-      this.error.set('El archivo es demasiado grande. Máximo 15MB.');
+      this.error.set(this.t.instant('errors.fileTooLarge', { max: '15MB' }));
       return;
     }
 
@@ -102,18 +107,18 @@ export class CvManagerComponent implements OnInit {
       this.newCvLanguageId = null;
 
       await this.loadCvDocuments();
-      this.success.set('CV subido correctamente');
-      setTimeout(() => this.success.set(null), 3000);
+      this.success.set(this.t.instant('success.cvUploaded'));
+      setTimeout(() => this.success.set(null), SUCCESS_MESSAGE_DURATION_MS);
     } catch (err) {
-      this.error.set('Error al subir el CV');
-      console.error('CV upload error:', err);
+      this.error.set(this.t.instant('errors.cvUploadFailed'));
+      this.logger.error('CV upload error:', err);
     } finally {
       this.uploading.set(false);
     }
   }
 
   async deleteCv(cv: Document): Promise<void> {
-    if (!confirm('¿Eliminar este CV?')) return;
+    if (!confirm(this.t.instant('confirmDialog.deleteCv'))) return;
 
     try {
       // Extract storage path from URL to delete the file from documents bucket
@@ -127,11 +132,11 @@ export class CvManagerComponent implements OnInit {
       await this.supabase.from('document').delete().eq('id', cv.id);
 
       await this.loadCvDocuments();
-      this.success.set('CV eliminado');
-      setTimeout(() => this.success.set(null), 3000);
+      this.success.set(this.t.instant('success.cvDeleted'));
+      setTimeout(() => this.success.set(null), SUCCESS_MESSAGE_DURATION_MS);
     } catch (err) {
-      this.error.set('Error al eliminar el CV');
-      console.error('CV delete error:', err);
+      this.error.set(this.t.instant('errors.cvDeleteFailed'));
+      this.logger.error('CV delete error:', err);
     }
   }
 

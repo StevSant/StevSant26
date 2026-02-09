@@ -14,6 +14,7 @@ import { ContentSectionAddFormComponent } from './content-section-add-form/conte
 import { ContentSectionItemComponent } from './content-section-item/content-section-item.component';
 import { ImageUploadComponent, ExistingImage } from '@shared/components/image-upload/image-upload.component';
 import { SECTION_KEY_OPTIONS } from './section-key-options';
+import { LoggerService } from '@core/services/logger.service';
 
 @Component({
   selector: 'app-content-section-manager',
@@ -34,6 +35,7 @@ export class ContentSectionManagerComponent implements OnInit {
   private languageService = inject(LanguageService);
   private translateService = inject(TranslateService);
   private supabase = inject(SupabaseService);
+  private logger = inject(LoggerService);
 
   /** The entity type this manager is attached to */
   sourceType = input.required<SourceType>();
@@ -110,7 +112,7 @@ export class ContentSectionManagerComponent implements OnInit {
       await this.loadSectionImages(items);
     } catch (err) {
       this.error.set(this.translateService.instant('contentSections.errors.loadError'));
-      console.error('Load content sections error:', err);
+      this.logger.error('Load content sections error:', err);
     } finally {
       this.loading.set(false);
     }
@@ -269,7 +271,7 @@ export class ContentSectionManagerComponent implements OnInit {
         await this.loadSections(sourceId);
       } catch (err) {
         this.error.set(this.translateService.instant('contentSections.errors.saveError'));
-        console.error('Save content section error:', err);
+        this.logger.error('Save content section error:', err);
       } finally {
         this.saving.set(false);
       }
@@ -295,7 +297,7 @@ export class ContentSectionManagerComponent implements OnInit {
         this.sections.update(items => items.filter(s => s.id !== item.id));
       } catch (err) {
         this.error.set(this.translateService.instant('contentSections.errors.deleteError'));
-        console.error('Delete content section error:', err);
+        this.logger.error('Delete content section error:', err);
       }
     } else {
       this.pendingItems.update(items => items.filter(s => s !== item));
@@ -335,7 +337,7 @@ export class ContentSectionManagerComponent implements OnInit {
       try {
         await this.contentSectionService.reorder(savedIds);
       } catch (err) {
-        console.error('Error reordering sections:', err);
+        this.logger.error('Error reordering sections:', err);
         this.error.set(this.translateService.instant('contentSections.errors.saveError'));
       }
     }
@@ -392,7 +394,7 @@ export class ContentSectionManagerComponent implements OnInit {
       // Reload images
       await this.loadSectionImages(this.sections());
     } catch (err) {
-      console.error('Error saving section image:', err);
+      this.logger.error('Error saving section image:', err);
     }
   }
 }
