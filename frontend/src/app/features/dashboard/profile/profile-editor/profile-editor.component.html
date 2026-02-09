@@ -40,6 +40,12 @@
         (formDataChange)="onSocialLinksChange($event)"
       />
 
+      <!-- Location & Availability Card -->
+      <app-location-availability-card
+        [formData]="locationAvailabilityData"
+        (formDataChange)="onLocationAvailabilityChange($event)"
+      />
+
       <!-- CV Documents -->
       <app-cv-manager />
 

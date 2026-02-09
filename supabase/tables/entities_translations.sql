@@ -10,6 +10,7 @@ CREATE TABLE profile_translation (
   profile_id UUID REFERENCES profile(id) ON DELETE CASCADE,
   language_id INT NOT NULL REFERENCES language(id),
   about TEXT NOT NULL,
+  headline TEXT,
 
   UNIQUE(profile_id, language_id)
 );

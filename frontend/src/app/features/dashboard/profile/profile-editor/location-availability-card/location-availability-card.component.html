@@ -1,0 +1,147 @@
+<div class="card space-y-6">
+  <h2 class="text-xl font-semibold text-[var(--color-text-primary)] flex items-center gap-2">
+    <svg
+      class="w-6 h-6 text-[var(--color-accent)]"
+      fill="none"
+      stroke="currentColor"
+      viewBox="0 0 24 24"
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="1.5"
+        d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"
+      />
+      <circle cx="12" cy="10" r="3" />
+    </svg>
+    {{ 'profile.locationAvailability' | translate }}
+  </h2>
+
+  <!-- Job Title -->
+  <div>
+    <label for="job_title" class="label">{{ 'profile.jobTitle' | translate }}</label>
+    <input
+      type="text"
+      id="job_title"
+      name="job_title"
+      [ngModel]="formData().job_title"
+      (ngModelChange)="formData().job_title = $event; onFieldChange()"
+      class="input"
+      [placeholder]="'profile.jobTitlePlaceholder' | translate"
+    />
+  </div>
+
+  <!-- City & Country -->
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div>
+      <label for="city" class="label">{{ 'profile.city' | translate }}</label>
+      <input
+        type="text"
+        id="city"
+        name="city"
+        [ngModel]="formData().city"
+        (ngModelChange)="formData().city = $event; onFieldChange()"
+        class="input"
+        [placeholder]="'profile.cityPlaceholder' | translate"
+      />
+    </div>
+    <div>
+      <label for="country_code" class="label">{{ 'profile.countryCode' | translate }}</label>
+      <input
+        type="text"
+        id="country_code"
+        name="country_code"
+        [ngModel]="formData().country_code"
+        (ngModelChange)="formData().country_code = $event; onFieldChange()"
+        class="input"
+        maxlength="2"
+        [placeholder]="'profile.countryCodePlaceholder' | translate"
+      />
+    </div>
+  </div>
+
+  <!-- Timezone -->
+  <div>
+    <label for="timezone" class="label">{{ 'profile.timezone' | translate }}</label>
+    <input
+      type="text"
+      id="timezone"
+      name="timezone"
+      [ngModel]="formData().timezone"
+      (ngModelChange)="formData().timezone = $event; onFieldChange()"
+      class="input"
+      [placeholder]="'profile.timezonePlaceholder' | translate"
+    />
+  </div>
+
+  <!-- Latitude & Longitude -->
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div>
+      <label for="latitude" class="label">{{ 'profile.latitude' | translate }}</label>
+      <input
+        type="number"
+        id="latitude"
+        name="latitude"
+        step="0.01"
+        [ngModel]="formData().latitude"
+        (ngModelChange)="onLatChange($event)"
+        class="input"
+        [placeholder]="'profile.latitudePlaceholder' | translate"
+      />
+    </div>
+    <div>
+      <label for="longitude" class="label">{{ 'profile.longitude' | translate }}</label>
+      <input
+        type="number"
+        id="longitude"
+        name="longitude"
+        step="0.01"
+        [ngModel]="formData().longitude"
+        (ngModelChange)="onLngChange($event)"
+        class="input"
+        [placeholder]="'profile.longitudePlaceholder' | translate"
+      />
+    </div>
+  </div>
+
+  <!-- Availability Toggle -->
+  <div class="flex items-center justify-between p-4 rounded-xl bg-[var(--color-bg-tertiary)] border border-[var(--color-border-primary)]">
+    <div class="flex items-center gap-3">
+      <div class="flex items-center gap-2">
+        <span
+          class="relative flex h-3 w-3"
+        >
+          @if (formData().is_available) {
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75" style="background: var(--color-success);"></span>
+          }
+          <span
+            class="relative inline-flex rounded-full h-3 w-3"
+            [style.background]="formData().is_available ? 'var(--color-success)' : 'var(--color-text-disabled)'"
+          ></span>
+        </span>
+        <span class="text-sm font-medium text-[var(--color-text-primary)]">
+          {{ 'profile.availability' | translate }}
+        </span>
+      </div>
+      <span
+        class="text-xs font-semibold px-2 py-0.5 rounded-full"
+        [style.background]="formData().is_available ? 'var(--color-success-bg)' : 'var(--color-bg-input)'"
+        [style.color]="formData().is_available ? 'var(--color-success)' : 'var(--color-text-muted)'"
+      >
+        {{ (formData().is_available ? 'profile.availableYes' : 'profile.availableNo') | translate }}
+      </span>
+    </div>
+    <button
+      type="button"
+      (click)="onAvailabilityToggle()"
+      class="relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-200 focus:outline-none"
+      [style.background]="formData().is_available ? 'var(--color-success)' : 'var(--color-bg-input)'"
+    >
+      <span
+        class="inline-block h-4 w-4 transform rounded-full bg-white transition-transform duration-200"
+        [class.translate-x-6]="formData().is_available"
+        [class.translate-x-1]="!formData().is_available"
+      ></span>
+    </button>
+  </div>
+</div>

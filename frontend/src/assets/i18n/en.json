@@ -118,7 +118,23 @@
     "aboutPlaceholder": "Tell us about yourself, your experience and interests...",
     "headline": "Professional headline",
     "saveChanges": "Save changes",
-    "saving": "Saving..."
+    "saving": "Saving...",
+    "locationAvailability": "Location & Availability",
+    "city": "City",
+    "cityPlaceholder": "E.g.: Cartagena",
+    "countryCode": "Country code",
+    "countryCodePlaceholder": "E.g.: CO",
+    "timezone": "Timezone",
+    "timezonePlaceholder": "E.g.: America/Bogota",
+    "latitude": "Latitude",
+    "latitudePlaceholder": "E.g.: 10.39",
+    "longitude": "Longitude",
+    "longitudePlaceholder": "E.g.: -75.51",
+    "jobTitle": "Job title",
+    "jobTitlePlaceholder": "E.g.: Systems Engineer",
+    "availability": "Available for work",
+    "availableYes": "Available",
+    "availableNo": "Busy"
   },
   "cv": {
     "title": "CV Documents",
@@ -515,7 +531,12 @@
       "getInTouch": "Get in Touch",
       "featuredProjects": "Featured Projects",
       "viewAllProjects": "View all projects",
-      "viewAllSkills": "View all skills"
+      "viewAllSkills": "View all skills",
+      "map": {
+        "basedIn": "Based in",
+        "available": "Available",
+        "unavailable": "Busy"
+      }
     },
     "skillLevel": {
       "beginner": "Beginner",

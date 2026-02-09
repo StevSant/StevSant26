@@ -7,11 +7,12 @@ import { TranslateService } from '@core/services/translate.service';
 import { TranslatePipe } from '@shared/pipes/translate.pipe';
 import { SafeHtmlPipe } from '@shared/pipes/safe-html.pipe';
 import { ScrollRevealDirective } from '@shared/directives/scroll-reveal.directive';
+import { PortfolioMapCardComponent } from '../components/portfolio-map-card/portfolio-map-card.component';
 
 @Component({
   selector: 'app-portfolio-home',
   standalone: true,
-  imports: [CommonModule, RouterModule, TranslatePipe, SafeHtmlPipe, ScrollRevealDirective],
+  imports: [CommonModule, RouterModule, TranslatePipe, SafeHtmlPipe, ScrollRevealDirective, PortfolioMapCardComponent],
   templateUrl: './portfolio-home.component.html',
 })
 export class PortfolioHomeComponent implements OnInit {
@@ -31,6 +32,20 @@ export class PortfolioHomeComponent implements OnInit {
   topSkillCategories = computed(() =>
     this.data.skillCategories().slice(0, 4)
   );
+
+  /** Whether the profile has location data configured */
+  hasLocationData = computed(() => {
+    const profile = this.data.profile();
+    return !!(profile?.city && profile?.latitude && profile?.longitude);
+  });
+
+  /** Resolved job title: from translated headline or profile.job_title */
+  profileJobTitle = computed(() => {
+    const profile = this.data.profile();
+    if (!profile) return '';
+    const translation = this.data.getEntityTranslation(profile, 'headline');
+    return translation || profile.job_title || '';
+  });
 
   async ngOnInit(): Promise<void> {
     await this.data.initialize();

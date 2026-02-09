@@ -1,0 +1,124 @@
+<!-- Map Bento Card -->
+<div
+  class="relative overflow-hidden rounded-2xl sm:rounded-3xl text-left transition-all duration-300 group select-none bg-(--color-bg-secondary) border border-(--color-card-border) hover:border-(--color-accent)/20 shadow-sm hover:shadow-xl h-full min-h-[280px] sm:min-h-[320px]"
+>
+  <div class="relative h-full flex flex-col w-full p-0">
+    <div class="relative w-full h-full overflow-hidden">
+      <!-- Globe background -->
+      <div class="absolute inset-0 z-0">
+        <div class="absolute inset-0 flex items-center justify-center overflow-hidden">
+          <div
+            class="relative flex items-center justify-center"
+            style="height: 100%; aspect-ratio: 1 / 1"
+          >
+            <div class="w-full h-full" style="transform: scale(1.35)">
+              <app-globe
+                [latitude]="latitude"
+                [longitude]="longitude"
+                [dotColor]="'rgba(255, 255, 255, 0.35)'"
+                [markerColor]="'#ffffff'"
+                [autoRotate]="true"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom gradient overlay -->
+      <div
+        class="absolute inset-x-0 bottom-0 h-28 z-10 pointer-events-none"
+        style="background: linear-gradient(to top, var(--color-bg-secondary) 10%, transparent)"
+      ></div>
+
+      <!-- Location info overlay -->
+      <div class="absolute bottom-0 left-0 right-0 z-20 p-3 sm:p-4">
+        <div class="flex items-center justify-between gap-3">
+          <!-- Location details -->
+          <div class="flex items-center gap-3">
+            <!-- Map pin icon -->
+            <div
+              class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-(--color-bg-primary) border border-(--color-border-primary) flex items-center justify-center text-(--color-text-primary) shrink-0 shadow-sm"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="sm:w-5 sm:h-5"
+              >
+                <path
+                  d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"
+                ></path>
+                <circle cx="12" cy="10" r="3"></circle>
+              </svg>
+            </div>
+
+            <div class="flex flex-col justify-center">
+              <p
+                class="text-[9px] font-bold text-(--color-text-muted) uppercase tracking-wider leading-tight mb-0.5"
+              >
+                {{ 'portfolio.home.map.basedIn' | translate }}
+              </p>
+              <h3 class="text-sm font-bold text-(--color-text-primary) leading-tight">
+                {{ displayLocation() }}
+              </h3>
+              <p
+                class="text-xs font-mono font-bold text-(--color-text-muted) mt-0.5 tabular-nums leading-tight"
+              >
+                {{ currentTime() }}
+              </p>
+            </div>
+          </div>
+
+          <!-- Availability badge -->
+          <div
+            class="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] sm:text-xs font-semibold uppercase tracking-wider shrink-0 border"
+            [class]="
+              isAvailable
+                ? 'bg-(--color-success-bg) text-(--color-success) border-(--color-success-border)'
+                : 'bg-(--color-bg-tertiary) text-(--color-text-muted) border-(--color-border-primary)'
+            "
+          >
+            <!-- Status dot -->
+            <span class="relative flex h-2 w-2">
+              @if (isAvailable) {
+                <span
+                  class="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 bg-(--color-success)"
+                ></span>
+              }
+              <span
+                class="relative inline-flex rounded-full h-2 w-2"
+                [class]="isAvailable ? 'bg-(--color-success)' : 'bg-(--color-text-disabled)'"
+              ></span>
+            </span>
+            {{
+              (isAvailable ? 'portfolio.home.map.available' : 'portfolio.home.map.unavailable')
+                | translate
+            }}
+          </div>
+        </div>
+      </div>
+
+      <!-- Job title badge (top-right) -->
+      @if (jobTitle) {
+        <div class="absolute top-0 left-0 right-0 z-20 p-3 sm:p-4">
+          <div class="flex items-center gap-2">
+            <span class="relative flex h-2 w-2">
+              <span class="relative inline-flex rounded-full h-2 w-2 bg-(--color-accent)"></span>
+            </span>
+            <span
+              class="text-xs sm:text-sm font-medium text-(--color-text-secondary) tracking-wide"
+            >
+              {{ jobTitle }}
+            </span>
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+</div>

@@ -15,7 +15,14 @@ CREATE TABLE profile (
   linkedin_url TEXT,
   github_url TEXT,
   instagram_url TEXT,
-  whatsapp TEXT
+  whatsapp TEXT,
+  city TEXT,
+  country_code TEXT,
+  timezone TEXT,
+  latitude DOUBLE PRECISION,
+  longitude DOUBLE PRECISION,
+  job_title TEXT,
+  is_available BOOLEAN DEFAULT true
 );
 
 -- =========================

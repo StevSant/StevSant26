@@ -9,6 +9,7 @@ import { TranslatePipe } from '@shared/pipes/translate.pipe';
 import { PersonalInfoCardComponent } from './personal-info-card/personal-info-card.component';
 import { SocialLinksCardComponent } from './social-links-card/social-links-card.component';
 import { ProfileTranslationsCardComponent } from './profile-translations-card/profile-translations-card.component';
+import { LocationAvailabilityCardComponent, LocationAvailabilityData } from './location-availability-card/location-availability-card.component';
 
 @Component({
   selector: 'app-profile-editor',
@@ -21,6 +22,7 @@ import { ProfileTranslationsCardComponent } from './profile-translations-card/pr
     PersonalInfoCardComponent,
     SocialLinksCardComponent,
     ProfileTranslationsCardComponent,
+    LocationAvailabilityCardComponent,
   ],
   templateUrl: './profile-editor.component.html',
 })
@@ -68,6 +70,13 @@ export class ProfileEditorComponent implements OnInit {
     github_url: '',
     instagram_url: '',
     whatsapp: '',
+    city: '',
+    country_code: '',
+    timezone: '',
+    latitude: null as number | null,
+    longitude: null as number | null,
+    job_title: '',
+    is_available: true,
   };
 
   // Computed sub-data objects for child components
@@ -90,6 +99,18 @@ export class ProfileEditorComponent implements OnInit {
     };
   }
 
+  get locationAvailabilityData(): LocationAvailabilityData {
+    return {
+      city: this.formData.city,
+      country_code: this.formData.country_code,
+      timezone: this.formData.timezone,
+      latitude: this.formData.latitude,
+      longitude: this.formData.longitude,
+      job_title: this.formData.job_title,
+      is_available: this.formData.is_available,
+    };
+  }
+
   onPersonalInfoChange(data: { first_name: string; last_name: string; nickname: string }): void {
     this.formData.first_name = data.first_name;
     this.formData.last_name = data.last_name;
@@ -103,6 +124,16 @@ export class ProfileEditorComponent implements OnInit {
     this.formData.linkedin_url = data.linkedin_url;
     this.formData.github_url = data.github_url;
     this.formData.instagram_url = data.instagram_url;
+  }
+
+  onLocationAvailabilityChange(data: LocationAvailabilityData): void {
+    this.formData.city = data.city;
+    this.formData.country_code = data.country_code;
+    this.formData.timezone = data.timezone;
+    this.formData.latitude = data.latitude;
+    this.formData.longitude = data.longitude;
+    this.formData.job_title = data.job_title;
+    this.formData.is_available = data.is_available;
   }
 
   // Translations map by language code
@@ -144,6 +175,13 @@ export class ProfileEditorComponent implements OnInit {
           github_url: data.github_url || '',
           instagram_url: data.instagram_url || '',
           whatsapp: data.whatsapp || '',
+          city: data.city || '',
+          country_code: data.country_code || '',
+          timezone: data.timezone || '',
+          latitude: data.latitude ?? null,
+          longitude: data.longitude ?? null,
+          job_title: data.job_title || '',
+          is_available: data.is_available ?? true,
         };
 
         // Load translations into the map
@@ -273,6 +311,13 @@ export class ProfileEditorComponent implements OnInit {
         github_url: this.profile.github_url || '',
         instagram_url: this.profile.instagram_url || '',
         whatsapp: this.profile.whatsapp || '',
+        city: this.profile.city || '',
+        country_code: this.profile.country_code || '',
+        timezone: this.profile.timezone || '',
+        latitude: this.profile.latitude ?? null,
+        longitude: this.profile.longitude ?? null,
+        job_title: this.profile.job_title || '',
+        is_available: this.profile.is_available ?? true,
       };
 
       // Reset translations
@@ -296,6 +341,13 @@ export class ProfileEditorComponent implements OnInit {
         github_url: '',
         instagram_url: '',
         whatsapp: '',
+        city: '',
+        country_code: '',
+        timezone: '',
+        latitude: null,
+        longitude: null,
+        job_title: '',
+        is_available: true,
       };
       this.translations.clear();
     }

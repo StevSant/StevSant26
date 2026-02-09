@@ -128,6 +128,26 @@
   </div>
 </section>
 
+<!-- Map & Location Card -->
+@if (hasLocationData()) {
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="h-px bg-(--color-divider)"></div>
+  </div>
+  <section appScrollReveal class="py-12 sm:py-16 lg:py-24 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-md mx-auto">
+      <app-portfolio-map-card
+        [city]="data.profile()?.city || ''"
+        [countryCode]="data.profile()?.country_code || ''"
+        [timezone]="data.profile()?.timezone || ''"
+        [jobTitle]="profileJobTitle()"
+        [isAvailable]="data.profile()?.is_available ?? true"
+        [latitude]="data.profile()?.latitude || 0"
+        [longitude]="data.profile()?.longitude || 0"
+      />
+    </div>
+  </section>
+}
+
 <!-- Featured Projects Section -->
 @if (pinnedProjects().length > 0) {
   <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">

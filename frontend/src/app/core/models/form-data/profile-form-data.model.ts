@@ -20,5 +20,12 @@ export interface ProfileFormData {
   github_url?: string;
   instagram_url?: string;
   whatsapp?: string;
+  city?: string;
+  country_code?: string;
+  timezone?: string;
+  latitude?: number;
+  longitude?: number;
+  job_title?: string;
+  is_available?: boolean;
   translations?: ProfileTranslationFormData[];
 }

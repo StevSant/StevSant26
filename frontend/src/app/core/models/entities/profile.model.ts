@@ -8,6 +8,7 @@ export interface ProfileTranslation {
   profile_id: string;
   language_id: number;
   about: string;
+  headline: string | null;
   language?: Language;
 }
 
@@ -25,5 +26,12 @@ export interface Profile {
   github_url: string | null;
   instagram_url: string | null;
   whatsapp: string | null;
+  city: string | null;
+  country_code: string | null;
+  timezone: string | null;
+  latitude: number | null;
+  longitude: number | null;
+  job_title: string | null;
+  is_available: boolean;
   translations?: ProfileTranslation[];
 }

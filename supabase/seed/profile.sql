@@ -8,7 +8,14 @@ INSERT INTO profile (
   linkedin_url,
   github_url,
   instagram_url,
-  whatsapp
+  whatsapp,
+  city,
+  country_code,
+  timezone,
+  latitude,
+  longitude,
+  job_title,
+  is_available
 ) VALUES (
   '5e234635-49ff-4778-b846-be4210386756',
   'Bryan Steven',
@@ -19,14 +26,22 @@ INSERT INTO profile (
   'https://www.linkedin.com/in/bryanmenoscal26',
   'https://github.com/StevSant/',
   'https://www.instagram.com/stevsant_/',
-  '+593997399441'
+  '+593997399441',
+  'Manta',
+  'EC',
+  'America/Guayaquil',
+  -0.9498,
+  -80.7333,
+  'Systems Engineer',
+  true
 );
 
 
 INSERT INTO profile_translation (
   profile_id,
   language_id,
-  about
+  about,
+  headline
 ) VALUES (
   '5e234635-49ff-4778-b846-be4210386756',
   1,
@@ -36,14 +51,16 @@ Me considero fuerte en el aprendizaje autónomo y en la mejora continua. Soy una
 
 Como ingeniero, me obsesionan la arquitectura de software y la calidad del sistema en su conjunto. Me interesa profundamente cómo crecen las aplicaciones con el tiempo: la escalabilidad, el diseño limpio, las buenas prácticas, el rendimiento y la mantenibilidad del código. Disfruto trabajar con conceptos como Domain-Driven Design, Event-Driven Architecture y microservicios, y en general con todo lo que contribuya a construir sistemas sólidos, bien estructurados y preparados para evolucionar.
 
-No busco solo que el software funcione hoy, sino que siga siendo entendible y confiable mañana.'
+No busco solo que el software funcione hoy, sino que siga siendo entendible y confiable mañana.',
+  'Ingeniero de Sistemas'
 );
 
 
 INSERT INTO profile_translation (
   profile_id,
   language_id,
-  about
+  about,
+  headline
 ) VALUES (
   '5e234635-49ff-4778-b846-be4210386756',
   2,
@@ -53,5 +70,6 @@ I consider myself strong in self-directed learning and continuous improvement. I
 
 As an engineer, I’m deeply focused on software architecture and overall system quality. I care about how applications grow over time: scalability, clean design, best practices, performance, and code maintainability. I enjoy working with concepts such as Domain-Driven Design, Event-Driven Architecture, and microservices, and in general anything related to building resilient, well-structured systems that are designed to evolve.
 
-My goal isn’t just to make software work today, but to ensure it remains understandable and reliable in the future.'
+My goal isn''t just to make software work today, but to ensure it remains understandable and reliable in the future.',
+  'Systems Engineer'
 );

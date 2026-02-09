@@ -118,7 +118,23 @@
     "aboutPlaceholder": "Cuéntanos sobre ti, tu experiencia y tus intereses...",
     "headline": "Título profesional",
     "saveChanges": "Guardar cambios",
-    "saving": "Guardando..."
+    "saving": "Guardando...",
+    "locationAvailability": "Ubicación y Disponibilidad",
+    "city": "Ciudad",
+    "cityPlaceholder": "Ej: Cartagena",
+    "countryCode": "Código de país",
+    "countryCodePlaceholder": "Ej: CO",
+    "timezone": "Zona horaria",
+    "timezonePlaceholder": "Ej: America/Bogota",
+    "latitude": "Latitud",
+    "latitudePlaceholder": "Ej: 10.39",
+    "longitude": "Longitud",
+    "longitudePlaceholder": "Ej: -75.51",
+    "jobTitle": "Cargo profesional",
+    "jobTitlePlaceholder": "Ej: Ingeniero de Sistemas",
+    "availability": "Disponible para trabajar",
+    "availableYes": "Disponible",
+    "availableNo": "Ocupado"
   },
   "cv": {
     "title": "Documentos CV",
@@ -513,7 +529,12 @@
       "getInTouch": "Contáctame",
       "featuredProjects": "Proyectos Destacados",
       "viewAllProjects": "Ver todos los proyectos",
-      "viewAllSkills": "Ver todas las habilidades"
+      "viewAllSkills": "Ver todas las habilidades",
+      "map": {
+        "basedIn": "Ubicado en",
+        "available": "Disponible",
+        "unavailable": "Ocupado"
+      }
     },
     "skillLevel": {
       "beginner": "Principiante",
