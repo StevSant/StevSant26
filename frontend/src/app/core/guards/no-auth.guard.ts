@@ -4,10 +4,9 @@ import { CanActivateFn, Router } from '@angular/router';
 import { SupabaseService } from '../services/supabase.service';
 
 /**
- * Auth guard to protect routes that require authentication
- * Redirects to login page if user is not authenticated
+ * Guard to redirect authenticated users away from login page
  */
-export const authGuard: CanActivateFn = async () => {
+export const noAuthGuard: CanActivateFn = async () => {
   const platformId = inject(PLATFORM_ID);
 
   // Skip auth check on server - client will handle it
@@ -25,11 +24,10 @@ export const authGuard: CanActivateFn = async () => {
 
   const session = supabase.session();
 
-  if (!session) {
-    router.navigate(['/login']);
+  if (session) {
+    router.navigate(['/dashboard']);
     return false;
   }
 
   return true;
 };
-

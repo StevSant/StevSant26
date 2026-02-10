@@ -1,5 +1,7 @@
 import { Component, inject, signal } from '@angular/core';
-import { ThemeService, AVAILABLE_THEMES, ThemeId, ThemeIconType } from '@core/services/theme.service';
+import { ThemeService } from '@core/services/theme.service';
+import { ThemeId, ThemeIconType } from '@core/services/theme.types';
+import { AVAILABLE_THEMES } from '@core/services/theme.constants';
 import { TranslatePipe } from '@shared/pipes/translate.pipe';
 
 @Component({

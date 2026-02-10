@@ -3,22 +3,16 @@ import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import { Meta, Title } from '@angular/platform-browser';
 import { APP_NAME } from '@shared/config/app_name';
 import { environment } from '../../../environments/environment';
-
-export interface SeoMetaOptions {
-  title?: string;
-  description?: string;
-  image?: string;
-  url?: string;
-  type?: string;
-  keywords?: string;
-  locale?: string;
-  author?: string;
-  robots?: string;
-}
-
-export interface JsonLdSchema {
-  [key: string]: unknown;
-}
+import { SeoMetaOptions, JsonLdSchema } from './seo.types';
+import {
+  buildPersonSchema as _buildPersonSchema,
+  buildWebSiteSchema as _buildWebSiteSchema,
+  buildBreadcrumbSchema as _buildBreadcrumbSchema,
+  buildProjectSchema as _buildProjectSchema,
+  buildExperienceSchema as _buildExperienceSchema,
+  buildEducationSchema as _buildEducationSchema,
+  buildEventSchema as _buildEventSchema,
+} from './json-ld.builder';
 
 @Injectable({ providedIn: 'root' })
 export class SeoService {
@@ -140,44 +134,21 @@ export class SeoService {
     jobTitle?: string;
     sameAs?: string[];
   }): JsonLdSchema {
-    return {
-      '@context': 'https://schema.org',
-      '@type': 'Person',
-      name: options.name,
-      ...(options.email && { email: `mailto:${options.email}` }),
-      url: options.url || this.siteUrl,
-      ...(options.image && { image: options.image }),
-      ...(options.jobTitle && { jobTitle: options.jobTitle }),
-      ...(options.sameAs?.length && { sameAs: options.sameAs }),
-    };
+    return _buildPersonSchema(this.siteUrl, options);
   }
 
   /**
    * Build a WebSite JSON-LD schema
    */
   buildWebSiteSchema(name: string): JsonLdSchema {
-    return {
-      '@context': 'https://schema.org',
-      '@type': 'WebSite',
-      name,
-      url: this.siteUrl,
-    };
+    return _buildWebSiteSchema(this.siteUrl, name);
   }
 
   /**
    * Build a BreadcrumbList JSON-LD schema
    */
   buildBreadcrumbSchema(items: { name: string; url: string }[]): JsonLdSchema {
-    return {
-      '@context': 'https://schema.org',
-      '@type': 'BreadcrumbList',
-      itemListElement: items.map((item, i) => ({
-        '@type': 'ListItem',
-        position: i + 1,
-        name: item.name,
-        item: item.url,
-      })),
-    };
+    return _buildBreadcrumbSchema(items);
   }
 
   /**
@@ -192,17 +163,7 @@ export class SeoService {
     author?: string;
     keywords?: string[];
   }): JsonLdSchema {
-    return {
-      '@context': 'https://schema.org',
-      '@type': 'CreativeWork',
-      name: options.name,
-      ...(options.description && { description: options.description }),
-      ...(options.url && { url: options.url }),
-      ...(options.image && { image: options.image }),
-      ...(options.dateCreated && { dateCreated: options.dateCreated }),
-      ...(options.author && { author: { '@type': 'Person', name: options.author } }),
-      ...(options.keywords?.length && { keywords: options.keywords.join(', ') }),
-    };
+    return _buildProjectSchema(options);
   }
 
   /**
@@ -216,18 +177,7 @@ export class SeoService {
     endDate?: string | null;
     description?: string;
   }): JsonLdSchema {
-    return {
-      '@context': 'https://schema.org',
-      '@type': 'OrganizationRole',
-      roleName: options.roleName,
-      startDate: options.startDate || undefined,
-      endDate: options.endDate || undefined,
-      ...(options.description && { description: options.description }),
-      memberOf: {
-        '@type': 'Organization',
-        name: options.companyName,
-      },
-    };
+    return _buildExperienceSchema(options);
   }
 
   /**
@@ -240,17 +190,7 @@ export class SeoService {
     endDate?: string | null;
     description?: string;
   }): JsonLdSchema {
-    return {
-      '@context': 'https://schema.org',
-      '@type': 'EducationalOccupationalCredential',
-      name: options.name,
-      recognizedBy: {
-        '@type': 'Organization',
-        name: options.institution,
-      },
-      ...(options.startDate && { dateCreated: options.startDate }),
-      ...(options.description && { description: options.description }),
-    };
+    return _buildEducationSchema(options);
   }
 
   /**
@@ -263,15 +203,7 @@ export class SeoService {
     url?: string;
     image?: string | null;
   }): JsonLdSchema {
-    return {
-      '@context': 'https://schema.org',
-      '@type': 'Event',
-      name: options.name,
-      ...(options.description && { description: options.description }),
-      ...(options.startDate && { startDate: options.startDate }),
-      ...(options.url && { url: options.url }),
-      ...(options.image && { image: options.image }),
-    };
+    return _buildEventSchema(options);
   }
 
   /**

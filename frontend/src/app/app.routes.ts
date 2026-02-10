@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
-import { authGuard, noAuthGuard } from './core/guards/auth.guard';
+import { authGuard } from './core/guards/auth.guard';
+import { noAuthGuard } from './core/guards/no-auth.guard';
 import { environment } from '../environments/environment';
 
 const portfolioChildren: Routes = [

@@ -1,23 +1,7 @@
 import { Injectable, signal, effect, PLATFORM_ID, inject } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
-
-export type ThemeId = 'dark-elegant' | 'light-elegant' | 'midnight-blue' | 'warm-sepia';
-
-export type ThemeIconType = 'moon' | 'sun' | 'waves' | 'book';
-
-export interface ThemeDefinition {
-  id: ThemeId;
-  nameKey: string;
-  icon: string;
-  iconType: ThemeIconType;
-}
-
-export const AVAILABLE_THEMES: ThemeDefinition[] = [
-  { id: 'dark-elegant', nameKey: 'theme.darkElegant', icon: '🌑', iconType: 'moon' },
-  { id: 'light-elegant', nameKey: 'theme.lightElegant', icon: '☀️', iconType: 'sun' },
-  { id: 'midnight-blue', nameKey: 'theme.midnightBlue', icon: '🌊', iconType: 'waves' },
-  { id: 'warm-sepia', nameKey: 'theme.warmSepia', icon: '📜', iconType: 'book' },
-];
+import { ThemeId } from './theme.types';
+import { AVAILABLE_THEMES } from './theme.constants';
 
 const STORAGE_KEY = 'portfolio-theme';
 
