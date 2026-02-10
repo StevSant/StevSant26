@@ -1,6 +1,17 @@
 <section class="py-12 sm:py-16 lg:py-24 px-4 sm:px-6 lg:px-8">
   <div class="max-w-4xl mx-auto">
     <!-- Back link -->
+    @if (parentProject(); as parent) {
+      <a
+        [routerLink]="['../', parent.id]"
+        class="inline-flex items-center gap-2 text-sm text-(--color-text-muted) hover:text-(--color-accent) transition-colors mb-2"
+      >
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+        </svg>
+        {{ data.getEntityTranslation(parent, 'title') }}
+      </a>
+    }
     <a
       routerLink="../"
       class="inline-flex items-center gap-2 text-sm text-(--color-text-muted) hover:text-(--color-accent) transition-colors mb-6 sm:mb-8"
@@ -144,6 +155,77 @@
         <div class="mb-10">
           <app-portfolio-content-sections sourceType="project" [sourceId]="p.id" />
         </div>
+
+        <!-- Sub-projects -->
+        @if (subProjects().length > 0) {
+          <div class="mb-10">
+            <h2
+              class="text-xs uppercase tracking-[0.2em] text-(--color-text-muted) mb-6 font-medium"
+            >
+              {{ 'portfolio.subProjectsTitle' | translate }}
+            </h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              @for (sub of subProjects(); track sub.id) {
+                <a
+                  [routerLink]="['../', sub.id]"
+                  class="group/sub block bg-(--color-bg-tertiary) rounded-lg border border-(--color-border-primary) hover:border-(--color-accent)/30 transition-all duration-200 hover:shadow-lg overflow-hidden"
+                >
+                  <!-- Sub-project image -->
+                  @if (data.getFirstImageUrl('project', sub.id)) {
+                    <div class="h-28 overflow-hidden">
+                      <img
+                        [src]="data.getFirstImageUrl('project', sub.id)"
+                        [alt]="data.getEntityTranslation(sub, 'title')"
+                        class="w-full h-full object-cover group-hover/sub:scale-105 transition-transform duration-300"
+                      />
+                    </div>
+                  }
+                  <div class="p-4">
+                    <div class="flex items-center gap-2 mb-1.5">
+                      <svg class="w-4 h-4 text-(--color-text-muted) shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+                      </svg>
+                      <h3 class="text-sm font-medium text-(--color-text-primary) group-hover/sub:text-(--color-accent) transition-colors truncate">
+                        {{ data.getEntityTranslation(sub, 'title') }}
+                      </h3>
+                    </div>
+                    @if (data.getEntityTranslation(sub, 'description')) {
+                      <p class="text-xs text-(--color-text-muted) line-clamp-2 leading-relaxed font-light">
+                        {{ data.getEntityTranslation(sub, 'description') }}
+                      </p>
+                    }
+                    <!-- Sub-project skills (compact) -->
+                    @if (data.getSkillUsages('project', sub.id).length > 0) {
+                      <div class="flex flex-wrap gap-1 mt-2">
+                        @for (usage of data.getSkillUsages('project', sub.id).slice(0, 4); track usage.id) {
+                          <span class="px-1.5 py-0.5 text-[10px] rounded-full bg-(--color-bg-secondary) text-(--color-text-muted) border border-(--color-border-primary) inline-flex items-center gap-0.5">
+                            @if (data.getSkillIconUrl(usage)) {
+                              <img [src]="data.getSkillIconUrl(usage)" class="w-3 h-3 object-contain" />
+                            }
+                            {{ data.getSkillName(usage) }}
+                          </span>
+                        }
+                        @if (data.getSkillUsages('project', sub.id).length > 4) {
+                          <span class="px-1.5 py-0.5 text-[10px] rounded-full bg-(--color-bg-secondary) text-(--color-text-muted)">
+                            +{{ data.getSkillUsages('project', sub.id).length - 4 }}
+                          </span>
+                        }
+                      </div>
+                    }
+                    @if (sub.url) {
+                      <div class="mt-2 flex items-center gap-1">
+                        <svg class="w-3 h-3 text-(--color-accent)" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                        </svg>
+                        <span class="text-[10px] uppercase tracking-wider text-(--color-accent)">{{ 'portfolio.viewProject' | translate }}</span>
+                      </div>
+                    }
+                  </div>
+                </a>
+              }
+            </div>
+          </div>
+        }
       </article>
     } @else if (!data.loading()) {
       <div class="text-center py-20">

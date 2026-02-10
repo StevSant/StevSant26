@@ -102,6 +102,16 @@ export class ProjectListComponent implements OnInit {
     return translation?.description || item.translations?.[0]?.description || null;
   }
 
+  getParentTitle(item: Project): string | null {
+    if (!item.parent_project_id) return null;
+    const parent = this.items().find(p => p.id === item.parent_project_id);
+    return parent ? this.getItemTitle(parent) : null;
+  }
+
+  getSubProjectCount(item: Project): number {
+    return this.items().filter(p => p.parent_project_id === item.id).length;
+  }
+
   filteredItems(): Project[] {
     const all = this.items();
     let filtered = this.showArchived() ? all.filter((i) => i.is_archived) : all.filter((i) => !i.is_archived);

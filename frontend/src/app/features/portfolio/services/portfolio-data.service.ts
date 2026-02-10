@@ -41,7 +41,10 @@ export class PortfolioDataService {
   profile = signal<Profile | null>(null);
   avatarUrl = signal<string | null>(null);
   bannerUrl = signal<string | null>(null);
+  /** Only parent/standalone projects (parent_project_id === null) */
   projects = signal<Project[]>([]);
+  /** All projects including sub-projects */
+  private allProjects = signal<Project[]>([]);
   experiences = signal<Experience[]>([]);
   educations = signal<Education[]>([]);
   competitions = signal<Competition[]>([]);
@@ -121,7 +124,9 @@ export class PortfolioDataService {
       .order('is_pinned', { ascending: false })
       .order('position', { ascending: true });
     if (data) {
-      this.projects.set(data as Project[]);
+      const all = data as Project[];
+      this.allProjects.set(all);
+      this.projects.set(all.filter(p => p.parent_project_id == null));
     }
   }
 
@@ -390,9 +395,14 @@ export class PortfolioDataService {
     return this.allImagesMap.get(`${sourceType}:${sourceId}`) ?? [];
   }
 
-  /** Find a project by ID */
+  /** Find a project by ID (searches all projects including sub-projects) */
   getProjectById(id: number): Project | undefined {
-    return this.projects().find(p => p.id === id);
+    return this.allProjects().find(p => p.id === id);
+  }
+
+  /** Get sub-projects for a parent project */
+  getSubProjects(parentId: number): Project[] {
+    return this.allProjects().filter(p => p.parent_project_id === parentId);
   }
 
   /** Find an experience by ID */

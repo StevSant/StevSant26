@@ -107,6 +107,8 @@
           [title]="getItemTitle(item)"
           [description]="getItemDescription(item)"
           [showDragHandle]="!showArchived()"
+          [parentTitle]="getParentTitle(item)"
+          [subProjectCount]="getSubProjectCount(item)"
           (pinToggled)="togglePin(item)"
           (archiveToggled)="toggleArchive(item)"
           (deleteClicked)="confirmDelete(item)"

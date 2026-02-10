@@ -1,4 +1,4 @@
 INSERT INTO language (code, name) VALUES
 ('es', 'Español'),
-('en', 'English'),
+('en', 'English')
 ON CONFLICT (code) DO NOTHING;

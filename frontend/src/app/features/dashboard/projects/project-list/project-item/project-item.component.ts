@@ -17,6 +17,8 @@ export class ProjectItemComponent {
   title = input.required<string>();
   description = input<string | null>(null);
   showDragHandle = input(true);
+  parentTitle = input<string | null>(null);
+  subProjectCount = input(0);
 
   pinToggled = output<void>();
   archiveToggled = output<void>();

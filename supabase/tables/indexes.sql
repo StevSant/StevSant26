@@ -5,6 +5,10 @@
 CREATE INDEX idx_project_source
 ON project(source_type, source_id);
 
+CREATE INDEX IF NOT EXISTS idx_project_parent
+ON project(parent_project_id);
+
+
 CREATE INDEX idx_image_source
 ON image(source_type, source_id);
 

@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, signal, computed } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { PortfolioDataService } from '../services/portfolio-data.service';
@@ -23,6 +23,8 @@ export class PortfolioProjectDetailComponent implements OnInit {
   project = signal<Project | null>(null);
   images = signal<import('@core/models').Image[]>([]);
   selectedImageIndex = signal(0);
+  subProjects = signal<Project[]>([]);
+  parentProject = signal<Project | null>(null);
 
   async ngOnInit(): Promise<void> {
     await this.data.initialize();
@@ -32,6 +34,10 @@ export class PortfolioProjectDetailComponent implements OnInit {
       if (p) {
         this.project.set(p);
         this.images.set(this.data.getAllImages('project', id));
+        this.subProjects.set(this.data.getSubProjects(id));
+        if (p.parent_project_id) {
+          this.parentProject.set(this.data.getProjectById(p.parent_project_id) ?? null);
+        }
         this.updateSeo(p);
       }
     }

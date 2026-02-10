@@ -48,7 +48,50 @@ VALUES
 -- Metodologías
 ('scrum', (SELECT id FROM skill_category WHERE code = 'methodologies'), 1),
 ('agile', (SELECT id FROM skill_category WHERE code = 'methodologies'), 2),
-('ci_cd', (SELECT id FROM skill_category WHERE code = 'methodologies'), 3);
+('ci_cd', (SELECT id FROM skill_category WHERE code = 'methodologies'), 3),
+('clean_architecture', (SELECT id FROM skill_category WHERE code = 'methodologies'), 4),
+('rest_api', (SELECT id FROM skill_category WHERE code = 'methodologies'), 5),
+('ddd', (SELECT id FROM skill_category WHERE code = 'methodologies'), 6),
+
+-- Backend (nuevos)
+('langchain', (SELECT id FROM skill_category WHERE code = 'backend'), 6),
+('pydantic', (SELECT id FROM skill_category WHERE code = 'backend'), 7),
+('graphql', (SELECT id FROM skill_category WHERE code = 'backend'), 8),
+('websocket', (SELECT id FROM skill_category WHERE code = 'backend'), 9),
+('nodejs', (SELECT id FROM skill_category WHERE code = 'backend'), 10),
+('jwt', (SELECT id FROM skill_category WHERE code = 'backend'), 11),
+('strawberry_graphql', (SELECT id FROM skill_category WHERE code = 'backend'), 12),
+('asyncio', (SELECT id FROM skill_category WHERE code = 'backend'), 13),
+
+-- Frontend (nuevos)
+('tailwindcss', (SELECT id FROM skill_category WHERE code = 'frontend'), 3),
+('scss', (SELECT id FROM skill_category WHERE code = 'frontend'), 4),
+('html_css', (SELECT id FROM skill_category WHERE code = 'frontend'), 5),
+('ngrx', (SELECT id FROM skill_category WHERE code = 'frontend'), 6),
+('leaflet', (SELECT id FROM skill_category WHERE code = 'frontend'), 7),
+
+-- Bases de datos (nuevas)
+('chromadb', (SELECT id FROM skill_category WHERE code = 'databases'), 4),
+('sql', (SELECT id FROM skill_category WHERE code = 'databases'), 5),
+('typeorm', (SELECT id FROM skill_category WHERE code = 'databases'), 6),
+
+-- Herramientas (nuevas)
+('playwright', (SELECT id FROM skill_category WHERE code = 'tools'), 6),
+('jest', (SELECT id FROM skill_category WHERE code = 'tools'), 7),
+('pytest', (SELECT id FROM skill_category WHERE code = 'tools'), 8),
+('kafka', (SELECT id FROM skill_category WHERE code = 'tools'), 9),
+('sonarqube', (SELECT id FROM skill_category WHERE code = 'tools'), 10),
+('swagger_openapi', (SELECT id FROM skill_category WHERE code = 'tools'), 11),
+('web_scraping', (SELECT id FROM skill_category WHERE code = 'tools'), 12),
+('github_actions', (SELECT id FROM skill_category WHERE code = 'tools'), 13),
+('n8n', (SELECT id FROM skill_category WHERE code = 'tools'), 14),
+
+-- Cloud (nuevos)
+('supabase', (SELECT id FROM skill_category WHERE code = 'cloud'), 4),
+('openai', (SELECT id FROM skill_category WHERE code = 'cloud'), 5),
+
+-- Lenguajes (nuevos)
+('shell_bash', (SELECT id FROM skill_category WHERE code = 'programming_languages'), 5);
 
 
 
@@ -425,4 +468,404 @@ VALUES
   (SELECT id FROM language WHERE code = 'en'),
   'Continuous integration',
   'Automation of testing and frequent code integration.'
+),
+
+-- ======================
+-- METODOLOGÍAS (nuevas)
+-- ======================
+(
+  (SELECT id FROM skill WHERE code = 'clean_architecture'),
+  (SELECT id FROM language WHERE code = 'es'),
+  'Arquitectura Limpia',
+  'Separación de responsabilidades en capas: dominio, casos de uso, infraestructura y presentación.'
+),
+(
+  (SELECT id FROM skill WHERE code = 'clean_architecture'),
+  (SELECT id FROM language WHERE code = 'en'),
+  'Clean Architecture',
+  'Separation of concerns in layers: domain, use cases, infrastructure and presentation.'
+),
+(
+  (SELECT id FROM skill WHERE code = 'rest_api'),
+  (SELECT id FROM language WHERE code = 'es'),
+  'API REST',
+  'Diseño e implementación de APIs RESTful con buenas prácticas y documentación.'
+),
+(
+  (SELECT id FROM skill WHERE code = 'rest_api'),
+  (SELECT id FROM language WHERE code = 'en'),
+  'REST API',
+  'Design and implementation of RESTful APIs with best practices and documentation.'
+),
+(
+  (SELECT id FROM skill WHERE code = 'ddd'),
+  (SELECT id FROM language WHERE code = 'es'),
+  'DDD',
+  'Diseño guiado por el dominio con entidades ricas, Value Objects y eventos de dominio.'
+),
+(
+  (SELECT id FROM skill WHERE code = 'ddd'),
+  (SELECT id FROM language WHERE code = 'en'),
+  'DDD',
+  'Domain-Driven Design with rich entities, Value Objects and domain events.'
+),
+
+-- ======================
+-- BACKEND (nuevos)
+-- ======================
+(
+  (SELECT id FROM skill WHERE code = 'langchain'),
+  (SELECT id FROM language WHERE code = 'es'),
+  'LangChain',
+  'Framework de orquestación de LLMs para cadenas de prompts y pipelines RAG.'
+),
+(
+  (SELECT id FROM skill WHERE code = 'langchain'),
+  (SELECT id FROM language WHERE code = 'en'),
+  'LangChain',
+  'LLM orchestration framework for prompt chains and RAG pipelines.'
+),
+(
+  (SELECT id FROM skill WHERE code = 'pydantic'),
+  (SELECT id FROM language WHERE code = 'es'),
+  'Pydantic',
+  'Validación de datos y configuración tipada en Python.'
+),
+(
+  (SELECT id FROM skill WHERE code = 'pydantic'),
+  (SELECT id FROM language WHERE code = 'en'),
+  'Pydantic',
+  'Data validation and typed configuration in Python.'
+),
+(
+  (SELECT id FROM skill WHERE code = 'graphql'),
+  (SELECT id FROM language WHERE code = 'es'),
+  'GraphQL',
+  'Lenguaje de consulta para APIs con schema tipado y resolvers.'
+),
+(
+  (SELECT id FROM skill WHERE code = 'graphql'),
+  (SELECT id FROM language WHERE code = 'en'),
+  'GraphQL',
+  'API query language with typed schema and resolvers.'
+),
+(
+  (SELECT id FROM skill WHERE code = 'websocket'),
+  (SELECT id FROM language WHERE code = 'es'),
+  'WebSocket',
+  'Comunicación bidireccional en tiempo real entre cliente y servidor.'
+),
+(
+  (SELECT id FROM skill WHERE code = 'websocket'),
+  (SELECT id FROM language WHERE code = 'en'),
+  'WebSocket',
+  'Real-time bidirectional communication between client and server.'
+),
+(
+  (SELECT id FROM skill WHERE code = 'nodejs'),
+  (SELECT id FROM language WHERE code = 'es'),
+  'Node.js',
+  'Entorno de ejecución JavaScript para desarrollo backend.'
+),
+(
+  (SELECT id FROM skill WHERE code = 'nodejs'),
+  (SELECT id FROM language WHERE code = 'en'),
+  'Node.js',
+  'JavaScript runtime for backend development.'
+),
+(
+  (SELECT id FROM skill WHERE code = 'jwt'),
+  (SELECT id FROM language WHERE code = 'es'),
+  'JWT',
+  'Autenticación y autorización basada en JSON Web Tokens.'
+),
+(
+  (SELECT id FROM skill WHERE code = 'jwt'),
+  (SELECT id FROM language WHERE code = 'en'),
+  'JWT',
+  'Authentication and authorization based on JSON Web Tokens.'
+),
+(
+  (SELECT id FROM skill WHERE code = 'strawberry_graphql'),
+  (SELECT id FROM language WHERE code = 'es'),
+  'Strawberry GraphQL',
+  'Biblioteca GraphQL para Python con tipado nativo y resolvers declarativos.'
+),
+(
+  (SELECT id FROM skill WHERE code = 'strawberry_graphql'),
+  (SELECT id FROM language WHERE code = 'en'),
+  'Strawberry GraphQL',
+  'Python GraphQL library with native typing and declarative resolvers.'
+),
+(
+  (SELECT id FROM skill WHERE code = 'asyncio'),
+  (SELECT id FROM language WHERE code = 'es'),
+  'asyncio',
+  'Programación asíncrona en Python con async/await y concurrencia controlada.'
+),
+(
+  (SELECT id FROM skill WHERE code = 'asyncio'),
+  (SELECT id FROM language WHERE code = 'en'),
+  'asyncio',
+  'Asynchronous Python programming with async/await and controlled concurrency.'
+),
+
+-- ======================
+-- FRONTEND (nuevos)
+-- ======================
+(
+  (SELECT id FROM skill WHERE code = 'tailwindcss'),
+  (SELECT id FROM language WHERE code = 'es'),
+  'TailwindCSS',
+  'Framework CSS utility-first para desarrollo rápido de interfaces responsivas.'
+),
+(
+  (SELECT id FROM skill WHERE code = 'tailwindcss'),
+  (SELECT id FROM language WHERE code = 'en'),
+  'TailwindCSS',
+  'Utility-first CSS framework for rapid responsive interface development.'
+),
+(
+  (SELECT id FROM skill WHERE code = 'scss'),
+  (SELECT id FROM language WHERE code = 'es'),
+  'SCSS',
+  'Preprocesador CSS con variables, mixins y sistema de módulos.'
+),
+(
+  (SELECT id FROM skill WHERE code = 'scss'),
+  (SELECT id FROM language WHERE code = 'en'),
+  'SCSS',
+  'CSS preprocessor with variables, mixins and module system.'
+),
+(
+  (SELECT id FROM skill WHERE code = 'html_css'),
+  (SELECT id FROM language WHERE code = 'es'),
+  'HTML/CSS',
+  'Maquetación semántica y estilización de interfaces web.'
+),
+(
+  (SELECT id FROM skill WHERE code = 'html_css'),
+  (SELECT id FROM language WHERE code = 'en'),
+  'HTML/CSS',
+  'Semantic markup and web interface styling.'
+),
+(
+  (SELECT id FROM skill WHERE code = 'ngrx'),
+  (SELECT id FROM language WHERE code = 'es'),
+  'NgRx',
+  'Gestión de estado reactivo para aplicaciones Angular.'
+),
+(
+  (SELECT id FROM skill WHERE code = 'ngrx'),
+  (SELECT id FROM language WHERE code = 'en'),
+  'NgRx',
+  'Reactive state management for Angular applications.'
+),
+(
+  (SELECT id FROM skill WHERE code = 'leaflet'),
+  (SELECT id FROM language WHERE code = 'es'),
+  'Leaflet',
+  'Biblioteca JavaScript para mapas interactivos.'
+),
+(
+  (SELECT id FROM skill WHERE code = 'leaflet'),
+  (SELECT id FROM language WHERE code = 'en'),
+  'Leaflet',
+  'JavaScript library for interactive maps.'
+),
+
+-- ======================
+-- BASES DE DATOS (nuevas)
+-- ======================
+(
+  (SELECT id FROM skill WHERE code = 'chromadb'),
+  (SELECT id FROM language WHERE code = 'es'),
+  'ChromaDB',
+  'Base de datos vectorial para almacenamiento de embeddings y búsqueda semántica.'
+),
+(
+  (SELECT id FROM skill WHERE code = 'chromadb'),
+  (SELECT id FROM language WHERE code = 'en'),
+  'ChromaDB',
+  'Vector database for embedding storage and semantic search.'
+),
+(
+  (SELECT id FROM skill WHERE code = 'sql'),
+  (SELECT id FROM language WHERE code = 'es'),
+  'SQL',
+  'Consultas y gestión de bases de datos relacionales.'
+),
+(
+  (SELECT id FROM skill WHERE code = 'sql'),
+  (SELECT id FROM language WHERE code = 'en'),
+  'SQL',
+  'Relational database queries and management.'
+),
+(
+  (SELECT id FROM skill WHERE code = 'typeorm'),
+  (SELECT id FROM language WHERE code = 'es'),
+  'TypeORM',
+  'ORM para TypeScript/JavaScript con soporte para múltiples bases de datos.'
+),
+(
+  (SELECT id FROM skill WHERE code = 'typeorm'),
+  (SELECT id FROM language WHERE code = 'en'),
+  'TypeORM',
+  'TypeScript/JavaScript ORM with multi-database support.'
+),
+
+-- ======================
+-- HERRAMIENTAS (nuevas)
+-- ======================
+(
+  (SELECT id FROM skill WHERE code = 'playwright'),
+  (SELECT id FROM language WHERE code = 'es'),
+  'Playwright',
+  'Automatización de navegadores web y testing end-to-end.'
+),
+(
+  (SELECT id FROM skill WHERE code = 'playwright'),
+  (SELECT id FROM language WHERE code = 'en'),
+  'Playwright',
+  'Web browser automation and end-to-end testing.'
+),
+(
+  (SELECT id FROM skill WHERE code = 'jest'),
+  (SELECT id FROM language WHERE code = 'es'),
+  'Jest',
+  'Framework de testing para JavaScript y TypeScript.'
+),
+(
+  (SELECT id FROM skill WHERE code = 'jest'),
+  (SELECT id FROM language WHERE code = 'en'),
+  'Jest',
+  'Testing framework for JavaScript and TypeScript.'
+),
+(
+  (SELECT id FROM skill WHERE code = 'pytest'),
+  (SELECT id FROM language WHERE code = 'es'),
+  'pytest',
+  'Framework de testing para Python con fixtures y parametrización.'
+),
+(
+  (SELECT id FROM skill WHERE code = 'pytest'),
+  (SELECT id FROM language WHERE code = 'en'),
+  'pytest',
+  'Python testing framework with fixtures and parameterization.'
+),
+(
+  (SELECT id FROM skill WHERE code = 'kafka'),
+  (SELECT id FROM language WHERE code = 'es'),
+  'Apache Kafka',
+  'Plataforma de streaming de eventos para comunicación asíncrona entre microservicios.'
+),
+(
+  (SELECT id FROM skill WHERE code = 'kafka'),
+  (SELECT id FROM language WHERE code = 'en'),
+  'Apache Kafka',
+  'Event streaming platform for asynchronous communication between microservices.'
+),
+(
+  (SELECT id FROM skill WHERE code = 'sonarqube'),
+  (SELECT id FROM language WHERE code = 'es'),
+  'SonarQube',
+  'Análisis continuo de calidad de código y cobertura de tests.'
+),
+(
+  (SELECT id FROM skill WHERE code = 'sonarqube'),
+  (SELECT id FROM language WHERE code = 'en'),
+  'SonarQube',
+  'Continuous code quality analysis and test coverage.'
+),
+(
+  (SELECT id FROM skill WHERE code = 'swagger_openapi'),
+  (SELECT id FROM language WHERE code = 'es'),
+  'Swagger/OpenAPI',
+  'Documentación y especificación de APIs REST.'
+),
+(
+  (SELECT id FROM skill WHERE code = 'swagger_openapi'),
+  (SELECT id FROM language WHERE code = 'en'),
+  'Swagger/OpenAPI',
+  'REST API documentation and specification.'
+),
+(
+  (SELECT id FROM skill WHERE code = 'web_scraping'),
+  (SELECT id FROM language WHERE code = 'es'),
+  'Web Scraping',
+  'Extracción automatizada de datos desde sitios web.'
+),
+(
+  (SELECT id FROM skill WHERE code = 'web_scraping'),
+  (SELECT id FROM language WHERE code = 'en'),
+  'Web Scraping',
+  'Automated data extraction from websites.'
+),
+(
+  (SELECT id FROM skill WHERE code = 'github_actions'),
+  (SELECT id FROM language WHERE code = 'es'),
+  'GitHub Actions',
+  'Automatización de CI/CD con workflows de GitHub.'
+),
+(
+  (SELECT id FROM skill WHERE code = 'github_actions'),
+  (SELECT id FROM language WHERE code = 'en'),
+  'GitHub Actions',
+  'CI/CD automation with GitHub workflows.'
+),
+(
+  (SELECT id FROM skill WHERE code = 'n8n'),
+  (SELECT id FROM language WHERE code = 'es'),
+  'n8n',
+  'Plataforma de automatización de workflows e integraciones.'
+),
+(
+  (SELECT id FROM skill WHERE code = 'n8n'),
+  (SELECT id FROM language WHERE code = 'en'),
+  'n8n',
+  'Workflow automation and integration platform.'
+),
+
+-- ======================
+-- CLOUD (nuevos)
+-- ======================
+(
+  (SELECT id FROM skill WHERE code = 'supabase'),
+  (SELECT id FROM language WHERE code = 'es'),
+  'Supabase',
+  'Plataforma backend-as-a-service con base de datos, autenticación y almacenamiento.'
+),
+(
+  (SELECT id FROM skill WHERE code = 'supabase'),
+  (SELECT id FROM language WHERE code = 'en'),
+  'Supabase',
+  'Backend-as-a-service platform with database, authentication and storage.'
+),
+(
+  (SELECT id FROM skill WHERE code = 'openai'),
+  (SELECT id FROM language WHERE code = 'es'),
+  'OpenAI',
+  'Integración con modelos de lenguaje y embeddings de OpenAI.'
+),
+(
+  (SELECT id FROM skill WHERE code = 'openai'),
+  (SELECT id FROM language WHERE code = 'en'),
+  'OpenAI',
+  'Integration with OpenAI language models and embeddings.'
+),
+
+-- ======================
+-- LENGUAJES (nuevos)
+-- ======================
+(
+  (SELECT id FROM skill WHERE code = 'shell_bash'),
+  (SELECT id FROM language WHERE code = 'es'),
+  'Shell/Bash',
+  'Scripting y automatización en línea de comandos.'
+),
+(
+  (SELECT id FROM skill WHERE code = 'shell_bash'),
+  (SELECT id FROM language WHERE code = 'en'),
+  'Shell/Bash',
+  'Command-line scripting and automation.'
 );
