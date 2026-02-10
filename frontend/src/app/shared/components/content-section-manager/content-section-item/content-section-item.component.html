@@ -19,7 +19,11 @@
       </div>
     }
 
-    <span class="text-lg shrink-0">{{ sectionIcon }}</span>
+    @if (isIconMaterial) {
+      <span class="material-symbols-outlined text-lg shrink-0">{{ sectionIcon }}</span>
+    } @else {
+      <span class="text-lg shrink-0">{{ sectionIcon }}</span>
+    }
     <div class="min-w-0">
       <p class="text-sm font-medium text-[var(--color-text-primary)] truncate">
         {{ displayTitle() || sectionKeyLabel }}

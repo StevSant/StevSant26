@@ -4,11 +4,13 @@ import { TranslateService } from '@core/services/translate.service';
 import { PortfolioDataService } from '../../services/portfolio-data.service';
 import { ContentSection, SourceType, Image } from '@core/models';
 import { ContentSectionKey } from '@core/models/entities/content-section.model';
-import { SECTION_KEY_OPTIONS } from '@shared/components/content-section-manager/section-key-options';
+import { SECTION_KEY_OPTIONS, isMaterialIcon } from '@shared/components/content-section-manager/section-key-options';
+import { MarkdownPipe } from '@shared/pipes/markdown.pipe';
 
 interface SectionGroup {
   key: ContentSectionKey;
   icon: string;
+  isMaterialIcon: boolean;
   label: string;
   sections: ContentSection[];
 }
@@ -16,12 +18,15 @@ interface SectionGroup {
 @Component({
   selector: 'app-portfolio-content-sections',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, MarkdownPipe],
   templateUrl: './portfolio-content-sections.component.html',
 })
 export class PortfolioContentSectionsComponent {
   protected data = inject(PortfolioDataService);
   private translate = inject(TranslateService);
+
+  /** Expose to template for per-section icon rendering */
+  protected isMaterialIcon = isMaterialIcon;
 
   sourceType = input.required<SourceType>();
   sourceId = input.required<number>();
@@ -50,11 +55,18 @@ export class PortfolioContentSectionsComponent {
     const groups: SectionGroup[] = [];
     for (const [key, secs] of groupMap) {
       const option = SECTION_KEY_OPTIONS.find(o => o.value === key);
-      const icon = secs[0]?.icon || option?.icon || '📝';
-      const label = option?.labelKey
-        ? this.translate.instant(option.labelKey)
-        : key;
-      groups.push({ key, icon, label, sections: secs });
+      const icon = secs[0]?.icon || option?.icon || 'article';
+
+      // Label priority: i18n key from SECTION_KEY_OPTIONS → translated title of first section → raw key
+      let label: string;
+      if (option?.labelKey) {
+        label = this.translate.instant(option.labelKey);
+      } else {
+        const firstTitle = this.data.getSectionTitle(secs[0]);
+        label = firstTitle || key.replace(/_/g, ' ');
+      }
+
+      groups.push({ key, icon, isMaterialIcon: isMaterialIcon(icon), label, sections: secs });
     }
 
     return groups;

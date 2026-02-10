@@ -14,7 +14,13 @@
                 : 'text-(--color-text-muted) hover:text-(--color-text-primary) hover:bg-(--color-bg-tertiary) border border-transparent'
             "
           >
-            <span class="text-sm">{{ group.icon }}</span>
+            @if (group.isMaterialIcon) {
+              <span class="material-symbols-outlined text-[16px] leading-none">{{
+                group.icon
+              }}</span>
+            } @else {
+              <span class="text-sm">{{ group.icon }}</span>
+            }
             {{ group.label }}
             @if (group.sections.length > 1) {
               <span
@@ -41,7 +47,13 @@
           <h2
             class="text-xs uppercase tracking-[0.2em] text-(--color-text-muted) mb-3 font-medium flex items-center gap-2"
           >
-            <span>{{ group.icon }}</span>
+            @if (group.isMaterialIcon) {
+              <span class="material-symbols-outlined text-[16px] leading-none">{{
+                group.icon
+              }}</span>
+            } @else {
+              <span>{{ group.icon }}</span>
+            }
             {{ group.label }}
           </h2>
         }
@@ -54,7 +66,13 @@
                 class="text-sm font-medium text-(--color-text-primary) mb-2 flex items-center gap-2"
               >
                 @if (section.icon && showTabs) {
-                  <span>{{ section.icon }}</span>
+                  @if (isMaterialIcon(section.icon)) {
+                    <span class="material-symbols-outlined text-[16px] leading-none">{{
+                      section.icon
+                    }}</span>
+                  } @else {
+                    <span>{{ section.icon }}</span>
+                  }
                 }
                 {{ data.getSectionTitle(section) }}
               </h3>
@@ -63,10 +81,9 @@
             <!-- Section body -->
             @if (data.getSectionBody(section)) {
               <div
-                class="text-(--color-text-secondary) leading-relaxed whitespace-pre-line text-sm"
-              >
-                {{ data.getSectionBody(section) }}
-              </div>
+                class="section-body text-(--color-text-secondary) leading-relaxed text-sm"
+                [innerHTML]="data.getSectionBody(section) | markdown"
+              ></div>
             }
 
             <!-- Section images -->

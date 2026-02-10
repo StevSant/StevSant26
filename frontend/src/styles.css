@@ -3,6 +3,27 @@
 @import "tailwindcss";
 
 /* ============================================
+   MATERIAL SYMBOLS — local class definition
+   Ensures it is NOT overridden by Tailwind CSS layers.
+   The @font-face is still loaded via the <link> in index.html.
+   ============================================ */
+.material-symbols-outlined {
+  font-family: 'Material Symbols Outlined' !important;
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  -webkit-font-feature-settings: 'liga';
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ============================================
    THEME: Dark Elegant (Default) — Black & White
    ============================================ */
 :root,
@@ -626,4 +647,56 @@ html * {
 .scroll-reveal--visible {
   opacity: 1;
   transform: translateY(0);
+}
+
+/* ============================================
+   Markdown Rendered Content (section bodies)
+   ============================================ */
+.section-body strong {
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.section-body .md-code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.8125em;
+  padding: 0.125rem 0.375rem;
+  border-radius: 0.25rem;
+  background-color: var(--color-bg-tertiary);
+  color: var(--color-accent-light);
+}
+
+.section-body .md-list {
+  margin: 0.5rem 0;
+  padding-left: 1.25rem;
+}
+
+.section-body ul.md-list {
+  list-style: disc;
+}
+
+.section-body ol.md-list {
+  list-style: decimal;
+}
+
+.section-body .md-list li {
+  margin-bottom: 0.25rem;
+}
+
+.section-body .md-codeblock {
+  display: block;
+  margin: 0.75rem 0;
+  padding: 1rem 1.25rem;
+  border-radius: 0.5rem;
+  background-color: var(--color-bg-tertiary);
+  border: 1px solid var(--color-border-primary);
+  overflow-x: auto;
+}
+
+.section-body .md-codeblock code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.8125rem;
+  line-height: 1.7;
+  white-space: pre;
+  color: var(--color-text-secondary);
 }

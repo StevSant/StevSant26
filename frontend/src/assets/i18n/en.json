@@ -617,6 +617,7 @@
       "bodyPlaceholder": "Write the section content..."
     },
     "keys": {
+      "overview": "Overview",
       "problem": "Problem Solved",
       "mistakes": "Mistakes I Made",
       "technical_decisions": "Technical Decisions",
@@ -627,6 +628,17 @@
       "challenges": "Challenges",
       "results": "Results",
       "methodology": "Methodology",
+      "tech_stack": "Tech Stack",
+      "features": "Features",
+      "testing": "Testing",
+      "api": "API",
+      "deployment": "Deployment",
+      "infrastructure": "Infrastructure",
+      "workflow": "Workflow",
+      "how_it_works": "How It Works",
+      "motivation": "Motivation",
+      "ui_ux": "UI/UX",
+      "i18n": "Internationalization",
       "custom": "Custom"
     },
     "errors": {

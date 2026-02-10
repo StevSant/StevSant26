@@ -14,7 +14,8 @@ export interface ContentSectionTranslation {
 }
 
 /**
- * Predefined section keys for structured content
+ * Predefined section keys for structured content.
+ * Accepts any string to support custom/project-specific keys from the database.
  */
 export type ContentSectionKey =
   | 'problem'
@@ -27,7 +28,20 @@ export type ContentSectionKey =
   | 'challenges'
   | 'results'
   | 'methodology'
-  | 'custom';
+  | 'custom'
+  | 'overview'
+  | 'tech_stack'
+  | 'features'
+  | 'testing'
+  | 'api'
+  | 'deployment'
+  | 'infrastructure'
+  | 'workflow'
+  | 'how_it_works'
+  | 'motivation'
+  | 'ui_ux'
+  | 'i18n'
+  | (string & {});
 
 /**
  * Content Section entity — flexible rich content blocks

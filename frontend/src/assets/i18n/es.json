@@ -615,6 +615,7 @@
       "bodyPlaceholder": "Escribe el contenido de la sección..."
     },
     "keys": {
+      "overview": "Descripción General",
       "problem": "Problema Resuelto",
       "mistakes": "Errores que Cometí",
       "technical_decisions": "Decisiones Técnicas",
@@ -625,6 +626,17 @@
       "challenges": "Desafíos",
       "results": "Resultados",
       "methodology": "Metodología",
+      "tech_stack": "Stack Tecnológico",
+      "features": "Funcionalidades",
+      "testing": "Testing",
+      "api": "API",
+      "deployment": "Despliegue",
+      "infrastructure": "Infraestructura",
+      "workflow": "Flujo de Trabajo",
+      "how_it_works": "Cómo Funciona",
+      "motivation": "Motivación",
+      "ui_ux": "UI/UX",
+      "i18n": "Internacionalización",
       "custom": "Personalizado"
     },
     "errors": {

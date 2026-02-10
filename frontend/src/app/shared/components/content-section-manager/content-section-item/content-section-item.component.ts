@@ -3,7 +3,7 @@ import { CdkDragHandle } from '@angular/cdk/drag-drop';
 import { TranslatePipe } from '@shared/pipes/translate.pipe';
 import { TranslateService } from '@core/services/translate.service';
 import { ContentSectionItem } from '../content-section-item.model';
-import { SECTION_KEY_OPTIONS } from '../section-key-options';
+import { SECTION_KEY_OPTIONS, isMaterialIcon } from '../section-key-options';
 
 @Component({
   selector: 'app-content-section-item',
@@ -25,11 +25,15 @@ export class ContentSectionItemComponent {
     const item = this.section();
     if (item.icon) return item.icon;
     const option = SECTION_KEY_OPTIONS.find(o => o.value === item.section_key);
-    return option?.icon || '📝';
+    return option?.icon || 'article';
+  }
+
+  get isIconMaterial(): boolean {
+    return isMaterialIcon(this.sectionIcon);
   }
 
   get sectionKeyLabel(): string {
     const option = SECTION_KEY_OPTIONS.find(o => o.value === this.section().section_key);
-    return option ? this.translate.instant(option.labelKey) : this.section().section_key;
+    return option ? this.translate.instant(option.labelKey) : this.section().section_key.replace(/_/g, ' ');
   }
 }
