@@ -5,7 +5,7 @@ import { PortfolioDataService } from '../services/portfolio-data.service';
 import { SeoService } from '@core/services/seo.service';
 import { TranslateService } from '@core/services/translate.service';
 import { TranslatePipe } from '@shared/pipes/translate.pipe';
-import { PortfolioFilterComponent, FilterOption } from '@shared/components/portfolio-filter/portfolio-filter.component';
+import { PortfolioFilterComponent, FilterOption, FilterOptionGroup } from '@shared/components/portfolio-filter/portfolio-filter.component';
 import { ScrollRevealDirective } from '@shared/directives/scroll-reveal.directive';
 
 @Component({
@@ -26,6 +26,13 @@ export class PortfolioProjectsComponent implements OnInit {
     return this.data.getAllSkillNames().map(name => ({ label: name, value: name }));
   });
 
+  skillFilterGroups = computed<FilterOptionGroup[]>(() => {
+    return this.data.getGroupedSkillNames().map(g => ({
+      label: g.category,
+      options: g.names.map(n => ({ label: n, value: n })),
+    }));
+  });
+
   filteredProjects = computed(() => {
     let projects = this.data.projects();
     const search = this.searchText().toLowerCase();
@@ -41,8 +48,15 @@ export class PortfolioProjectsComponent implements OnInit {
 
     if (skill) {
       projects = projects.filter(p => {
-        const usages = this.data.getSkillUsages('project', p.id);
-        return usages.some(u => this.data.getSkillName(u) === skill);
+        // Check skill usages on the parent project itself
+        const parentUsages = this.data.getSkillUsages('project', p.id);
+        if (parentUsages.some(u => this.data.getSkillName(u) === skill)) return true;
+        // Also check skill usages on any child/sub-projects
+        const children = this.data.getSubProjects(p.id);
+        return children.some(child => {
+          const childUsages = this.data.getSkillUsages('project', child.id);
+          return childUsages.some(u => this.data.getSkillName(u) === skill);
+        });
       });
     }
 

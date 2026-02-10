@@ -29,8 +29,7 @@
     } @else {
       <app-portfolio-filter
         placeholder="portfolio.filter.searchEvents"
-        [filterOptions]="skillFilterOptions()"
-        filterLabel="portfolio.filter.skills"
+        [filterGroups]="skillFilterGroups()"
         (searchChange)="onSearchChange($event)"
         (filterChange)="onSkillFilterChange($event)"
       />

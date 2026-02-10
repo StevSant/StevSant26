@@ -77,14 +77,22 @@ export class SkillCategoryListComponent implements OnInit {
   }
 
   async drop(event: CdkDragDrop<SkillCategory[]>): Promise<void> {
+    const allItems = [...this.items()];
     const filtered = this.filteredItems();
-    moveItemInArray(filtered, event.previousIndex, event.currentIndex);
-    const updates = filtered.map((item, index) => ({ id: item.id, position: index }));
+    const movedItem = filtered[event.previousIndex];
+    const targetItem = filtered[event.currentIndex];
+    const fromIndex = allItems.indexOf(movedItem);
+    const toIndex = allItems.indexOf(targetItem);
+    if (fromIndex < 0 || toIndex < 0) return;
+    moveItemInArray(allItems, fromIndex, toIndex);
+    allItems.forEach((item, i) => (item as any).position = i);
+    this.items.set(allItems);
+    const updates = allItems.map((item, i) => ({ id: item.id, position: i }));
     try {
       await this.supabase.updatePositions('skill_category', updates);
-      await this.loadItems();
     } catch (err) {
       this.logger.error('Error updating positions:', err);
+      await this.loadItems();
     }
   }
 

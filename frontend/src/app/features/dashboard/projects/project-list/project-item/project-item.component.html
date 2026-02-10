@@ -1,4 +1,13 @@
-<div class="card-hover p-4 flex items-center gap-4 group" [class.opacity-60]="item().is_archived">
+<div class="card-hover p-4 flex items-center gap-4 group" [class.opacity-60]="item().is_archived" [class.ml-8]="isChild()" [class.border-l-2]="isChild()" [class.border-l-[var(--color-accent)]]="isChild()">
+  <!-- Expand/Collapse button for parents -->
+  @if (subProjectCount() > 0) {
+    <button (click)="expandToggled.emit()" class="p-1 text-[var(--color-text-muted)] hover:text-[var(--color-accent)] transition-colors shrink-0">
+      <svg class="w-5 h-5 transition-transform duration-200" [class.rotate-90]="isExpanded()" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+      </svg>
+    </button>
+  }
+
   <!-- Drag Handle -->
   @if (showDragHandle()) {
     <div cdkDragHandle class="drag-handle">
@@ -45,7 +54,7 @@
       </span>
     }
     @if (subProjectCount() > 0) {
-      <span class="inline-flex items-center gap-1 text-xs text-[var(--color-accent-light)] mt-0.5">
+      <button (click)="expandToggled.emit()" class="inline-flex items-center gap-1 text-xs text-[var(--color-accent-light)] mt-0.5 hover:underline cursor-pointer">
         <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path
             stroke-linecap="round"
@@ -55,7 +64,7 @@
           />
         </svg>
         {{ subProjectCount() }} sub-projects
-      </span>
+      </button>
     }
     @if (description()) {
       <p class="text-[var(--color-text-muted)] text-sm truncate mt-1">{{ description() }}</p>

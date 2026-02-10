@@ -6,12 +6,13 @@ import { SeoService } from '@core/services/seo.service';
 import { TranslateService } from '@core/services/translate.service';
 import { TranslatePipe } from '@shared/pipes/translate.pipe';
 import { PortfolioContentSectionsComponent } from '../components/portfolio-content-sections/portfolio-content-sections.component';
+import { ImageGalleryComponent } from '@shared/components/image-gallery/image-gallery.component';
 import { Event } from '@core/models';
 
 @Component({
   selector: 'app-portfolio-event-detail',
   standalone: true,
-  imports: [CommonModule, DatePipe, RouterModule, TranslatePipe, PortfolioContentSectionsComponent],
+  imports: [CommonModule, DatePipe, RouterModule, TranslatePipe, PortfolioContentSectionsComponent, ImageGalleryComponent],
   templateUrl: './portfolio-event-detail.component.html',
 })
 export class PortfolioEventDetailComponent implements OnInit {
@@ -22,7 +23,6 @@ export class PortfolioEventDetailComponent implements OnInit {
 
   event = signal<Event | null>(null);
   images = signal<import('@core/models').Image[]>([]);
-  selectedImageIndex = signal(0);
 
   async ngOnInit(): Promise<void> {
     await this.data.initialize();

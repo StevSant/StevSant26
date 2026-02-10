@@ -99,20 +99,43 @@
     <!-- Items List with Drag and Drop -->
     <div cdkDropList (cdkDropListDropped)="drop($event)" class="space-y-2">
       @for (item of filteredItems(); track item.id) {
-        <app-project-item
-          cdkDrag
-          [cdkDragDisabled]="showArchived()"
-          [item]="item"
-          [imageUrl]="imageMap.get(item.id)"
-          [title]="getItemTitle(item)"
-          [description]="getItemDescription(item)"
-          [showDragHandle]="!showArchived()"
-          [parentTitle]="getParentTitle(item)"
-          [subProjectCount]="getSubProjectCount(item)"
-          (pinToggled)="togglePin(item)"
-          (archiveToggled)="toggleArchive(item)"
-          (deleteClicked)="confirmDelete(item)"
-        />
+        <div>
+          <app-project-item
+            cdkDrag
+            [cdkDragDisabled]="showArchived()"
+            [item]="item"
+            [imageUrl]="imageMap.get(item.id)"
+            [title]="getItemTitle(item)"
+            [description]="getItemDescription(item)"
+            [showDragHandle]="!showArchived()"
+            [parentTitle]="getParentTitle(item)"
+            [subProjectCount]="getSubProjectCount(item)"
+            [isExpanded]="isExpanded(item.id)"
+            (expandToggled)="toggleExpand(item.id)"
+            (pinToggled)="togglePin(item)"
+            (archiveToggled)="toggleArchive(item)"
+            (deleteClicked)="confirmDelete(item)"
+          />
+          <!-- Child Projects (expandable) -->
+          @if (isExpanded(item.id) && getSubProjectCount(item) > 0) {
+            <div class="mt-1 space-y-1">
+              @for (child of getChildProjects(item.id); track child.id) {
+                <app-project-item
+                  [item]="child"
+                  [imageUrl]="imageMap.get(child.id)"
+                  [title]="getItemTitle(child)"
+                  [description]="getItemDescription(child)"
+                  [showDragHandle]="false"
+                  [isChild]="true"
+                  [subProjectCount]="0"
+                  (pinToggled)="togglePin(child)"
+                  (archiveToggled)="toggleArchive(child)"
+                  (deleteClicked)="confirmDelete(child)"
+                />
+              }
+            </div>
+          }
+        </div>
       }
     </div>
   }

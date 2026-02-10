@@ -476,6 +476,34 @@ export class PortfolioDataService {
     return Array.from(names).sort();
   }
 
+  /** Get skill names grouped by category (only skills that are actually used) */
+  getGroupedSkillNames(): { category: string; names: string[] }[] {
+    const usedNames = new Set(this.getAllSkillNames());
+    const groups: { category: string; names: string[] }[] = [];
+
+    for (const cat of this.skillCategories()) {
+      const categoryName = this.getCategoryName(cat);
+      const names: string[] = [];
+      for (const skill of cat.skills) {
+        const translation = getTranslation(skill.translations as any[], this.currentLang());
+        const skillName = (translation as any)?.name;
+        if (skillName && usedNames.has(skillName)) {
+          names.push(skillName);
+          usedNames.delete(skillName);
+        }
+      }
+      if (names.length > 0) {
+        groups.push({ category: categoryName, names: names.sort() });
+      }
+    }
+
+    if (usedNames.size > 0) {
+      groups.push({ category: 'Other', names: Array.from(usedNames).sort() });
+    }
+
+    return groups;
+  }
+
   /** Get all unique companies from experiences */
   getAllCompanies(): string[] {
     const companies = new Set<string>();

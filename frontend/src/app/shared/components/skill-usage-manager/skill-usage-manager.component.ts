@@ -160,6 +160,11 @@ export class SkillUsageManagerComponent implements OnInit {
     return translation?.name || skill.translations?.[0]?.name || `Skill #${skill.id}`;
   }
 
+  /** Bound function reference for passing to child components */
+  getSkillNameFn = (skill: Skill): string => {
+    return this.getSkillName(skill);
+  };
+
   getSkillById(skillId: number): Skill | undefined {
     return this.skills().find(s => s.id === skillId);
   }
@@ -252,6 +257,62 @@ export class SkillUsageManagerComponent implements OnInit {
     } finally {
       this.saving.set(false);
     }
+  }
+
+  async editSkillUsage(updatedUsage: SkillUsageItem): Promise<void> {
+    const sourceId = this.sourceId();
+
+    if (updatedUsage.id && sourceId) {
+      // Existing usage - update in DB
+      this.saving.set(true);
+      this.error.set(null);
+      try {
+        const basePayload = {
+          skill_id: updatedUsage.skill_id,
+          source_id: sourceId,
+          source_type: this.sourceType(),
+          level: updatedUsage.level,
+          started_at: updatedUsage.started_at || null,
+          ended_at: updatedUsage.ended_at || null,
+        };
+
+        const translationsPayload = Array.from(updatedUsage.translations.entries()).map(([lang, t]) => ({
+          language: lang,
+          notes: t.notes || null,
+        }));
+
+        const result = await this.supabase.updateWithTranslations(
+          'skill_usages',
+          'skill_usages_translation',
+          'skill_usages_id',
+          updatedUsage.id,
+          basePayload,
+          translationsPayload
+        );
+
+        if (result.error) throw result.error;
+        await this.loadSkillUsages(sourceId);
+      } catch (err) {
+        this.error.set(this.translateService.instant('skillUsages.errors.saveError'));
+        this.logger.error('Edit error:', err);
+      } finally {
+        this.saving.set(false);
+      }
+    } else {
+      // Pending usage - update in local list
+      this.skillUsages.update(usages =>
+        usages.map(u => (u === this.findOriginalUsage(updatedUsage) ? updatedUsage : u))
+      );
+      this.pendingUsages.update(usages =>
+        usages.map(u => (u.skill_id === updatedUsage.skill_id ? updatedUsage : u))
+      );
+    }
+  }
+
+  private findOriginalUsage(updated: SkillUsageItem): SkillUsageItem | undefined {
+    return this.skillUsages().find(u =>
+      u.id ? u.id === updated.id : u.skill_id === updated.skill_id
+    );
   }
 
   async removeSkillUsage(usage: SkillUsageItem): Promise<void> {

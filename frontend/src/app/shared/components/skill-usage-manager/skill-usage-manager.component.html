@@ -88,6 +88,9 @@
             [displayName]="
               usage.skill ? getSkillName(usage.skill) : getSkillName(getSkillById(usage.skill_id))
             "
+            [skills]="skills()"
+            [getSkillName]="getSkillNameFn"
+            (edit)="editSkillUsage($event)"
             (remove)="removeSkillUsage($event)"
           />
         }

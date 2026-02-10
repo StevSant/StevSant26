@@ -77,7 +77,11 @@ export class ProjectFormComponent extends BaseEntityFormComponent<Project, Proje
   }
 
   protected override async onBeforeLoadEntity(): Promise<void> {
-    const { data: projects } = await this.supabase.getActive<Project>('project');
+    const { data: projects } = await this.supabase.getWithTranslations<Project>(
+      'project',
+      'project_translation',
+      'project_id'
+    );
     if (projects) {
       this.parentProjects.set(
         this.currentId ? projects.filter((p) => p.id !== this.currentId) : projects

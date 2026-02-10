@@ -39,8 +39,50 @@
     }
   </div>
 
-  <!-- Filter chips -->
-  @if (filterOptions().length > 0) {
+  <!-- Two-step grouped filter: category → skill -->
+  @if (filterGroups().length > 0) {
+    <div class="space-y-3">
+      <!-- Step 1: Category chips -->
+      <div class="flex flex-wrap justify-center gap-2">
+        @for (group of filterGroups(); track group.label) {
+          <button
+            type="button"
+            (click)="onCategorySelect(group.label)"
+            class="px-3.5 py-1.5 text-xs font-medium rounded-full border transition-all duration-200"
+            [class]="
+              selectedCategory() === group.label
+                ? 'bg-(--color-accent) text-white border-(--color-accent) shadow-md'
+                : 'bg-(--color-bg-secondary) text-(--color-text-secondary) border-(--color-border-primary) hover:border-(--color-accent)/40'
+            "
+          >
+            {{ group.label }}
+            <span class="ml-1 opacity-60">({{ group.options.length }})</span>
+          </button>
+        }
+      </div>
+
+      <!-- Step 2: Skills within selected category -->
+      @if (activeGroupOptions().length > 0) {
+        <div class="flex flex-wrap justify-center gap-2 pt-1">
+          @for (option of activeGroupOptions(); track option.value) {
+            <button
+              type="button"
+              (click)="onFilterSelect(option.value)"
+              class="px-3 py-1 text-xs rounded-full border transition-all duration-200"
+              [class]="
+                selectedFilter() === option.value
+                  ? 'bg-(--color-accent) text-white border-(--color-accent)'
+                  : 'bg-(--color-bg-secondary) text-(--color-text-secondary) border-(--color-border-primary) hover:border-(--color-accent)/40'
+              "
+            >
+              {{ option.label }}
+            </button>
+          }
+        </div>
+      }
+    </div>
+  } @else if (filterOptions().length > 0) {
+    <!-- Flat filter chips (fallback) -->
     <div class="flex flex-wrap justify-center gap-2">
       @if (filterLabel()) {
         <span class="text-xs text-(--color-text-muted) uppercase tracking-wider self-center mr-1">

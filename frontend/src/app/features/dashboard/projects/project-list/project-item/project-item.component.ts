@@ -19,8 +19,11 @@ export class ProjectItemComponent {
   showDragHandle = input(true);
   parentTitle = input<string | null>(null);
   subProjectCount = input(0);
+  isExpanded = input(false);
+  isChild = input(false);
 
   pinToggled = output<void>();
   archiveToggled = output<void>();
   deleteClicked = output<void>();
+  expandToggled = output<void>();
 }

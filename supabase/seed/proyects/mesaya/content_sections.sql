@@ -22,47 +22,62 @@ ON CONFLICT DO NOTHING;
 
 INSERT INTO content_section_translation (content_section_id, language_id, title, body)
 VALUES
+  -- Root: overview
   ((SELECT cs.id FROM content_section cs WHERE cs.entity_id = (SELECT id FROM project WHERE code = 'mesaya') AND cs.section_key = 'overview' AND cs.entity_type = 'project'),
    (SELECT id FROM language WHERE code = 'es'), 'Descripción General',
-   'mesaYA es una plataforma de reservas de restaurantes con arquitectura de microservicios. Conecta clientes con restaurantes mediante reservas en tiempo real, chatbot con IA, pagos en línea y mapas interactivos de mesas.'),
+   E'mesaYA es una plataforma de reservas de restaurantes construida con arquitectura de microservicios que conecta clientes con restaurantes mediante reservas en tiempo real, un chatbot con IA, pagos en línea y mapas interactivos de mesas.\n\nEl sistema permite a los clientes explorar restaurantes, visualizar la disposición de mesas en mapas canvas interactivos, seleccionar mesas disponibles en tiempo real vía WebSocket, y completar reservas con pago integrado. Los dueños de restaurantes pueden gestionar su negocio, configurar horarios, menús y secciones de mesas desde un panel administrativo.\n\nLa plataforma incluye un chatbot contextual que adapta sus respuestas según el rol del usuario (cliente, dueño, admin) y un gateway GraphQL que unifica todos los microservicios bajo un schema único.'),
   ((SELECT cs.id FROM content_section cs WHERE cs.entity_id = (SELECT id FROM project WHERE code = 'mesaya') AND cs.section_key = 'overview' AND cs.entity_type = 'project'),
    (SELECT id FROM language WHERE code = 'en'), 'Overview',
-   'mesaYA is a restaurant reservation platform with microservices architecture. It connects customers with restaurants through real-time reservations, AI chatbot, online payments, and interactive table maps.'),
+   E'mesaYA is a restaurant reservation platform built with microservices architecture that connects customers with restaurants through real-time reservations, an AI chatbot, online payments, and interactive table maps.\n\nThe system allows customers to explore restaurants, visualize table layouts on interactive canvas maps, select available tables in real time via WebSocket, and complete reservations with integrated payment. Restaurant owners can manage their business, configure schedules, menus, and table sections from an admin panel.\n\nThe platform includes a contextual chatbot that adapts responses based on user role (customer, owner, admin) and a GraphQL gateway that unifies all microservices under a single schema.'),
+
+  -- Root: architecture
   ((SELECT cs.id FROM content_section cs WHERE cs.entity_id = (SELECT id FROM project WHERE code = 'mesaya') AND cs.section_key = 'architecture' AND cs.entity_type = 'project'),
    (SELECT id FROM language WHERE code = 'es'), 'Arquitectura',
-   'Frontend Angular 19 (SSR), API de Reservas (NestJS + DDD), Auth MS (NestJS + RBAC), GraphQL Gateway (Python + Strawberry), Chatbot (Python), Payment MS (NestJS), WebSocket Service y MCP. Comunicación asíncrona con Kafka y orquestación con Docker Compose.'),
+   E'El ecosistema mesaYA se compone de 8 servicios independientes orquestados con Docker Compose:\n\n• **Frontend Angular 19** — SPA con SSR, mapas canvas interactivos y comunicación WebSocket\n• **API de Reservas (NestJS)** — Microservicio principal con Clean Architecture y DDD que gestiona restaurantes, mesas, reservas, menús, reseñas y pagos\n• **Auth MS (NestJS)** — Autenticación JWT con sistema RBAC completo (admin, owner, user, guest)\n• **GraphQL Gateway (Python + Strawberry)** — Capa de agregación que unifica las APIs REST bajo un schema GraphQL\n• **Chatbot (Python)** — Servicio de IA con prompts contextuales por rol e idioma\n• **Payment MS (NestJS)** — Procesamiento de transacciones para reservas y suscripciones\n• **WebSocket Service** — Comunicación bidireccional en tiempo real para selección de mesas\n• **MCP Server** — Integración con Model Context Protocol para asistentes de IA\n\nLa comunicación asíncrona entre servicios se realiza mediante Apache Kafka con topics de eventos de dominio.'),
   ((SELECT cs.id FROM content_section cs WHERE cs.entity_id = (SELECT id FROM project WHERE code = 'mesaya') AND cs.section_key = 'architecture' AND cs.entity_type = 'project'),
    (SELECT id FROM language WHERE code = 'en'), 'Architecture',
-   'Angular 19 Frontend (SSR), Reservation API (NestJS + DDD), Auth MS (NestJS + RBAC), GraphQL Gateway (Python + Strawberry), Chatbot (Python), Payment MS (NestJS), WebSocket Service, and MCP. Async communication via Kafka and orchestration with Docker Compose.'),
+   E'The mesaYA ecosystem comprises 8 independent services orchestrated with Docker Compose:\n\n• **Angular 19 Frontend** — SPA with SSR, interactive canvas maps, and WebSocket communication\n• **Reservation API (NestJS)** — Core microservice with Clean Architecture and DDD managing restaurants, tables, reservations, menus, reviews, and payments\n• **Auth MS (NestJS)** — JWT authentication with complete RBAC system (admin, owner, user, guest)\n• **GraphQL Gateway (Python + Strawberry)** — Aggregation layer unifying REST APIs under a GraphQL schema\n• **Chatbot (Python)** — AI service with role and language-based contextual prompts\n• **Payment MS (NestJS)** — Transaction processing for reservations and subscriptions\n• **WebSocket Service** — Real-time bidirectional communication for table selection\n• **MCP Server** — Model Context Protocol integration for AI assistants\n\nAsync communication between services is handled via Apache Kafka with domain event topics.'),
+
+  -- Root: tech_stack
   ((SELECT cs.id FROM content_section cs WHERE cs.entity_id = (SELECT id FROM project WHERE code = 'mesaya') AND cs.section_key = 'tech_stack' AND cs.entity_type = 'project'),
    (SELECT id FROM language WHERE code = 'es'), 'Stack Tecnológico',
-   'TypeScript, Angular 19, NestJS, Python, Strawberry GraphQL, PostgreSQL, TypeORM, Kafka, Docker, Jest, SonarQube, GitHub Actions, JWT, Swagger.'),
+   E'**Frontend:** TypeScript, Angular 19 (SSR, signals, standalone components), TailwindCSS, Canvas API\n**Backend:** NestJS (TypeScript), Python (FastAPI, Strawberry GraphQL)\n**Bases de datos:** PostgreSQL con TypeORM para datos relacionales\n**Mensajería:** Apache Kafka para comunicación asíncrona entre microservicios\n**Autenticación:** JWT con refresh tokens y sistema RBAC granular\n**Infraestructura:** Docker Compose, n8n para automatización de workflows\n**Calidad:** Jest (90% cobertura), SonarQube/SonarCloud, GitHub Actions CI/CD\n**Documentación:** Swagger/OpenAPI auto-generado en cada microservicio'),
   ((SELECT cs.id FROM content_section cs WHERE cs.entity_id = (SELECT id FROM project WHERE code = 'mesaya') AND cs.section_key = 'tech_stack' AND cs.entity_type = 'project'),
    (SELECT id FROM language WHERE code = 'en'), 'Tech Stack',
-   'TypeScript, Angular 19, NestJS, Python, Strawberry GraphQL, PostgreSQL, TypeORM, Kafka, Docker, Jest, SonarQube, GitHub Actions, JWT, Swagger.'),
+   E'**Frontend:** TypeScript, Angular 19 (SSR, signals, standalone components), TailwindCSS, Canvas API\n**Backend:** NestJS (TypeScript), Python (FastAPI, Strawberry GraphQL)\n**Databases:** PostgreSQL with TypeORM for relational data\n**Messaging:** Apache Kafka for async communication between microservices\n**Authentication:** JWT with refresh tokens and granular RBAC system\n**Infrastructure:** Docker Compose, n8n for workflow automation\n**Quality:** Jest (90% coverage), SonarQube/SonarCloud, GitHub Actions CI/CD\n**Documentation:** Auto-generated Swagger/OpenAPI on each microservice'),
+
+  -- Root: infra_kafka
   ((SELECT cs.id FROM content_section cs WHERE cs.entity_id = (SELECT id FROM project WHERE code = 'mesaya') AND cs.section_key = 'infra_kafka' AND cs.entity_type = 'project'),
    (SELECT id FROM language WHERE code = 'es'), 'Infraestructura Kafka',
-   'Brokers Kafka, topics de eventos de dominio y conectores para comunicación asíncrona entre microservicios.'),
+   E'Apache Kafka actúa como columna vertebral de comunicación asíncrona entre los microservicios del ecosistema mesaYA.\n\nLos topics de eventos de dominio permiten que cada servicio publique cambios de estado sin acoplamiento directo: cuando una reserva se confirma, el evento se propaga a los servicios de pagos, notificaciones y WebSocket para actualizar la disponibilidad de mesas en tiempo real.\n\nLa infraestructura incluye brokers Kafka con Apache Zookeeper para coordinación de clúster, conectores configurados para la persistencia de eventos, y schemas de mensajes definidos para garantizar compatibilidad entre productores y consumidores.'),
   ((SELECT cs.id FROM content_section cs WHERE cs.entity_id = (SELECT id FROM project WHERE code = 'mesaya') AND cs.section_key = 'infra_kafka' AND cs.entity_type = 'project'),
    (SELECT id FROM language WHERE code = 'en'), 'Kafka Infrastructure',
-   'Kafka brokers, domain event topics, and connectors for async communication between microservices.'),
+   E'Apache Kafka acts as the backbone for async communication between mesaYA ecosystem microservices.\n\nDomain event topics allow each service to publish state changes without direct coupling: when a reservation is confirmed, the event propagates to payment, notification, and WebSocket services to update table availability in real time.\n\nThe infrastructure includes Kafka brokers with Apache Zookeeper for cluster coordination, connectors configured for event persistence, and defined message schemas to guarantee compatibility between producers and consumers.'),
+
+  -- Root: infra_n8n
   ((SELECT cs.id FROM content_section cs WHERE cs.entity_id = (SELECT id FROM project WHERE code = 'mesaya') AND cs.section_key = 'infra_n8n' AND cs.entity_type = 'project'),
    (SELECT id FROM language WHERE code = 'es'), 'Automatización n8n',
-   'Flujos de automatización con n8n para integraciones y workflows del ecosistema mesaYA.'),
+   E'n8n proporciona flujos de automatización visual para integraciones y workflows del ecosistema mesaYA que no requieren código personalizado.\n\nLos flujos incluyen notificaciones automáticas por email o webhook cuando se confirma una reserva, sincronización de datos entre servicios para reportes consolidados, y tareas programadas de mantenimiento como limpieza de sesiones expiradas y generación de métricas de uso.'),
   ((SELECT cs.id FROM content_section cs WHERE cs.entity_id = (SELECT id FROM project WHERE code = 'mesaya') AND cs.section_key = 'infra_n8n' AND cs.entity_type = 'project'),
    (SELECT id FROM language WHERE code = 'en'), 'n8n Automation',
-   'Automation flows with n8n for integrations and workflows of the mesaYA ecosystem.'),
+   E'n8n provides visual automation flows for mesaYA ecosystem integrations and workflows that don''t require custom code.\n\nFlows include automatic email or webhook notifications when a reservation is confirmed, data synchronization between services for consolidated reports, and scheduled maintenance tasks like expired session cleanup and usage metrics generation.'),
+
+  -- Root: infra_docker
   ((SELECT cs.id FROM content_section cs WHERE cs.entity_id = (SELECT id FROM project WHERE code = 'mesaya') AND cs.section_key = 'infra_docker' AND cs.entity_type = 'project'),
    (SELECT id FROM language WHERE code = 'es'), 'Docker y Orquestación',
-   'Docker Compose con PostgreSQL, Kafka, Zookeeper, n8n y todos los microservicios. Redes, volúmenes y variables de entorno.'),
+   E'Docker Compose orquesta todo el ecosistema mesaYA en un solo archivo de configuración, definiendo cada microservicio, base de datos y herramienta de infraestructura como servicios independientes.\n\nLa configuración incluye PostgreSQL con volumen persistente, Apache Kafka + Zookeeper para mensajería, n8n para automatización, y todos los microservicios con sus respectivas variables de entorno, redes internas y health checks.\n\nLas redes Docker aíslan la comunicación entre servicios: una red para el tráfico público (frontend ↔ gateway) y otra interna para comunicación entre microservicios, garantizando que los servicios backend no sean accesibles directamente desde el exterior.')
+ON CONFLICT (content_section_id, language_id) DO NOTHING;
+
+-- bridge translations for infra_docker EN
+INSERT INTO content_section_translation (content_section_id, language_id, title, body)
+VALUES
   ((SELECT cs.id FROM content_section cs WHERE cs.entity_id = (SELECT id FROM project WHERE code = 'mesaya') AND cs.section_key = 'infra_docker' AND cs.entity_type = 'project'),
    (SELECT id FROM language WHERE code = 'en'), 'Docker & Orchestration',
-   'Docker Compose with PostgreSQL, Kafka, Zookeeper, n8n, and all microservices. Networks, volumes, and environment variables.')
+   E'Docker Compose orchestrates the entire mesaYA ecosystem in a single configuration file, defining each microservice, database, and infrastructure tool as independent services.\n\nThe configuration includes PostgreSQL with persistent volumes, Apache Kafka + Zookeeper for messaging, n8n for automation, and all microservices with their respective environment variables, internal networks, and health checks.\n\nDocker networks isolate inter-service communication: one network for public traffic (frontend ↔ gateway) and an internal one for microservice communication, ensuring backend services are not directly accessible from outside.')
 ON CONFLICT (content_section_id, language_id) DO NOTHING;
 
 -- =========================================
 -- Frontend (mesaya-frontend): 6 sections
--- (2 original + 4 from fe sub-modules)
 -- =========================================
 INSERT INTO content_section (entity_type, entity_id, section_key, icon, position, is_archived, is_pinned)
 VALUES
@@ -78,45 +93,49 @@ INSERT INTO content_section_translation (content_section_id, language_id, title,
 VALUES
   ((SELECT cs.id FROM content_section cs WHERE cs.entity_id = (SELECT id FROM project WHERE code = 'mesaya-frontend') AND cs.section_key = 'overview' AND cs.entity_type = 'project'),
    (SELECT id FROM language WHERE code = 'es'), 'Descripción General',
-   'SPA con Angular 19 y SSR. Mapas interactivos de restaurantes en canvas, selección de mesas en tiempo real vía WebSocket, internacionalización (es/en), Material Design y lazy loading por features.'),
+   E'SPA desarrollada con Angular 19 y Server-Side Rendering que proporciona la interfaz de usuario principal de la plataforma mesaYA.\n\nIncluye mapas interactivos de restaurantes renderizados en canvas HTML5 con selección de mesas en tiempo real vía WebSocket, sistema de internacionalización completo (español/inglés), diseño responsivo con Material Design, y carga lazy de módulos por features para optimizar el rendimiento inicial.\n\nLa arquitectura del frontend sigue principios de Clean Architecture con separación entre domain (entidades, puertos), application (servicios, adaptadores) y presentation (componentes, páginas), usando signals de Angular para gestión de estado reactiva.'),
   ((SELECT cs.id FROM content_section cs WHERE cs.entity_id = (SELECT id FROM project WHERE code = 'mesaya-frontend') AND cs.section_key = 'overview' AND cs.entity_type = 'project'),
    (SELECT id FROM language WHERE code = 'en'), 'Overview',
-   'SPA with Angular 19 and SSR. Interactive restaurant maps on canvas, real-time table selection via WebSocket, internationalization (es/en), Material Design, and feature-based lazy loading.'),
+   E'SPA built with Angular 19 and Server-Side Rendering providing the main user interface for the mesaYA platform.\n\nIt includes interactive restaurant maps rendered on HTML5 canvas with real-time table selection via WebSocket, a complete internationalization system (Spanish/English), responsive Material Design, and lazy-loaded feature modules to optimize initial performance.\n\nThe frontend architecture follows Clean Architecture principles with separation between domain (entities, ports), application (services, adapters) and presentation (components, pages), using Angular signals for reactive state management.'),
+
   ((SELECT cs.id FROM content_section cs WHERE cs.entity_id = (SELECT id FROM project WHERE code = 'mesaya-frontend') AND cs.section_key = 'features' AND cs.entity_type = 'project'),
    (SELECT id FROM language WHERE code = 'es'), 'Funcionalidades Clave',
-   'Mapa canvas interactivo con secciones y mesas, selección en tiempo real con WebSocket, cambio de idioma persistente, modal de configuración, adaptadores de repositorio para HTTP y WS, y diseño responsivo.'),
+   E'• Mapa canvas interactivo con secciones del restaurante y mesas individuales, incluyendo zoom, pan y estados visuales de disponibilidad\n• Selección de mesas en tiempo real sincronizada entre usuarios mediante WebSocket — cuando un usuario selecciona una mesa, otros la ven bloqueada instantáneamente\n• Flujo completo de reserva: explorar restaurante → seleccionar mesa → elegir horario → confirmar → pagar\n• Cambio de idioma persistente entre español e inglés con todas las cadenas traducidas\n• Panel de administración para dueños de restaurantes con gestión de menús, horarios y configuración de mesas\n• Diseño responsivo que adapta los mapas canvas y la navegación a pantallas móviles y desktop'),
   ((SELECT cs.id FROM content_section cs WHERE cs.entity_id = (SELECT id FROM project WHERE code = 'mesaya-frontend') AND cs.section_key = 'features' AND cs.entity_type = 'project'),
    (SELECT id FROM language WHERE code = 'en'), 'Key Features',
-   'Interactive canvas map with sections and tables, real-time selection with WebSocket, persistent language switch, settings modal, repository adapters for HTTP and WS, and responsive design.'),
+   E'• Interactive canvas map with restaurant sections and individual tables, including zoom, pan, and visual availability states\n• Real-time table selection synchronized between users via WebSocket — when a user selects a table, others see it locked instantly\n• Complete reservation flow: explore restaurant → select table → choose time slot → confirm → pay\n• Persistent language switch between Spanish and English with all strings translated\n• Admin panel for restaurant owners with menu, schedule, and table setup management\n• Responsive design adapting canvas maps and navigation to mobile and desktop screens'),
+
   ((SELECT cs.id FROM content_section cs WHERE cs.entity_id = (SELECT id FROM project WHERE code = 'mesaya-frontend') AND cs.section_key = 'restaurant_map' AND cs.entity_type = 'project'),
    (SELECT id FROM language WHERE code = 'es'), 'Mapa Interactivo de Restaurante',
-   'Componente canvas interactivo que renderiza secciones y mesas con assets visuales, estados de disponibilidad y selección en tiempo real.'),
+   E'Componente canvas interactivo que renderiza la disposición completa de un restaurante, incluyendo secciones (terraza, salón principal, VIP) y mesas individuales con sus assets visuales.\n\nCada mesa muestra su estado en tiempo real mediante colores: disponible (verde), seleccionada por otro usuario (amarillo), o reservada (rojo). La selección se sincroniza instantáneamente con el servidor WebSocket, bloqueando la mesa para otros usuarios mientras se completa la reserva.\n\nEl componente soporta interacciones touch y mouse con funcionalidad de zoom y pan para navegar restaurantes grandes con muchas secciones.'),
   ((SELECT cs.id FROM content_section cs WHERE cs.entity_id = (SELECT id FROM project WHERE code = 'mesaya-frontend') AND cs.section_key = 'restaurant_map' AND cs.entity_type = 'project'),
    (SELECT id FROM language WHERE code = 'en'), 'Interactive Restaurant Map',
-   'Interactive canvas component rendering sections and tables with visual assets, availability states, and real-time selection.'),
+   E'Interactive canvas component rendering the complete layout of a restaurant, including sections (terrace, main hall, VIP) and individual tables with their visual assets.\n\nEach table displays its real-time status through colors: available (green), selected by another user (yellow), or reserved (red). Selection is instantly synchronized with the WebSocket server, locking the table for other users while the reservation is completed.\n\nThe component supports touch and mouse interactions with zoom and pan functionality to navigate large restaurants with many sections.'),
+
   ((SELECT cs.id FROM content_section cs WHERE cs.entity_id = (SELECT id FROM project WHERE code = 'mesaya-frontend') AND cs.section_key = 'table_adapter' AND cs.entity_type = 'project'),
    (SELECT id FROM language WHERE code = 'es'), 'Adaptador de Repositorio de Mesas',
-   'Adaptador que unifica datos de mesas desde HTTP y WebSocket con mapeo robusto de payloads polimórficos.'),
+   E'Adaptador que unifica el acceso a datos de mesas desde dos fuentes distintas: la API REST (estado inicial al cargar) y el servicio WebSocket (actualizaciones en tiempo real).\n\nImplementa un mapeo robusto de payloads polimórficos, ya que la estructura de datos difiere entre la respuesta HTTP (formato completo con relaciones) y los eventos WebSocket (formato ligero con solo los campos actualizados). El adaptador normaliza ambos formatos en entidades de dominio consistentes que los componentes de presentación consumen sin conocer el origen de los datos.'),
   ((SELECT cs.id FROM content_section cs WHERE cs.entity_id = (SELECT id FROM project WHERE code = 'mesaya-frontend') AND cs.section_key = 'table_adapter' AND cs.entity_type = 'project'),
    (SELECT id FROM language WHERE code = 'en'), 'Table Spot Repository Adapter',
-   'Adapter unifying table data from HTTP and WebSocket with robust polymorphic payload mapping.'),
+   E'Adapter unifying table data access from two distinct sources: the REST API (initial state on load) and the WebSocket service (real-time updates).\n\nIt implements robust polymorphic payload mapping since the data structure differs between the HTTP response (full format with relationships) and WebSocket events (lightweight format with only updated fields). The adapter normalizes both formats into consistent domain entities that presentation components consume without knowing the data origin.'),
+
   ((SELECT cs.id FROM content_section cs WHERE cs.entity_id = (SELECT id FROM project WHERE code = 'mesaya-frontend') AND cs.section_key = 'i18n' AND cs.entity_type = 'project'),
    (SELECT id FROM language WHERE code = 'es'), 'Internacionalización (i18n)',
-   'Sistema de traducción con TranslatePipe, I18nPort abstracto, soporte es/en y persistencia de preferencia de idioma.'),
+   E'Sistema de traducción implementado con un I18nPort abstracto, un servicio concreto que carga archivos JSON de traducciones, y un TranslatePipe personalizado para uso en templates.\n\nEl idioma seleccionado se persiste en localStorage y se aplica automáticamente al iniciar la aplicación. Todas las cadenas de UI, mensajes de error, y etiquetas de formulario están externalizadas en archivos de traducción con soporte completo para español e inglés.'),
   ((SELECT cs.id FROM content_section cs WHERE cs.entity_id = (SELECT id FROM project WHERE code = 'mesaya-frontend') AND cs.section_key = 'i18n' AND cs.entity_type = 'project'),
    (SELECT id FROM language WHERE code = 'en'), 'Internationalization (i18n)',
-   'Translation system with TranslatePipe, abstract I18nPort, es/en support, and language preference persistence.'),
+   E'Translation system implemented with an abstract I18nPort, a concrete service that loads JSON translation files, and a custom TranslatePipe for template usage.\n\nThe selected language is persisted in localStorage and automatically applied on application startup. All UI strings, error messages, and form labels are externalized in translation files with full Spanish and English support.'),
+
   ((SELECT cs.id FROM content_section cs WHERE cs.entity_id = (SELECT id FROM project WHERE code = 'mesaya-frontend') AND cs.section_key = 'settings' AND cs.entity_type = 'project'),
    (SELECT id FROM language WHERE code = 'es'), 'Modal de Configuración',
-   'Modal de configuración con selector de idioma y preferencias de la aplicación.'),
+   E'Modal de configuración accesible desde la barra de navegación que centraliza las preferencias del usuario: selector de idioma con cambio inmediato, preferencias de tema (claro/oscuro), y configuración de notificaciones.\n\nEl componente usa signals de Angular para reflejar los cambios de configuración instantáneamente en toda la aplicación sin necesidad de recargar la página.'),
   ((SELECT cs.id FROM content_section cs WHERE cs.entity_id = (SELECT id FROM project WHERE code = 'mesaya-frontend') AND cs.section_key = 'settings' AND cs.entity_type = 'project'),
    (SELECT id FROM language WHERE code = 'en'), 'Settings Modal',
-   'Settings modal with language selector and application preferences.')
+   E'Settings modal accessible from the navigation bar that centralizes user preferences: language selector with immediate switching, theme preferences (light/dark), and notification configuration.\n\nThe component uses Angular signals to reflect configuration changes instantly across the entire application without page reload.')
 ON CONFLICT (content_section_id, language_id) DO NOTHING;
 
 -- =========================================
 -- Reservation MS (mesaya-res): 12 sections
--- (3 original + 9 from res sub-modules)
 -- =========================================
 INSERT INTO content_section (entity_type, entity_id, section_key, icon, position, is_archived, is_pinned)
 VALUES
@@ -138,81 +157,91 @@ INSERT INTO content_section_translation (content_section_id, language_id, title,
 VALUES
   ((SELECT cs.id FROM content_section cs WHERE cs.entity_id = (SELECT id FROM project WHERE code = 'mesaya-res') AND cs.section_key = 'overview' AND cs.entity_type = 'project'),
    (SELECT id FROM language WHERE code = 'es'), 'Descripción General',
-   'Microservicio principal que gestiona restaurantes, secciones, mesas, menús, reservas, reseñas, pagos y suscripciones. NestJS con Clean Architecture y DDD, entidades ricas y Value Objects.'),
+   E'Microservicio principal del ecosistema mesaYA que gestiona toda la lógica de negocio central: restaurantes, secciones, mesas, menús, reservas, reseñas, pagos y suscripciones.\n\nConstruido con NestJS siguiendo estrictamente Clean Architecture y Domain-Driven Design, con entidades ricas que encapsulan lógica de negocio, Value Objects inmutables para conceptos de dominio (moneda, coordenadas, estados), y eventos de dominio publicados vía Kafka para comunicación con otros servicios.\n\nCada módulo funcional (restaurantes, mesas, reservas, etc.) es independiente con su propia capa de domain, application e infrastructure, comunicándose entre sí solo a través de puertos definidos.'),
   ((SELECT cs.id FROM content_section cs WHERE cs.entity_id = (SELECT id FROM project WHERE code = 'mesaya-res') AND cs.section_key = 'overview' AND cs.entity_type = 'project'),
    (SELECT id FROM language WHERE code = 'en'), 'Overview',
-   'Core microservice managing restaurants, sections, tables, menus, reservations, reviews, payments, and subscriptions. NestJS with Clean Architecture and DDD, rich entities and Value Objects.'),
+   E'Core microservice of the mesaYA ecosystem managing all central business logic: restaurants, sections, tables, menus, reservations, reviews, payments, and subscriptions.\n\nBuilt with NestJS strictly following Clean Architecture and Domain-Driven Design, with rich entities encapsulating business logic, immutable Value Objects for domain concepts (currency, coordinates, states), and domain events published via Kafka for communication with other services.\n\nEach functional module (restaurants, tables, reservations, etc.) is independent with its own domain, application, and infrastructure layers, communicating with each other only through defined ports.'),
+
   ((SELECT cs.id FROM content_section cs WHERE cs.entity_id = (SELECT id FROM project WHERE code = 'mesaya-res') AND cs.section_key = 'architecture' AND cs.entity_type = 'project'),
    (SELECT id FROM language WHERE code = 'es'), 'Arquitectura',
-   'Capas: Domain (entidades, VOs, eventos), Application (casos de uso, puertos), Infrastructure (TypeORM, Kafka, mappers) e Interface (controladores REST, Swagger). Patrón Facade para seeding en 5 fases.'),
+   E'Implementa Clean Architecture con 4 capas claramente separadas:\n\n• **Domain** — Entidades ricas con lógica de negocio (Restaurant, Table, Reservation), Value Objects inmutables (Currency, Coordinates, ReservationStatus), y eventos de dominio\n• **Application** — Casos de uso que orquestan la lógica de negocio, puertos de entrada/salida, y DTOs para contratos de datos\n• **Infrastructure** — Repositorios TypeORM, productores Kafka, mappers entidad↔ORM, y adaptadores de servicios externos\n• **Interface** — Controladores REST con validación automática, decoradores Swagger, y guards de autenticación\n\nEl patrón Facade se usa para orquestar el seeding de datos en fases ordenadas, garantizando que las dependencias entre entidades se respeten.'),
   ((SELECT cs.id FROM content_section cs WHERE cs.entity_id = (SELECT id FROM project WHERE code = 'mesaya-res') AND cs.section_key = 'architecture' AND cs.entity_type = 'project'),
    (SELECT id FROM language WHERE code = 'en'), 'Architecture',
-   'Layers: Domain (entities, VOs, events), Application (use cases, ports), Infrastructure (TypeORM, Kafka, mappers), and Interface (REST controllers, Swagger). Facade pattern for 5-phase seeding.'),
+   E'Implements Clean Architecture with 4 clearly separated layers:\n\n• **Domain** — Rich entities with business logic (Restaurant, Table, Reservation), immutable Value Objects (Currency, Coordinates, ReservationStatus), and domain events\n• **Application** — Use cases orchestrating business logic, input/output ports, and DTOs for data contracts\n• **Infrastructure** — TypeORM repositories, Kafka producers, entity↔ORM mappers, and external service adapters\n• **Interface** — REST controllers with automatic validation, Swagger decorators, and authentication guards\n\nThe Facade pattern is used to orchestrate data seeding in ordered phases, ensuring entity dependencies are respected.'),
+
   ((SELECT cs.id FROM content_section cs WHERE cs.entity_id = (SELECT id FROM project WHERE code = 'mesaya-res') AND cs.section_key = 'testing' AND cs.entity_type = 'project'),
    (SELECT id FROM language WHERE code = 'es'), 'Testing y Calidad',
-   'Cobertura de tests unitarios al 90% con Jest. SonarCloud vía GitHub Actions con Quality Gate personalizado, análisis de code smells y cobertura LCOV.'),
+   E'Suite de pruebas con Jest que alcanza 90% de cobertura de código, verificada mediante integración continua con SonarCloud vía GitHub Actions.\n\nLos tests unitarios cubren entidades de dominio, Value Objects, casos de uso y mappers. Cada caso de uso se prueba con mocks de los puertos de salida, aislando la lógica de negocio de la infraestructura. Los tests de integración validan endpoints REST con request/response completos.\n\nEl Quality Gate personalizado de SonarCloud incluye umbrales para cobertura mínima, duplicación de código, y deuda técnica acumulada, ejecutándose automáticamente en cada pull request.'),
   ((SELECT cs.id FROM content_section cs WHERE cs.entity_id = (SELECT id FROM project WHERE code = 'mesaya-res') AND cs.section_key = 'testing' AND cs.entity_type = 'project'),
    (SELECT id FROM language WHERE code = 'en'), 'Testing & Quality',
-   '90% unit test coverage with Jest. SonarCloud via GitHub Actions with custom Quality Gate, code smells analysis, and LCOV coverage.'),
+   E'Test suite with Jest achieving 90% code coverage, verified through continuous integration with SonarCloud via GitHub Actions.\n\nUnit tests cover domain entities, Value Objects, use cases, and mappers. Each use case is tested with output port mocks, isolating business logic from infrastructure. Integration tests validate REST endpoints with complete request/response flows.\n\nSonarCloud''s custom Quality Gate includes thresholds for minimum coverage, code duplication, and accumulated technical debt, running automatically on every pull request.'),
+
   ((SELECT cs.id FROM content_section cs WHERE cs.entity_id = (SELECT id FROM project WHERE code = 'mesaya-res') AND cs.section_key = 'tables' AND cs.entity_type = 'project'),
    (SELECT id FROM language WHERE code = 'es'), 'Módulo de Mesas',
-   'Entidad rica Table con validación de layout (colisiones, límites), snapshot/rehydrate, analíticas y eventos Kafka para sincronización en tiempo real.'),
+   E'Entidad rica Table que encapsula la lógica de gestión de mesas de restaurante con validaciones de dominio complejas.\n\nIncluye validación de layout que detecta colisiones entre mesas (dos mesas no pueden superponerse en el canvas), verificación de límites (la mesa debe estar dentro del área de su sección), y funcionalidad de snapshot/rehydrate para persistir y restaurar el estado del layout.\n\nPublica eventos Kafka cuando una mesa cambia de estado (disponible, seleccionada, reservada) para sincronización en tiempo real con el servicio WebSocket y el frontend.'),
   ((SELECT cs.id FROM content_section cs WHERE cs.entity_id = (SELECT id FROM project WHERE code = 'mesaya-res') AND cs.section_key = 'tables' AND cs.entity_type = 'project'),
    (SELECT id FROM language WHERE code = 'en'), 'Tables Module',
-   'Rich Table entity with layout validation (collisions, bounds), snapshot/rehydrate, analytics, and Kafka events for real-time sync.'),
+   E'Rich Table entity encapsulating restaurant table management logic with complex domain validations.\n\nIncludes layout validation detecting collisions between tables (two tables cannot overlap on the canvas), bounds checking (table must be within its section area), and snapshot/rehydrate functionality to persist and restore layout state.\n\nPublishes Kafka events when a table changes state (available, selected, reserved) for real-time synchronization with the WebSocket service and frontend.'),
+
   ((SELECT cs.id FROM content_section cs WHERE cs.entity_id = (SELECT id FROM project WHERE code = 'mesaya-res') AND cs.section_key = 'restaurants' AND cs.entity_type = 'project'),
    (SELECT id FROM language WHERE code = 'es'), 'Módulo de Restaurantes',
-   'Gestión de restaurantes con horarios, días de operación, ubicación y capacidad. Verificación de propietarios vía Auth MS.'),
+   E'Gestión completa de restaurantes incluyendo horarios de operación configurables por día de la semana, ubicación geográfica con coordenadas, capacidad total y secciones del local.\n\nLa verificación de propietarios se realiza mediante integración con el Auth MS: solo usuarios con rol OWNER pueden crear o modificar restaurantes, y cada restaurante está vinculado a un propietario específico verificado por JWT.'),
   ((SELECT cs.id FROM content_section cs WHERE cs.entity_id = (SELECT id FROM project WHERE code = 'mesaya-res') AND cs.section_key = 'restaurants' AND cs.entity_type = 'project'),
    (SELECT id FROM language WHERE code = 'en'), 'Restaurants Module',
-   'Restaurant management with schedules, operating days, location, and capacity. Owner verification via Auth MS.'),
+   E'Complete restaurant management including configurable operating schedules per day of the week, geographic location with coordinates, total capacity, and venue sections.\n\nOwner verification is done through Auth MS integration: only users with the OWNER role can create or modify restaurants, and each restaurant is linked to a specific owner verified by JWT.'),
+
   ((SELECT cs.id FROM content_section cs WHERE cs.entity_id = (SELECT id FROM project WHERE code = 'mesaya-res') AND cs.section_key = 'reservations' AND cs.entity_type = 'project'),
    (SELECT id FROM language WHERE code = 'es'), 'Módulo de Reservaciones',
-   'Reservaciones con máquina de estados, validación de disponibilidad y relación usuario-restaurante-mesa.'),
+   E'Sistema de reservaciones con máquina de estados que gestiona el ciclo de vida completo: PENDING → CONFIRMED → COMPLETED o CANCELLED. Cada transición de estado es validada por reglas de negocio en la entidad de dominio.\n\nLa validación de disponibilidad verifica que la mesa no esté reservada en el horario solicitado, que el restaurante esté abierto, y que el usuario no tenga conflictos con otras reservas activas. Los eventos de reserva se propagan vía Kafka para actualizar la disponibilidad en tiempo real.'),
   ((SELECT cs.id FROM content_section cs WHERE cs.entity_id = (SELECT id FROM project WHERE code = 'mesaya-res') AND cs.section_key = 'reservations' AND cs.entity_type = 'project'),
    (SELECT id FROM language WHERE code = 'en'), 'Reservations Module',
-   'Reservations with state machine, availability validation, and user-restaurant-table relationships.'),
+   E'Reservation system with a state machine managing the complete lifecycle: PENDING → CONFIRMED → COMPLETED or CANCELLED. Each state transition is validated by business rules in the domain entity.\n\nAvailability validation checks that the table is not reserved at the requested time, the restaurant is open, and the user has no conflicts with other active reservations. Reservation events propagate via Kafka to update real-time availability.'),
+
   ((SELECT cs.id FROM content_section cs WHERE cs.entity_id = (SELECT id FROM project WHERE code = 'mesaya-res') AND cs.section_key = 'menus' AND cs.entity_type = 'project'),
    (SELECT id FROM language WHERE code = 'es'), 'Módulo de Menús y Platos',
-   'Gestión de menús y platos por restaurante con precios, descripciones e imágenes.'),
+   E'Gestión de menús y platos organizados por restaurante, con soporte para precios con Value Object de moneda, descripciones detalladas, imágenes de platos, y categorización por tipo (entrante, principal, postre, bebida).\n\nLos dueños de restaurantes pueden crear múltiples menús (almuerzo, cena, especial) y asignar platos a cada uno con precios y disponibilidad independientes.'),
   ((SELECT cs.id FROM content_section cs WHERE cs.entity_id = (SELECT id FROM project WHERE code = 'mesaya-res') AND cs.section_key = 'menus' AND cs.entity_type = 'project'),
    (SELECT id FROM language WHERE code = 'en'), 'Menus & Dishes Module',
-   'Menu and dish management per restaurant with prices, descriptions, and images.'),
+   E'Menu and dish management organized by restaurant, with support for prices using a Currency Value Object, detailed descriptions, dish images, and categorization by type (appetizer, main, dessert, beverage).\n\nRestaurant owners can create multiple menus (lunch, dinner, special) and assign dishes to each with independent prices and availability.'),
+
   ((SELECT cs.id FROM content_section cs WHERE cs.entity_id = (SELECT id FROM project WHERE code = 'mesaya-res') AND cs.section_key = 'reviews' AND cs.entity_type = 'project'),
    (SELECT id FROM language WHERE code = 'es'), 'Módulo de Reseñas',
-   'Calificaciones y comentarios de usuarios sobre restaurantes con valoración numérica.'),
+   E'Sistema de calificaciones y comentarios donde los usuarios pueden evaluar restaurantes después de completar una reserva. Incluye puntuación numérica (1-5 estrellas), comentario de texto libre, y validación de que solo usuarios con reservas completadas pueden dejar reseñas.\n\nLas reseñas se agregan para calcular la calificación promedio del restaurante, visible en los listados y mapas de la plataforma.'),
   ((SELECT cs.id FROM content_section cs WHERE cs.entity_id = (SELECT id FROM project WHERE code = 'mesaya-res') AND cs.section_key = 'reviews' AND cs.entity_type = 'project'),
    (SELECT id FROM language WHERE code = 'en'), 'Reviews Module',
-   'User ratings and comments for restaurants with numeric scores.'),
+   E'Rating and comment system where users can evaluate restaurants after completing a reservation. Includes numeric scoring (1-5 stars), free-text comments, and validation that only users with completed reservations can leave reviews.\n\nReviews are aggregated to calculate the restaurant''s average rating, visible in platform listings and maps.'),
+
   ((SELECT cs.id FROM content_section cs WHERE cs.entity_id = (SELECT id FROM project WHERE code = 'mesaya-res') AND cs.section_key = 'payments' AND cs.entity_type = 'project'),
    (SELECT id FROM language WHERE code = 'es'), 'Módulo de Pagos',
-   'Procesamiento de pagos para reservaciones y suscripciones con VOs de moneda y estado de transacción.'),
+   E'Procesamiento de pagos para reservaciones y suscripciones de restaurantes con Value Objects para moneda (monto, divisa) y estado de transacción (PENDING, COMPLETED, FAILED, REFUNDED).\n\nIntegra con el Payment MS a través de eventos Kafka: cuando una reserva se confirma, se genera un evento de pago que el servicio de pagos procesa y responde con el resultado de la transacción.'),
   ((SELECT cs.id FROM content_section cs WHERE cs.entity_id = (SELECT id FROM project WHERE code = 'mesaya-res') AND cs.section_key = 'payments' AND cs.entity_type = 'project'),
    (SELECT id FROM language WHERE code = 'en'), 'Payments Module',
-   'Payment processing for reservations and subscriptions with currency and transaction status VOs.'),
+   E'Payment processing for reservations and restaurant subscriptions with Value Objects for currency (amount, currency code) and transaction status (PENDING, COMPLETED, FAILED, REFUNDED).\n\nIntegrates with the Payment MS through Kafka events: when a reservation is confirmed, a payment event is generated that the payment service processes and responds with the transaction result.'),
+
   ((SELECT cs.id FROM content_section cs WHERE cs.entity_id = (SELECT id FROM project WHERE code = 'mesaya-res') AND cs.section_key = 'subscriptions' AND cs.entity_type = 'project'),
    (SELECT id FROM language WHERE code = 'es'), 'Módulo de Suscripciones',
-   'Planes de suscripción para restaurantes con estados activo/inactivo y fechas de vigencia.'),
+   E'Planes de suscripción para restaurantes con estados gestionados por máquina de estados (ACTIVE, INACTIVE, EXPIRED, CANCELLED) y fechas de inicio/fin de vigencia.\n\nCada plan define los límites del restaurante: número máximo de mesas, secciones, y funcionalidades premium disponibles. La lógica de dominio valida automáticamente la expiración y los cambios de plan.'),
   ((SELECT cs.id FROM content_section cs WHERE cs.entity_id = (SELECT id FROM project WHERE code = 'mesaya-res') AND cs.section_key = 'subscriptions' AND cs.entity_type = 'project'),
    (SELECT id FROM language WHERE code = 'en'), 'Subscriptions Module',
-   'Restaurant subscription plans with active/inactive states and validity dates.'),
+   E'Restaurant subscription plans with states managed by a state machine (ACTIVE, INACTIVE, EXPIRED, CANCELLED) and validity start/end dates.\n\nEach plan defines restaurant limits: maximum number of tables, sections, and available premium features. Domain logic automatically validates expiration and plan changes.'),
+
   ((SELECT cs.id FROM content_section cs WHERE cs.entity_id = (SELECT id FROM project WHERE code = 'mesaya-res') AND cs.section_key = 'seed' AND cs.entity_type = 'project'),
    (SELECT id FROM language WHERE code = 'es'), 'Módulo de Seed',
-   'Orquestador de seeding con patrón Facade: planes → media → restaurantes → secciones → mesas → menús → reservas → reseñas → pagos.'),
+   E'Orquestador de seeding con patrón Facade que garantiza el orden correcto de inserción respetando las dependencias entre entidades. El proceso se ejecuta en fases secuenciales:\n\nplanes → media → restaurantes → secciones → mesas → menús → reservas → reseñas → pagos\n\nCada fase solo se ejecuta si las dependencias previas están satisfechas, y los datos son idempotentes para evitar duplicados en ejecuciones repetidas.'),
   ((SELECT cs.id FROM content_section cs WHERE cs.entity_id = (SELECT id FROM project WHERE code = 'mesaya-res') AND cs.section_key = 'seed' AND cs.entity_type = 'project'),
    (SELECT id FROM language WHERE code = 'en'), 'Seed Module',
-   'Seeding orchestrator with Facade pattern: plans → media → restaurants → sections → tables → menus → reservations → reviews → payments.'),
+   E'Seeding orchestrator with Facade pattern ensuring correct insertion order respecting entity dependencies. The process runs in sequential phases:\n\nplans → media → restaurants → sections → tables → menus → reservations → reviews → payments\n\nEach phase only executes if previous dependencies are satisfied, and data is idempotent to avoid duplicates on repeated runs.'),
+
   ((SELECT cs.id FROM content_section cs WHERE cs.entity_id = (SELECT id FROM project WHERE code = 'mesaya-res') AND cs.section_key = 'sonarqube' AND cs.entity_type = 'project'),
    (SELECT id FROM language WHERE code = 'es'), 'Integración SonarQube',
-   'SonarCloud con GitHub Actions, cobertura LCOV al 90%, Quality Gate personalizado y análisis continuo de deuda técnica.'),
+   E'Integración continua con SonarCloud ejecutada automáticamente en cada pull request mediante GitHub Actions. El pipeline genera reportes de cobertura LCOV con Jest y los envía a SonarCloud para análisis.\n\nEl Quality Gate personalizado verifica: cobertura mínima del 90%, cero bugs críticos, deuda técnica dentro de umbrales aceptables, y ausencia de vulnerabilidades de seguridad. Los resultados se reportan como checks de estado en el PR.'),
   ((SELECT cs.id FROM content_section cs WHERE cs.entity_id = (SELECT id FROM project WHERE code = 'mesaya-res') AND cs.section_key = 'sonarqube' AND cs.entity_type = 'project'),
    (SELECT id FROM language WHERE code = 'en'), 'SonarQube Integration',
-   'SonarCloud with GitHub Actions, 90% LCOV coverage, custom Quality Gate, and continuous technical debt analysis.')
+   E'Continuous integration with SonarCloud automatically executed on every pull request via GitHub Actions. The pipeline generates LCOV coverage reports with Jest and sends them to SonarCloud for analysis.\n\nThe custom Quality Gate verifies: minimum 90% coverage, zero critical bugs, technical debt within acceptable thresholds, and absence of security vulnerabilities. Results are reported as status checks on the PR.')
 ON CONFLICT (content_section_id, language_id) DO NOTHING;
 
 -- =========================================
 -- Auth MS (mesaya-auth-ms): 4 sections
--- (2 original + 2 from auth sub-modules)
 -- =========================================
 INSERT INTO content_section (entity_type, entity_id, section_key, icon, position, is_archived, is_pinned)
 VALUES
@@ -226,28 +255,31 @@ INSERT INTO content_section_translation (content_section_id, language_id, title,
 VALUES
   ((SELECT cs.id FROM content_section cs WHERE cs.entity_id = (SELECT id FROM project WHERE code = 'mesaya-auth-ms') AND cs.section_key = 'overview' AND cs.entity_type = 'project'),
    (SELECT id FROM language WHERE code = 'es'), 'Descripción General',
-   'Microservicio de autenticación con JWT y RBAC completo. Usuarios, roles y permisos con seeding automático al iniciar vía OnModuleInit.'),
+   E'Microservicio de autenticación y autorización que gestiona el ciclo de vida completo de usuarios dentro del ecosistema mesaYA.\n\nImplementa autenticación con JWT (access + refresh tokens), hash seguro de contraseñas con bcrypt, y un sistema RBAC completo con roles predefinidos (admin, owner, user, guest) y permisos granulares asignables dinámicamente.\n\nAl iniciar el servicio, un seeder automático vía OnModuleInit de NestJS crea los permisos, roles y usuarios por defecto necesarios para el funcionamiento del sistema.'),
   ((SELECT cs.id FROM content_section cs WHERE cs.entity_id = (SELECT id FROM project WHERE code = 'mesaya-auth-ms') AND cs.section_key = 'overview' AND cs.entity_type = 'project'),
    (SELECT id FROM language WHERE code = 'en'), 'Overview',
-   'Authentication microservice with JWT and complete RBAC. Users, roles, and permissions with automatic seeding on startup via OnModuleInit.'),
+   E'Authentication and authorization microservice managing the complete user lifecycle within the mesaYA ecosystem.\n\nIt implements JWT authentication (access + refresh tokens), secure password hashing with bcrypt, and a complete RBAC system with predefined roles (admin, owner, user, guest) and granular dynamically-assignable permissions.\n\nOn service startup, an automatic seeder via NestJS OnModuleInit creates the default permissions, roles, and users required for system operation.'),
+
   ((SELECT cs.id FROM content_section cs WHERE cs.entity_id = (SELECT id FROM project WHERE code = 'mesaya-auth-ms') AND cs.section_key = 'features' AND cs.entity_type = 'project'),
    (SELECT id FROM language WHERE code = 'es'), 'Funcionalidades',
-   'Registro e inicio de sesión con JWT + refresh tokens, hash de contraseñas, asignación dinámica de permisos, roles predefinidos (admin, owner, user, guest) y middleware de verificación.'),
+   E'• Registro de usuarios con validación de datos y hash de contraseña\n• Login con generación de JWT access token (corta duración) + refresh token (larga duración)\n• Renovación automática de tokens sin requerir re-login\n• Middleware de verificación de JWT en cada request protegido\n• Asignación dinámica de permisos a roles existentes\n• Validación de permisos a nivel de endpoint con decoradores personalizados de NestJS'),
   ((SELECT cs.id FROM content_section cs WHERE cs.entity_id = (SELECT id FROM project WHERE code = 'mesaya-auth-ms') AND cs.section_key = 'features' AND cs.entity_type = 'project'),
    (SELECT id FROM language WHERE code = 'en'), 'Features',
-   'Registration and login with JWT + refresh tokens, password hashing, dynamic permission assignment, predefined roles (admin, owner, user, guest), and verification middleware.'),
+   E'• User registration with data validation and password hashing\n• Login with JWT access token (short-lived) + refresh token (long-lived) generation\n• Automatic token renewal without requiring re-login\n• JWT verification middleware on every protected request\n• Dynamic permission assignment to existing roles\n• Endpoint-level permission validation with custom NestJS decorators'),
+
   ((SELECT cs.id FROM content_section cs WHERE cs.entity_id = (SELECT id FROM project WHERE code = 'mesaya-auth-ms') AND cs.section_key = 'auth_seeder' AND cs.entity_type = 'project'),
    (SELECT id FROM language WHERE code = 'es'), 'Seeder de Autenticación',
-   'Siembra automática de permisos, roles y usuarios por defecto al iniciar con OnModuleInit de NestJS.'),
+   E'Proceso de siembra automática que se ejecuta al iniciar el servicio mediante el hook OnModuleInit de NestJS, creando la estructura base de seguridad:\n\n1. Permisos granulares para cada recurso y operación del sistema\n2. Roles predefinidos con conjuntos de permisos apropiados\n3. Usuarios por defecto (administrador del sistema) con credenciales configurables por variables de entorno\n\nLa siembra es idempotente: verifica si los datos ya existen antes de insertarlos, permitiendo reinicios seguros del servicio.'),
   ((SELECT cs.id FROM content_section cs WHERE cs.entity_id = (SELECT id FROM project WHERE code = 'mesaya-auth-ms') AND cs.section_key = 'auth_seeder' AND cs.entity_type = 'project'),
    (SELECT id FROM language WHERE code = 'en'), 'Auth Seeder',
-   'Automatic seeding of permissions, roles, and default users on startup with NestJS OnModuleInit.'),
+   E'Automatic seeding process that runs on service startup via NestJS OnModuleInit hook, creating the base security structure:\n\n1. Granular permissions for each system resource and operation\n2. Predefined roles with appropriate permission sets\n3. Default users (system administrator) with credentials configurable via environment variables\n\nSeeding is idempotent: it checks if data already exists before inserting, allowing safe service restarts.'),
+
   ((SELECT cs.id FROM content_section cs WHERE cs.entity_id = (SELECT id FROM project WHERE code = 'mesaya-auth-ms') AND cs.section_key = 'rbac' AND cs.entity_type = 'project'),
    (SELECT id FROM language WHERE code = 'es'), 'Sistema RBAC',
-   'RBAC con permisos granulares, roles predefinidos (admin, owner, user, guest) y asignación dinámica.'),
+   E'Role-Based Access Control con 4 roles jerárquicos y permisos granulares:\n\n• **Admin** — Acceso total al sistema, gestión de usuarios y configuración global\n• **Owner** — Gestión completa de sus restaurantes, mesas, menús y visualización de reservas/reseñas\n• **User** — Búsqueda de restaurantes, creación de reservas, escritura de reseñas\n• **Guest** — Solo lectura: explorar restaurantes y menús sin autenticación\n\nCada permiso es asignable individualmente a cualquier rol, permitiendo personalización granular según las necesidades del negocio.'),
   ((SELECT cs.id FROM content_section cs WHERE cs.entity_id = (SELECT id FROM project WHERE code = 'mesaya-auth-ms') AND cs.section_key = 'rbac' AND cs.entity_type = 'project'),
    (SELECT id FROM language WHERE code = 'en'), 'RBAC System',
-   'RBAC with granular permissions, predefined roles (admin, owner, user, guest), and dynamic assignment.')
+   E'Role-Based Access Control with 4 hierarchical roles and granular permissions:\n\n• **Admin** — Full system access, user management, and global configuration\n• **Owner** — Complete management of their restaurants, tables, menus, and reservation/review visibility\n• **User** — Restaurant search, reservation creation, review writing\n• **Guest** — Read-only: explore restaurants and menus without authentication\n\nEach permission is individually assignable to any role, allowing granular customization based on business needs.')
 ON CONFLICT (content_section_id, language_id) DO NOTHING;
 
 -- =========================================
@@ -263,21 +295,21 @@ INSERT INTO content_section_translation (content_section_id, language_id, title,
 VALUES
   ((SELECT cs.id FROM content_section cs WHERE cs.entity_id = (SELECT id FROM project WHERE code = 'mesaya-graphql') AND cs.section_key = 'overview' AND cs.entity_type = 'project'),
    (SELECT id FROM language WHERE code = 'es'), 'Descripción General',
-   'Gateway GraphQL en Python con Strawberry que agrega las APIs REST de los microservicios bajo un schema unificado. Arquitectura modular por features.'),
+   E'Gateway GraphQL construido con Python y Strawberry que actúa como capa de agregación para todos los microservicios del ecosistema mesaYA.\n\nExpone un schema GraphQL unificado que permite al frontend consultar datos de múltiples microservicios (reservas, restaurantes, autenticación) en una sola request, eliminando el problema de over-fetching y under-fetching típico de APIs REST.\n\nLa arquitectura es modular por features: cada dominio funcional (restaurantes, mesas, reservas, auth) tiene sus propios types, queries y mutations, facilitando el mantenimiento y escalabilidad del gateway.'),
   ((SELECT cs.id FROM content_section cs WHERE cs.entity_id = (SELECT id FROM project WHERE code = 'mesaya-graphql') AND cs.section_key = 'overview' AND cs.entity_type = 'project'),
    (SELECT id FROM language WHERE code = 'en'), 'Overview',
-   'Python GraphQL gateway with Strawberry aggregating microservice REST APIs under a unified schema. Feature-based modular architecture.'),
+   E'GraphQL gateway built with Python and Strawberry acting as an aggregation layer for all mesaYA ecosystem microservices.\n\nIt exposes a unified GraphQL schema allowing the frontend to query data from multiple microservices (reservations, restaurants, authentication) in a single request, eliminating the over-fetching and under-fetching problems typical of REST APIs.\n\nThe architecture is feature-modular: each functional domain (restaurants, tables, reservations, auth) has its own types, queries, and mutations, facilitating gateway maintenance and scalability.'),
+
   ((SELECT cs.id FROM content_section cs WHERE cs.entity_id = (SELECT id FROM project WHERE code = 'mesaya-graphql') AND cs.section_key = 'features' AND cs.entity_type = 'project'),
    (SELECT id FROM language WHERE code = 'es'), 'Funcionalidades',
-   'Queries y mutations para restaurantes, mesas, reservas y autenticación. Resolvers que consumen endpoints REST con manejo de errores centralizado.'),
+   E'• Queries y mutations para restaurantes, mesas, reservas y autenticación con tipado estricto de Strawberry\n• Resolvers que consumen los endpoints REST de cada microservicio con manejo de errores centralizado y retry configurable\n• Autenticación propagada: el token JWT del usuario se reenvía a cada microservicio interno para mantener el contexto de seguridad\n• Playground GraphiQL integrado para exploración y testing del schema en desarrollo'),
   ((SELECT cs.id FROM content_section cs WHERE cs.entity_id = (SELECT id FROM project WHERE code = 'mesaya-graphql') AND cs.section_key = 'features' AND cs.entity_type = 'project'),
    (SELECT id FROM language WHERE code = 'en'), 'Features',
-   'Queries and mutations for restaurants, tables, reservations, and authentication. Resolvers consuming REST endpoints with centralized error handling.')
+   E'• Queries and mutations for restaurants, tables, reservations, and authentication with strict Strawberry typing\n• Resolvers consuming each microservice''s REST endpoints with centralized error handling and configurable retry\n• Propagated authentication: the user''s JWT token is forwarded to each internal microservice to maintain the security context\n• Integrated GraphiQL playground for schema exploration and testing in development')
 ON CONFLICT (content_section_id, language_id) DO NOTHING;
 
 -- =========================================
 -- Chatbot (mesaya-chatbot): 4 sections
--- (2 original + 2 from chatbot sub-modules)
 -- =========================================
 INSERT INTO content_section (entity_type, entity_id, section_key, icon, position, is_archived, is_pinned)
 VALUES
@@ -291,28 +323,31 @@ INSERT INTO content_section_translation (content_section_id, language_id, title,
 VALUES
   ((SELECT cs.id FROM content_section cs WHERE cs.entity_id = (SELECT id FROM project WHERE code = 'mesaya-chatbot') AND cs.section_key = 'overview' AND cs.entity_type = 'project'),
    (SELECT id FROM language WHERE code = 'es'), 'Descripción General',
-   'Servicio de chatbot con IA que genera prompts contextuales según el nivel de acceso (GUEST, USER, OWNER, ADMIN) y el idioma (es/en).'),
+   E'Servicio de chatbot con inteligencia artificial que genera respuestas contextuales según el nivel de acceso del usuario (GUEST, USER, OWNER, ADMIN) y el idioma seleccionado (español/inglés).\n\nEl chatbot asiste a los clientes en la búsqueda de restaurantes, recomendaciones de platos y proceso de reserva, mientras que para los dueños proporciona información sobre gestión de su negocio, análisis de reservas y configuración de la plataforma.\n\nCada rol recibe un prompt system diferente con conocimiento de dominio especializado, garantizando que las respuestas sean relevantes y apropiadas al contexto del usuario.'),
   ((SELECT cs.id FROM content_section cs WHERE cs.entity_id = (SELECT id FROM project WHERE code = 'mesaya-chatbot') AND cs.section_key = 'overview' AND cs.entity_type = 'project'),
    (SELECT id FROM language WHERE code = 'en'), 'Overview',
-   'AI chatbot service generating contextual prompts based on access level (GUEST, USER, OWNER, ADMIN) and language (es/en).'),
+   E'AI chatbot service generating contextual responses based on user access level (GUEST, USER, OWNER, ADMIN) and selected language (Spanish/English).\n\nThe chatbot assists customers with restaurant search, dish recommendations, and the reservation process, while for owners it provides information about business management, reservation analytics, and platform configuration.\n\nEach role receives a different system prompt with specialized domain knowledge, ensuring responses are relevant and appropriate to the user''s context.'),
+
   ((SELECT cs.id FROM content_section cs WHERE cs.entity_id = (SELECT id FROM project WHERE code = 'mesaya-chatbot') AND cs.section_key = 'features' AND cs.entity_type = 'project'),
    (SELECT id FROM language WHERE code = 'es'), 'Funcionalidades',
-   'Prompts especializados por rol con conocimiento de dominio (cliente busca restaurantes vs dueño gestiona negocio). Soporte bilingüe completo.'),
+   E'• Respuestas contextuales adaptadas al rol del usuario con conocimiento de dominio diferenciado\n• Soporte bilingüe completo (español/inglés) con prompts nativos en cada idioma\n• Asistencia para clientes: búsqueda de restaurantes, recomendaciones, guía de reserva\n• Asistencia para dueños: información de gestión, métricas, configuración de restaurante\n• Detección automática del idioma del usuario basada en la configuración de la plataforma'),
   ((SELECT cs.id FROM content_section cs WHERE cs.entity_id = (SELECT id FROM project WHERE code = 'mesaya-chatbot') AND cs.section_key = 'features' AND cs.entity_type = 'project'),
    (SELECT id FROM language WHERE code = 'en'), 'Features',
-   'Role-specialized prompts with domain knowledge (client searching restaurants vs owner managing business). Full bilingual support.'),
+   E'• Contextual responses adapted to user role with differentiated domain knowledge\n• Full bilingual support (Spanish/English) with native prompts in each language\n• Customer assistance: restaurant search, recommendations, reservation guide\n• Owner assistance: management information, metrics, restaurant configuration\n• Automatic language detection based on platform settings'),
+
   ((SELECT cs.id FROM content_section cs WHERE cs.entity_id = (SELECT id FROM project WHERE code = 'mesaya-chatbot') AND cs.section_key = 'prompts' AND cs.entity_type = 'project'),
    (SELECT id FROM language WHERE code = 'es'), 'Sistema de Prompts',
-   'Generación de prompts por nivel de acceso con conocimiento de dominio especializado para cada rol.'),
+   E'El sistema de prompts genera instrucciones especializadas por nivel de acceso, proporcionando al modelo de IA un contexto de dominio completo:\n\n• **GUEST** — Información general de restaurantes, menús públicos, proceso de registro\n• **USER** — Búsqueda personalizada, historial de reservas, recomendaciones basadas en preferencias\n• **OWNER** — Gestión de restaurante, análisis de ocupación, configuración de menús y horarios\n• **ADMIN** — Configuración del sistema, métricas globales, gestión de usuarios'),
   ((SELECT cs.id FROM content_section cs WHERE cs.entity_id = (SELECT id FROM project WHERE code = 'mesaya-chatbot') AND cs.section_key = 'prompts' AND cs.entity_type = 'project'),
    (SELECT id FROM language WHERE code = 'en'), 'Prompt System',
-   'Prompt generation by access level with specialized domain knowledge for each role.'),
+   E'The prompt system generates specialized instructions per access level, providing the AI model with complete domain context:\n\n• **GUEST** — General restaurant info, public menus, registration process\n• **USER** — Personalized search, reservation history, preference-based recommendations\n• **OWNER** — Restaurant management, occupancy analysis, menu and schedule configuration\n• **ADMIN** — System configuration, global metrics, user management'),
+
   ((SELECT cs.id FROM content_section cs WHERE cs.entity_id = (SELECT id FROM project WHERE code = 'mesaya-chatbot') AND cs.section_key = 'languages' AND cs.entity_type = 'project'),
    (SELECT id FROM language WHERE code = 'es'), 'Soporte Multiidioma',
-   'Módulo de idiomas soportados con español por defecto e inglés como alternativa.'),
+   E'Módulo de idiomas que gestiona las traducciones de prompts y respuestas del chatbot con español como idioma principal e inglés como alternativa.\n\nCada prompt system se escribe de forma nativa en ambos idiomas (no traducido automáticamente), garantizando naturalidad y precisión en las instrucciones al modelo de IA. El idioma se determina por la preferencia del usuario almacenada en su perfil.'),
   ((SELECT cs.id FROM content_section cs WHERE cs.entity_id = (SELECT id FROM project WHERE code = 'mesaya-chatbot') AND cs.section_key = 'languages' AND cs.entity_type = 'project'),
    (SELECT id FROM language WHERE code = 'en'), 'Multi-language Support',
-   'Supported languages module with Spanish as default and English as alternative.')
+   E'Language module managing chatbot prompt and response translations with Spanish as primary language and English as alternative.\n\nEach system prompt is written natively in both languages (not auto-translated), ensuring naturalness and accuracy in AI model instructions. Language is determined by the user preference stored in their profile.')
 ON CONFLICT (content_section_id, language_id) DO NOTHING;
 
 -- =========================================
@@ -330,28 +365,31 @@ INSERT INTO content_section_translation (content_section_id, language_id, title,
 VALUES
   ((SELECT cs.id FROM content_section cs WHERE cs.entity_id = (SELECT id FROM project WHERE code = 'mesaya-payment-ms') AND cs.section_key = 'overview' AND cs.entity_type = 'project'),
    (SELECT id FROM language WHERE code = 'es'), 'Descripción General',
-   'Microservicio de pagos para transacciones de reservas y suscripciones con Value Objects para moneda y estado.'),
+   E'Microservicio dedicado al procesamiento de transacciones para reservas y suscripciones de restaurantes. Implementa Value Objects para representar moneda (monto + divisa) y estado de transacción (PENDING, COMPLETED, FAILED, REFUNDED).\n\nRecibe eventos de pago desde la API de Reservas vía Kafka, procesa la transacción, y publica el resultado como evento de respuesta para que los servicios dependientes actualicen su estado. La separación como microservicio independiente permite escalar el procesamiento de pagos sin afectar otros servicios.'),
   ((SELECT cs.id FROM content_section cs WHERE cs.entity_id = (SELECT id FROM project WHERE code = 'mesaya-payment-ms') AND cs.section_key = 'overview' AND cs.entity_type = 'project'),
    (SELECT id FROM language WHERE code = 'en'), 'Overview',
-   'Payment microservice for reservation and subscription transactions with Value Objects for currency and status.'),
+   E'Dedicated microservice for processing reservation and restaurant subscription transactions. Implements Value Objects to represent currency (amount + currency code) and transaction status (PENDING, COMPLETED, FAILED, REFUNDED).\n\nReceives payment events from the Reservation API via Kafka, processes the transaction, and publishes the result as a response event for dependent services to update their state. Separation as an independent microservice allows scaling payment processing without affecting other services.'),
+
   ((SELECT cs.id FROM content_section cs WHERE cs.entity_id = (SELECT id FROM project WHERE code = 'mesaya-ws') AND cs.section_key = 'overview' AND cs.entity_type = 'project'),
    (SELECT id FROM language WHERE code = 'es'), 'Descripción General',
-   'WebSockets para comunicación bidireccional en tiempo real: selección/liberación de mesas, actualizaciones de estado y notificaciones push.'),
+   E'Servicio WebSocket para comunicación bidireccional en tiempo real entre el frontend y el backend del ecosistema mesaYA.\n\nGestiona la selección y liberación de mesas en tiempo real: cuando un usuario selecciona una mesa en el mapa canvas, el evento se propaga instantáneamente a todos los clientes conectados, bloqueando visualmente la mesa para otros usuarios. También maneja actualizaciones de estado de reservas y notificaciones push para cambios relevantes.'),
   ((SELECT cs.id FROM content_section cs WHERE cs.entity_id = (SELECT id FROM project WHERE code = 'mesaya-ws') AND cs.section_key = 'overview' AND cs.entity_type = 'project'),
    (SELECT id FROM language WHERE code = 'en'), 'Overview',
-   'WebSockets for real-time bidirectional communication: table selection/release, status updates, and push notifications.'),
+   E'WebSocket service for real-time bidirectional communication between the frontend and backend of the mesaYA ecosystem.\n\nManages real-time table selection and release: when a user selects a table on the canvas map, the event propagates instantly to all connected clients, visually locking the table for other users. Also handles reservation status updates and push notifications for relevant changes.'),
+
   ((SELECT cs.id FROM content_section cs WHERE cs.entity_id = (SELECT id FROM project WHERE code = 'mesaya-mcp') AND cs.section_key = 'overview' AND cs.entity_type = 'project'),
    (SELECT id FROM language WHERE code = 'es'), 'Descripción General',
-   'Integración con Model Context Protocol para proporcionar contexto del sistema a asistentes de IA y herramientas de desarrollo.'),
+   E'Servidor Model Context Protocol (MCP) que expone la estructura, APIs y lógica de negocio del ecosistema mesaYA a asistentes de IA y herramientas de desarrollo.\n\nPermite que agentes de IA comprendan la arquitectura del sistema, los endpoints disponibles, los esquemas de datos y las relaciones entre microservicios, facilitando el desarrollo asistido por IA y la generación de código contextualizada.'),
   ((SELECT cs.id FROM content_section cs WHERE cs.entity_id = (SELECT id FROM project WHERE code = 'mesaya-mcp') AND cs.section_key = 'overview' AND cs.entity_type = 'project'),
    (SELECT id FROM language WHERE code = 'en'), 'Overview',
-   'Model Context Protocol integration to provide system context to AI assistants and development tools.'),
+   E'Model Context Protocol (MCP) server exposing the structure, APIs, and business logic of the mesaYA ecosystem to AI assistants and development tools.\n\nAllows AI agents to understand the system architecture, available endpoints, data schemas, and microservice relationships, facilitating AI-assisted development and contextualized code generation.'),
+
   ((SELECT cs.id FROM content_section cs WHERE cs.entity_id = (SELECT id FROM project WHERE code = 'mesaya-partner-demo') AND cs.section_key = 'overview' AND cs.entity_type = 'project'),
    (SELECT id FROM language WHERE code = 'es'), 'Descripción General',
-   'Aplicación de demostración para socios comerciales. Archivada tras completar fase de presentación.'),
+   E'Aplicación de demostración para socios comerciales que muestra las capacidades de la plataforma mesaYA en un entorno controlado. Archivada tras completar la fase de presentación a stakeholders.'),
   ((SELECT cs.id FROM content_section cs WHERE cs.entity_id = (SELECT id FROM project WHERE code = 'mesaya-partner-demo') AND cs.section_key = 'overview' AND cs.entity_type = 'project'),
    (SELECT id FROM language WHERE code = 'en'), 'Overview',
-   'Demo application for business partners. Archived after presentation phase completed.')
+   E'Demo application for business partners showcasing mesaYA platform capabilities in a controlled environment. Archived after completing the stakeholder presentation phase.')
 ON CONFLICT (content_section_id, language_id) DO NOTHING;
 
 COMMIT;

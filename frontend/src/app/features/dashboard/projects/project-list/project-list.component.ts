@@ -30,6 +30,9 @@ export class ProjectListComponent implements OnInit {
   itemToDelete: Project | null = null;
   imageMap = new Map<number, string>();
 
+  // Expanded parent projects (track which parents are expanded)
+  expandedParents = signal<Set<number>>(new Set());
+
   // Filter state
   searchText = signal('');
   selectedSourceType = signal('');
@@ -114,7 +117,11 @@ export class ProjectListComponent implements OnInit {
 
   filteredItems(): Project[] {
     const all = this.items();
-    let filtered = this.showArchived() ? all.filter((i) => i.is_archived) : all.filter((i) => !i.is_archived);
+    // Only show parent projects and independent projects (no parent_project_id)
+    let filtered = all.filter((i) => !i.parent_project_id);
+
+    // Apply archived filter
+    filtered = this.showArchived() ? filtered.filter((i) => i.is_archived) : filtered.filter((i) => !i.is_archived);
 
     // Filter by source type
     const sourceType = this.selectedSourceType();
@@ -130,11 +137,45 @@ export class ProjectListComponent implements OnInit {
       filtered = filtered.filter(i => {
         const title = this.getItemTitle(i).toLowerCase();
         const desc = (this.getItemDescription(i) || '').toLowerCase();
-        return title.includes(search) || desc.includes(search);
+        // Also check if any child matches
+        const children = this.getChildProjects(i.id);
+        const childMatch = children.some(c => {
+          const cTitle = this.getItemTitle(c).toLowerCase();
+          const cDesc = (this.getItemDescription(c) || '').toLowerCase();
+          return cTitle.includes(search) || cDesc.includes(search);
+        });
+        return title.includes(search) || desc.includes(search) || childMatch;
       });
     }
 
     return filtered;
+  }
+
+  /** Get child projects for a parent */
+  getChildProjects(parentId: number): Project[] {
+    const all = this.items();
+    const archived = this.showArchived();
+    return all.filter(p =>
+      p.parent_project_id === parentId &&
+      (archived ? p.is_archived : !p.is_archived)
+    );
+  }
+
+  /** Toggle expand/collapse of a parent project */
+  toggleExpand(projectId: number): void {
+    this.expandedParents.update(set => {
+      const newSet = new Set(set);
+      if (newSet.has(projectId)) {
+        newSet.delete(projectId);
+      } else {
+        newSet.add(projectId);
+      }
+      return newSet;
+    });
+  }
+
+  isExpanded(projectId: number): boolean {
+    return this.expandedParents().has(projectId);
   }
 
   onSearchChange(text: string): void { this.searchText.set(text); }
@@ -145,21 +186,22 @@ export class ProjectListComponent implements OnInit {
   }
 
   async drop(event: CdkDragDrop<Project[]>): Promise<void> {
+    const allItems = [...this.items()];
     const filtered = this.filteredItems();
-    moveItemInArray(filtered, event.previousIndex, event.currentIndex);
-
-    // Update positions
-    const updates = filtered.map((item, index) => ({
-      id: item.id,
-      position: index,
-    }));
-
+    const movedItem = filtered[event.previousIndex];
+    const targetItem = filtered[event.currentIndex];
+    const fromIndex = allItems.indexOf(movedItem);
+    const toIndex = allItems.indexOf(targetItem);
+    if (fromIndex < 0 || toIndex < 0) return;
+    moveItemInArray(allItems, fromIndex, toIndex);
+    allItems.forEach((item, i) => (item as any).position = i);
+    this.items.set(allItems);
+    const updates = allItems.map((item, i) => ({ id: item.id, position: i }));
     try {
       await this.supabase.updatePositions('project', updates);
-      // Reload to get fresh data
-      await this.loadItems();
     } catch (err) {
       this.logger.error('Error updating positions:', err);
+      await this.loadItems();
     }
   }
 

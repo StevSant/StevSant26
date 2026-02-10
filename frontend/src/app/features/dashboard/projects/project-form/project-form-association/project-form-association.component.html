@@ -14,7 +14,7 @@
         id="source_type"
         name="source_type"
         [ngModel]="sourceType()"
-        (ngModelChange)="sourceTypeChange.emit($event)"
+        (ngModelChange)="onSourceTypeChange($event)"
         class="input"
       >
         <option [ngValue]="null">{{ 'common.noAssociation' | translate }}</option>
@@ -28,19 +28,40 @@
       </select>
     </div>
 
-    <!-- Source ID -->
+    <!-- Source ID (Dynamic Dropdown) -->
     <div>
       <label for="source_id" class="label">{{ 'projects.fields.sourceId' | translate }}</label>
-      <input
-        type="number"
-        id="source_id"
-        name="source_id"
-        [ngModel]="sourceId()"
-        (ngModelChange)="sourceIdChange.emit($event)"
-        [disabled]="!sourceType()"
-        class="input"
-        placeholder="ID"
-      />
+      @if (loadingOptions()) {
+        <div class="input flex items-center gap-2 text-[var(--color-text-muted)]">
+          <svg class="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+          </svg>
+          <span class="text-sm">Cargando...</span>
+        </div>
+      } @else if (sourceType() && sourceOptions().length > 0) {
+        <select
+          id="source_id"
+          name="source_id"
+          [ngModel]="sourceId()"
+          (ngModelChange)="sourceIdChange.emit($event)"
+          class="input"
+        >
+          <option [ngValue]="null">{{ 'common.none' | translate }}</option>
+          @for (option of sourceOptions(); track option.id) {
+            <option [ngValue]="option.id">{{ option.label }}</option>
+          }
+        </select>
+      } @else {
+        <select
+          id="source_id"
+          name="source_id"
+          [disabled]="!sourceType()"
+          class="input"
+        >
+          <option [ngValue]="null">{{ !sourceType() ? ('common.noAssociation' | translate) : ('common.none' | translate) }}</option>
+        </select>
+      }
     </div>
   </div>
 
