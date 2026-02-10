@@ -228,21 +228,51 @@ ON CONFLICT (skill_usages_id, language_id) DO NOTHING;
 -- ============================================================
 INSERT INTO skill_usages (skill_id, source_id, source_type, level, started_at, is_pinned, position)
 VALUES
-  ((SELECT id FROM skill WHERE code = 'python'),   (SELECT id FROM project WHERE code = 'mesaya-chatbot'), 'project', 4, '2024-03-01', true,  1),
-  ((SELECT id FROM skill WHERE code = 'rest_api'), (SELECT id FROM project WHERE code = 'mesaya-chatbot'), 'project', 3, '2024-03-01', false, 2)
+  ((SELECT id FROM skill WHERE code = 'python'),             (SELECT id FROM project WHERE code = 'mesaya-chatbot'), 'project', 4, '2024-03-01', true,  1),
+  ((SELECT id FROM skill WHERE code = 'langchain'),          (SELECT id FROM project WHERE code = 'mesaya-chatbot'), 'project', 4, '2024-03-01', true,  2),
+  ((SELECT id FROM skill WHERE code = 'groq'),               (SELECT id FROM project WHERE code = 'mesaya-chatbot'), 'project', 4, '2024-03-01', true,  3),
+  ((SELECT id FROM skill WHERE code = 'clean_architecture'), (SELECT id FROM project WHERE code = 'mesaya-chatbot'), 'project', 4, '2024-03-01', true,  4),
+  ((SELECT id FROM skill WHERE code = 'fastapi'),            (SELECT id FROM project WHERE code = 'mesaya-chatbot'), 'project', 4, '2024-03-01', false, 5),
+  ((SELECT id FROM skill WHERE code = 'pydantic'),           (SELECT id FROM project WHERE code = 'mesaya-chatbot'), 'project', 3, '2024-03-01', false, 6),
+  ((SELECT id FROM skill WHERE code = 'rest_api'),           (SELECT id FROM project WHERE code = 'mesaya-chatbot'), 'project', 4, '2024-03-01', false, 7)
 ON CONFLICT DO NOTHING;
 
 INSERT INTO skill_usages_translation (skill_usages_id, language_id, notes)
 VALUES
   ((SELECT su.id FROM skill_usages su WHERE su.skill_id = (SELECT id FROM skill WHERE code = 'python') AND su.source_id = (SELECT id FROM project WHERE code = 'mesaya-chatbot') AND su.source_type = 'project'),
-   (SELECT id FROM language WHERE code = 'es'), 'Servicio de chatbot con generación de prompts por nivel de acceso (GUEST, USER, OWNER, ADMIN) y soporte bilingüe.'),
+   (SELECT id FROM language WHERE code = 'es'), 'Lenguaje principal del servicio: Clean Architecture con capas domain, application, infrastructure y presentation.'),
   ((SELECT su.id FROM skill_usages su WHERE su.skill_id = (SELECT id FROM skill WHERE code = 'python') AND su.source_id = (SELECT id FROM project WHERE code = 'mesaya-chatbot') AND su.source_type = 'project'),
-   (SELECT id FROM language WHERE code = 'en'), 'Chatbot service with prompt generation by access level (GUEST, USER, OWNER, ADMIN) and bilingual support.'),
+   (SELECT id FROM language WHERE code = 'en'), 'Main service language: Clean Architecture with domain, application, infrastructure, and presentation layers.'),
+
+  ((SELECT su.id FROM skill_usages su WHERE su.skill_id = (SELECT id FROM skill WHERE code = 'langchain') AND su.source_id = (SELECT id FROM project WHERE code = 'mesaya-chatbot') AND su.source_type = 'project'),
+   (SELECT id FROM language WHERE code = 'es'), 'Orquestación de LLMs: cadenas de prompts, memoria conversacional, integración con herramientas externas y contexto del MCP.'),
+  ((SELECT su.id FROM skill_usages su WHERE su.skill_id = (SELECT id FROM skill WHERE code = 'langchain') AND su.source_id = (SELECT id FROM project WHERE code = 'mesaya-chatbot') AND su.source_type = 'project'),
+   (SELECT id FROM language WHERE code = 'en'), 'LLM orchestration: prompt chains, conversational memory, external tool integration, and MCP context.'),
+
+  ((SELECT su.id FROM skill_usages su WHERE su.skill_id = (SELECT id FROM skill WHERE code = 'groq') AND su.source_id = (SELECT id FROM project WHERE code = 'mesaya-chatbot') AND su.source_type = 'project'),
+   (SELECT id FROM language WHERE code = 'es'), 'Proveedor de inferencia LLM de ultra baja latencia con modelos Llama para generación de respuestas del chatbot.'),
+  ((SELECT su.id FROM skill_usages su WHERE su.skill_id = (SELECT id FROM skill WHERE code = 'groq') AND su.source_id = (SELECT id FROM project WHERE code = 'mesaya-chatbot') AND su.source_type = 'project'),
+   (SELECT id FROM language WHERE code = 'en'), 'Ultra-low latency LLM inference provider with Llama models for chatbot response generation.'),
+
+  ((SELECT su.id FROM skill_usages su WHERE su.skill_id = (SELECT id FROM skill WHERE code = 'clean_architecture') AND su.source_id = (SELECT id FROM project WHERE code = 'mesaya-chatbot') AND su.source_type = 'project'),
+   (SELECT id FROM language WHERE code = 'es'), 'Separación en capas domain/application/infrastructure/presentation con inversión de dependencias para desacoplar el proveedor de IA.'),
+  ((SELECT su.id FROM skill_usages su WHERE su.skill_id = (SELECT id FROM skill WHERE code = 'clean_architecture') AND su.source_id = (SELECT id FROM project WHERE code = 'mesaya-chatbot') AND su.source_type = 'project'),
+   (SELECT id FROM language WHERE code = 'en'), 'Layer separation into domain/application/infrastructure/presentation with dependency inversion to decouple the AI provider.'),
+
+  ((SELECT su.id FROM skill_usages su WHERE su.skill_id = (SELECT id FROM skill WHERE code = 'fastapi') AND su.source_id = (SELECT id FROM project WHERE code = 'mesaya-chatbot') AND su.source_type = 'project'),
+   (SELECT id FROM language WHERE code = 'es'), 'Framework de presentación para endpoints REST del chatbot con documentación automática.'),
+  ((SELECT su.id FROM skill_usages su WHERE su.skill_id = (SELECT id FROM skill WHERE code = 'fastapi') AND su.source_id = (SELECT id FROM project WHERE code = 'mesaya-chatbot') AND su.source_type = 'project'),
+   (SELECT id FROM language WHERE code = 'en'), 'Presentation framework for chatbot REST endpoints with automatic documentation.'),
+
+  ((SELECT su.id FROM skill_usages su WHERE su.skill_id = (SELECT id FROM skill WHERE code = 'pydantic') AND su.source_id = (SELECT id FROM project WHERE code = 'mesaya-chatbot') AND su.source_type = 'project'),
+   (SELECT id FROM language WHERE code = 'es'), 'Validación de datos y DTOs tipados para requests/responses del chatbot.'),
+  ((SELECT su.id FROM skill_usages su WHERE su.skill_id = (SELECT id FROM skill WHERE code = 'pydantic') AND su.source_id = (SELECT id FROM project WHERE code = 'mesaya-chatbot') AND su.source_type = 'project'),
+   (SELECT id FROM language WHERE code = 'en'), 'Data validation and typed DTOs for chatbot requests/responses.'),
 
   ((SELECT su.id FROM skill_usages su WHERE su.skill_id = (SELECT id FROM skill WHERE code = 'rest_api') AND su.source_id = (SELECT id FROM project WHERE code = 'mesaya-chatbot') AND su.source_type = 'project'),
-   (SELECT id FROM language WHERE code = 'es'), 'API REST para comunicación con el chatbot desde el frontend.'),
+   (SELECT id FROM language WHERE code = 'es'), 'API REST para comunicación con el chatbot desde el frontend y consumo de contexto vía MCP por STDIO.'),
   ((SELECT su.id FROM skill_usages su WHERE su.skill_id = (SELECT id FROM skill WHERE code = 'rest_api') AND su.source_id = (SELECT id FROM project WHERE code = 'mesaya-chatbot') AND su.source_type = 'project'),
-   (SELECT id FROM language WHERE code = 'en'), 'REST API for chatbot communication from the frontend.')
+   (SELECT id FROM language WHERE code = 'en'), 'REST API for chatbot communication from the frontend and context consumption via MCP over STDIO.')
 ON CONFLICT (skill_usages_id, language_id) DO NOTHING;
 
 -- ============================================================

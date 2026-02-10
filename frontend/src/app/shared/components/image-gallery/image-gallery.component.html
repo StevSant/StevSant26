@@ -14,7 +14,8 @@
       <img
         [src]="currentImage()?.url"
         [alt]="currentImage()?.alt_text || fallbackAlt()"
-        class="w-full max-h-125 object-contain"
+        class="w-full max-h-125 object-contain cursor-pointer"
+        (click)="openLightbox()"
       />
 
       <!-- Navigation arrows (visible on hover or focus, only when multiple images) -->
@@ -82,4 +83,14 @@
       </div>
     }
   </div>
+}
+
+<!-- Lightbox overlay -->
+@if (lightboxOpen()) {
+  <app-image-lightbox
+    [images]="images()"
+    [startIndex]="selectedIndex()"
+    [fallbackAlt]="fallbackAlt()"
+    (closed)="closeLightbox()"
+  />
 }

@@ -14,5 +14,6 @@ export * from './portfolio-filter/portfolio-filter.component';
 export * from './dashboard-filter/dashboard-filter.component';
 export * from './content-section-manager/content-section-manager.component';
 export * from './image-gallery/image-gallery.component';
+export * from './image-lightbox/image-lightbox.component';
 export * from './globe/globe.component';
 export * from './location-picker/location-picker.component';

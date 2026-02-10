@@ -6,6 +6,7 @@ import { ContentSection, SourceType, Image } from '@core/models';
 import { ContentSectionKey } from '@core/models/entities/content-section.model';
 import { SECTION_KEY_OPTIONS, isMaterialIcon } from '@shared/components/content-section-manager/section-key-options';
 import { MarkdownPipe } from '@shared/pipes/markdown.pipe';
+import { ImageLightboxComponent } from '@shared/components/image-lightbox/image-lightbox.component';
 
 interface SectionGroup {
   key: ContentSectionKey;
@@ -18,7 +19,7 @@ interface SectionGroup {
 @Component({
   selector: 'app-portfolio-content-sections',
   standalone: true,
-  imports: [CommonModule, MarkdownPipe],
+  imports: [CommonModule, MarkdownPipe, ImageLightboxComponent],
   templateUrl: './portfolio-content-sections.component.html',
 })
 export class PortfolioContentSectionsComponent {
@@ -32,6 +33,23 @@ export class PortfolioContentSectionsComponent {
   sourceId = input.required<number>();
 
   activeTabIndex = signal(0);
+
+  /** Lightbox state */
+  lightboxOpen = signal(false);
+  lightboxImages = signal<Image[]>([]);
+  lightboxStartIndex = signal(0);
+
+  openLightbox(images: Image[], index: number): void {
+    this.lightboxImages.set(images);
+    this.lightboxStartIndex.set(index);
+    this.lightboxOpen.set(true);
+    document.body.style.overflow = 'hidden';
+  }
+
+  closeLightbox(): void {
+    this.lightboxOpen.set(false);
+    document.body.style.overflow = '';
+  }
 
   get sections(): ContentSection[] {
     return this.data.getContentSections(this.sourceType(), this.sourceId());

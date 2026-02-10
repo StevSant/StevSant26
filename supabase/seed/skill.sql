@@ -89,6 +89,7 @@ VALUES
 -- Cloud (nuevos)
 ('supabase', (SELECT id FROM skill_category WHERE code = 'cloud'), 4),
 ('openai', (SELECT id FROM skill_category WHERE code = 'cloud'), 5),
+('groq', (SELECT id FROM skill_category WHERE code = 'cloud'), 6),
 
 -- Lenguajes (nuevos)
 ('shell_bash', (SELECT id FROM skill_category WHERE code = 'programming_languages'), 5);
@@ -852,6 +853,18 @@ VALUES
   (SELECT id FROM language WHERE code = 'en'),
   'OpenAI',
   'Integration with OpenAI language models and embeddings.'
+),
+(
+  (SELECT id FROM skill WHERE code = 'groq'),
+  (SELECT id FROM language WHERE code = 'es'),
+  'Groq',
+  'Plataforma de inferencia de LLMs de ultra baja latencia con modelos como Llama y Mixtral.'
+),
+(
+  (SELECT id FROM skill WHERE code = 'groq'),
+  (SELECT id FROM language WHERE code = 'en'),
+  'Groq',
+  'Ultra-low latency LLM inference platform with models like Llama and Mixtral.'
 ),
 
 -- ======================

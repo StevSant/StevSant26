@@ -1,0 +1,137 @@
+<!-- Full-screen lightbox overlay -->
+<div
+  class="lightbox-backdrop fixed inset-0 z-50 flex flex-col items-center justify-center bg-black/90 backdrop-blur-sm animate-lightbox-in"
+  (click)="onBackdropClick($event)"
+>
+  <!-- Top bar: counter + close -->
+  <div class="absolute top-0 left-0 right-0 flex items-center justify-between px-4 py-3 z-10">
+    @if (hasMultiple()) {
+      <span class="text-sm font-medium text-white/80 tabular-nums">
+        {{ selectedIndex() + 1 }} / {{ images().length }}
+      </span>
+    } @else {
+      <span></span>
+    }
+
+    <div class="flex items-center gap-2">
+      <!-- Zoom toggle -->
+      <button
+        type="button"
+        (click)="toggleZoom(); $event.stopPropagation()"
+        class="w-10 h-10 rounded-full bg-white/10 text-white flex items-center justify-center hover:bg-white/20 transition-colors"
+        [attr.aria-label]="zoomed() ? 'Zoom out' : 'Zoom in'"
+      >
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          @if (zoomed()) {
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM13 10H7"
+            />
+          } @else {
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v6m3-3H7"
+            />
+          }
+        </svg>
+      </button>
+
+      <!-- Close -->
+      <button
+        type="button"
+        (click)="close(); $event.stopPropagation()"
+        class="w-10 h-10 rounded-full bg-white/10 text-white flex items-center justify-center hover:bg-white/20 transition-colors"
+        aria-label="Close lightbox"
+      >
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M6 18L18 6M6 6l12 12"
+          />
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Main image area -->
+  <div
+    class="relative flex items-center justify-center flex-1 w-full px-14 py-16 overflow-auto"
+    (click)="$event.stopPropagation()"
+  >
+    <!-- Navigation: Previous -->
+    @if (hasMultiple()) {
+      <button
+        type="button"
+        (click)="prevImage(); $event.stopPropagation()"
+        class="absolute left-3 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full bg-white/10 text-white flex items-center justify-center hover:bg-white/25 transition-all z-10 backdrop-blur-sm"
+        aria-label="Previous image"
+      >
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M15 19l-7-7 7-7"
+          />
+        </svg>
+      </button>
+    }
+
+    <!-- Image -->
+    @if (currentImage(); as img) {
+      <img
+        [src]="img.url"
+        [alt]="img.alt_text || fallbackAlt()"
+        class="select-none transition-transform duration-300 ease-out rounded-lg shadow-2xl"
+        [class]="
+          zoomed()
+            ? 'max-w-none max-h-none cursor-zoom-out scale-150'
+            : 'max-w-full max-h-[80vh] object-contain cursor-zoom-in'
+        "
+        (click)="toggleZoom(); $event.stopPropagation()"
+      />
+    }
+
+    <!-- Navigation: Next -->
+    @if (hasMultiple()) {
+      <button
+        type="button"
+        (click)="nextImage(); $event.stopPropagation()"
+        class="absolute right-3 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full bg-white/10 text-white flex items-center justify-center hover:bg-white/25 transition-all z-10 backdrop-blur-sm"
+        aria-label="Next image"
+      >
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+        </svg>
+      </button>
+    }
+  </div>
+
+  <!-- Thumbnail strip -->
+  @if (hasMultiple()) {
+    <div class="absolute bottom-0 left-0 right-0 px-4 py-3 flex justify-center">
+      <div class="flex gap-2 overflow-x-auto max-w-full pb-1 px-2">
+        @for (img of images(); track img.id; let i = $index) {
+          <button
+            type="button"
+            (click)="selectImage(i); $event.stopPropagation()"
+            class="shrink-0 w-16 h-16 rounded-md overflow-hidden border-2 transition-all duration-200"
+            [class]="
+              i === selectedIndex()
+                ? 'border-white ring-2 ring-white/40 scale-105'
+                : 'border-white/20 opacity-50 hover:opacity-80 hover:border-white/40'
+            "
+          >
+            <img [src]="img.url" [alt]="''" class="w-full h-full object-cover" />
+          </button>
+        }
+      </div>
+    </div>
+  }
+</div>

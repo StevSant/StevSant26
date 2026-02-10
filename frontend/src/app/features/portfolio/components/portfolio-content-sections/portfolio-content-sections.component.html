@@ -86,25 +86,159 @@
               ></div>
             }
 
-            <!-- Section images -->
+            <!-- Section images gallery -->
             @if (getSectionImages(section.id).length > 0) {
-              <div
-                class="mt-4 grid gap-3 justify-center"
-                [class]="
-                  getSectionImages(section.id).length === 1
-                    ? 'grid-cols-1 max-w-md mx-auto'
-                    : 'grid-cols-1 sm:grid-cols-2'
-                "
-              >
-                @for (img of getSectionImages(section.id); track img.id) {
-                  <div class="rounded-lg overflow-hidden border border-(--color-border-primary)">
-                    <img
-                      [src]="img.url"
-                      [alt]="img.alt_text || data.getSectionTitle(section) || ''"
-                      class="w-full h-auto object-cover"
-                      loading="lazy"
-                    />
+              <div class="mt-5">
+                <!-- Single image: full-width showcase -->
+                @if (getSectionImages(section.id).length === 1) {
+                  <div
+                    class="section-gallery-thumb rounded-xl overflow-hidden border border-(--color-border-primary) cursor-pointer group/img max-w-2xl mx-auto"
+                    (click)="openLightbox(getSectionImages(section.id), 0)"
+                  >
+                    <div class="relative">
+                      <img
+                        [src]="getSectionImages(section.id)[0].url"
+                        [alt]="
+                          getSectionImages(section.id)[0].alt_text ||
+                          data.getSectionTitle(section) ||
+                          ''
+                        "
+                        class="w-full h-auto object-cover transition-transform duration-300 group-hover/img:scale-[1.02]"
+                        loading="lazy"
+                      />
+                      <div
+                        class="absolute inset-0 bg-black/0 group-hover/img:bg-black/15 transition-colors duration-300 flex items-center justify-center"
+                      >
+                        <span
+                          class="material-symbols-outlined text-white text-3xl opacity-0 group-hover/img:opacity-100 transition-opacity duration-300 drop-shadow-lg"
+                          >zoom_in</span
+                        >
+                      </div>
+                    </div>
                   </div>
+                } @else {
+                  <!-- Multiple images: masonry-style grid -->
+                  @if (getSectionImages(section.id).length === 2) {
+                    <!-- 2 images: side by side -->
+                    <div class="grid grid-cols-2 gap-3">
+                      @for (img of getSectionImages(section.id); track img.id; let i = $index) {
+                        <div
+                          class="section-gallery-thumb rounded-xl overflow-hidden border border-(--color-border-primary) cursor-pointer group/img"
+                          (click)="openLightbox(getSectionImages(section.id), i)"
+                        >
+                          <div class="relative aspect-video">
+                            <img
+                              [src]="img.url"
+                              [alt]="img.alt_text || data.getSectionTitle(section) || ''"
+                              class="w-full h-full object-cover transition-transform duration-300 group-hover/img:scale-[1.03]"
+                              loading="lazy"
+                            />
+                            <div
+                              class="absolute inset-0 bg-black/0 group-hover/img:bg-black/15 transition-colors duration-300 flex items-center justify-center"
+                            >
+                              <span
+                                class="material-symbols-outlined text-white text-2xl opacity-0 group-hover/img:opacity-100 transition-opacity duration-300 drop-shadow-lg"
+                                >zoom_in</span
+                              >
+                            </div>
+                          </div>
+                        </div>
+                      }
+                    </div>
+                  } @else if (getSectionImages(section.id).length === 3) {
+                    <!-- 3 images: 1 large + 2 stacked -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      <div
+                        class="section-gallery-thumb rounded-xl overflow-hidden border border-(--color-border-primary) cursor-pointer group/img sm:row-span-2"
+                        (click)="openLightbox(getSectionImages(section.id), 0)"
+                      >
+                        <div class="relative h-full">
+                          <img
+                            [src]="getSectionImages(section.id)[0].url"
+                            [alt]="getSectionImages(section.id)[0].alt_text || ''"
+                            class="w-full h-full object-cover transition-transform duration-300 group-hover/img:scale-[1.03]"
+                            loading="lazy"
+                          />
+                          <div
+                            class="absolute inset-0 bg-black/0 group-hover/img:bg-black/15 transition-colors duration-300 flex items-center justify-center"
+                          >
+                            <span
+                              class="material-symbols-outlined text-white text-2xl opacity-0 group-hover/img:opacity-100 transition-opacity duration-300 drop-shadow-lg"
+                              >zoom_in</span
+                            >
+                          </div>
+                        </div>
+                      </div>
+                      @for (
+                        img of getSectionImages(section.id).slice(1);
+                        track img.id;
+                        let i = $index
+                      ) {
+                        <div
+                          class="section-gallery-thumb rounded-xl overflow-hidden border border-(--color-border-primary) cursor-pointer group/img"
+                          (click)="openLightbox(getSectionImages(section.id), i + 1)"
+                        >
+                          <div class="relative aspect-video">
+                            <img
+                              [src]="img.url"
+                              [alt]="img.alt_text || ''"
+                              class="w-full h-full object-cover transition-transform duration-300 group-hover/img:scale-[1.03]"
+                              loading="lazy"
+                            />
+                            <div
+                              class="absolute inset-0 bg-black/0 group-hover/img:bg-black/15 transition-colors duration-300 flex items-center justify-center"
+                            >
+                              <span
+                                class="material-symbols-outlined text-white text-2xl opacity-0 group-hover/img:opacity-100 transition-opacity duration-300 drop-shadow-lg"
+                                >zoom_in</span
+                              >
+                            </div>
+                          </div>
+                        </div>
+                      }
+                    </div>
+                  } @else {
+                    <!-- 4+ images: 2x2 grid with overflow indicator -->
+                    <div class="grid grid-cols-2 gap-3">
+                      @for (
+                        img of getSectionImages(section.id).slice(0, 4);
+                        track img.id;
+                        let i = $index
+                      ) {
+                        <div
+                          class="section-gallery-thumb rounded-xl overflow-hidden border border-(--color-border-primary) cursor-pointer group/img relative"
+                          (click)="openLightbox(getSectionImages(section.id), i)"
+                        >
+                          <div class="relative aspect-video">
+                            <img
+                              [src]="img.url"
+                              [alt]="img.alt_text || data.getSectionTitle(section) || ''"
+                              class="w-full h-full object-cover transition-transform duration-300 group-hover/img:scale-[1.03]"
+                              loading="lazy"
+                            />
+                            <div
+                              class="absolute inset-0 bg-black/0 group-hover/img:bg-black/15 transition-colors duration-300 flex items-center justify-center"
+                            >
+                              <span
+                                class="material-symbols-outlined text-white text-2xl opacity-0 group-hover/img:opacity-100 transition-opacity duration-300 drop-shadow-lg"
+                                >zoom_in</span
+                              >
+                            </div>
+                            <!-- "+N more" overlay on the last visible image -->
+                            @if (i === 3 && getSectionImages(section.id).length > 4) {
+                              <div
+                                class="absolute inset-0 bg-black/50 flex items-center justify-center"
+                              >
+                                <span class="text-white text-xl font-semibold"
+                                  >+{{ getSectionImages(section.id).length - 4 }}</span
+                                >
+                              </div>
+                            }
+                          </div>
+                        </div>
+                      }
+                    </div>
+                  }
                 }
               </div>
             }
@@ -113,4 +247,13 @@
       </div>
     }
   </div>
+}
+
+<!-- Lightbox overlay -->
+@if (lightboxOpen()) {
+  <app-image-lightbox
+    [images]="lightboxImages()"
+    [startIndex]="lightboxStartIndex()"
+    (closed)="closeLightbox()"
+  />
 }

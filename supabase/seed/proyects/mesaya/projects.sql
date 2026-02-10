@@ -92,10 +92,10 @@ INSERT INTO project_translation (project_id, language_id, title, description)
 VALUES
   ((SELECT id FROM project WHERE code = 'mesaya-chatbot'), (SELECT id FROM language WHERE code = 'es'),
    'mesaYA Chatbot Service',
-   'Servicio de chatbot con IA que soporta múltiples idiomas (español/inglés) y niveles de acceso (invitado, usuario, dueño, admin). Genera prompts contextuales según el rol del usuario.'),
+   'Servicio de chatbot inteligente construido con Python siguiendo Clean Architecture. Utiliza LangChain para orquestación de LLMs y Groq API para inferencia de ultra baja latencia. Se integra con el servidor MCP (Model Context Protocol) del ecosistema mesaYA vía STDIO para obtener contexto en tiempo real del sistema. Soporta múltiples idiomas y niveles de acceso con prompts contextuales por rol.'),
   ((SELECT id FROM project WHERE code = 'mesaya-chatbot'), (SELECT id FROM language WHERE code = 'en'),
    'mesaYA Chatbot Service',
-   'AI chatbot service supporting multiple languages (Spanish/English) and access levels (guest, user, owner, admin). Generates contextual prompts based on user role.')
+   'Intelligent chatbot service built with Python following Clean Architecture. Uses LangChain for LLM orchestration and Groq API for ultra-low latency inference. Integrates with the mesaYA ecosystem MCP (Model Context Protocol) server via STDIO for real-time system context. Supports multiple languages and access levels with role-based contextual prompts.')
 ON CONFLICT (project_id, language_id) DO NOTHING;
 
 -- mesaya-payment-ms

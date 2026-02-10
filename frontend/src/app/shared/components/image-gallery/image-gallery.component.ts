@@ -1,11 +1,12 @@
 import { Component, input, signal, computed, HostListener, ElementRef, inject } from '@angular/core';
 import { Image } from '@core/models';
 import { TranslatePipe } from '@shared/pipes/translate.pipe';
+import { ImageLightboxComponent } from '../image-lightbox/image-lightbox.component';
 
 @Component({
   selector: 'app-image-gallery',
   standalone: true,
-  imports: [TranslatePipe],
+  imports: [TranslatePipe, ImageLightboxComponent],
   templateUrl: './image-gallery.component.html',
 })
 export class ImageGalleryComponent {
@@ -56,6 +57,19 @@ export class ImageGalleryComponent {
   onArrowLeft(event: any): void {
     event.preventDefault();
     this.prevImage();
+  }
+
+  /** Lightbox state */
+  lightboxOpen = signal(false);
+
+  openLightbox(): void {
+    this.lightboxOpen.set(true);
+    document.body.style.overflow = 'hidden';
+  }
+
+  closeLightbox(): void {
+    this.lightboxOpen.set(false);
+    document.body.style.overflow = '';
   }
 
   /** Reset index when images change (called by parent) */

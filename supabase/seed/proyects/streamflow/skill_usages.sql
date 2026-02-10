@@ -13,7 +13,9 @@ VALUES
   ((SELECT id FROM skill WHERE code = 'supabase'),           (SELECT id FROM project WHERE code = 'streamflow-music'), 'project', 3, '2025-01-01', false, 2),
   ((SELECT id FROM skill WHERE code = 'clean_architecture'), (SELECT id FROM project WHERE code = 'streamflow-music'), 'project', 4, '2025-01-01', true,  3),
   ((SELECT id FROM skill WHERE code = 'sonarqube'),          (SELECT id FROM project WHERE code = 'streamflow-music'), 'project', 3, '2025-01-01', false, 4),
-  ((SELECT id FROM skill WHERE code = 'github_actions'),     (SELECT id FROM project WHERE code = 'streamflow-music'), 'project', 3, '2025-01-01', false, 5)
+  ((SELECT id FROM skill WHERE code = 'github_actions'),     (SELECT id FROM project WHERE code = 'streamflow-music'), 'project', 3, '2025-01-01', false, 5),
+  ((SELECT id FROM skill WHERE code = 'scrum'),              (SELECT id FROM project WHERE code = 'streamflow-music'), 'project', 4, '2025-01-01', true,  6),
+  ((SELECT id FROM skill WHERE code = 'agile'),              (SELECT id FROM project WHERE code = 'streamflow-music'), 'project', 4, '2025-01-01', true,  7)
 ON CONFLICT DO NOTHING;
 
 -- Root translations
@@ -42,7 +44,17 @@ VALUES
   ((SELECT su.id FROM skill_usages su WHERE su.skill_id = (SELECT id FROM skill WHERE code = 'github_actions') AND su.source_id = (SELECT id FROM project WHERE code = 'streamflow-music') AND su.source_type = 'project'),
    (SELECT id FROM language WHERE code = 'es'), 'Pipelines de integración continua para ambos codebases con tests automáticos y análisis de calidad.'),
   ((SELECT su.id FROM skill_usages su WHERE su.skill_id = (SELECT id FROM skill WHERE code = 'github_actions') AND su.source_id = (SELECT id FROM project WHERE code = 'streamflow-music') AND su.source_type = 'project'),
-   (SELECT id FROM language WHERE code = 'en'), 'Continuous integration pipelines for both codebases with automated tests and quality analysis.')
+   (SELECT id FROM language WHERE code = 'en'), 'Continuous integration pipelines for both codebases with automated tests and quality analysis.'),
+
+  ((SELECT su.id FROM skill_usages su WHERE su.skill_id = (SELECT id FROM skill WHERE code = 'scrum') AND su.source_id = (SELECT id FROM project WHERE code = 'streamflow-music') AND su.source_type = 'project'),
+   (SELECT id FROM language WHERE code = 'es'), 'Marco Scrum completo: Sprint Planning, Daily Stand-ups, Sprint Review, Retrospective, priorización MoSCoW y Burn Down Charts.'),
+  ((SELECT su.id FROM skill_usages su WHERE su.skill_id = (SELECT id FROM skill WHERE code = 'scrum') AND su.source_id = (SELECT id FROM project WHERE code = 'streamflow-music') AND su.source_type = 'project'),
+   (SELECT id FROM language WHERE code = 'en'), 'Full Scrum framework: Sprint Planning, Daily Stand-ups, Sprint Review, Retrospective, MoSCoW prioritization, and Burn Down Charts.'),
+
+  ((SELECT su.id FROM skill_usages su WHERE su.skill_id = (SELECT id FROM skill WHERE code = 'agile') AND su.source_id = (SELECT id FROM project WHERE code = 'streamflow-music') AND su.source_type = 'project'),
+   (SELECT id FROM language WHERE code = 'es'), 'Desarrollo ágil con tablero Kanban completo, límites WIP, Definition of Done y entrega incremental de valor por sprints.'),
+  ((SELECT su.id FROM skill_usages su WHERE su.skill_id = (SELECT id FROM skill WHERE code = 'agile') AND su.source_id = (SELECT id FROM project WHERE code = 'streamflow-music') AND su.source_type = 'project'),
+   (SELECT id FROM language WHERE code = 'en'), 'Agile development with complete Kanban board, WIP limits, Definition of Done, and incremental value delivery per sprint.')
 ON CONFLICT (skill_usages_id, language_id) DO NOTHING;
 
 -- ============================================================
