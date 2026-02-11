@@ -12,7 +12,7 @@
       (ngModelChange)="onSectionKeyChange($event)"
     >
       @for (option of sectionKeyOptions; track option.value) {
-        <option [value]="option.value">{{ option.icon }} {{ option.labelKey | translate }}</option>
+        <option [value]="option.value">{{ option.labelKey | translate }}</option>
       }
     </select>
   </div>

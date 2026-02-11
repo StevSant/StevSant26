@@ -19,7 +19,9 @@
   white-space: nowrap;
   word-wrap: normal;
   direction: ltr;
+  font-feature-settings: 'liga';
   -webkit-font-feature-settings: 'liga';
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
   -webkit-font-smoothing: antialiased;
 }
 
@@ -43,6 +45,7 @@
   --color-text-disabled: #606060;
 
   --color-accent: #ffffff;
+  --color-text-on-accent: #0a0a0a;
   --color-accent-hover: #e0e0e0;
   --color-accent-active: #c0c0c0;
   --color-accent-muted: rgba(255, 255, 255, 0.4);
@@ -105,6 +108,7 @@
   --color-text-disabled: #a3a3a3;
 
   --color-accent: #0a0a0a;
+  --color-text-on-accent: #ffffff;
   --color-accent-hover: #262626;
   --color-accent-active: #404040;
   --color-accent-muted: rgba(10, 10, 10, 0.4);
@@ -166,6 +170,7 @@
   --color-text-disabled: #4a5a75;
 
   --color-accent: #60a5fa;
+  --color-text-on-accent: #0a0a0a;
   --color-accent-hover: #3b82f6;
   --color-accent-active: #2563eb;
   --color-accent-muted: rgba(96, 165, 250, 0.4);
@@ -227,6 +232,7 @@
   --color-text-disabled: #6b5e50;
 
   --color-accent: #d4a76a;
+  --color-text-on-accent: #0a0a0a;
   --color-accent-hover: #c49558;
   --color-accent-active: #b48448;
   --color-accent-muted: rgba(212, 167, 106, 0.4);

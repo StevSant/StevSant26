@@ -85,10 +85,10 @@
         <button
           type="button"
           (click)="setFilter(null)"
-          class="px-3 py-1 text-xs font-medium rounded-full border transition-colors"
+          class="px-3 py-1.5 text-xs font-medium rounded-full border transition-colors flex items-center gap-1.5"
           [class]="
             activeFilter() === null
-              ? 'bg-[var(--color-accent)] text-white border-[var(--color-accent)]'
+              ? 'bg-[var(--color-accent)] text-[var(--color-text-on-accent)] border-[var(--color-accent)]'
               : 'bg-[var(--color-bg-tertiary)] text-[var(--color-text-muted)] border-[var(--color-border-primary)] hover:border-[var(--color-accent)]/50'
           "
         >
@@ -98,14 +98,15 @@
           <button
             type="button"
             (click)="setFilter(opt.value)"
-            class="px-3 py-1 text-xs font-medium rounded-full border transition-colors"
+            class="px-3 py-1.5 text-xs font-medium rounded-full border transition-colors flex items-center gap-1.5"
             [class]="
               activeFilter() === opt.value
-                ? 'bg-[var(--color-accent)] text-white border-[var(--color-accent)]'
+                ? 'bg-[var(--color-accent)] text-[var(--color-text-on-accent)] border-[var(--color-accent)]'
                 : 'bg-[var(--color-bg-tertiary)] text-[var(--color-text-muted)] border-[var(--color-border-primary)] hover:border-[var(--color-accent)]/50'
             "
           >
-            {{ opt.icon }} {{ opt.labelKey | translate }}
+            <span class="material-symbols-outlined text-[18px] leading-none">{{ opt.icon }}</span>
+            {{ opt.labelKey | translate }}
           </button>
         }
       </div>
