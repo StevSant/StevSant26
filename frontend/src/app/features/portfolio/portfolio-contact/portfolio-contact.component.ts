@@ -40,7 +40,6 @@ export class PortfolioContactComponent implements OnInit {
   async ngOnInit(): Promise<void> {
     await this.data.initialize();
 
-    console.log('Contact data loaded:', this.data.profile());
     const siteUrl = this.seoService.getSiteUrl();
     const locale = this.translateService.currentLang() === 'es' ? 'es_ES' : 'en_US';
     this.seoService.updateMeta({
