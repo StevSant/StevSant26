@@ -10,8 +10,10 @@
     <form (ngSubmit)="onSubmit()" class="space-y-6">
       <app-project-form-base-info
         [url]="formData.url"
+        [demoUrl]="formData.demo_url"
         [createdAt]="formData.created_at"
         (urlChange)="formData.url = $event"
+        (demoUrlChange)="formData.demo_url = $event"
         (createdAtChange)="formData.created_at = $event"
       />
 

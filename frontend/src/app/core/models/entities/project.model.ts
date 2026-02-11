@@ -17,6 +17,7 @@ export interface ProjectTranslation {
  */
 export interface Project extends PolymorphicEntity {
   url: string | null;
+  demo_url: string | null;
   created_at: string | null;
   parent_project_id: number | null;
   translations?: ProjectTranslation[];

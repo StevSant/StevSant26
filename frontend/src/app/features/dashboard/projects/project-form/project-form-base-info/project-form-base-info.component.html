@@ -17,6 +17,20 @@
     />
   </div>
 
+  <!-- Demo URL (YouTube, Loom, etc.) -->
+  <div>
+    <label for="demo_url" class="label">{{ 'projects.fields.demoUrl' | translate }}</label>
+    <input
+      type="url"
+      id="demo_url"
+      name="demo_url"
+      [ngModel]="demoUrl()"
+      (ngModelChange)="demoUrlChange.emit($event)"
+      class="input"
+      placeholder="https://..."
+    />
+  </div>
+
   <!-- Created At -->
   <div>
     <label for="created_at" class="label">{{ 'projects.createdAtLabel' | translate }}</label>

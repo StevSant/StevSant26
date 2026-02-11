@@ -176,6 +176,7 @@
       "title": "Title",
       "description": "Description",
       "url": "Project URL",
+      "demoUrl": "Demo URL (YouTube, Loom, etc.)",
       "githubUrl": "GitHub URL",
       "startDate": "Start date",
       "endDate": "End date",
@@ -514,6 +515,7 @@
       "education": "No education to display"
     },
     "viewProject": "View Project",
+    "viewDemo": "View demo",
     "viewDetails": "View Details",
     "backToList": "Back to list",
     "subProjects": "sub-projects",

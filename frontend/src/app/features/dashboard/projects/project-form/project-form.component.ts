@@ -48,6 +48,7 @@ export class ProjectFormComponent extends BaseEntityFormComponent<Project, Proje
   // Base fields (non-translatable)
   formData = {
     url: '',
+    demo_url: '',
     created_at: new Date().toISOString().split('T')[0],
     parent_project_id: null as number | null,
     source_id: null as number | null,
@@ -92,6 +93,7 @@ export class ProjectFormComponent extends BaseEntityFormComponent<Project, Proje
   initializeFormData(data: Project): void {
     this.formData = {
       url: data.url || '',
+      demo_url: data.demo_url || '',
       created_at: data.created_at?.split('T')[0] || '',
       parent_project_id: data.parent_project_id,
       source_id: data.source_id,
@@ -126,6 +128,7 @@ export class ProjectFormComponent extends BaseEntityFormComponent<Project, Proje
   buildFormPayload(): Record<string, unknown> {
     return {
       url: this.formData.url || null,
+      demo_url: this.formData.demo_url || null,
       created_at: this.formData.created_at || null,
       parent_project_id: this.formData.parent_project_id,
       source_id: this.formData.source_id,

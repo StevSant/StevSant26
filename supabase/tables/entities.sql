@@ -115,6 +115,7 @@ CREATE TABLE project (
   id SERIAL PRIMARY KEY,
   code TEXT UNIQUE NOT NULL,
   url TEXT,
+  demo_url TEXT,
   created_at DATE DEFAULT NOW(),
   parent_project_id INT REFERENCES project(id) ON DELETE SET NULL,
   source_id INT,

@@ -10,8 +10,10 @@ import { TranslatePipe } from '@shared/pipes/translate.pipe';
 })
 export class ProjectFormBaseInfoComponent {
   url = input<string>('');
+  demoUrl = input<string>('');
   createdAt = input<string>('');
 
   urlChange = output<string>();
+  demoUrlChange = output<string>();
   createdAtChange = output<string>();
 }
