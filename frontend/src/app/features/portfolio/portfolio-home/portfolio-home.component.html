@@ -1,11 +1,9 @@
-        <!-- Hero Section -->
-<section
-  class="relative pt-8 pb-12 sm:pt-10 sm:pb-16 lg:pt-12 lg:pb-24 px-4 sm:px-6 lg:px-8 overflow-hidden"
->
+<!-- Hero Section -->
+<section class="relative pt-8 pb-12 sm:pt-10 sm:pb-16 lg:pt-12 lg:pb-24 px-4 sm:px-6 lg:px-8">
   <!-- Banner Background -->
   @if (data.bannerUrl()) {
     <div
-      class="absolute inset-0 z-0 cursor-pointer"
+      class="absolute inset-0 z-0 cursor-pointer overflow-hidden"
       (dblclick)="openImageModal(data.bannerUrl()!, 'Banner')"
       title="Doble clic para ver en grande"
     >
@@ -112,22 +110,119 @@
             {{ 'portfolio.home.getInTouch' | translate }}
           </a>
           @if (data.cvDocuments().length > 0) {
-            <a
-              [href]="data.cvDocuments()[0].url"
-              target="_blank"
-              rel="noopener noreferrer"
-              class="inline-flex items-center gap-2 px-6 py-2.5 rounded-full border border-(--color-divider) text-(--color-text-secondary) text-sm font-medium tracking-wide hover:border-(--color-accent) hover:text-(--color-accent) transition-all"
-            >
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                />
-              </svg>
-              {{ 'portfolio.downloadCV' | translate }}
-            </a>
+            <div class="relative">
+              <button
+                type="button"
+                (click)="toggleCvMenu()"
+                class="inline-flex items-center gap-2 px-6 py-2.5 rounded-full border border-(--color-divider) text-(--color-text-secondary) text-sm font-medium tracking-wide hover:border-(--color-accent) hover:text-(--color-accent) transition-all"
+              >
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                  />
+                </svg>
+                {{ 'portfolio.downloadCV' | translate }}
+                <svg
+                  class="w-3.5 h-3.5 transition-transform"
+                  [class.rotate-180]="cvMenuOpen()"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M19 9l-7 7-7-7"
+                  />
+                </svg>
+              </button>
+              @if (cvMenuOpen()) {
+                <div
+                  class="absolute left-0 mt-2 w-64 bg-(--color-bg-secondary) border border-(--color-border-primary) rounded-lg shadow-xl z-50 py-1 max-h-72 overflow-y-auto"
+                >
+                  <div class="px-4 py-2 border-b border-(--color-divider)">
+                    <p
+                      class="text-xs font-medium uppercase tracking-wider text-(--color-text-muted)"
+                    >
+                      {{ 'portfolio.nav.cvDocuments' | translate }}
+                    </p>
+                  </div>
+                  @for (cv of data.cvDocuments(); track cv.id) {
+                    <div class="px-4 py-3 hover:bg-(--color-bg-tertiary) transition-colors">
+                      <div class="flex items-center justify-between">
+                        <div class="min-w-0 flex-1">
+                          <p class="text-sm font-medium text-(--color-text-primary) truncate">
+                            {{ cv.label || cv.file_name || 'CV' }}
+                          </p>
+                          @if (cv.language) {
+                            <p class="text-xs text-(--color-text-muted)">
+                              {{ cv.language.name }}
+                            </p>
+                          }
+                        </div>
+                        <div class="flex items-center gap-1 shrink-0 ml-3">
+                          <!-- View -->
+                          <a
+                            [href]="cv.url"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            (click)="closeCvMenu()"
+                            class="p-1.5 rounded-md text-(--color-text-muted) hover:text-(--color-accent) hover:bg-(--color-bg-primary) transition-colors"
+                            [title]="'portfolio.nav.viewCV' | translate"
+                          >
+                            <svg
+                              class="w-4 h-4"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                              />
+                              <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                              />
+                            </svg>
+                          </a>
+                          <!-- Download -->
+                          <a
+                            [href]="cv.url"
+                            download
+                            (click)="closeCvMenu()"
+                            class="p-1.5 rounded-md text-(--color-text-muted) hover:text-(--color-accent) hover:bg-(--color-bg-primary) transition-colors"
+                            [title]="'portfolio.downloadCV' | translate"
+                          >
+                            <svg
+                              class="w-4 h-4"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
+                              />
+                            </svg>
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                  }
+                </div>
+              }
+            </div>
           }
         </div>
 

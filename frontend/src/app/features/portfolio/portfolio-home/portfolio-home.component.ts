@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, computed, signal } from '@angular/core';
+import { Component, inject, OnInit, computed, signal, HostListener, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { PortfolioDataService } from '../services/portfolio-data.service';
@@ -19,11 +19,15 @@ export class PortfolioHomeComponent implements OnInit {
   protected data = inject(PortfolioDataService);
   private seoService = inject(SeoService);
   private translate = inject(TranslateService);
+  private elRef = inject(ElementRef);
 
   // Image modal state
   showImageModal = signal(false);
   modalImageUrl = signal<string | null>(null);
   modalImageAlt = signal<string>('');
+
+  // CV dropdown state
+  cvMenuOpen = signal(false);
 
   pinnedProjects = computed(() =>
     this.data.projects().filter(p => p.is_pinned && !p.is_archived).slice(0, 3)
@@ -89,6 +93,28 @@ export class PortfolioHomeComponent implements OnInit {
   onModalBackdropClick(event: MouseEvent): void {
     if ((event.target as HTMLElement).classList.contains('modal-backdrop')) {
       this.closeImageModal();
+    }
+  }
+
+  toggleCvMenu(): void {
+    this.cvMenuOpen.update(v => !v);
+  }
+
+  closeCvMenu(): void {
+    this.cvMenuOpen.set(false);
+  }
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent): void {
+    if (this.cvMenuOpen() && !this.elRef.nativeElement.querySelector('.relative')?.contains(event.target)) {
+      this.closeCvMenu();
+    }
+  }
+
+  @HostListener('document:keydown.escape')
+  onEscapeKey(): void {
+    if (this.cvMenuOpen()) {
+      this.closeCvMenu();
     }
   }
 }
