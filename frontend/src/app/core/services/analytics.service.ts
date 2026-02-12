@@ -2,6 +2,7 @@ import { Injectable, inject, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { SupabaseClientService } from './supabase-client.service';
 import { AnalyticsSummary, VisitorSession, PageView } from '../models';
+import { environment } from '../../../environments/environment';
 
 /** Recruiter-indicative referrer domains or sources */
 const RECRUITER_REFERRERS = [
@@ -46,6 +47,8 @@ export class AnalyticsService {
   private pagesVisitedInSession: string[] = [];
   private capturedRef: string | null = null;
   private resolvedReferrerSource: string | null = null;
+  private currentPageStartTime: number = 0;
+  private currentPagePath: string | null = null;
 
   constructor() {
     // Capture ?ref= or ?utm_source= immediately before Angular router strips them
@@ -77,20 +80,13 @@ export class AnalyticsService {
 
     const visitorHash = this.generateVisitorHash();
 
-    // Read ref from ALL sources — sessionStorage (set by inline script) is most reliable
-    let refFromStorage: string | null = null;
-    try { refFromStorage = sessionStorage.getItem('analytics_ref'); } catch {}
-    const queryRef = refFromStorage || this.capturedRef || this.getQueryParam('ref') || this.getQueryParam('utm_source');
+    // Priority: direct ref param (from ActivatedRoute) > cookie (set by inline script, survives 302) > URL params > document.referrer
+    const refFromCookie = this.getCookie('analytics_ref');
+    const queryRef = referrer || refFromCookie || this.capturedRef || this.getQueryParam('ref') || this.getQueryParam('utm_source');
 
-    console.log('[Analytics] initSession debug:', {
-      refFromStorage,
-      capturedRef: this.capturedRef,
-      windowSearch: window.location.search,
-      queryRef,
-      documentReferrer: document.referrer,
-    });
+    console.log('[Analytics] initSession:', { directRef: referrer, cookie: refFromCookie, queryRef });
 
-    const rawReferrer = referrer || queryRef || document.referrer;
+    const rawReferrer = queryRef || document.referrer;
     const referrerSource = queryRef || this.extractReferrerSource(rawReferrer);
     this.resolvedReferrerSource = referrerSource;
     const deviceInfo = this.getDeviceInfo();
@@ -147,7 +143,10 @@ export class AnalyticsService {
         this.storeSessionId(sessionId);
         this.storePageCount(1);
         // Clear captured ref so it doesn't persist to future sessions
-        try { sessionStorage.removeItem('analytics_ref'); } catch {}
+        try {
+          sessionStorage.removeItem('analytics_ref');
+          document.cookie = 'analytics_ref=;path=/;max-age=0';
+        } catch {}
       }
     } catch {
       // Silently fail — analytics should never break the portfolio
@@ -159,6 +158,9 @@ export class AnalyticsService {
    */
   async trackPageView(pagePath: string, pageTitle?: string): Promise<void> {
     if (!isPlatformBrowser(this.platformId) || !this.sessionId) return;
+
+    // Update duration of previous page before tracking new one
+    await this.updateCurrentPageDuration();
 
     // Strip query params and fragments from page path
     const cleanPath = pagePath.split('?')[0].split('#')[0] || '/';
@@ -172,6 +174,9 @@ export class AnalyticsService {
         referrer: document.referrer || null,
       });
 
+      this.currentPagePath = cleanPath;
+      this.currentPageStartTime = Date.now();
+
       // Update page count and check recruiter pattern
       const count = this.getStoredPageCount() + 1;
       this.storePageCount(count);
@@ -184,6 +189,61 @@ export class AnalyticsService {
           is_potential_recruiter: this.detectRecruiterPattern(),
         })
         .eq('id', this.sessionId);
+    } catch {
+      // Silently fail
+    }
+  }
+
+  /**
+   * Update the duration of the current page view.
+   * Called when navigating away from a page or leaving the site.
+   */
+  async updateCurrentPageDuration(): Promise<void> {
+    if (!this.sessionId || !this.currentPagePath || !this.currentPageStartTime) return;
+
+    const durationSeconds = Math.round((Date.now() - this.currentPageStartTime) / 1000);
+    if (durationSeconds <= 0) return;
+
+    try {
+      // Update the most recent page_view for this session + path
+      await this.client.client
+        .from('page_view')
+        .update({ duration_seconds: durationSeconds })
+        .eq('session_id', this.sessionId)
+        .eq('page_path', this.currentPagePath)
+        .order('created_at', { ascending: false })
+        .limit(1);
+    } catch {
+      // Silently fail
+    }
+  }
+
+  /**
+   * Finalize duration tracking when user leaves. Called from component OnDestroy.
+   */
+  finalizeSession(): void {
+    if (!this.sessionId || !this.currentPagePath || !this.currentPageStartTime) return;
+
+    const durationSeconds = Math.round((Date.now() - this.currentPageStartTime) / 1000);
+    if (durationSeconds <= 0) return;
+
+    // Use fetch with keepalive for reliable delivery on page unload
+    try {
+      const url = `${environment.supabaseUrl}/rest/v1/page_view?session_id=eq.${this.sessionId}&page_path=eq.${encodeURIComponent(this.currentPagePath)}&order=created_at.desc&limit=1`;
+      const body = JSON.stringify({ duration_seconds: durationSeconds });
+      const headers: Record<string, string> = {
+        'Content-Type': 'application/json',
+        'apikey': environment.supabaseKey,
+        'Authorization': `Bearer ${environment.supabaseKey}`,
+        'Prefer': 'return=minimal',
+      };
+
+      fetch(url, {
+        method: 'PATCH',
+        headers,
+        body,
+        keepalive: true,
+      }).catch(() => {});
     } catch {
       // Silently fail
     }
@@ -401,6 +461,18 @@ export class AnalyticsService {
         country: data.country_name || data.country || null,
         city: data.city || null,
       };
+    } catch {
+      return null;
+    }
+  }
+
+  /**
+   * Read a cookie value by name.
+   */
+  private getCookie(name: string): string | null {
+    try {
+      const match = document.cookie.match(new RegExp('(?:^|;\\s*)' + name + '=([^;]*)'));
+      return match ? decodeURIComponent(match[1]) : null;
     } catch {
       return null;
     }

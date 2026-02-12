@@ -99,11 +99,11 @@
         </p>
       </div>
 
-      <!-- Avg Views per Visitor -->
+      <!-- Avg Session Duration -->
       <div class="bg-(--color-bg-secondary) rounded-xl p-5 border border-(--color-border-primary)">
         <div class="flex items-center justify-between">
           <p class="text-sm font-medium text-(--color-text-muted)">
-            {{ 'analytics.avgViews' | translate }}
+            {{ 'analytics.avgDuration' | translate }}
           </p>
           <div class="p-2 bg-blue-500/10 rounded-lg">
             <svg
@@ -116,16 +116,17 @@
                 stroke-linecap="round"
                 stroke-linejoin="round"
                 stroke-width="2"
-                d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+                d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
               />
             </svg>
           </div>
         </div>
         <p class="text-3xl font-bold text-(--color-text-primary) mt-2">
-          {{ avgViewsPerVisitor() }}
+          {{ avgSessionDuration() }}
         </p>
         <p class="text-xs text-(--color-text-muted) mt-1">
-          {{ 'analytics.pagesPerVisit' | translate }}
+          {{ 'analytics.avgPerVisit' | translate }}: {{ avgViewsPerVisitor() }}
+          {{ 'analytics.pages' | translate }}
         </p>
       </div>
 
@@ -321,6 +322,11 @@
                     {{ 'analytics.views' | translate }}
                   </th>
                   <th
+                    class="text-right px-5 py-3 text-xs font-medium text-(--color-text-muted) uppercase tracking-wider"
+                  >
+                    {{ 'analytics.avgTime' | translate }}
+                  </th>
+                  <th
                     class="text-right px-5 py-3 text-xs font-medium text-(--color-text-muted) uppercase tracking-wider w-48"
                   >
                     {{ 'analytics.percentage' | translate }}
@@ -339,6 +345,9 @@
                       class="px-5 py-3 text-sm text-(--color-text-primary) text-right font-medium"
                     >
                       {{ page.views }}
+                    </td>
+                    <td class="px-5 py-3 text-sm text-(--color-text-muted) text-right">
+                      {{ formatDuration(page.avg_duration) }}
                     </td>
                     <td class="px-5 py-3 text-right">
                       <div class="flex items-center justify-end gap-2">

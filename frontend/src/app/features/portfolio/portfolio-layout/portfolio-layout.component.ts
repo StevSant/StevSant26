@@ -1,6 +1,6 @@
-import { Component, OnInit, OnDestroy, signal, inject, PLATFORM_ID } from '@angular/core';
+import { Component, OnInit, OnDestroy, HostListener, signal, inject, PLATFORM_ID } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
-import { RouterModule, Router, NavigationEnd } from '@angular/router';
+import { RouterModule, Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
 import { ThemeService } from '@core/services/theme.service';
@@ -38,6 +38,7 @@ export class PortfolioLayoutComponent implements OnInit, OnDestroy {
   private translate = inject(TranslateService);
   private analytics = inject(AnalyticsService);
   private router = inject(Router);
+  private route = inject(ActivatedRoute);
   private platformId = inject(PLATFORM_ID);
   private routerSub?: Subscription;
 
@@ -52,7 +53,10 @@ export class PortfolioLayoutComponent implements OnInit, OnDestroy {
 
     // Initialize analytics only in browser (not during SSR)
     if (isPlatformBrowser(this.platformId)) {
-      await this.analytics.initSession();
+      // Capture ref/utm_source from query params via Angular router (reliable even after SSR redirects)
+      const queryParams = this.route.snapshot.queryParams;
+      const ref = queryParams['ref'] || queryParams['utm_source'] || null;
+      await this.analytics.initSession(ref);
       await this.analytics.trackPageView(this.router.url, document?.title);
 
       // Track subsequent route navigations
@@ -126,7 +130,13 @@ export class PortfolioLayoutComponent implements OnInit, OnDestroy {
     this.mobileMenuOpen.set(false);
   }
 
+  @HostListener('window:beforeunload')
+  onBeforeUnload(): void {
+    this.analytics.finalizeSession();
+  }
+
   ngOnDestroy(): void {
+    this.analytics.finalizeSession();
     this.routerSub?.unsubscribe();
   }
 }

@@ -28,6 +28,7 @@ export interface PageView {
   page_path: string;
   page_title: string | null;
   referrer: string | null;
+  duration_seconds: number;
   created_at: string;
 }
 
@@ -47,11 +48,13 @@ export interface AnalyticsSummary {
   browser_breakdown: BrowserBreakdown[] | null;
   daily_views: DailyView[] | null;
   recruiter_sessions: RecruiterSession[] | null;
+  avg_session_duration: number;
 }
 
 export interface TopPage {
   page_path: string;
   views: number;
+  avg_duration: number;
 }
 
 export interface TopReferrer {

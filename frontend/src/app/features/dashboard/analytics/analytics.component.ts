@@ -31,6 +31,11 @@ export class AnalyticsComponent implements OnInit {
     return Math.max(...s.daily_views.map((d) => d.views));
   });
 
+  avgSessionDuration = computed(() => {
+    const s = this.summary();
+    return this.formatDuration(s?.avg_session_duration ?? 0);
+  });
+
   async ngOnInit(): Promise<void> {
     await this.loadData();
   }
@@ -107,5 +112,16 @@ export class AnalyticsComponent implements OnInit {
     if (hasRecruiterReferrer && uniquePages >= 3) return 'high';
     if (hasRecruiterReferrer || uniquePages >= 4) return 'medium';
     return 'low';
+  }
+
+  /**
+   * Format seconds into a human-readable duration (e.g. "2m 30s").
+   */
+  formatDuration(seconds: number): string {
+    if (!seconds || seconds <= 0) return '0s';
+    const m = Math.floor(seconds / 60);
+    const s = seconds % 60;
+    if (m === 0) return `${s}s`;
+    return `${m}m ${s}s`;
   }
 }

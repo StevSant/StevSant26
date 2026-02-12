@@ -53,7 +53,10 @@
         try {
           var p = new URLSearchParams(window.location.search);
           var r = p.get('ref') || p.get('utm_source');
-          if (r) sessionStorage.setItem('analytics_ref', r);
+          if (r) {
+            document.cookie =
+              'analytics_ref=' + encodeURIComponent(r) + ';path=/;max-age=300;SameSite=Lax';
+          }
         } catch (e) {}
       })();
     </script>
