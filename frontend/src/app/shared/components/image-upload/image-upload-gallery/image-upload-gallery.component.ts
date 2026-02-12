@@ -1,9 +1,11 @@
 import { Component, input, output } from '@angular/core';
+import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
 import { ExistingImage } from '../image-upload.component';
 
 @Component({
   selector: 'app-image-upload-gallery',
   standalone: true,
+  imports: [DragDropModule],
   templateUrl: './image-upload-gallery.component.html',
 })
 export class ImageUploadGalleryComponent {
@@ -14,6 +16,8 @@ export class ImageUploadGalleryComponent {
   // Outputs
   removeUploaded = output<string>();
   removeExisting = output<number>();
+  reorderExisting = output<ExistingImage[]>();
+  reorderUploaded = output<{ path: string; url: string; alt?: string }[]>();
 
   onRemoveUploaded(path: string, event: Event): void {
     event.stopPropagation();
@@ -23,5 +27,17 @@ export class ImageUploadGalleryComponent {
   onRemoveExisting(id: number, event: Event): void {
     event.stopPropagation();
     this.removeExisting.emit(id);
+  }
+
+  onDropExisting(event: CdkDragDrop<ExistingImage[]>): void {
+    const items = [...this.existingImages()];
+    moveItemInArray(items, event.previousIndex, event.currentIndex);
+    this.reorderExisting.emit(items);
+  }
+
+  onDropUploaded(event: CdkDragDrop<{ path: string; url: string; alt?: string }[]>): void {
+    const items = [...this.uploadedImages()];
+    moveItemInArray(items, event.previousIndex, event.currentIndex);
+    this.reorderUploaded.emit(items);
   }
 }

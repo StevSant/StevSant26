@@ -455,7 +455,9 @@
     "errorType": "Tipo de archivo no permitido",
     "errorSize": "El archivo es demasiado grande. Máximo 10MB.",
     "errorUpload": "Error al subir la imagen. Por favor intenta de nuevo.",
-    "errorDelete": "Error al eliminar la imagen."
+    "errorDelete": "Error al eliminar la imagen.",
+    "dragToReorder": "Arrastra para reordenar imágenes",
+    "savedImages": "Imágenes guardadas:"
   },
   "documentUpload": {
     "clickToUpload": "Haz clic para subir documentos",
@@ -703,6 +705,7 @@
     "bannerDeleteFailed": "Error al eliminar el banner",
     "imageSaveFailed": "Error al guardar la imagen",
     "imageDeleteFailed": "Error al eliminar la imagen",
+    "imageReorderFailed": "Error al reordenar las imágenes",
     "imageUploadFailed": "Error al subir la imagen. Por favor intenta de nuevo.",
     "documentSaveFailed": "Error al guardar el documento",
     "documentDeleteFailed": "Error al eliminar el documento",

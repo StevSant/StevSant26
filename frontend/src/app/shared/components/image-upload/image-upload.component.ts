@@ -50,6 +50,7 @@ export class ImageUploadComponent {
   removed = output<string>();
   imageDeleted = output<number>();
   existingImageRemoved = output<number>();
+  imagesReordered = output<{ id: number; position: number }[]>();
 
   // Internal signals
   uploading = signal(false);
@@ -265,5 +266,15 @@ export class ImageUploadComponent {
       this.error.set(this.t.instant('errors.imageDeleteFailed'));
       this.logger.error('Delete error:', err);
     }
+  }
+
+  onGalleryReorderExisting(reorderedImages: ExistingImage[]): void {
+    this.loadedExistingImages.set(reorderedImages);
+    const updates = reorderedImages.map((img, index) => ({ id: img.id, position: index }));
+    this.imagesReordered.emit(updates);
+  }
+
+  onGalleryReorderUploaded(reorderedImages: { path: string; url: string; alt?: string }[]): void {
+    this.uploadedImages.set(reorderedImages);
   }
 }

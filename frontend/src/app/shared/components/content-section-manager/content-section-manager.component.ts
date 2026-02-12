@@ -397,4 +397,16 @@ export class ContentSectionManagerComponent implements OnInit {
       this.logger.error('Error saving section image:', err);
     }
   }
+
+  /** Handle image reorder for a saved section */
+  async onSectionImagesReordered(sectionId: number, updates: { id: number; position: number }[]): Promise<void> {
+    if (updates.length === 0) return;
+    try {
+      await this.supabase.updatePositions('image', updates);
+      // Reload images to reflect the new order
+      await this.loadSectionImages(this.sections());
+    } catch (err) {
+      this.logger.error('Error reordering section images:', err);
+    }
+  }
 }

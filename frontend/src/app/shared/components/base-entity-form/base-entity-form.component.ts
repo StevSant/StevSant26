@@ -291,11 +291,12 @@ export abstract class BaseEntityFormComponent<TEntity, TTranslation> implements 
   async onImageUploaded(data: { path: string; url: string }): Promise<void> {
     if (this.currentId) {
       try {
+        const currentImages = this.existingImages();
         await this.supabase.create('image', {
           url: data.url,
           source_type: this.getSourceType(),
           source_id: this.currentId,
-          position: 0,
+          position: currentImages.length,
         });
       } catch (err) {
         this.logger.error('Error saving image:', err);
@@ -309,6 +310,7 @@ export abstract class BaseEntityFormComponent<TEntity, TTranslation> implements 
   async onDocumentUploaded(data: { path: string; url: string; file_name: string; file_type: string; file_size: number }): Promise<void> {
     if (this.currentId) {
       try {
+        const currentDocuments = this.existingDocuments();
         await this.supabase.create('document', {
           url: data.url,
           file_name: data.file_name,
@@ -316,7 +318,7 @@ export abstract class BaseEntityFormComponent<TEntity, TTranslation> implements 
           file_size: data.file_size,
           source_type: this.getSourceType(),
           source_id: this.currentId,
-          position: 0,
+          position: currentDocuments.length,
         });
       } catch (err) {
         this.logger.error('Error saving document:', err);
@@ -324,6 +326,23 @@ export abstract class BaseEntityFormComponent<TEntity, TTranslation> implements 
       }
     } else {
       this.pendingDocuments.update(docs => [...docs, data]);
+    }
+  }
+
+  async onImagesReordered(updates: { id: number; position: number }[]): Promise<void> {
+    if (updates.length === 0) return;
+    try {
+      await this.supabase.updatePositions('image', updates);
+      // Update local existing images to reflect new order
+      const sorted = [...this.existingImages()].sort((a, b) => {
+        const posA = updates.find(u => u.id === a.id)?.position ?? 0;
+        const posB = updates.find(u => u.id === b.id)?.position ?? 0;
+        return posA - posB;
+      });
+      this.existingImages.set(sorted);
+    } catch (err) {
+      this.logger.error('Error reordering images:', err);
+      this.error.set(this.t.instant('errors.imageReorderFailed'));
     }
   }
 }

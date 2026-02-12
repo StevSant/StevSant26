@@ -5,7 +5,7 @@ BEGIN;
 
 -- Root project (monorepo)
 INSERT INTO project (code, url, created_at, is_archived, is_pinned, position)
-VALUES ('streamflow-music', 'https://github.com/StevSant/streamflow_music', '2025-01-01', false, true, 1)
+VALUES ('streamflow-music', 'https://github.com/StevSant/streamflow_music', '2025-07-22', false, true, 1)
 ON CONFLICT (code) DO NOTHING;
 
 INSERT INTO project_translation (project_id, language_id, title, description)
@@ -20,7 +20,7 @@ ON CONFLICT (project_id, language_id) DO NOTHING;
 
 -- Backend child
 INSERT INTO project (code, url, created_at, parent_project_id, is_archived, is_pinned, position)
-VALUES ('streamflow-music-backend', 'https://github.com/StevSant/streamflow_music_backend', '2025-01-01',
+VALUES ('streamflow-music-backend', 'https://github.com/StevSant/streamflow_music_backend', '2025-07-22',
         (SELECT id FROM project WHERE code = 'streamflow-music'), false, true, 1)
 ON CONFLICT (code) DO NOTHING;
 
@@ -36,7 +36,7 @@ ON CONFLICT (project_id, language_id) DO NOTHING;
 
 -- Frontend child
 INSERT INTO project (code, url, created_at, parent_project_id, is_archived, is_pinned, position)
-VALUES ('streamflow-music-frontend', 'https://github.com/StevSant/streamflow_music_frontend', '2025-01-01',
+VALUES ('streamflow-music-frontend', 'https://github.com/StevSant/streamflow_music_frontend', '2025-07-22',
         (SELECT id FROM project WHERE code = 'streamflow-music'), false, true, 2)
 ON CONFLICT (code) DO NOTHING;
 

@@ -5,7 +5,7 @@ BEGIN;
 
 -- === Main Projects ===
 INSERT INTO project (code, url, created_at, is_archived, is_pinned, position)
-VALUES ('mesaya', 'https://github.com/StevSant/mesaYa', '2024-01-15', false, true, 1)
+VALUES ('mesaya', 'https://github.com/StevSant/mesaYa', '2025-09-16', false, true, 1)
 ON CONFLICT (code) DO NOTHING;
 
 INSERT INTO project_translation (project_id, language_id, title, description)
@@ -20,7 +20,7 @@ ON CONFLICT (project_id, language_id) DO NOTHING;
 
 -- mesaya-frontend
 INSERT INTO project (code, url, created_at, parent_project_id, is_archived, is_pinned, position)
-VALUES ('mesaya-frontend', 'https://github.com/StevSant/mesaYa_frontend', '2024-01-20',
+VALUES ('mesaya-frontend', 'https://github.com/StevSant/mesaYa_frontend', '2025-09-16',
         (SELECT id FROM project WHERE code = 'mesaya'), false, true, 2)
 ON CONFLICT (code) DO NOTHING;
 
@@ -36,7 +36,7 @@ ON CONFLICT (project_id, language_id) DO NOTHING;
 
 -- mesaya-res
 INSERT INTO project (code, url, created_at, parent_project_id, is_archived, is_pinned, position)
-VALUES ('mesaya-res', 'https://github.com/lesquel/mesaYa_Res', '2024-01-20',
+VALUES ('mesaya-res', 'https://github.com/lesquel/mesaYa_Res', '2025-10-03',
         (SELECT id FROM project WHERE code = 'mesaya'), false, true, 3)
 ON CONFLICT (code) DO NOTHING;
 
@@ -52,7 +52,7 @@ ON CONFLICT (project_id, language_id) DO NOTHING;
 
 -- mesaya-auth-ms
 INSERT INTO project (code, url, created_at, parent_project_id, is_archived, is_pinned, position)
-VALUES ('mesaya-auth-ms', 'https://github.com/StevSant/mesaYA_auth_ms', '2024-02-01',
+VALUES ('mesaya-auth-ms', 'https://github.com/StevSant/mesaYA_auth_ms', '2026-01-05',
         (SELECT id FROM project WHERE code = 'mesaya'), false, true, 4)
 ON CONFLICT (code) DO NOTHING;
 
@@ -68,7 +68,7 @@ ON CONFLICT (project_id, language_id) DO NOTHING;
 
 -- mesaya-graphql
 INSERT INTO project (code, url, created_at, parent_project_id, is_archived, is_pinned, position)
-VALUES ('mesaya-graphql', 'https://github.com/StevSant/mesaYA_graphql', '2024-02-10',
+VALUES ('mesaya-graphql', 'https://github.com/StevSant/mesaYA_graphql', '2025-10-26',
         (SELECT id FROM project WHERE code = 'mesaya'), false, false, 5)
 ON CONFLICT (code) DO NOTHING;
 
@@ -84,7 +84,7 @@ ON CONFLICT (project_id, language_id) DO NOTHING;
 
 -- mesaya-chatbot
 INSERT INTO project (code, url, created_at, parent_project_id, is_archived, is_pinned, position)
-VALUES ('mesaya-chatbot', 'https://github.com/StevSant/mesaYA_chatbot_service', '2024-03-01',
+VALUES ('mesaya-chatbot', 'https://github.com/StevSant/mesaYA_chatbot_service', '2025-12-15',
         (SELECT id FROM project WHERE code = 'mesaya'), false, false, 6)
 ON CONFLICT (code) DO NOTHING;
 
@@ -100,7 +100,7 @@ ON CONFLICT (project_id, language_id) DO NOTHING;
 
 -- mesaya-payment-ms
 INSERT INTO project (code, url, created_at, parent_project_id, is_archived, is_pinned, position)
-VALUES ('mesaya-payment-ms', 'https://github.com/lesquel/mesaYA_payment_ms', '2024-03-15',
+VALUES ('mesaya-payment-ms', 'https://github.com/lesquel/mesaYA_payment_ms', '2026-01-19',
         (SELECT id FROM project WHERE code = 'mesaya'), false, false, 7)
 ON CONFLICT (code) DO NOTHING;
 
@@ -116,7 +116,7 @@ ON CONFLICT (project_id, language_id) DO NOTHING;
 
 -- mesaya-ws
 INSERT INTO project (code, url, created_at, parent_project_id, is_archived, is_pinned, position)
-VALUES ('mesaya-ws', NULL, '2024-02-20',
+VALUES ('mesaya-ws', NULL, '2025-10-12',
         (SELECT id FROM project WHERE code = 'mesaya'), false, false, 8)
 ON CONFLICT (code) DO NOTHING;
 
@@ -132,7 +132,7 @@ ON CONFLICT (project_id, language_id) DO NOTHING;
 
 -- mesaya-mcp
 INSERT INTO project (code, url, created_at, parent_project_id, is_archived, is_pinned, position)
-VALUES ('mesaya-mcp', 'https://github.com/StevSant/mesaYA_mcp', '2024-04-01',
+VALUES ('mesaya-mcp', 'https://github.com/StevSant/mesaYA_mcp', '2025-12-23',
         (SELECT id FROM project WHERE code = 'mesaya'), false, false, 9)
 ON CONFLICT (code) DO NOTHING;
 

@@ -134,6 +134,7 @@
                   [sourceId]="section.id"
                   [existingImages]="getExistingImages(section.id)"
                   (uploaded)="onSectionImageUploaded(section.id!, $event)"
+                  (imagesReordered)="onSectionImagesReordered(section.id!, $event)"
                 />
               </div>
             }

@@ -5,7 +5,7 @@ BEGIN;
 
 -- Root project (linked to hackathon competition)
 INSERT INTO project (code, url, created_at, source_id, source_type, is_archived, is_pinned, position)
-VALUES ('hackathon-agent-ai', 'https://github.com/StevSant/hackiaton-agent-ai-backend', '2024-01-15',
+VALUES ('hackathon-agent-ai', 'https://github.com/StevSant/hackiaton-agent-ai-backend', '2025-08-10',
         (SELECT id FROM competitions WHERE code = 'hackiathon_viamatica_2025'), 'competitions',
         false, true, 1)
 ON CONFLICT (code) DO NOTHING;
@@ -30,7 +30,7 @@ ON CONFLICT (project_id, language_id) DO NOTHING;
 
 -- Backend (real child)
 INSERT INTO project (code, url, created_at, parent_project_id, source_id, source_type, is_archived, is_pinned, position)
-VALUES ('hackathon-backend', NULL, '2024-01-15',
+VALUES ('hackathon-backend', NULL, '2025-08-10',
         (SELECT id FROM project WHERE code = 'hackathon-agent-ai'), NULL, NULL, false, true, 1)
 ON CONFLICT (code) DO NOTHING;
 
@@ -52,7 +52,7 @@ ON CONFLICT (project_id, language_id) DO NOTHING;
 
 -- Frontend (real child)
 INSERT INTO project (code, url, created_at, parent_project_id, source_id, source_type, is_archived, is_pinned, position)
-VALUES ('hackathon-frontend', NULL, '2024-01-15',
+VALUES ('hackathon-frontend', NULL, '2025-08-10',
         (SELECT id FROM project WHERE code = 'hackathon-agent-ai'), NULL, NULL, false, true, 2)
 ON CONFLICT (code) DO NOTHING;
 

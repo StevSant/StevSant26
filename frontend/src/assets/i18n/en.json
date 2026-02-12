@@ -457,7 +457,9 @@
     "errorType": "File type not allowed",
     "errorSize": "File is too large. Maximum 10MB.",
     "errorUpload": "Error uploading image. Please try again.",
-    "errorDelete": "Error deleting image."
+    "errorDelete": "Error deleting image.",
+    "dragToReorder": "Drag to reorder images",
+    "savedImages": "Saved images:"
   },
   "documentUpload": {
     "clickToUpload": "Click to upload documents",
@@ -705,6 +707,7 @@
     "bannerDeleteFailed": "Error deleting banner",
     "imageSaveFailed": "Error saving image",
     "imageDeleteFailed": "Error deleting image",
+    "imageReorderFailed": "Error reordering images",
     "imageUploadFailed": "Error uploading image. Please try again.",
     "documentSaveFailed": "Error saving document",
     "documentDeleteFailed": "Error deleting document",
