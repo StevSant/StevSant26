@@ -410,10 +410,11 @@
                   >
                     <td class="px-5 py-3 text-sm text-(--color-text-primary)">
                       <div class="flex items-center gap-2">
-                        @if (ref.referrer_source.includes('linkedin')) {
+                        @if (getReferrerBadge(ref.referrer_source); as badge) {
                           <span
-                            class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300"
-                            >LinkedIn</span
+                            class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium"
+                            [ngClass]="badge.classes"
+                            >{{ badge.label }}</span
                           >
                         }
                         {{ ref.referrer_source }}
@@ -483,7 +484,19 @@
                         }
                       }
                       <div>
-                        <p class="text-sm font-medium text-(--color-text-primary)">
+                        <p
+                          class="text-sm font-medium text-(--color-text-primary) flex items-center gap-2"
+                        >
+                          @if (
+                            session.referrer_source && getReferrerBadge(session.referrer_source);
+                            as badge
+                          ) {
+                            <span
+                              class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium"
+                              [ngClass]="badge.classes"
+                              >{{ badge.label }}</span
+                            >
+                          }
                           {{ session.referrer_source || ('analytics.directVisit' | translate) }}
                         </p>
                         <p class="text-xs text-(--color-text-muted)">
@@ -533,6 +546,11 @@
                           <span class="text-(--color-text-primary)">{{
                             formatPagePath(page.page_path)
                           }}</span>
+                          @if (page.duration_seconds > 0) {
+                            <span class="text-xs font-medium text-(--color-accent)">{{
+                              formatDuration(page.duration_seconds)
+                            }}</span>
+                          }
                           <span class="text-xs text-(--color-text-muted)">{{
                             page.created_at | date: 'shortTime'
                           }}</span>

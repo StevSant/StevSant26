@@ -21,10 +21,22 @@ BEGIN
     'potential_recruiters', (SELECT COUNT(DISTINCT visitor_hash) FROM visitor_session WHERE started_at >= start_date AND is_potential_recruiter = TRUE),
     'views_today', (SELECT COUNT(*) FROM page_view WHERE created_at >= CURRENT_DATE),
     'visitors_today', (SELECT COUNT(DISTINCT session_id) FROM page_view WHERE created_at >= CURRENT_DATE),
+    'avg_session_duration', (
+      SELECT COALESCE(ROUND(AVG(session_dur)::numeric, 0), 0)
+      FROM (
+        SELECT SUM(COALESCE(pv.duration_seconds, 0)) as session_dur
+        FROM visitor_session vs
+        JOIN page_view pv ON pv.session_id = vs.id
+        WHERE vs.started_at >= start_date
+        GROUP BY vs.id
+        HAVING SUM(COALESCE(pv.duration_seconds, 0)) > 0
+      ) sub
+    ),
     'top_pages', (
       SELECT COALESCE(json_agg(row_to_json(t)), '[]'::json)
       FROM (
-        SELECT page_path, COUNT(*) as views
+        SELECT page_path, COUNT(*) as views,
+               COALESCE(ROUND(AVG(CASE WHEN duration_seconds > 0 THEN duration_seconds ELSE NULL END)::numeric, 0), 0) as avg_duration
         FROM page_view
         WHERE created_at >= start_date
         GROUP BY page_path
@@ -89,7 +101,7 @@ BEGIN
           vs.total_page_views,
           (
             SELECT COALESCE(json_agg(
-              json_build_object('page_path', pv.page_path, 'created_at', pv.created_at)
+              json_build_object('page_path', pv.page_path, 'created_at', pv.created_at, 'duration_seconds', COALESCE(pv.duration_seconds, 0))
               ORDER BY pv.created_at ASC
             ), '[]'::json)
             FROM page_view pv

@@ -87,5 +87,5 @@ export interface RecruiterSession {
   city: string | null;
   started_at: string;
   total_page_views: number;
-  pages_visited: { page_path: string; created_at: string }[] | null;
+  pages_visited: { page_path: string; created_at: string; duration_seconds: number }[] | null;
 }

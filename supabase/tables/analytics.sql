@@ -30,6 +30,7 @@ CREATE TABLE page_view (
   page_path TEXT NOT NULL,
   page_title TEXT,
   referrer TEXT,
+  duration_seconds INT DEFAULT 0,
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 

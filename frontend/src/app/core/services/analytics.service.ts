@@ -49,6 +49,7 @@ export class AnalyticsService {
   private resolvedReferrerSource: string | null = null;
   private currentPageStartTime: number = 0;
   private currentPagePath: string | null = null;
+  private currentPageViewId: number | null = null;
 
   constructor() {
     // Capture ?ref= or ?utm_source= immediately before Angular router strips them
@@ -84,7 +85,6 @@ export class AnalyticsService {
     const refFromCookie = this.getCookie('analytics_ref');
     const queryRef = referrer || refFromCookie || this.capturedRef || this.getQueryParam('ref') || this.getQueryParam('utm_source');
 
-    console.log('[Analytics] initSession:', { directRef: referrer, cookie: refFromCookie, queryRef });
 
     const rawReferrer = queryRef || document.referrer;
     const referrerSource = queryRef || this.extractReferrerSource(rawReferrer);
@@ -121,7 +121,6 @@ export class AnalyticsService {
       const isRecruiter = this.isRecruiterReferrer(referrerSource);
       const sessionId = crypto.randomUUID();
 
-      console.log('[Analytics] Creating session:', { sessionId, referrerSource, isRecruiter, geo });
 
       const { error } = await this.client.client
         .from('visitor_session')
@@ -167,15 +166,16 @@ export class AnalyticsService {
     this.pagesVisitedInSession.push(cleanPath);
 
     try {
-      await this.client.client.from('page_view').insert({
+      const { data: insertedRows } = await this.client.client.from('page_view').insert({
         session_id: this.sessionId,
         page_path: cleanPath,
         page_title: pageTitle || null,
         referrer: document.referrer || null,
-      });
+      }).select('id');
 
       this.currentPagePath = cleanPath;
       this.currentPageStartTime = Date.now();
+      this.currentPageViewId = insertedRows?.[0]?.id ?? null;
 
       // Update page count and check recruiter pattern
       const count = this.getStoredPageCount() + 1;
@@ -197,6 +197,9 @@ export class AnalyticsService {
   /**
    * Update the duration of the current page view.
    * Called when navigating away from a page or leaving the site.
+   *
+   * PostgREST does not support .order()/.limit() on UPDATE, so we first
+   * SELECT the most recent page_view row, then update it by ID.
    */
   async updateCurrentPageDuration(): Promise<void> {
     if (!this.sessionId || !this.currentPagePath || !this.currentPageStartTime) return;
@@ -205,14 +208,29 @@ export class AnalyticsService {
     if (durationSeconds <= 0) return;
 
     try {
-      // Update the most recent page_view for this session + path
-      await this.client.client
-        .from('page_view')
-        .update({ duration_seconds: durationSeconds })
-        .eq('session_id', this.sessionId)
-        .eq('page_path', this.currentPagePath)
-        .order('created_at', { ascending: false })
-        .limit(1);
+      if (this.currentPageViewId) {
+        // Fast path: update by known ID
+        await this.client.client
+          .from('page_view')
+          .update({ duration_seconds: durationSeconds })
+          .eq('id', this.currentPageViewId);
+      } else {
+        // Fallback: find the most recent page_view for this session + path
+        const { data: rows } = await this.client.client
+          .from('page_view')
+          .select('id')
+          .eq('session_id', this.sessionId)
+          .eq('page_path', this.currentPagePath)
+          .order('created_at', { ascending: false })
+          .limit(1);
+
+        if (rows && rows.length > 0) {
+          await this.client.client
+            .from('page_view')
+            .update({ duration_seconds: durationSeconds })
+            .eq('id', rows[0].id);
+        }
+      }
     } catch {
       // Silently fail
     }
@@ -229,7 +247,14 @@ export class AnalyticsService {
 
     // Use fetch with keepalive for reliable delivery on page unload
     try {
-      const url = `${environment.supabaseUrl}/rest/v1/page_view?session_id=eq.${this.sessionId}&page_path=eq.${encodeURIComponent(this.currentPagePath)}&order=created_at.desc&limit=1`;
+      let url: string;
+      if (this.currentPageViewId) {
+        // Update by known row ID — reliable
+        url = `${environment.supabaseUrl}/rest/v1/page_view?id=eq.${this.currentPageViewId}`;
+      } else {
+        // Fallback: match by session + path (may update the wrong row if duplicates exist)
+        url = `${environment.supabaseUrl}/rest/v1/page_view?session_id=eq.${this.sessionId}&page_path=eq.${encodeURIComponent(this.currentPagePath)}`;
+      }
       const body = JSON.stringify({ duration_seconds: durationSeconds });
       const headers: Record<string, string> = {
         'Content-Type': 'application/json',
