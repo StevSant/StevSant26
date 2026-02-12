@@ -24,6 +24,20 @@ FOR UPDATE
 USING (true)
 WITH CHECK (true);
 
+-- Anonymous users can UPDATE page_view (to record duration_seconds)
+CREATE POLICY "Anon update page_view"
+ON page_view
+FOR UPDATE
+USING (true)
+WITH CHECK (true);
+
+-- Anonymous users can SELECT page_view (needed for .insert().select('id') to return the row ID)
+CREATE POLICY "Anon select own page_view"
+ON page_view
+FOR SELECT
+TO anon
+USING (true);
+
 -- Only authenticated users can SELECT (for dashboard)
 CREATE POLICY "Admin read visitor_session"
 ON visitor_session
