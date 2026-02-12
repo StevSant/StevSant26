@@ -76,12 +76,25 @@ export class AnalyticsService {
     if (!isPlatformBrowser(this.platformId)) return;
 
     const visitorHash = this.generateVisitorHash();
-    // Priority: captured ref (from constructor) > explicit param > document.referrer
-    const queryRef = this.capturedRef || this.getQueryParam('ref') || this.getQueryParam('utm_source');
+
+    // Read ref from ALL sources — sessionStorage (set by inline script) is most reliable
+    let refFromStorage: string | null = null;
+    try { refFromStorage = sessionStorage.getItem('analytics_ref'); } catch {}
+    const queryRef = refFromStorage || this.capturedRef || this.getQueryParam('ref') || this.getQueryParam('utm_source');
+
+    console.log('[Analytics] initSession debug:', {
+      refFromStorage,
+      capturedRef: this.capturedRef,
+      windowSearch: window.location.search,
+      queryRef,
+      documentReferrer: document.referrer,
+    });
+
     const rawReferrer = referrer || queryRef || document.referrer;
     const referrerSource = queryRef || this.extractReferrerSource(rawReferrer);
     this.resolvedReferrerSource = referrerSource;
     const deviceInfo = this.getDeviceInfo();
+    const geo = await this.fetchGeolocation();
 
     try {
       const existingSessionId = this.getStoredSessionId();
@@ -112,6 +125,8 @@ export class AnalyticsService {
       const isRecruiter = this.isRecruiterReferrer(referrerSource);
       const sessionId = crypto.randomUUID();
 
+      console.log('[Analytics] Creating session:', { sessionId, referrerSource, isRecruiter, geo });
+
       const { error } = await this.client.client
         .from('visitor_session')
         .insert({
@@ -123,6 +138,8 @@ export class AnalyticsService {
           device_type: deviceInfo.deviceType,
           browser: deviceInfo.browser,
           os: deviceInfo.os,
+          country: geo?.country || null,
+          city: geo?.city || null,
         });
 
       if (!error) {
@@ -364,6 +381,26 @@ export class AnalyticsService {
     try {
       const params = new URLSearchParams(window.location.search);
       return params.get(name);
+    } catch {
+      return null;
+    }
+  }
+
+  /**
+   * Fetch approximate geolocation from a free IP API.
+   * Fails silently — returns null if the API is unreachable.
+   */
+  private async fetchGeolocation(): Promise<{ country: string; city: string } | null> {
+    try {
+      const res = await fetch('https://ipapi.co/json/', {
+        signal: AbortSignal.timeout(3000),
+      });
+      if (!res.ok) return null;
+      const data = await res.json();
+      return {
+        country: data.country_name || data.country || null,
+        city: data.city || null,
+      };
     } catch {
       return null;
     }
