@@ -3,7 +3,7 @@ import { isPlatformBrowser } from '@angular/common';
 import { SupabaseClientService } from './supabase-client.service';
 import { AnalyticsSummary, VisitorSession, PageView } from '../models';
 
-/** Recruiter-indicative referrer domains */
+/** Recruiter-indicative referrer domains or sources */
 const RECRUITER_REFERRERS = [
   'linkedin.com',
   'indeed.com',
@@ -14,6 +14,9 @@ const RECRUITER_REFERRERS = [
   'talent.com',
   'ziprecruiter.com',
   'monster.com',
+  'cv',
+  'resume',
+  'curriculum',
 ];
 
 /** Pages that recruiters typically visit (multiple = likely recruiter) */
@@ -52,7 +55,10 @@ export class AnalyticsService {
     if (!isPlatformBrowser(this.platformId)) return;
 
     const visitorHash = this.generateVisitorHash();
-    const referrerSource = this.extractReferrerSource(referrer || document.referrer);
+    // Priority: explicit param > ?ref= query param > document.referrer
+    const queryRef = this.getQueryParam('ref') || this.getQueryParam('utm_source');
+    const rawReferrer = referrer || queryRef || document.referrer;
+    const referrerSource = queryRef || this.extractReferrerSource(rawReferrer);
     const deviceInfo = this.getDeviceInfo();
 
     // Check for an existing session from this visitor in the last 30 minutes
@@ -316,6 +322,19 @@ export class AnalyticsService {
       sessionStorage.setItem('analytics_page_count', count.toString());
     } catch {
       // Ignore
+    }
+  }
+
+  /**
+   * Read a query parameter from the current URL.
+   * Used to support ?ref= and ?utm_source= for referrer tracking.
+   */
+  private getQueryParam(name: string): string | null {
+    try {
+      const params = new URLSearchParams(window.location.search);
+      return params.get(name);
+    } catch {
+      return null;
     }
   }
 }
