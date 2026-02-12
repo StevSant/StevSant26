@@ -41,19 +41,22 @@
     <link rel="canonical" href="https://stevsant.vercel.app" />
 
     <!-- Material Symbols for content section icons (dashboard + portfolio) -->
-    <link
-      rel="preconnect"
-      href="https://fonts.googleapis.com"
-    />
-    <link
-      rel="preconnect"
-      href="https://fonts.gstatic.com"
-      crossorigin
-    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=block"
     />
+    <!-- Capture ?ref= / ?utm_source= before Angular router strips query params -->
+    <script>
+      (function () {
+        try {
+          var p = new URLSearchParams(window.location.search);
+          var r = p.get('ref') || p.get('utm_source');
+          if (r) sessionStorage.setItem('analytics_ref', r);
+        } catch (e) {}
+      })();
+    </script>
   </head>
   <body>
     <app-root></app-root>

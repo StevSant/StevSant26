@@ -37,9 +37,15 @@ export class AnalyticsComponent implements OnInit {
 
   async loadData(): Promise<void> {
     this.loading.set(true);
-    const data = await this.analyticsService.getAnalyticsSummary(this.selectedDays());
-    this.summary.set(data);
-    this.loading.set(false);
+    try {
+      const data = await this.analyticsService.getAnalyticsSummary(this.selectedDays());
+      console.log('[Analytics] Summary data:', data);
+      this.summary.set(data);
+    } catch (err) {
+      console.error('[Analytics] Error loading data:', err);
+    } finally {
+      this.loading.set(false);
+    }
   }
 
   async onDaysChange(days: number): Promise<void> {

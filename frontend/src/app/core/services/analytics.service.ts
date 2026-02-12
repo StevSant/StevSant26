@@ -44,6 +44,27 @@ export class AnalyticsService {
 
   private sessionId: string | null = null;
   private pagesVisitedInSession: string[] = [];
+  private capturedRef: string | null = null;
+  private resolvedReferrerSource: string | null = null;
+
+  constructor() {
+    // Capture ?ref= or ?utm_source= immediately before Angular router strips them
+    if (isPlatformBrowser(this.platformId)) {
+      try {
+        const params = new URLSearchParams(window.location.search);
+        const ref = params.get('ref') || params.get('utm_source');
+        if (ref) {
+          this.capturedRef = ref;
+          sessionStorage.setItem('analytics_ref', ref);
+        } else {
+          // Check if we stored it from a previous redirect
+          this.capturedRef = sessionStorage.getItem('analytics_ref');
+        }
+      } catch {
+        // Ignore
+      }
+    }
+  }
 
   // ==================== TRACKING (Public Portfolio) ====================
 
@@ -55,28 +76,30 @@ export class AnalyticsService {
     if (!isPlatformBrowser(this.platformId)) return;
 
     const visitorHash = this.generateVisitorHash();
-    // Priority: explicit param > ?ref= query param > document.referrer
-    const queryRef = this.getQueryParam('ref') || this.getQueryParam('utm_source');
+    // Priority: captured ref (from constructor) > explicit param > document.referrer
+    const queryRef = this.capturedRef || this.getQueryParam('ref') || this.getQueryParam('utm_source');
     const rawReferrer = referrer || queryRef || document.referrer;
     const referrerSource = queryRef || this.extractReferrerSource(rawReferrer);
+    this.resolvedReferrerSource = referrerSource;
     const deviceInfo = this.getDeviceInfo();
 
-    // Check for an existing session from this visitor in the last 30 minutes
-    const thirtyMinutesAgo = new Date(Date.now() - 30 * 60 * 1000).toISOString();
-
     try {
-      // Try to find a recent session — this will fail for anon (RLS blocks SELECT)
-      // So we always create a new session and store the ID locally
       const existingSessionId = this.getStoredSessionId();
 
       if (existingSessionId) {
-        // We have a stored session, update it
+        // If we have a ref/utm_source, always update the referrer on the existing session
+        const updateData: Record<string, unknown> = {
+          last_seen_at: new Date().toISOString(),
+          total_page_views: this.getStoredPageCount() + 1,
+        };
+        if (referrerSource) {
+          updateData['referrer_source'] = referrerSource;
+          updateData['is_potential_recruiter'] = this.isRecruiterReferrer(referrerSource);
+        }
+
         const { error } = await this.client.client
           .from('visitor_session')
-          .update({
-            last_seen_at: new Date().toISOString(),
-            total_page_views: this.getStoredPageCount() + 1,
-          })
+          .update(updateData)
           .eq('id', existingSessionId);
 
         if (!error) {
@@ -85,12 +108,14 @@ export class AnalyticsService {
         }
       }
 
-      // Create a new session
+      // Create a new session — generate ID client-side to avoid needing SELECT after INSERT
       const isRecruiter = this.isRecruiterReferrer(referrerSource);
+      const sessionId = crypto.randomUUID();
 
-      const { data, error } = await this.client.client
+      const { error } = await this.client.client
         .from('visitor_session')
         .insert({
+          id: sessionId,
           visitor_hash: visitorHash,
           referrer_source: referrerSource,
           is_potential_recruiter: isRecruiter,
@@ -98,14 +123,14 @@ export class AnalyticsService {
           device_type: deviceInfo.deviceType,
           browser: deviceInfo.browser,
           os: deviceInfo.os,
-        })
-        .select('id')
-        .single();
+        });
 
-      if (data && !error) {
-        this.sessionId = data.id;
-        this.storeSessionId(data.id);
+      if (!error) {
+        this.sessionId = sessionId;
+        this.storeSessionId(sessionId);
         this.storePageCount(1);
+        // Clear captured ref so it doesn't persist to future sessions
+        try { sessionStorage.removeItem('analytics_ref'); } catch {}
       }
     } catch {
       // Silently fail — analytics should never break the portfolio
@@ -118,12 +143,14 @@ export class AnalyticsService {
   async trackPageView(pagePath: string, pageTitle?: string): Promise<void> {
     if (!isPlatformBrowser(this.platformId) || !this.sessionId) return;
 
-    this.pagesVisitedInSession.push(pagePath);
+    // Strip query params and fragments from page path
+    const cleanPath = pagePath.split('?')[0].split('#')[0] || '/';
+    this.pagesVisitedInSession.push(cleanPath);
 
     try {
       await this.client.client.from('page_view').insert({
         session_id: this.sessionId,
-        page_path: pagePath,
+        page_path: cleanPath,
         page_title: pageTitle || null,
         referrer: document.referrer || null,
       });
@@ -158,7 +185,7 @@ export class AnalyticsService {
       });
 
       if (error) {
-        console.error('Error fetching analytics summary:', error);
+        console.error('Error fetching analytics summary:', error.message, error.details, error.hint, error.code);
         return null;
       }
 
@@ -251,6 +278,10 @@ export class AnalyticsService {
    * - Visited 3+ different "interest" pages (experience, projects, skills, etc.)
    */
   private detectRecruiterPattern(): boolean {
+    // Check captured ref from ?ref= query param or previously resolved source
+    if (this.isRecruiterReferrer(this.capturedRef)) return true;
+    if (this.isRecruiterReferrer(this.resolvedReferrerSource)) return true;
+
     const referrerSource = this.extractReferrerSource(document.referrer);
     if (this.isRecruiterReferrer(referrerSource)) return true;
 

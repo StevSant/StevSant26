@@ -1,5 +1,5 @@
-import { Component, OnInit, OnDestroy, signal, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, OnInit, OnDestroy, signal, inject, PLATFORM_ID } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { RouterModule, Router, NavigationEnd } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
@@ -38,6 +38,7 @@ export class PortfolioLayoutComponent implements OnInit, OnDestroy {
   private translate = inject(TranslateService);
   private analytics = inject(AnalyticsService);
   private router = inject(Router);
+  private platformId = inject(PLATFORM_ID);
   private routerSub?: Subscription;
 
   mobileMenuOpen = signal(false);
@@ -49,16 +50,18 @@ export class PortfolioLayoutComponent implements OnInit, OnDestroy {
   async ngOnInit(): Promise<void> {
     await this.data.initialize();
 
-    // Initialize analytics session and track the first page view
-    await this.analytics.initSession();
-    await this.analytics.trackPageView(this.router.url, document?.title);
+    // Initialize analytics only in browser (not during SSR)
+    if (isPlatformBrowser(this.platformId)) {
+      await this.analytics.initSession();
+      await this.analytics.trackPageView(this.router.url, document?.title);
 
-    // Track subsequent route navigations
-    this.routerSub = this.router.events
-      .pipe(filter((e): e is NavigationEnd => e instanceof NavigationEnd))
-      .subscribe((event) => {
-        this.analytics.trackPageView(event.urlAfterRedirects, document?.title);
-      });
+      // Track subsequent route navigations
+      this.routerSub = this.router.events
+        .pipe(filter((e): e is NavigationEnd => e instanceof NavigationEnd))
+        .subscribe((event) => {
+          this.analytics.trackPageView(event.urlAfterRedirects, document?.title);
+        });
+    }
 
     // Update lang attribute based on current language
     this.seoService.updateLang(this.translate.currentLang());

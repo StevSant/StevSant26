@@ -66,17 +66,12 @@ CREATE OR REPLACE FUNCTION get_analytics_summary(
 )
 RETURNS JSON
 LANGUAGE plpgsql
-SECURITY DEFINER
+SECURITY INVOKER
 AS $$
 DECLARE
   result JSON;
   start_date TIMESTAMPTZ;
 BEGIN
-  -- Only allow authenticated users
-  IF auth.uid() IS NULL THEN
-    RAISE EXCEPTION 'Not authenticated';
-  END IF;
-
   start_date := NOW() - (p_days || ' days')::INTERVAL;
 
   SELECT json_build_object(
@@ -86,7 +81,7 @@ BEGIN
     'views_today', (SELECT COUNT(*) FROM page_view WHERE created_at >= CURRENT_DATE),
     'visitors_today', (SELECT COUNT(DISTINCT session_id) FROM page_view WHERE created_at >= CURRENT_DATE),
     'top_pages', (
-      SELECT json_agg(row_to_json(t))
+      SELECT COALESCE(json_agg(row_to_json(t)), '[]'::json)
       FROM (
         SELECT page_path, COUNT(*) as views
         FROM page_view
@@ -97,7 +92,7 @@ BEGIN
       ) t
     ),
     'top_referrers', (
-      SELECT json_agg(row_to_json(t))
+      SELECT COALESCE(json_agg(row_to_json(t)), '[]'::json)
       FROM (
         SELECT referrer_source, COUNT(*) as visits
         FROM visitor_session
@@ -108,7 +103,7 @@ BEGIN
       ) t
     ),
     'device_breakdown', (
-      SELECT json_agg(row_to_json(t))
+      SELECT COALESCE(json_agg(row_to_json(t)), '[]'::json)
       FROM (
         SELECT device_type, COUNT(*) as count
         FROM visitor_session
@@ -118,7 +113,7 @@ BEGIN
       ) t
     ),
     'browser_breakdown', (
-      SELECT json_agg(row_to_json(t))
+      SELECT COALESCE(json_agg(row_to_json(t)), '[]'::json)
       FROM (
         SELECT browser, COUNT(*) as count
         FROM visitor_session
@@ -129,7 +124,7 @@ BEGIN
       ) t
     ),
     'daily_views', (
-      SELECT json_agg(row_to_json(t))
+      SELECT COALESCE(json_agg(row_to_json(t)), '[]'::json)
       FROM (
         SELECT DATE(created_at) as date, COUNT(*) as views
         FROM page_view
@@ -139,7 +134,7 @@ BEGIN
       ) t
     ),
     'recruiter_sessions', (
-      SELECT json_agg(row_to_json(t))
+      SELECT COALESCE(json_agg(row_to_json(t)), '[]'::json)
       FROM (
         SELECT
           vs.id,
@@ -152,10 +147,12 @@ BEGIN
           vs.started_at,
           vs.total_page_views,
           (
-            SELECT json_agg(json_build_object('page_path', pv.page_path, 'created_at', pv.created_at))
+            SELECT COALESCE(json_agg(
+              json_build_object('page_path', pv.page_path, 'created_at', pv.created_at)
+              ORDER BY pv.created_at ASC
+            ), '[]'::json)
             FROM page_view pv
             WHERE pv.session_id = vs.id
-            ORDER BY pv.created_at ASC
           ) as pages_visited
         FROM visitor_session vs
         WHERE vs.is_potential_recruiter = TRUE AND vs.started_at >= start_date
