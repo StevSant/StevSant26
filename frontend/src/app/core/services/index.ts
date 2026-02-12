@@ -18,3 +18,4 @@ export * from './seo.service';
 export * from './content-section.service';
 export * from './logger.service';
 export * from './logger.util';
+export * from './analytics.service';

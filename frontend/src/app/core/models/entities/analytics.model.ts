@@ -1,0 +1,88 @@
+/**
+ * Visitor Session entity
+ * Represents a unique visitor's browsing session on the portfolio
+ */
+export interface VisitorSession {
+  id: string;
+  visitor_hash: string;
+  started_at: string;
+  last_seen_at: string;
+  total_page_views: number;
+  referrer_source: string | null;
+  is_potential_recruiter: boolean;
+  user_agent: string | null;
+  device_type: 'desktop' | 'mobile' | 'tablet' | 'unknown';
+  browser: string | null;
+  os: string | null;
+  country: string | null;
+  city: string | null;
+}
+
+/**
+ * Page View entity
+ * Represents a single page visit within a session
+ */
+export interface PageView {
+  id: number;
+  session_id: string;
+  page_path: string;
+  page_title: string | null;
+  referrer: string | null;
+  created_at: string;
+}
+
+/**
+ * Analytics Summary DTO
+ * Aggregated analytics data returned by the Supabase function
+ */
+export interface AnalyticsSummary {
+  total_views: number;
+  unique_visitors: number;
+  potential_recruiters: number;
+  views_today: number;
+  visitors_today: number;
+  top_pages: TopPage[] | null;
+  top_referrers: TopReferrer[] | null;
+  device_breakdown: DeviceBreakdown[] | null;
+  browser_breakdown: BrowserBreakdown[] | null;
+  daily_views: DailyView[] | null;
+  recruiter_sessions: RecruiterSession[] | null;
+}
+
+export interface TopPage {
+  page_path: string;
+  views: number;
+}
+
+export interface TopReferrer {
+  referrer_source: string;
+  visits: number;
+}
+
+export interface DeviceBreakdown {
+  device_type: string;
+  count: number;
+}
+
+export interface BrowserBreakdown {
+  browser: string;
+  count: number;
+}
+
+export interface DailyView {
+  date: string;
+  views: number;
+}
+
+export interface RecruiterSession {
+  id: string;
+  referrer_source: string | null;
+  device_type: string | null;
+  browser: string | null;
+  os: string | null;
+  country: string | null;
+  city: string | null;
+  started_at: string;
+  total_page_views: number;
+  pages_visited: { page_path: string; created_at: string }[] | null;
+}

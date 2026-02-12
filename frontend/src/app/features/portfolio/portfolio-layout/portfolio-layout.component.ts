@@ -1,9 +1,12 @@
-import { Component, OnInit, signal, inject } from '@angular/core';
+import { Component, OnInit, OnDestroy, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Router, NavigationEnd } from '@angular/router';
+import { Subscription } from 'rxjs';
+import { filter } from 'rxjs/operators';
 import { ThemeService } from '@core/services/theme.service';
 import { SeoService } from '@core/services/seo.service';
 import { TranslateService } from '@core/services/translate.service';
+import { AnalyticsService } from '@core/services/analytics.service';
 import { TranslatePipe } from '@shared/pipes/translate.pipe';
 import { LanguageSelectorComponent } from '@shared/components/language-selector/language-selector.component';
 import { ThemeToggleComponent } from '@shared/components/theme-toggle/theme-toggle.component';
@@ -27,12 +30,15 @@ import { PortfolioFooterComponent } from './portfolio-footer/portfolio-footer.co
   ],
   templateUrl: './portfolio-layout.component.html',
 })
-export class PortfolioLayoutComponent implements OnInit {
+export class PortfolioLayoutComponent implements OnInit, OnDestroy {
   protected data = inject(PortfolioDataService);
   // Theme service injected to ensure initialization
   protected themeService = inject(ThemeService);
   private seoService = inject(SeoService);
   private translate = inject(TranslateService);
+  private analytics = inject(AnalyticsService);
+  private router = inject(Router);
+  private routerSub?: Subscription;
 
   mobileMenuOpen = signal(false);
   moreMenuOpen = signal(false);
@@ -42,6 +48,17 @@ export class PortfolioLayoutComponent implements OnInit {
 
   async ngOnInit(): Promise<void> {
     await this.data.initialize();
+
+    // Initialize analytics session and track the first page view
+    await this.analytics.initSession();
+    await this.analytics.trackPageView(this.router.url, document?.title);
+
+    // Track subsequent route navigations
+    this.routerSub = this.router.events
+      .pipe(filter((e): e is NavigationEnd => e instanceof NavigationEnd))
+      .subscribe((event) => {
+        this.analytics.trackPageView(event.urlAfterRedirects, document?.title);
+      });
 
     // Update lang attribute based on current language
     this.seoService.updateLang(this.translate.currentLang());
@@ -104,5 +121,9 @@ export class PortfolioLayoutComponent implements OnInit {
     this.moreMenuOpen.set(false);
     this.cvMenuOpen.set(false);
     this.mobileMenuOpen.set(false);
+  }
+
+  ngOnDestroy(): void {
+    this.routerSub?.unsubscribe();
   }
 }

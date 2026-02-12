@@ -154,6 +154,11 @@ const dashboardChildren: Routes = [
     loadComponent: () =>
       import('./features/dashboard/skill-categories/skill-category-form/skill-category-form.component').then((m) => m.SkillCategoryFormComponent),
   },
+  {
+    path: 'analytics',
+    loadComponent: () =>
+      import('./features/dashboard/analytics/analytics.component').then((m) => m.AnalyticsComponent),
+  },
 ];
 
 const devRoutes: Routes = [
