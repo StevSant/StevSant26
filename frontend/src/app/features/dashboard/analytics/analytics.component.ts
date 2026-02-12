@@ -36,10 +36,37 @@ export class AnalyticsComponent implements OnInit {
     return (s.total_views / s.unique_visitors).toFixed(1);
   });
 
-  maxDailyViews = computed(() => {
+  /**
+   * Fills in missing dates with 0 views so the chart renders
+   * a bar for every day in the selected period.
+   */
+  filledDailyViews = computed(() => {
     const s = this.summary();
-    if (!s?.daily_views?.length) return 1;
-    return Math.max(...s.daily_views.map((d) => d.views));
+    if (!s?.daily_views?.length) return [];
+
+    const days = this.selectedDays();
+    const viewMap = new Map<string, number>();
+    for (const d of s.daily_views) {
+      // Normalise: the SQL returns DATE strings like "2026-02-12"
+      const key = d.date.substring(0, 10);
+      viewMap.set(key, d.views);
+    }
+
+    const result: { date: string; views: number }[] = [];
+    const now = new Date();
+    for (let i = days - 1; i >= 0; i--) {
+      const d = new Date(now);
+      d.setDate(d.getDate() - i);
+      const key = d.toISOString().substring(0, 10);
+      result.push({ date: key, views: viewMap.get(key) ?? 0 });
+    }
+    return result;
+  });
+
+  maxDailyViews = computed(() => {
+    const filled = this.filledDailyViews();
+    if (!filled.length) return 1;
+    return Math.max(1, ...filled.map((d) => d.views));
   });
 
   avgSessionDuration = computed(() => {
@@ -125,10 +152,11 @@ export class AnalyticsComponent implements OnInit {
 
   /**
    * Returns a percentage height for the bar chart visualization.
+   * Returns 0 for days with no views, and a minimum of 4% for days with views.
    */
   getBarHeight(views: number): number {
     const max = this.maxDailyViews();
-    if (max === 0) return 0;
+    if (max === 0 || views === 0) return 0;
     return Math.max(4, (views / max) * 100);
   }
 
