@@ -794,6 +794,23 @@
     "noReferrers": "Aún no hay datos de referencias. Los visitantes pueden estar llegando directamente.",
     "noRecruiters": "Aún no se han detectado sesiones de reclutadores",
     "noDataTitle": "Sin datos de analíticas",
-    "noDataHint": "Los datos aparecerán cuando los visitantes comiencen a navegar tu portafolio"
+    "noDataHint": "Los datos aparecerán cuando los visitantes comiencen a navegar tu portafolio",
+    "tabVisitors": "Visitantes",
+    "searchVisitors": "Buscar por país, ciudad, navegador, referencia...",
+    "allDevices": "Todos los dispositivos",
+    "allVisitors": "Todos los visitantes",
+    "onlyRecruiters": "Solo reclutadores",
+    "nonRecruiters": "No reclutadores",
+    "clearFilters": "Limpiar filtros",
+    "visitorsFound": "visitantes únicos encontrados",
+    "unknownLocation": "Ubicación desconocida",
+    "recruiter": "Reclutador",
+    "sessions": "Sesiones",
+    "firstVisit": "Primera visita",
+    "lastVisit": "Última visita",
+    "uniquePagesCount": "Páginas únicas",
+    "pagesExplored": "Páginas exploradas",
+    "noVisitors": "Aún no hay visitantes",
+    "noVisitorsFiltered": "Ningún visitante coincide con los filtros actuales"
   }
 }

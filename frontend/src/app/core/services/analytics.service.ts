@@ -1,7 +1,7 @@
 import { Injectable, inject, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { SupabaseClientService } from './supabase-client.service';
-import { AnalyticsSummary, VisitorSession, PageView } from '../models';
+import { AnalyticsSummary, VisitorSession, PageView, UniqueVisitor } from '../models';
 import { environment } from '../../../environments/environment';
 
 /** Recruiter-indicative referrer domains or sources */
@@ -309,6 +309,41 @@ export class AnalyticsService {
 
     if (error) return [];
     return data as PageView[];
+  }
+
+  /**
+   * Get unique visitors with filters.
+   * Calls the Supabase function get_unique_visitors.
+   */
+  async getUniqueVisitors(params: {
+    days?: number;
+    deviceType?: string | null;
+    referrer?: string | null;
+    isRecruiter?: boolean | null;
+    country?: string | null;
+    search?: string | null;
+  } = {}): Promise<UniqueVisitor[]> {
+    try {
+      const rpcParams: Record<string, unknown> = {
+        p_days: params.days ?? 30,
+      };
+      if (params.deviceType) rpcParams['p_device_type'] = params.deviceType;
+      if (params.referrer) rpcParams['p_referrer'] = params.referrer;
+      if (params.isRecruiter !== undefined && params.isRecruiter !== null) rpcParams['p_is_recruiter'] = params.isRecruiter;
+      if (params.country) rpcParams['p_country'] = params.country;
+      if (params.search) rpcParams['p_search'] = params.search;
+
+      const { data, error } = await this.client.client.rpc('get_unique_visitors', rpcParams);
+
+      if (error) {
+        console.error('Error fetching unique visitors:', error.message);
+        return [];
+      }
+
+      return (data as UniqueVisitor[]) || [];
+    } catch {
+      return [];
+    }
   }
 
   /**

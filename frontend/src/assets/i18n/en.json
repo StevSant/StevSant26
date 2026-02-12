@@ -796,6 +796,23 @@
     "noReferrers": "No referrer data yet. Visitors may be coming directly.",
     "noRecruiters": "No recruiter sessions detected yet",
     "noDataTitle": "No analytics data",
-    "noDataHint": "Analytics data will appear once visitors start browsing your portfolio"
+    "noDataHint": "Analytics data will appear once visitors start browsing your portfolio",
+    "tabVisitors": "Visitors",
+    "searchVisitors": "Search by country, city, browser, referrer...",
+    "allDevices": "All devices",
+    "allVisitors": "All visitors",
+    "onlyRecruiters": "Recruiters only",
+    "nonRecruiters": "Non-recruiters",
+    "clearFilters": "Clear filters",
+    "visitorsFound": "unique visitors found",
+    "unknownLocation": "Unknown location",
+    "recruiter": "Recruiter",
+    "sessions": "Sessions",
+    "firstVisit": "First visit",
+    "lastVisit": "Last visit",
+    "uniquePagesCount": "Unique pages",
+    "pagesExplored": "Pages explored",
+    "noVisitors": "No visitors yet",
+    "noVisitorsFiltered": "No visitors match the current filters"
   }
 }

@@ -89,3 +89,24 @@ export interface RecruiterSession {
   total_page_views: number;
   pages_visited: { page_path: string; created_at: string; duration_seconds: number }[] | null;
 }
+
+/**
+ * Unique Visitor DTO
+ * Aggregated data for a unique visitor (grouped by visitor_hash)
+ */
+export interface UniqueVisitor {
+  visitor_hash: string;
+  total_sessions: number;
+  total_page_views: number;
+  first_visit: string;
+  last_visit: string;
+  avg_session_duration: number;
+  device_type: string | null;
+  browser: string | null;
+  os: string | null;
+  country: string | null;
+  city: string | null;
+  is_potential_recruiter: boolean;
+  referrer_sources: string[];
+  unique_pages_visited: string[];
+}

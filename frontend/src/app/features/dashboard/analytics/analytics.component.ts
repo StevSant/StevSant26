@@ -1,13 +1,14 @@
 import { Component, OnInit, signal, inject, computed } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { AnalyticsService } from '@core/services/analytics.service';
-import { AnalyticsSummary } from '@core/models';
+import { AnalyticsSummary, UniqueVisitor } from '@core/models';
 import { TranslatePipe } from '@shared/pipes/translate.pipe';
 
 @Component({
   selector: 'app-analytics',
   standalone: true,
-  imports: [CommonModule, DatePipe, TranslatePipe],
+  imports: [CommonModule, DatePipe, TranslatePipe, FormsModule],
   templateUrl: './analytics.component.html',
 })
 export class AnalyticsComponent implements OnInit {
@@ -16,7 +17,17 @@ export class AnalyticsComponent implements OnInit {
   summary = signal<AnalyticsSummary | null>(null);
   loading = signal(true);
   selectedDays = signal(30);
-  activeTab = signal<'overview' | 'pages' | 'referrers' | 'recruiters'>('overview');
+  activeTab = signal<'overview' | 'pages' | 'referrers' | 'recruiters' | 'visitors'>('overview');
+
+  // Visitors tab state
+  visitors = signal<UniqueVisitor[]>([]);
+  visitorsLoading = signal(false);
+  visitorSearch = signal('');
+  visitorFilterDevice = signal<string | null>(null);
+  visitorFilterRecruiter = signal<boolean | null>(null);
+  visitorFilterCountry = signal<string | null>(null);
+  visitorFilterReferrer = signal<string | null>(null);
+  expandedVisitor = signal<string | null>(null);
 
   // Computed values for display
   avgViewsPerVisitor = computed(() => {
@@ -55,10 +66,61 @@ export class AnalyticsComponent implements OnInit {
   async onDaysChange(days: number): Promise<void> {
     this.selectedDays.set(days);
     await this.loadData();
+    if (this.activeTab() === 'visitors') {
+      await this.loadVisitors();
+    }
   }
 
-  setTab(tab: 'overview' | 'pages' | 'referrers' | 'recruiters'): void {
+  setTab(tab: 'overview' | 'pages' | 'referrers' | 'recruiters' | 'visitors'): void {
     this.activeTab.set(tab);
+    if (tab === 'visitors' && this.visitors().length === 0) {
+      this.loadVisitors();
+    }
+  }
+
+  async loadVisitors(): Promise<void> {
+    this.visitorsLoading.set(true);
+    try {
+      const data = await this.analyticsService.getUniqueVisitors({
+        days: this.selectedDays(),
+        deviceType: this.visitorFilterDevice(),
+        referrer: this.visitorFilterReferrer(),
+        isRecruiter: this.visitorFilterRecruiter(),
+        country: this.visitorFilterCountry(),
+        search: this.visitorSearch() || null,
+      });
+      this.visitors.set(data);
+    } catch (err) {
+      console.error('[Analytics] Error loading visitors:', err);
+    } finally {
+      this.visitorsLoading.set(false);
+    }
+  }
+
+  async onVisitorSearch(query: string): Promise<void> {
+    this.visitorSearch.set(query);
+    await this.loadVisitors();
+  }
+
+  async onVisitorFilterChange(): Promise<void> {
+    await this.loadVisitors();
+  }
+
+  clearVisitorFilters(): void {
+    this.visitorSearch.set('');
+    this.visitorFilterDevice.set(null);
+    this.visitorFilterRecruiter.set(null);
+    this.visitorFilterCountry.set(null);
+    this.visitorFilterReferrer.set(null);
+    this.loadVisitors();
+  }
+
+  toggleVisitorExpand(hash: string): void {
+    this.expandedVisitor.set(this.expandedVisitor() === hash ? null : hash);
+  }
+
+  hasActiveVisitorFilters(): boolean {
+    return !!(this.visitorSearch() || this.visitorFilterDevice() || this.visitorFilterRecruiter() !== null || this.visitorFilterCountry() || this.visitorFilterReferrer());
   }
 
   /**

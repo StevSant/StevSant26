@@ -170,6 +170,7 @@
             { id: 'pages', label: 'analytics.tabPages' },
             { id: 'referrers', label: 'analytics.tabReferrers' },
             { id: 'recruiters', label: 'analytics.tabRecruiters' },
+            { id: 'visitors', label: 'analytics.tabVisitors' },
           ];
           track tab.id
         ) {
@@ -579,6 +580,198 @@
                 />
               </svg>
               <p class="text-(--color-text-muted)">{{ 'analytics.noRecruiters' | translate }}</p>
+            </div>
+          }
+        </div>
+      }
+
+      <!-- VISITORS TAB -->
+      @case ('visitors') {
+        <div class="space-y-4">
+          <!-- Filters Bar -->
+          <div class="bg-(--color-bg-secondary) rounded-xl p-4 border border-(--color-border-primary)">
+            <div class="flex flex-col lg:flex-row gap-3">
+              <!-- Search -->
+              <div class="flex-1 relative">
+                <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-(--color-text-muted)" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+                <input
+                  type="text"
+                  [ngModel]="visitorSearch()"
+                  (ngModelChange)="onVisitorSearch($event)"
+                  [placeholder]="'analytics.searchVisitors' | translate"
+                  class="w-full pl-10 pr-4 py-2 text-sm bg-(--color-bg-primary) border border-(--color-border-primary) rounded-lg text-(--color-text-primary) placeholder:text-(--color-text-muted) focus:outline-none focus:ring-2 focus:ring-(--color-accent)/50"
+                />
+              </div>
+              <!-- Device Filter -->
+              <select
+                [ngModel]="visitorFilterDevice()"
+                (ngModelChange)="visitorFilterDevice.set($event || null); onVisitorFilterChange()"
+                class="px-3 py-2 text-sm bg-(--color-bg-primary) border border-(--color-border-primary) rounded-lg text-(--color-text-primary) focus:outline-none focus:ring-2 focus:ring-(--color-accent)/50"
+              >
+                <option [ngValue]="null">{{ 'analytics.allDevices' | translate }}</option>
+                <option value="desktop">Desktop</option>
+                <option value="mobile">Mobile</option>
+                <option value="tablet">Tablet</option>
+              </select>
+              <!-- Recruiter Filter -->
+              <select
+                [ngModel]="visitorFilterRecruiter()"
+                (ngModelChange)="visitorFilterRecruiter.set($event); onVisitorFilterChange()"
+                class="px-3 py-2 text-sm bg-(--color-bg-primary) border border-(--color-border-primary) rounded-lg text-(--color-text-primary) focus:outline-none focus:ring-2 focus:ring-(--color-accent)/50"
+              >
+                <option [ngValue]="null">{{ 'analytics.allVisitors' | translate }}</option>
+                <option [ngValue]="true">{{ 'analytics.onlyRecruiters' | translate }}</option>
+                <option [ngValue]="false">{{ 'analytics.nonRecruiters' | translate }}</option>
+              </select>
+              <!-- Clear Filters -->
+              @if (hasActiveVisitorFilters()) {
+                <button
+                  (click)="clearVisitorFilters()"
+                  class="px-3 py-2 text-sm font-medium text-(--color-accent) hover:text-(--color-accent)/80 transition-colors"
+                >
+                  {{ 'analytics.clearFilters' | translate }}
+                </button>
+              }
+            </div>
+          </div>
+
+          <!-- Loading -->
+          @if (visitorsLoading()) {
+            <div class="flex items-center justify-center py-10">
+              <div class="animate-spin rounded-full h-6 w-6 border-b-2 border-(--color-accent)"></div>
+            </div>
+          } @else if (visitors().length) {
+            <!-- Results count -->
+            <p class="text-sm text-(--color-text-muted)">
+              {{ visitors().length }} {{ 'analytics.visitorsFound' | translate }}
+            </p>
+
+            <!-- Visitor Cards -->
+            @for (visitor of visitors(); track visitor.visitor_hash) {
+              <div class="bg-(--color-bg-secondary) rounded-xl border border-(--color-border-primary) overflow-hidden transition-all">
+                <!-- Visitor Header (clickable) -->
+                <button
+                  (click)="toggleVisitorExpand(visitor.visitor_hash)"
+                  class="w-full p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 hover:bg-(--color-bg-primary)/30 transition-colors text-left"
+                >
+                  <div class="flex items-center gap-3">
+                    <!-- Avatar-like icon -->
+                    <div class="w-10 h-10 rounded-full flex items-center justify-center shrink-0"
+                      [class]="visitor.is_potential_recruiter ? 'bg-purple-500/10' : 'bg-(--color-accent)/10'"
+                    >
+                      <svg class="w-5 h-5" [class]="visitor.is_potential_recruiter ? 'text-purple-500' : 'text-(--color-accent)'" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          [attr.d]="visitor.is_potential_recruiter
+                            ? 'M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z'
+                            : 'M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z'"
+                        />
+                      </svg>
+                    </div>
+                    <div>
+                      <div class="flex items-center gap-2 flex-wrap">
+                        <span class="text-sm font-medium text-(--color-text-primary)">
+                          {{ visitor.city ? visitor.city + ', ' : '' }}{{ visitor.country || ('analytics.unknownLocation' | translate) }}
+                        </span>
+                        @if (visitor.is_potential_recruiter) {
+                          <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300">
+                            {{ 'analytics.recruiter' | translate }}
+                          </span>
+                        }
+                        @for (ref of visitor.referrer_sources; track ref) {
+                          @if (getReferrerBadge(ref); as badge) {
+                            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium" [ngClass]="badge.classes">
+                              {{ badge.label }}
+                            </span>
+                          }
+                        }
+                      </div>
+                      <p class="text-xs text-(--color-text-muted) mt-0.5">
+                        {{ visitor.browser }} · {{ visitor.os }} · {{ visitor.device_type }}
+                      </p>
+                    </div>
+                  </div>
+
+                  <!-- Right side: metrics -->
+                  <div class="flex items-center gap-4 text-xs text-(--color-text-muted) shrink-0">
+                    <div class="text-center">
+                      <p class="text-base font-bold text-(--color-text-primary)">{{ visitor.total_sessions }}</p>
+                      <p>{{ 'analytics.sessions' | translate }}</p>
+                    </div>
+                    <div class="text-center">
+                      <p class="text-base font-bold text-(--color-text-primary)">{{ visitor.total_page_views }}</p>
+                      <p>{{ 'analytics.views' | translate }}</p>
+                    </div>
+                    <div class="text-center">
+                      <p class="text-base font-bold text-(--color-text-primary)">{{ formatDuration(visitor.avg_session_duration) }}</p>
+                      <p>{{ 'analytics.avgTime' | translate }}</p>
+                    </div>
+                    <!-- Expand arrow -->
+                    <svg class="w-4 h-4 text-(--color-text-muted) transition-transform" [class.rotate-180]="expandedVisitor() === visitor.visitor_hash" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </div>
+                </button>
+
+                <!-- Expanded Details -->
+                @if (expandedVisitor() === visitor.visitor_hash) {
+                  <div class="border-t border-(--color-border-primary) p-4 space-y-3 bg-(--color-bg-primary)/20">
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-sm">
+                      <div>
+                        <p class="text-xs text-(--color-text-muted)">{{ 'analytics.firstVisit' | translate }}</p>
+                        <p class="text-(--color-text-primary) font-medium">{{ visitor.first_visit | date: 'mediumDate' }}</p>
+                      </div>
+                      <div>
+                        <p class="text-xs text-(--color-text-muted)">{{ 'analytics.lastVisit' | translate }}</p>
+                        <p class="text-(--color-text-primary) font-medium">{{ visitor.last_visit | date: 'mediumDate' }}</p>
+                      </div>
+                      <div>
+                        <p class="text-xs text-(--color-text-muted)">{{ 'analytics.source' | translate }}</p>
+                        <p class="text-(--color-text-primary) font-medium">
+                          @if (visitor.referrer_sources.length) {
+                            {{ visitor.referrer_sources.join(', ') }}
+                          } @else {
+                            {{ 'analytics.directVisit' | translate }}
+                          }
+                        </p>
+                      </div>
+                      <div>
+                        <p class="text-xs text-(--color-text-muted)">{{ 'analytics.uniquePagesCount' | translate }}</p>
+                        <p class="text-(--color-text-primary) font-medium">{{ visitor.unique_pages_visited.length }}</p>
+                      </div>
+                    </div>
+
+                    <!-- Pages visited -->
+                    @if (visitor.unique_pages_visited.length) {
+                      <div>
+                        <p class="text-xs text-(--color-text-muted) mb-2">{{ 'analytics.pagesExplored' | translate }}</p>
+                        <div class="flex flex-wrap gap-1.5">
+                          @for (page of visitor.unique_pages_visited; track page) {
+                            <span class="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium bg-(--color-bg-secondary) text-(--color-text-primary) border border-(--color-border-primary)">
+                              {{ formatPagePath(page) }}
+                            </span>
+                          }
+                        </div>
+                      </div>
+                    }
+                  </div>
+                }
+              </div>
+            }
+          } @else {
+            <!-- Empty state -->
+            <div class="bg-(--color-bg-secondary) rounded-xl p-10 border border-(--color-border-primary) text-center">
+              <svg class="w-12 h-12 mx-auto text-(--color-text-muted) mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
+              </svg>
+              <p class="text-(--color-text-muted)">
+                @if (hasActiveVisitorFilters()) {
+                  {{ 'analytics.noVisitorsFiltered' | translate }}
+                } @else {
+                  {{ 'analytics.noVisitors' | translate }}
+                }
+              </p>
             </div>
           }
         </div>
