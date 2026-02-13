@@ -60,6 +60,8 @@ export class PortfolioDataService {
   private skillUsageMap = new Map<string, SkillUsage[]>();
   /** Map: "sourceType:sourceId" → content sections */
   private contentSectionMap = new Map<string, ContentSection[]>();
+  /** Map: "sourceType:sourceId" → documents */
+  private documentMap = new Map<string, Document[]>();
 
   currentLang = computed(() => this.languageService.currentLanguageCode());
 
@@ -81,6 +83,7 @@ export class PortfolioDataService {
       this.loadAllImages(),
       this.loadAllSkillUsages(),
       this.loadAllContentSections(),
+      this.loadAllDocuments(),
     ]);
     this.loading.set(false);
     this.initialized = true;
@@ -390,6 +393,26 @@ export class PortfolioDataService {
     }
   }
 
+  /** Bulk-load all non-archived documents and index by source */
+  private async loadAllDocuments(): Promise<void> {
+    const { data } = await this.supabase
+      .from('document')
+      .select('*, language:language(*), translations:document_translation(*, language:language(*))')
+      .eq('is_archived', false)
+      .order('position', { ascending: true });
+    if (data) {
+      for (const doc of data as Document[]) {
+        if (doc.source_type && doc.source_id != null) {
+          const key = `${doc.source_type}:${doc.source_id}`;
+          if (!this.documentMap.has(key)) {
+            this.documentMap.set(key, []);
+          }
+          this.documentMap.get(key)!.push(doc);
+        }
+      }
+    }
+  }
+
   /** Get ALL images for an entity */
   getAllImages(sourceType: SourceType, sourceId: number): Image[] {
     return this.allImagesMap.get(`${sourceType}:${sourceId}`) ?? [];
@@ -403,6 +426,17 @@ export class PortfolioDataService {
   /** Get sub-projects for a parent project */
   getSubProjects(parentId: number): Project[] {
     return this.allProjects().filter(p => p.parent_project_id === parentId);
+  }
+
+  /** Get projects linked to a source entity (e.g., competition, event, experience) */
+  getProjectsBySource(sourceType: SourceType, sourceId: number): Project[] {
+    // Handle DB inconsistency: competitions table uses plural 'competitions' as source_type
+    const possibleTypes: string[] = [sourceType];
+    if (sourceType === 'competition') possibleTypes.push('competitions');
+
+    return this.allProjects().filter(
+      p => possibleTypes.includes(p.source_type as string) && p.source_id === sourceId && !p.is_archived
+    );
   }
 
   /** Find an experience by ID */
@@ -433,6 +467,23 @@ export class PortfolioDataService {
   /** Get content sections for an entity */
   getContentSections(sourceType: SourceType, sourceId: number): ContentSection[] {
     return this.contentSectionMap.get(`${sourceType}:${sourceId}`) ?? [];
+  }
+
+  /** Get documents for an entity */
+  getDocuments(sourceType: SourceType, sourceId: number): Document[] {
+    return this.documentMap.get(`${sourceType}:${sourceId}`) ?? [];
+  }
+
+  /** Get translated label for a document (falls back to doc.label or file_name) */
+  getDocumentLabel(doc: Document): string {
+    const translation = getTranslation(doc.translations ?? [], this.currentLang());
+    return translation?.label || doc.label || doc.file_name || '';
+  }
+
+  /** Get translated description for a document */
+  getDocumentDescription(doc: Document): string {
+    const translation = getTranslation(doc.translations ?? [], this.currentLang());
+    return translation?.description || '';
   }
 
   /** Get translated content section title */
@@ -479,6 +530,50 @@ export class PortfolioDataService {
   /** Get skill names grouped by category (only skills that are actually used) */
   getGroupedSkillNames(): { category: string; names: string[] }[] {
     const usedNames = new Set(this.getAllSkillNames());
+    const groups: { category: string; names: string[] }[] = [];
+
+    for (const cat of this.skillCategories()) {
+      const categoryName = this.getCategoryName(cat);
+      const names: string[] = [];
+      for (const skill of cat.skills) {
+        const translation = getTranslation(skill.translations as any[], this.currentLang());
+        const skillName = (translation as any)?.name;
+        if (skillName && usedNames.has(skillName)) {
+          names.push(skillName);
+          usedNames.delete(skillName);
+        }
+      }
+      if (names.length > 0) {
+        groups.push({ category: categoryName, names: names.sort() });
+      }
+    }
+
+    if (usedNames.size > 0) {
+      groups.push({ category: 'Other', names: Array.from(usedNames).sort() });
+    }
+
+    return groups;
+  }
+
+  /** Get all unique skill names used by a specific source type */
+  getAllSkillNamesBySourceType(sourceType: SourceType): string[] {
+    const names = new Set<string>();
+    for (const [key, usages] of this.skillUsageMap.entries()) {
+      if (key.startsWith(`${sourceType}:`)) {
+        for (const usage of usages) {
+          const name = this.getSkillName(usage);
+          if (name) names.add(name);
+        }
+      }
+    }
+    return Array.from(names).sort();
+  }
+
+  /** Get skill names grouped by category, filtered to only a specific source type */
+  getGroupedSkillNamesBySourceType(sourceType: SourceType): { category: string; names: string[] }[] {
+    const usedNames = new Set(this.getAllSkillNamesBySourceType(sourceType));
+    if (usedNames.size === 0) return [];
+
     const groups: { category: string; names: string[] }[] = [];
 
     for (const cat of this.skillCategories()) {

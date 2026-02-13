@@ -7,7 +7,7 @@ import { TranslateService } from '@core/services/translate.service';
 import { TranslatePipe } from '@shared/pipes/translate.pipe';
 import { PortfolioContentSectionsComponent } from '../components/portfolio-content-sections/portfolio-content-sections.component';
 import { ImageGalleryComponent } from '@shared/components/image-gallery/image-gallery.component';
-import { Event } from '@core/models';
+import { Event, Project, Document } from '@core/models';
 
 @Component({
   selector: 'app-portfolio-event-detail',
@@ -23,6 +23,8 @@ export class PortfolioEventDetailComponent implements OnInit {
 
   event = signal<Event | null>(null);
   images = signal<import('@core/models').Image[]>([]);
+  relatedProjects = signal<Project[]>([]);
+  documents = signal<Document[]>([]);
 
   async ngOnInit(): Promise<void> {
     await this.data.initialize();
@@ -32,6 +34,8 @@ export class PortfolioEventDetailComponent implements OnInit {
       if (evt) {
         this.event.set(evt);
         this.images.set(this.data.getAllImages('event', id));
+        this.relatedProjects.set(this.data.getProjectsBySource('event', id));
+        this.documents.set(this.data.getDocuments('event', id));
         this.updateSeo(evt);
       }
     }

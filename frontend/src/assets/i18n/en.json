@@ -471,7 +471,11 @@
     "errorType": "File type not allowed",
     "errorSize": "File is too large. Maximum 20MB.",
     "errorUpload": "Error uploading document. Please try again.",
-    "errorDelete": "Error deleting document."
+    "errorDelete": "Error deleting document.",
+    "labelPlaceholder": "Label (e.g. Certificate, Diploma...)",
+    "descriptionPlaceholder": "Description (optional)",
+    "editTranslations": "Edit translations",
+    "saveTranslations": "Save"
   },
   "confirmDialog": {
     "defaultTitle": "Are you sure?",
@@ -526,6 +530,12 @@
     "about": "About",
     "gallery": "Gallery",
     "skillsUsed": "Skills Used",
+    "relatedProjects": "Related Projects",
+    "documents": "Documents",
+    "viewDocument": "View Document",
+    "downloadDocument": "Download",
+    "documentLabel": "Document Label",
+    "documentDescription": "Document Description",
     "noImages": "No images available",
     "details": {
       "project": "Project Details",

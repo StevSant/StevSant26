@@ -7,7 +7,7 @@ import { TranslateService } from '@core/services/translate.service';
 import { TranslatePipe } from '@shared/pipes/translate.pipe';
 import { PortfolioContentSectionsComponent } from '../components/portfolio-content-sections/portfolio-content-sections.component';
 import { ImageGalleryComponent } from '@shared/components/image-gallery/image-gallery.component';
-import { Competition } from '@core/models';
+import { Competition, Project, Document } from '@core/models';
 
 @Component({
   selector: 'app-portfolio-competition-detail',
@@ -23,6 +23,8 @@ export class PortfolioCompetitionDetailComponent implements OnInit {
 
   competition = signal<Competition | null>(null);
   images = signal<import('@core/models').Image[]>([]);
+  relatedProjects = signal<Project[]>([]);
+  documents = signal<Document[]>([]);
 
   async ngOnInit(): Promise<void> {
     await this.data.initialize();
@@ -32,6 +34,8 @@ export class PortfolioCompetitionDetailComponent implements OnInit {
       if (comp) {
         this.competition.set(comp);
         this.images.set(this.data.getAllImages('competition', id));
+        this.relatedProjects.set(this.data.getProjectsBySource('competition', id));
+        this.documents.set(this.data.getDocuments('competition', id));
         this.updateSeo(comp);
       }
     }

@@ -27,7 +27,7 @@ export class PortfolioEventsComponent implements OnInit {
   });
 
   skillFilterGroups = computed<FilterOptionGroup[]>(() => {
-    return this.data.getGroupedSkillNames().map(g => ({
+    return this.data.getGroupedSkillNamesBySourceType('event').map(g => ({
       label: g.category,
       options: g.names.map(n => ({ label: n, value: n })),
     }));

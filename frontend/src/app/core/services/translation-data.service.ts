@@ -306,7 +306,7 @@ export class TranslationDataService {
   async getDocumentsBySource(sourceType: string, sourceId: number) {
     return this.client.client
       .from('document')
-      .select('*')
+      .select('*, translations:document_translation(*, language:language(*))')
       .eq('source_type', sourceType)
       .eq('source_id', sourceId)
       .eq('is_archived', false)

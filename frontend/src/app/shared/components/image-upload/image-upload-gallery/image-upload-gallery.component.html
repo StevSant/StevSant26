@@ -2,10 +2,11 @@
 @if (uploadedImages().length > 0) {
   <div
     cdkDropList
+    cdkDropListOrientation="mixed"
     (cdkDropListDropped)="onDropUploaded($event)"
     class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"
   >
-    @for (img of uploadedImages(); track img.path) {
+    @for (img of uploadedImages(); track img.path; let i = $index) {
       <div
         cdkDrag
         class="relative group rounded-lg overflow-hidden bg-(--color-bg-tertiary) cursor-grab active:cursor-grabbing"
@@ -15,6 +16,12 @@
           *cdkDragPlaceholder
           class="w-full h-32 rounded-lg border-2 border-dashed border-(--color-accent) bg-(--color-accent)/10"
         ></div>
+        <!-- Position badge -->
+        <div
+          class="absolute top-2 left-2 z-10 w-6 h-6 rounded-full bg-black/60 text-white text-xs font-bold flex items-center justify-center backdrop-blur-sm"
+        >
+          {{ i + 1 }}
+        </div>
         <img [src]="img.url" [alt]="img.alt || 'Uploaded image'" class="w-full h-32 object-cover" />
         <div
           class="absolute inset-0 bg-(--color-overlay) opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2"
@@ -59,10 +66,11 @@
     <p class="text-sm text-(--color-text-muted)">Imágenes guardadas:</p>
     <div
       cdkDropList
+      cdkDropListOrientation="mixed"
       (cdkDropListDropped)="onDropExisting($event)"
       class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"
     >
-      @for (img of existingImages(); track img.id) {
+      @for (img of existingImages(); track img.id; let i = $index) {
         <div
           cdkDrag
           class="relative group rounded-lg overflow-hidden bg-(--color-bg-tertiary) cursor-grab active:cursor-grabbing"
@@ -72,6 +80,12 @@
             *cdkDragPlaceholder
             class="w-full h-32 rounded-lg border-2 border-dashed border-(--color-accent) bg-(--color-accent)/10"
           ></div>
+          <!-- Position badge -->
+          <div
+            class="absolute top-2 left-2 z-10 w-6 h-6 rounded-full bg-black/60 text-white text-xs font-bold flex items-center justify-center backdrop-blur-sm"
+          >
+            {{ i + 1 }}
+          </div>
           <img
             [src]="img.url"
             [alt]="img.alt_text || 'Saved image'"

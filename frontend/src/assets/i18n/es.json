@@ -469,7 +469,11 @@
     "errorType": "Tipo de archivo no permitido",
     "errorSize": "El archivo es demasiado grande. Máximo 20MB.",
     "errorUpload": "Error al subir el documento. Por favor intenta de nuevo.",
-    "errorDelete": "Error al eliminar el documento."
+    "errorDelete": "Error al eliminar el documento.",
+    "labelPlaceholder": "Etiqueta (ej. Certificado, Diploma...)",
+    "descriptionPlaceholder": "Descripción (opcional)",
+    "editTranslations": "Editar traducciones",
+    "saveTranslations": "Guardar"
   },
   "confirmDialog": {
     "defaultTitle": "¿Estás seguro?",
@@ -524,6 +528,12 @@
     "about": "Acerca de",
     "gallery": "Galería",
     "skillsUsed": "Habilidades Utilizadas",
+    "relatedProjects": "Proyectos Relacionados",
+    "documents": "Documentos",
+    "viewDocument": "Ver Documento",
+    "downloadDocument": "Descargar",
+    "documentLabel": "Etiqueta del Documento",
+    "documentDescription": "Descripción del Documento",
     "noImages": "No hay imágenes disponibles",
     "details": {
       "project": "Detalle del Proyecto",

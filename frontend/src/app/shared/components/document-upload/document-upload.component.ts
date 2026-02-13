@@ -1,11 +1,22 @@
 import { Component, input, output, signal, inject, effect } from '@angular/core';
 import { NgClass } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { SupabaseService } from '@core/services/supabase.service';
 import { TranslateService } from '@core/services/translate.service';
-import { SourceType } from '@core/models';
+import { LanguageService } from '@core/services/language.service';
+import { SourceType, Language } from '@core/models';
 import { MAX_DOCUMENT_SIZE_BYTES } from '@shared/config/constants';
 import { TranslatePipe } from '@shared/pipes/translate.pipe';
 import { LoggerService } from '@core/services/logger.service';
+
+export interface ExistingDocumentTranslation {
+  id?: number;
+  document_id?: number;
+  language_id?: number;
+  label: string | null;
+  description: string | null;
+  language?: Language;
+}
 
 export interface ExistingDocument {
   id: number;
@@ -14,17 +25,19 @@ export interface ExistingDocument {
   file_type: string | null;
   file_size: number | null;
   label: string | null;
+  translations?: ExistingDocumentTranslation[];
 }
 
 @Component({
   selector: 'app-document-upload',
   standalone: true,
-  imports: [NgClass, TranslatePipe],
+  imports: [NgClass, FormsModule, TranslatePipe],
   templateUrl: './document-upload.component.html',
 })
 export class DocumentUploadComponent {
   private supabase = inject(SupabaseService);
   private t = inject(TranslateService);
+  private languageService = inject(LanguageService);
   private logger = inject(LoggerService);
 
   // Signal inputs
@@ -43,6 +56,15 @@ export class DocumentUploadComponent {
   isDragging = signal(false);
   uploadedDocuments = signal<{ path: string; url: string; file_name: string; file_type: string; file_size: number }[]>([]);
   loadedExistingDocuments = signal<ExistingDocument[]>([]);
+
+  // Translation editing
+  expandedDocId = signal<number | null>(null);
+  editingTranslations = signal<Map<string, { label: string; description: string }>>(new Map());
+  savingTranslation = signal(false);
+
+  get supportedLanguages(): Language[] {
+    return this.languageService.supportedLanguages();
+  }
 
   private readonly MAX_SIZE = MAX_DOCUMENT_SIZE_BYTES;
   private readonly ALLOWED_TYPES = [
@@ -173,6 +195,75 @@ export class DocumentUploadComponent {
 
   openDocument(url: string): void {
     window.open(url, '_blank');
+  }
+
+  toggleTranslationEdit(doc: ExistingDocument): void {
+    if (this.expandedDocId() === doc.id) {
+      this.expandedDocId.set(null);
+      return;
+    }
+
+    // Initialize editing map from existing translations
+    const map = new Map<string, { label: string; description: string }>();
+    for (const lang of this.supportedLanguages) {
+      const existing = doc.translations?.find(t => t.language?.code === lang.code);
+      map.set(lang.code, {
+        label: existing?.label || '',
+        description: existing?.description || '',
+      });
+    }
+    this.editingTranslations.set(map);
+    this.expandedDocId.set(doc.id);
+  }
+
+  getEditingTranslation(langCode: string): { label: string; description: string } {
+    return this.editingTranslations().get(langCode) || { label: '', description: '' };
+  }
+
+  updateEditingTranslation(langCode: string, field: 'label' | 'description', value: string): void {
+    const map = new Map(this.editingTranslations());
+    const current = map.get(langCode) || { label: '', description: '' };
+    map.set(langCode, { ...current, [field]: value });
+    this.editingTranslations.set(map);
+  }
+
+  async saveDocumentTranslations(docId: number): Promise<void> {
+    this.savingTranslation.set(true);
+    try {
+      for (const [langCode, fields] of this.editingTranslations()) {
+        await this.supabase.upsertTranslation(
+          'document_translation',
+          'document_id',
+          docId,
+          { language: langCode, label: fields.label || null, description: fields.description || null }
+        );
+      }
+
+      // Update the local existing documents to reflect saved translations
+      this.loadedExistingDocuments.update(docs =>
+        docs.map(d => {
+          if (d.id !== docId) return d;
+          const updatedTranslations: ExistingDocumentTranslation[] = [];
+          for (const [langCode, fields] of this.editingTranslations()) {
+            const lang = this.supportedLanguages.find(l => l.code === langCode);
+            updatedTranslations.push({
+              document_id: docId,
+              label: fields.label || null,
+              description: fields.description || null,
+              language: lang,
+            });
+          }
+          return { ...d, translations: updatedTranslations };
+        })
+      );
+
+      this.expandedDocId.set(null);
+    } catch (err) {
+      this.error.set(this.t.instant('errors.saveFailed'));
+      this.logger.error('Error saving document translations:', err);
+    } finally {
+      this.savingTranslation.set(false);
+    }
   }
 
   getFileIcon(fileType: string | null): string {

@@ -27,7 +27,7 @@ export class PortfolioProjectsComponent implements OnInit {
   });
 
   skillFilterGroups = computed<FilterOptionGroup[]>(() => {
-    return this.data.getGroupedSkillNames().map(g => ({
+    return this.data.getGroupedSkillNamesBySourceType('project').map(g => ({
       label: g.category,
       options: g.names.map(n => ({ label: n, value: n })),
     }));
