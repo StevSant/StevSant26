@@ -168,6 +168,11 @@ const devRoutes: Routes = [
     pathMatch: 'full' as const,
   },
   {
+    path: 'from/:source',
+    loadComponent: () =>
+      import('./features/portfolio/referrer-redirect/referrer-redirect.component').then((m) => m.ReferrerRedirectComponent),
+  },
+  {
     path: 'portfolio',
     loadComponent: () =>
       import('./features/portfolio/portfolio-layout/portfolio-layout.component').then((m) => m.PortfolioLayoutComponent),
@@ -193,6 +198,11 @@ const devRoutes: Routes = [
 ];
 
 const prodRoutes: Routes = [
+  {
+    path: 'from/:source',
+    loadComponent: () =>
+      import('./features/portfolio/referrer-redirect/referrer-redirect.component').then((m) => m.ReferrerRedirectComponent),
+  },
   portfolioRoute,
   {
     path: 'login',

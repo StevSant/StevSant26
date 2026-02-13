@@ -52,17 +52,33 @@ export class AnalyticsService {
   private currentPageViewId: number | null = null;
 
   constructor() {
-    // Capture ?ref= or ?utm_source= immediately before Angular router strips them
+    // Capture referrer source immediately before Angular router strips them
+    // Priority: /from/:source path > ?ref= query param > ?utm_source= > previously stored
     if (isPlatformBrowser(this.platformId)) {
       try {
-        const params = new URLSearchParams(window.location.search);
-        const ref = params.get('ref') || params.get('utm_source');
-        if (ref) {
-          this.capturedRef = ref;
-          sessionStorage.setItem('analytics_ref', ref);
+        // 1. Check /from/:source path (most reliable — platforms can't strip paths)
+        const pathMatch = window.location.pathname.match(/^\/from\/([^/]+)/);
+        if (pathMatch) {
+          const sourceMap: Record<string, string> = {
+            linkedin: 'linkedin.com', github: 'github.com', indeed: 'indeed.com',
+            glassdoor: 'glassdoor.com', twitter: 'x.com', x: 'x.com',
+            instagram: 'instagram.com', facebook: 'facebook.com',
+            cv: 'cv', resume: 'resume', curriculum: 'curriculum',
+          };
+          const raw = decodeURIComponent(pathMatch[1]).toLowerCase();
+          this.capturedRef = sourceMap[raw] || pathMatch[1];
+          sessionStorage.setItem('analytics_ref', this.capturedRef);
         } else {
-          // Check if we stored it from a previous redirect
-          this.capturedRef = sessionStorage.getItem('analytics_ref');
+          // 2. Check ?ref= / ?utm_source= query params
+          const params = new URLSearchParams(window.location.search);
+          const ref = params.get('ref') || params.get('utm_source');
+          if (ref) {
+            this.capturedRef = ref;
+            sessionStorage.setItem('analytics_ref', ref);
+          } else {
+            // 3. Check if we stored it from a previous redirect
+            this.capturedRef = sessionStorage.getItem('analytics_ref');
+          }
         }
       } catch {
         // Ignore

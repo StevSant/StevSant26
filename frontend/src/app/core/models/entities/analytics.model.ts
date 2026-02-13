@@ -109,8 +109,8 @@ export interface UniqueVisitor {
   is_potential_recruiter: boolean;
   referrer_sources: string[];
   unique_pages_visited: string[];
-  session_history: VisitorSessionDetail[];
-  page_time_breakdown: PageTimeBreakdown[];
+  session_history: VisitorSessionDetail[] | null;
+  page_time_breakdown: PageTimeBreakdown[] | null;
 }
 
 /**
@@ -124,7 +124,7 @@ export interface VisitorSessionDetail {
   session_device_type: string | null;
   session_page_views: number;
   session_duration: number;
-  pages: SessionPageView[];
+  pages: SessionPageView[] | null;
 }
 
 /**

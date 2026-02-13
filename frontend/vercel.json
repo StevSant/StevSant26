@@ -1,5 +1,6 @@
 {
   "rewrites": [
+    { "source": "/from/:source", "destination": "/index.csr.html" },
     { "source": "/(.*)", "destination": "/index.csr.html" }
   ]
 }

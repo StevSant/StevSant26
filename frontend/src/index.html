@@ -47,10 +47,33 @@
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=block"
     />
-    <!-- Capture ?ref= / ?utm_source= before Angular router strips query params -->
+    <!-- Capture referrer source before Angular router strips query params or redirects /from/:source -->
     <script>
       (function () {
         try {
+          // 1. Check /from/:source path (most reliable — LinkedIn can't strip paths)
+          var match = window.location.pathname.match(/^\/from\/([^/]+)/);
+          if (match) {
+            var src = decodeURIComponent(match[1]);
+            var map = {
+              linkedin: 'linkedin.com',
+              github: 'github.com',
+              indeed: 'indeed.com',
+              glassdoor: 'glassdoor.com',
+              twitter: 'x.com',
+              x: 'x.com',
+              instagram: 'instagram.com',
+              facebook: 'facebook.com',
+              cv: 'cv',
+              resume: 'resume',
+              curriculum: 'curriculum',
+            };
+            var resolved = map[src.toLowerCase()] || src;
+            document.cookie =
+              'analytics_ref=' + encodeURIComponent(resolved) + ';path=/;max-age=300;SameSite=Lax';
+            return;
+          }
+          // 2. Fallback: check ?ref= / ?utm_source= query params
           var p = new URLSearchParams(window.location.search);
           var r = p.get('ref') || p.get('utm_source');
           if (r) {
