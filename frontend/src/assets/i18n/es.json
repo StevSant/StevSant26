@@ -810,6 +810,9 @@
     "lastVisit": "Última visita",
     "uniquePagesCount": "Páginas únicas",
     "pagesExplored": "Páginas exploradas",
+    "visitHistory": "Historial de Visitas",
+    "timePerPage": "Tiempo por Página",
+    "totalTime": "Tiempo Total",
     "noVisitors": "Aún no hay visitantes",
     "noVisitorsFiltered": "Ningún visitante coincide con los filtros actuales"
   }

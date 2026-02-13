@@ -2,7 +2,7 @@ import { Component, OnInit, signal, inject, computed } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AnalyticsService } from '@core/services/analytics.service';
-import { AnalyticsSummary, UniqueVisitor } from '@core/models';
+import { AnalyticsSummary, UniqueVisitor, VisitorSessionDetail } from '@core/models';
 import { TranslatePipe } from '@shared/pipes/translate.pipe';
 
 @Component({
@@ -28,6 +28,7 @@ export class AnalyticsComponent implements OnInit {
   visitorFilterCountry = signal<string | null>(null);
   visitorFilterReferrer = signal<string | null>(null);
   expandedVisitor = signal<string | null>(null);
+  expandedVisitorTab = signal<'history' | 'pages'>('history');
 
   // Computed values for display
   avgViewsPerVisitor = computed(() => {
@@ -143,7 +144,23 @@ export class AnalyticsComponent implements OnInit {
   }
 
   toggleVisitorExpand(hash: string): void {
-    this.expandedVisitor.set(this.expandedVisitor() === hash ? null : hash);
+    if (this.expandedVisitor() === hash) {
+      this.expandedVisitor.set(null);
+    } else {
+      this.expandedVisitor.set(hash);
+      this.expandedVisitorTab.set('history');
+    }
+  }
+
+  setVisitorDetailTab(tab: 'history' | 'pages'): void {
+    this.expandedVisitorTab.set(tab);
+  }
+
+  /**
+   * Compute total duration for a session from its pages.
+   */
+  getSessionTotalDuration(session: VisitorSessionDetail): number {
+    return session.session_duration || 0;
   }
 
   hasActiveVisitorFilters(): boolean {

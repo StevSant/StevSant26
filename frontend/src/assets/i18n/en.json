@@ -812,6 +812,9 @@
     "lastVisit": "Last visit",
     "uniquePagesCount": "Unique pages",
     "pagesExplored": "Pages explored",
+    "visitHistory": "Visit History",
+    "timePerPage": "Time per Page",
+    "totalTime": "Total Time",
     "noVisitors": "No visitors yet",
     "noVisitorsFiltered": "No visitors match the current filters"
   }

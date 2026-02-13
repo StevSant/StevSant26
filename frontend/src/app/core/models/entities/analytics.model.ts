@@ -109,4 +109,40 @@ export interface UniqueVisitor {
   is_potential_recruiter: boolean;
   referrer_sources: string[];
   unique_pages_visited: string[];
+  session_history: VisitorSessionDetail[];
+  page_time_breakdown: PageTimeBreakdown[];
+}
+
+/**
+ * Individual session detail within a visitor's history
+ */
+export interface VisitorSessionDetail {
+  id: string;
+  started_at: string;
+  last_seen_at: string;
+  referrer_source: string | null;
+  session_device_type: string | null;
+  session_page_views: number;
+  session_duration: number;
+  pages: SessionPageView[];
+}
+
+/**
+ * A single page view within a session
+ */
+export interface SessionPageView {
+  page_path: string;
+  page_title: string | null;
+  created_at: string;
+  duration_seconds: number;
+}
+
+/**
+ * Per-page time breakdown across all sessions for a visitor
+ */
+export interface PageTimeBreakdown {
+  page_path: string;
+  visit_count: number;
+  total_time: number;
+  avg_time: number;
 }
