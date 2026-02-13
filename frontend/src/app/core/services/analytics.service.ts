@@ -31,6 +31,43 @@ const RECRUITER_INTEREST_PAGES = [
 ];
 
 /**
+ * Map of known redirect/tracker domains to their actual source platform.
+ * Platforms like LinkedIn wrap outbound links through tracker domains
+ * (e.g., lnkd.in, l.linkedin.com) which strips the original referrer.
+ */
+const REFERRER_DOMAIN_MAP: Record<string, string> = {
+  // LinkedIn
+  'lnkd.in': 'linkedin.com',
+  'l.linkedin.com': 'linkedin.com',
+  'linkedin.com': 'linkedin.com',
+  // Twitter/X
+  't.co': 'x.com',
+  'x.com': 'x.com',
+  'twitter.com': 'x.com',
+  // Facebook / Meta
+  'l.facebook.com': 'facebook.com',
+  'lm.facebook.com': 'facebook.com',
+  'facebook.com': 'facebook.com',
+  'l.instagram.com': 'instagram.com',
+  'instagram.com': 'instagram.com',
+  // Google
+  'google.com': 'google.com',
+  'google.co': 'google.com',
+  // Indeed
+  'indeed.com': 'indeed.com',
+  // GitHub
+  'github.com': 'github.com',
+  // Glassdoor
+  'glassdoor.com': 'glassdoor.com',
+};
+
+/** Duration heartbeat interval in milliseconds (30 seconds) */
+const DURATION_HEARTBEAT_MS = 30_000;
+
+/** First heartbeat delay — save duration quickly in case user leaves early (5 seconds) */
+const FIRST_HEARTBEAT_MS = 5_000;
+
+/**
  * Analytics service for tracking portfolio visitors and retrieving dashboard metrics.
  *
  * Responsibilities:
@@ -50,6 +87,9 @@ export class AnalyticsService {
   private currentPageStartTime: number = 0;
   private currentPagePath: string | null = null;
   private currentPageViewId: number | null = null;
+  private heartbeatInterval: ReturnType<typeof setInterval> | null = null;
+  private heartbeatTimeout: ReturnType<typeof setTimeout> | null = null;
+  private lastHeartbeatDuration: number = 0;
 
   constructor() {
     // Capture referrer source immediately before Angular router strips them
@@ -176,6 +216,7 @@ export class AnalyticsService {
 
     // Update duration of previous page before tracking new one
     await this.updateCurrentPageDuration();
+    this.stopHeartbeat();
 
     // Strip query params and fragments from page path
     const cleanPath = pagePath.split('?')[0].split('#')[0] || '/';
@@ -191,7 +232,11 @@ export class AnalyticsService {
 
       this.currentPagePath = cleanPath;
       this.currentPageStartTime = Date.now();
+      this.lastHeartbeatDuration = 0;
       this.currentPageViewId = insertedRows?.[0]?.id ?? null;
+
+      // Start periodic heartbeat to keep duration updated
+      this.startHeartbeat();
 
       // Update page count and check recruiter pattern
       const count = this.getStoredPageCount() + 1;
@@ -256,6 +301,8 @@ export class AnalyticsService {
    * Finalize duration tracking when user leaves. Called from component OnDestroy.
    */
   finalizeSession(): void {
+    this.stopHeartbeat();
+
     if (!this.sessionId || !this.currentPagePath || !this.currentPageStartTime) return;
 
     const durationSeconds = Math.round((Date.now() - this.currentPageStartTime) / 1000);
@@ -263,30 +310,150 @@ export class AnalyticsService {
 
     // Use fetch with keepalive for reliable delivery on page unload
     try {
-      let url: string;
-      if (this.currentPageViewId) {
-        // Update by known row ID — reliable
-        url = `${environment.supabaseUrl}/rest/v1/page_view?id=eq.${this.currentPageViewId}`;
-      } else {
-        // Fallback: match by session + path (may update the wrong row if duplicates exist)
-        url = `${environment.supabaseUrl}/rest/v1/page_view?session_id=eq.${this.sessionId}&page_path=eq.${encodeURIComponent(this.currentPagePath)}`;
-      }
+      const url = this.buildPageViewUpdateUrl();
       const body = JSON.stringify({ duration_seconds: durationSeconds });
-      const headers: Record<string, string> = {
-        'Content-Type': 'application/json',
-        'apikey': environment.supabaseKey,
-        'Authorization': `Bearer ${environment.supabaseKey}`,
-        'Prefer': 'return=minimal',
-      };
 
       fetch(url, {
         method: 'PATCH',
-        headers,
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': environment.supabaseKey,
+          'Authorization': `Bearer ${environment.supabaseKey}`,
+          'Prefer': 'return=minimal',
+        },
         body,
         keepalive: true,
       }).catch(() => {});
     } catch {
       // Silently fail
+    }
+  }
+
+  /**
+   * Setup visibility change and pagehide listeners for more reliable
+   * duration tracking, especially on mobile where beforeunload is unreliable.
+   * Called once from the portfolio layout component.
+   */
+  setupPageLifecycleListeners(): void {
+    if (!isPlatformBrowser(this.platformId)) return;
+
+    // visibilitychange fires when user switches tabs, minimizes browser, etc.
+    // More reliable than beforeunload on mobile.
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'hidden') {
+        this.flushCurrentDuration();
+      } else if (document.visibilityState === 'visible') {
+        // Resume heartbeat when page becomes visible again
+        this.startHeartbeat();
+      }
+    });
+
+    // pagehide is the last reliable event before a page is discarded (iOS Safari)
+    window.addEventListener('pagehide', () => {
+      this.flushCurrentDuration();
+    });
+  }
+
+  /**
+   * Flush the current page duration to the DB using fetch+keepalive.
+   * Called from visibility/lifecycle events — must be fast and non-blocking.
+   */
+  private flushCurrentDuration(): void {
+    this.stopHeartbeat();
+
+    if (!this.sessionId || !this.currentPagePath || !this.currentPageStartTime) return;
+
+    const durationSeconds = Math.round((Date.now() - this.currentPageStartTime) / 1000);
+    if (durationSeconds <= 0 || durationSeconds === this.lastHeartbeatDuration) return;
+
+    try {
+      const url = this.buildPageViewUpdateUrl();
+      const body = JSON.stringify({ duration_seconds: durationSeconds });
+
+      fetch(url, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': environment.supabaseKey,
+          'Authorization': `Bearer ${environment.supabaseKey}`,
+          'Prefer': 'return=minimal',
+        },
+        body,
+        keepalive: true,
+      }).catch(() => {});
+
+      this.lastHeartbeatDuration = durationSeconds;
+    } catch {
+      // Silently fail
+    }
+  }
+
+  /**
+   * Build the PostgREST URL for updating the current page view's duration.
+   */
+  private buildPageViewUpdateUrl(): string {
+    if (this.currentPageViewId) {
+      return `${environment.supabaseUrl}/rest/v1/page_view?id=eq.${this.currentPageViewId}`;
+    }
+    return `${environment.supabaseUrl}/rest/v1/page_view?session_id=eq.${this.sessionId}&page_path=eq.${encodeURIComponent(this.currentPagePath!)}`;
+  }
+
+  // ==================== HEARTBEAT ====================
+
+  /**
+   * Start duration heartbeat: fires once quickly (5s) to capture short visits,
+   * then switches to a 30s periodic interval for long-lived pages.
+   */
+  private startHeartbeat(): void {
+    this.stopHeartbeat();
+
+    if (!this.currentPageViewId || !this.currentPageStartTime) return;
+
+    // First rapid tick — captures users who leave within the first 30 seconds
+    this.heartbeatTimeout = setTimeout(() => {
+      this.heartbeatTick();
+
+      // Then switch to steady 30s interval
+      this.heartbeatInterval = setInterval(() => {
+        this.heartbeatTick();
+      }, DURATION_HEARTBEAT_MS);
+    }, FIRST_HEARTBEAT_MS);
+  }
+
+  /**
+   * Single heartbeat tick — updates the current page view's duration in the DB.
+   */
+  private async heartbeatTick(): Promise<void> {
+    if (!this.currentPageViewId || !this.currentPageStartTime) {
+      this.stopHeartbeat();
+      return;
+    }
+
+    // Only update if page is visible
+    if (document.visibilityState !== 'visible') return;
+
+    const durationSeconds = Math.round((Date.now() - this.currentPageStartTime) / 1000);
+    if (durationSeconds <= 0 || durationSeconds === this.lastHeartbeatDuration) return;
+
+    try {
+      await this.client.client
+        .from('page_view')
+        .update({ duration_seconds: durationSeconds })
+        .eq('id', this.currentPageViewId);
+      this.lastHeartbeatDuration = durationSeconds;
+    } catch {
+      // Silently fail
+    }
+  }
+
+  private stopHeartbeat(): void {
+    if (this.heartbeatTimeout) {
+      clearTimeout(this.heartbeatTimeout);
+      this.heartbeatTimeout = null;
+    }
+    if (this.heartbeatInterval) {
+      clearInterval(this.heartbeatInterval);
+      this.heartbeatInterval = null;
     }
   }
 
@@ -406,15 +573,41 @@ export class AnalyticsService {
 
   /**
    * Extract the source domain from a referrer URL.
+   * Maps known redirect/tracker domains (e.g., lnkd.in → linkedin.com).
    */
   private extractReferrerSource(referrer: string): string | null {
     if (!referrer) return null;
     try {
       const url = new URL(referrer);
-      return url.hostname.replace('www.', '');
+      const hostname = url.hostname.replace('www.', '');
+
+      // Check if this hostname (or any parent domain) is in our known map
+      const mapped = this.mapReferrerDomain(hostname);
+      return mapped || hostname;
     } catch {
       return null;
     }
+  }
+
+  /**
+   * Map a hostname to its known source platform.
+   * Checks the full hostname first, then progressively strips subdomains.
+   * e.g., "l.linkedin.com" → "linkedin.com", "lnkd.in" → "linkedin.com"
+   */
+  private mapReferrerDomain(hostname: string): string | null {
+    // Direct match
+    if (REFERRER_DOMAIN_MAP[hostname]) {
+      return REFERRER_DOMAIN_MAP[hostname];
+    }
+    // Check parent domains (e.g., "sub.example.com" → "example.com")
+    const parts = hostname.split('.');
+    for (let i = 1; i < parts.length - 1; i++) {
+      const parent = parts.slice(i).join('.');
+      if (REFERRER_DOMAIN_MAP[parent]) {
+        return REFERRER_DOMAIN_MAP[parent];
+      }
+    }
+    return null;
   }
 
   /**

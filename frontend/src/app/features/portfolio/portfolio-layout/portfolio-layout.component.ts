@@ -59,6 +59,9 @@ export class PortfolioLayoutComponent implements OnInit, OnDestroy {
       await this.analytics.initSession(ref);
       await this.analytics.trackPageView(this.router.url, document?.title);
 
+      // Setup visibility/pagehide listeners for reliable duration tracking on mobile
+      this.analytics.setupPageLifecycleListeners();
+
       // Track subsequent route navigations
       this.routerSub = this.router.events
         .pipe(filter((e): e is NavigationEnd => e instanceof NavigationEnd))

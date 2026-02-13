@@ -40,6 +40,12 @@ export class ReferrerRedirectComponent implements OnInit {
         cv: 'cv',
         resume: 'resume',
         curriculum: 'curriculum',
+        // Redirect/tracker domain aliases
+        'lnkd.in': 'linkedin.com',
+        'l.linkedin.com': 'linkedin.com',
+        't.co': 'x.com',
+        'l.facebook.com': 'facebook.com',
+        'l.instagram.com': 'instagram.com',
       };
 
       const resolvedSource = sourceMap[source.toLowerCase()] || source;

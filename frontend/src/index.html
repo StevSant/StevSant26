@@ -79,6 +79,28 @@
           if (r) {
             document.cookie =
               'analytics_ref=' + encodeURIComponent(r) + ';path=/;max-age=300;SameSite=Lax';
+            return;
+          }
+          // 3. Detect referrer from document.referrer (map redirect/tracker domains)
+          if (document.referrer) {
+            try {
+              var refHost = new URL(document.referrer).hostname.replace('www.', '');
+              var domainMap = {
+                'lnkd.in': 'linkedin.com',
+                'l.linkedin.com': 'linkedin.com',
+                't.co': 'x.com',
+                'l.facebook.com': 'facebook.com',
+                'lm.facebook.com': 'facebook.com',
+                'l.instagram.com': 'instagram.com',
+              };
+              var mapped = domainMap[refHost];
+              if (mapped) {
+                document.cookie =
+                  'analytics_ref=' +
+                  encodeURIComponent(mapped) +
+                  ';path=/;max-age=300;SameSite=Lax';
+              }
+            } catch (e2) {}
           }
         } catch (e) {}
       })();
