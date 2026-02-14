@@ -133,9 +133,7 @@
                             class="w-5 h-5 object-contain"
                           />
                         }
-                        <span class="text-(--color-text-primary) text-sm font-light">
-                          {{ data.getEntityTranslation(skill, 'name') }}
-                        </mat-icon>
+                        <mat-icon class="text-(--color-text-primary) text-sm font-light">{{ data.getEntityTranslation(skill, 'name') }}</mat-icon>
                       </div>
                       <div class="flex gap-1">
                         @for (filled of data.getStarArray(skill.calculatedLevel); track $index) {

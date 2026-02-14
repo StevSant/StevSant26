@@ -21,8 +21,7 @@
   <!-- Pin Indicator -->
   @if (item().is_pinned) {
     <div class="text-[var(--color-pin)]">
-      <mat-icon class="text-[20px]" style="font-variation-settings: 'FILL' 1" >star</mat-icon
-      >
+      <mat-icon class="text-[20px]" style="font-variation-settings: 'FILL' 1">star</mat-icon>
     </div>
   }
 
@@ -39,7 +38,7 @@
       @if (item().date) {
         <span class="text-[var(--color-text-disabled)] text-xs">{{
           item().date | date: 'mediumDate'
-        }}</mat-icon>
+        }}</span>
       }
       @if (result()) {
         <span
@@ -53,7 +52,10 @@
   <!-- Actions -->
   <div class="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
     <button (click)="pinToggled.emit()" class="icon-btn-pin">
-      <mat-icon class="text-[20px]" [style.font-variation-settings]="item().is_pinned ? '\'FILL\' 1' : '\'FILL\' 0'" >star</mat-icon
+      <mat-icon
+        class="text-[20px]"
+        [style.font-variation-settings]="item().is_pinned ? '\'FILL\' 1' : '\'FILL\' 0'"
+        >star</mat-icon
       >
     </button>
     <a [routerLink]="[item().id]" class="icon-btn-edit">

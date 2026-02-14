@@ -30,7 +30,8 @@ import { MatIcon } from '@angular/material/icon';
     SocialLinksCardComponent,
     ProfileTranslationsCardComponent,
     LocationAvailabilityCardComponent,
-  , MatIcon],
+    MatIcon,
+  ],
   templateUrl: './profile-editor.component.html',
 })
 export class ProfileEditorComponent implements OnInit {

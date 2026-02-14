@@ -21,8 +21,7 @@
   <!-- Pin Indicator -->
   @if (item().is_pinned) {
     <div class="text-[var(--color-pin)]">
-      <mat-icon class="text-[20px]" style="font-variation-settings: 'FILL' 1" >star</mat-icon
-      >
+      <mat-icon class="text-[20px]" style="font-variation-settings: 'FILL' 1">star</mat-icon>
     </div>
   }
 
@@ -41,10 +40,11 @@
               : 'bg-amber-500/10 text-amber-400'
         "
       >
-        <mat-icon class="text-[12px]" [style.font-variation-settings]="'FILL 0'" >{{ getTypeIcon(item().education_type) }}</mat-icon
-        >
+        <mat-icon class="text-[12px]" [style.font-variation-settings]="'FILL 0'">{{
+          getTypeIcon(item().education_type)
+        }}</mat-icon>
         {{ 'educations.types.' + item().education_type | translate }}
-      </mat-icon>
+      </span>
     </div>
     <p class="text-[var(--color-text-muted)] text-sm truncate">{{ item().institution }}</p>
     <p class="text-[var(--color-text-disabled)] text-xs mt-1">
@@ -60,7 +60,10 @@
   <!-- Actions -->
   <div class="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
     <button (click)="pinToggled.emit()" class="icon-btn-pin">
-      <mat-icon class="text-[20px]" [style.font-variation-settings]="item().is_pinned ? '\'FILL\' 1' : '\'FILL\' 0'" >star</mat-icon
+      <mat-icon
+        class="text-[20px]"
+        [style.font-variation-settings]="item().is_pinned ? '\'FILL\' 1' : '\'FILL\' 0'"
+        >star</mat-icon
       >
     </button>
     <a [routerLink]="[item().id]" class="icon-btn-edit">
