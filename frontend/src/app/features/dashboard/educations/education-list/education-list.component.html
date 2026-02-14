@@ -8,27 +8,13 @@
     </div>
     <div class="flex gap-3">
       <button (click)="toggleShowArchived()" class="btn-secondary">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"
-          />
-        </svg>
+        <span class="material-symbols-outlined text-[20px]">inventory_2</span>
         {{
           showArchived() ? ('common.hideArchived' | translate) : ('common.showArchived' | translate)
         }}
       </button>
       <a routerLink="new" class="btn-primary">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M12 4v16m8-8H4"
-          />
-        </svg>
+        <span class="material-symbols-outlined text-[20px]">add</span>
         {{ 'educations.create' | translate }}
       </a>
     </div>
@@ -90,32 +76,13 @@
     </div>
   } @else if (filteredItems().length === 0) {
     <div class="bg-[var(--color-bg-secondary)] rounded-xl p-12 text-center">
-      <svg
-        class="mx-auto h-16 w-16 text-[var(--color-text-disabled)]"
-        fill="none"
-        stroke="currentColor"
-        viewBox="0 0 24 24"
-      >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14zm-4 6v-7.5l4-2.222"
-        />
-      </svg>
+      <span class="material-symbols-outlined text-[64px] mx-auto text-[var(--color-text-disabled)]">school</span>
       <h3 class="mt-4 text-lg font-medium text-[var(--color-text-primary)]">
         {{ 'educations.empty' | translate }}
       </h3>
       <p class="mt-2 text-[var(--color-text-muted)]">{{ 'educations.emptyHint' | translate }}</p>
       <a routerLink="new" class="mt-6 inline-flex items-center gap-2 btn-primary">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M12 4v16m8-8H4"
-          />
-        </svg>
+        <span class="material-symbols-outlined text-[20px]">add</span>
         {{ 'educations.create' | translate }}
       </a>
     </div>

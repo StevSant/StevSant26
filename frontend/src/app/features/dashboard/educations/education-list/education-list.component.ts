@@ -2,7 +2,8 @@ import { Component, OnInit, signal, viewChild, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
-import { SupabaseService } from '@core/services/supabase.service';
+import { TranslationDataService } from '@core/services/translation-data.service';
+import { CrudService } from '@core/services/crud.service';
 import { TranslateService } from '@core/services/translate.service';
 import { Education, EducationTranslation, Image } from '@core/models';
 import { ConfirmDialogComponent } from '@shared/components/confirm-dialog/confirm-dialog.component';
@@ -18,7 +19,8 @@ import { LoggerService } from '@core/services/logger.service';
   templateUrl: './education-list.component.html',
 })
 export class EducationListComponent implements OnInit {
-  private supabase = inject(SupabaseService);
+  private translationData = inject(TranslationDataService);
+  private crudService = inject(CrudService);
   private translateService = inject(TranslateService);
   private logger = inject(LoggerService);
 
@@ -45,7 +47,7 @@ export class EducationListComponent implements OnInit {
   async loadItems(): Promise<void> {
     this.loading.set(true);
     try {
-      const { data, error } = await this.supabase.getAllWithTranslations<Education>(
+      const { data, error } = await this.translationData.getAllWithTranslations<Education>(
         'education',
         'education_translation',
         'position',
@@ -72,7 +74,7 @@ export class EducationListComponent implements OnInit {
   private async loadImages(items: Education[]): Promise<void> {
     if (items.length === 0) return;
     const ids = items.map(i => i.id);
-    const { data } = await this.supabase
+    const { data } = await this.crudService
       .from('image')
       .select('*')
       .eq('source_type', 'education')
@@ -134,19 +136,19 @@ export class EducationListComponent implements OnInit {
     allItems.forEach((item, i) => (item as any).position = i);
     this.items.set(allItems);
     const updates = allItems.map((item, i) => ({ id: item.id, position: i }));
-    try { await this.supabase.updatePositions('education', updates); }
+    try { await this.crudService.updatePositions('education', updates); }
     catch (err) { this.logger.error('Error updating positions:', err); await this.loadItems(); }
   }
 
   async togglePin(item: Education): Promise<void> {
-    try { await this.supabase.togglePin('education', item.id, !item.is_pinned); await this.loadItems(); }
+    try { await this.crudService.togglePin('education', item.id, !item.is_pinned); await this.loadItems(); }
     catch (err) { this.logger.error('Error toggling pin:', err); }
   }
 
   async toggleArchive(item: Education): Promise<void> {
     try {
-      if (item.is_archived) { await this.supabase.unarchive('education', item.id); }
-      else { await this.supabase.archive('education', item.id); }
+      if (item.is_archived) { await this.crudService.unarchive('education', item.id); }
+      else { await this.crudService.archive('education', item.id); }
       await this.loadItems();
     } catch (err) { this.logger.error('Error toggling archive:', err); }
   }
@@ -155,7 +157,7 @@ export class EducationListComponent implements OnInit {
 
   async deleteItem(): Promise<void> {
     if (!this.itemToDelete) return;
-    try { await this.supabase.delete('education', this.itemToDelete.id); await this.loadItems(); }
+    try { await this.crudService.delete('education', this.itemToDelete.id); await this.loadItems(); }
     catch (err) { this.logger.error('Error deleting item:', err); }
     finally { this.itemToDelete = null; }
   }

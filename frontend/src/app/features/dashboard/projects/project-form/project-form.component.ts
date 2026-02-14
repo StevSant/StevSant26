@@ -78,7 +78,7 @@ export class ProjectFormComponent extends BaseEntityFormComponent<Project, Proje
   }
 
   protected override async onBeforeLoadEntity(): Promise<void> {
-    const { data: projects } = await this.supabase.getWithTranslations<Project>(
+    const { data: projects } = await this.translationData.getWithTranslations<Project>(
       'project',
       'project_translation',
       'project_id'

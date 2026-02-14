@@ -1,19 +1,6 @@
 <div class="card space-y-6">
   <h2 class="text-xl font-semibold text-(--color-text-primary) flex items-center gap-2">
-    <svg
-      class="w-6 h-6 text-(--color-accent)"
-      fill="none"
-      stroke="currentColor"
-      viewBox="0 0 24 24"
-    >
-      <path
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        stroke-width="1.5"
-        d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"
-      />
-      <circle cx="12" cy="10" r="3" />
-    </svg>
+    <span class="material-symbols-outlined text-[24px] text-(--color-accent)">location_on</span>
     {{ 'profile.locationAvailability' | translate }}
   </h2>
 
@@ -47,25 +34,7 @@
         <span
           class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-(--color-bg-tertiary) border border-(--color-border-primary) text-xs text-(--color-text-secondary)"
         >
-          <svg
-            class="w-3 h-3 text-(--color-text-muted)"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
-            />
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
-            />
-          </svg>
+          <span class="material-symbols-outlined text-[12px] text-(--color-text-muted)">location_on</span>
           {{ formData().city }}
         </span>
       }
@@ -98,15 +67,10 @@
       (click)="toggleDetails()"
       class="text-xs text-(--color-text-muted) hover:text-(--color-accent) transition-colors flex items-center gap-1 mt-1"
     >
-      <svg
-        class="w-3.5 h-3.5 transition-transform duration-200"
+      <span
+        class="material-symbols-outlined text-[14px] transition-transform duration-200"
         [class.rotate-180]="showDetails"
-        fill="none"
-        stroke="currentColor"
-        viewBox="0 0 24 24"
-      >
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-      </svg>
+      >expand_more</span>
       {{ 'profile.locationAdjust' | translate }}
     </button>
   }

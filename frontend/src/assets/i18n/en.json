@@ -475,7 +475,8 @@
     "labelPlaceholder": "Label (e.g. Certificate, Diploma...)",
     "descriptionPlaceholder": "Description (optional)",
     "editTranslations": "Edit translations",
-    "saveTranslations": "Save"
+    "saveTranslations": "Save",
+    "translations": "Translatable Content"
   },
   "confirmDialog": {
     "defaultTitle": "Are you sure?",

@@ -1,6 +1,5 @@
 import { Injectable, signal, computed, inject, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
-import { SupabaseService } from '@core/services/supabase.service';
 import { LanguageService } from '@core/services/language.service';
 import {
   Profile,
@@ -19,6 +18,7 @@ import {
   SourceType,
   getTranslation,
 } from '@core/models';
+import { CrudService, TranslationDataService } from '@core/services';
 
 export interface SkillWithLevel extends Skill {
   calculatedLevel: number;
@@ -31,7 +31,8 @@ export interface SkillCategoryWithSkills extends SkillCategory {
 
 @Injectable({ providedIn: 'root' })
 export class PortfolioDataService {
-  private supabase = inject(SupabaseService);
+  private crudService = inject(CrudService);
+  private translationDataService = inject(TranslationDataService);
   private languageService = inject(LanguageService);
   private platformId = inject(PLATFORM_ID);
 
@@ -90,7 +91,7 @@ export class PortfolioDataService {
   }
 
   private async loadProfile(): Promise<void> {
-    const { data } = await this.supabase
+    const { data } = await this.crudService
       .from('profile')
       .select('*, translations:profile_translation(*, language:language(*))')
       .limit(1);
@@ -98,17 +99,17 @@ export class PortfolioDataService {
       this.profile.set(data[0] as Profile);
     }
 
-    const { data: avatarImages } = await this.supabase.getImagesBySourceType('profile');
+    const { data: avatarImages } = await this.translationDataService.getImagesBySourceType('profile');
     if (avatarImages && avatarImages.length > 0) {
       this.avatarUrl.set(avatarImages[0].url);
     }
 
-    const { data: bannerImages } = await this.supabase.getImagesBySourceType('profile_banner');
+    const { data: bannerImages } = await this.translationDataService.getImagesBySourceType('profile_banner');
     if (bannerImages && bannerImages.length > 0) {
       this.bannerUrl.set(bannerImages[0].url);
     }
 
-    const { data: cvData } = await this.supabase
+    const { data: cvData } = await this.crudService
       .from('document')
       .select('*, language:language(*)')
       .eq('source_type', 'profile')
@@ -120,7 +121,7 @@ export class PortfolioDataService {
   }
 
   private async loadProjects(): Promise<void> {
-    const { data } = await this.supabase
+    const { data } = await this.crudService
       .from('project')
       .select('*, translations:project_translation(*, language:language(*))')
       .eq('is_archived', false)
@@ -134,7 +135,7 @@ export class PortfolioDataService {
   }
 
   private async loadExperiences(): Promise<void> {
-    const { data } = await this.supabase
+    const { data } = await this.crudService
       .from('experience')
       .select('*, translations:experience_translation(*, language:language(*))')
       .eq('is_archived', false)
@@ -145,7 +146,7 @@ export class PortfolioDataService {
   }
 
   private async loadEducations(): Promise<void> {
-    const { data } = await this.supabase
+    const { data } = await this.crudService
       .from('education')
       .select('*, translations:education_translation(*, language:language(*))')
       .eq('is_archived', false)
@@ -156,7 +157,7 @@ export class PortfolioDataService {
   }
 
   private async loadCompetitions(): Promise<void> {
-    const { data } = await this.supabase
+    const { data } = await this.crudService
       .from('competitions')
       .select('*, translations:competitions_translation(*, language:language(*))')
       .eq('is_archived', false)
@@ -167,7 +168,7 @@ export class PortfolioDataService {
   }
 
   private async loadEvents(): Promise<void> {
-    const { data } = await this.supabase
+    const { data } = await this.crudService
       .from('event')
       .select('*, translations:event_translation(*, language:language(*))')
       .eq('is_archived', false)
@@ -178,7 +179,7 @@ export class PortfolioDataService {
   }
 
   private async loadSkillsWithLevels(): Promise<void> {
-    const { data: skills } = await this.supabase
+    const { data: skills } = await this.crudService
       .from('skill')
       .select(`
         *,
@@ -192,7 +193,7 @@ export class PortfolioDataService {
       return;
     }
 
-    const { data: usages } = await this.supabase
+    const { data: usages } = await this.crudService
       .from('skill_usages')
       .select('skill_id, level');
 
@@ -319,7 +320,7 @@ export class PortfolioDataService {
 
   /** Bulk-load all non-archived images and index by source */
   private async loadAllImages(): Promise<void> {
-    const { data } = await this.supabase
+    const { data } = await this.crudService
       .from('image')
       .select('*')
       .eq('is_archived', false)
@@ -344,7 +345,7 @@ export class PortfolioDataService {
 
   /** Bulk-load all skill usages with skill details and index by source */
   private async loadAllSkillUsages(): Promise<void> {
-    const { data } = await this.supabase
+    const { data } = await this.crudService
       .from('skill_usages')
       .select(`
         *,
@@ -375,7 +376,7 @@ export class PortfolioDataService {
 
   /** Bulk-load all non-archived content sections and index by entity */
   private async loadAllContentSections(): Promise<void> {
-    const { data } = await this.supabase
+    const { data } = await this.crudService
       .from('content_section')
       .select('*, translations:content_section_translation(*, language:language(*))')
       .eq('is_archived', false)
@@ -395,7 +396,7 @@ export class PortfolioDataService {
 
   /** Bulk-load all non-archived documents and index by source */
   private async loadAllDocuments(): Promise<void> {
-    const { data } = await this.supabase
+    const { data } = await this.crudService
       .from('document')
       .select('*, language:language(*), translations:document_translation(*, language:language(*))')
       .eq('is_archived', false)

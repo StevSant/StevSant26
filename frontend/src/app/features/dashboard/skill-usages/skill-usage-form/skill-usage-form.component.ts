@@ -1,7 +1,7 @@
 import { Component, OnInit, signal, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-import { SupabaseService } from '@core/services/supabase.service';
+import { TranslationDataService } from '@core/services/translation-data.service';
 import { LanguageService } from '@core/services/language.service';
 import { TranslateService } from '@core/services/translate.service';
 import { SkillUsage, SkillUsageTranslation, Skill, SourceType, Language } from '@core/models';
@@ -18,7 +18,7 @@ import { LoggerService } from '@core/services/logger.service';
   templateUrl: './skill-usage-form.component.html',
 })
 export class SkillUsageFormComponent implements OnInit {
-  private supabase = inject(SupabaseService);
+  private translationData = inject(TranslationDataService);
   private languageService = inject(LanguageService);
   private translateService = inject(TranslateService);
   private logger = inject(LoggerService);
@@ -84,7 +84,7 @@ export class SkillUsageFormComponent implements OnInit {
         this.translations.set(lang.code, { notes: '' });
       }
 
-      const { data: skillsData } = await this.supabase.getWithTranslations<Skill>(
+      const { data: skillsData } = await this.translationData.getWithTranslations<Skill>(
         'skill',
         'skill_translation',
         'skill_id'
@@ -92,7 +92,7 @@ export class SkillUsageFormComponent implements OnInit {
       this.skills.set(skillsData || []);
 
       if (!this.isNew && this.currentId) {
-        const { data, error } = await this.supabase.getByIdWithTranslations<SkillUsage>(
+        const { data, error } = await this.translationData.getByIdWithTranslations<SkillUsage>(
           'skill_usages',
           'skill_usages_translation',
           this.currentId
@@ -169,7 +169,7 @@ export class SkillUsageFormComponent implements OnInit {
 
       let result;
       if (this.isNew) {
-        result = await this.supabase.createWithTranslations(
+        result = await this.translationData.createWithTranslations(
           'skill_usages',
           'skill_usages_translation',
           'skill_usage_id',
@@ -177,7 +177,7 @@ export class SkillUsageFormComponent implements OnInit {
           translationsPayload
         );
       } else {
-        result = await this.supabase.updateWithTranslations(
+        result = await this.translationData.updateWithTranslations(
           'skill_usages',
           'skill_usages_translation',
           'skill_usage_id',

@@ -6,7 +6,7 @@ import { TranslatePipe } from '@shared/pipes/translate.pipe';
 import { TranslateService } from '@core/services/translate.service';
 import { LanguageService } from '@core/services/language.service';
 import { ContentSectionService } from '@core/services/content-section.service';
-import { SupabaseService } from '@core/services/supabase.service';
+import { CrudService } from '@core/services/crud.service';
 import { ContentSection, ContentSectionKey, SourceType, Language, getTranslation, Image } from '@core/models';
 import { ContentSectionFormData } from '@core/models';
 import { ContentSectionItem } from './content-section-item.model';
@@ -34,7 +34,7 @@ export class ContentSectionManagerComponent implements OnInit {
   private contentSectionService = inject(ContentSectionService);
   private languageService = inject(LanguageService);
   private translateService = inject(TranslateService);
-  private supabase = inject(SupabaseService);
+  private crud = inject(CrudService);
   private logger = inject(LoggerService);
 
   /** The entity type this manager is attached to */
@@ -350,7 +350,7 @@ export class ContentSectionManagerComponent implements OnInit {
     const ids = sectionItems.filter(i => i.id).map(i => i.id!);
     if (ids.length === 0) return;
 
-    const { data } = await this.supabase
+    const { data } = await this.crud
       .from('image')
       .select('*')
       .eq('source_type', 'content_section')
@@ -385,7 +385,7 @@ export class ContentSectionManagerComponent implements OnInit {
   async onSectionImageUploaded(sectionId: number, data: { path: string; url: string }): Promise<void> {
     try {
       const existingImages = this.getExistingImages(sectionId);
-      await this.supabase.create('image', {
+      await this.crud.create('image', {
         url: data.url,
         source_type: 'content_section',
         source_id: sectionId,
@@ -402,7 +402,7 @@ export class ContentSectionManagerComponent implements OnInit {
   async onSectionImagesReordered(sectionId: number, updates: { id: number; position: number }[]): Promise<void> {
     if (updates.length === 0) return;
     try {
-      await this.supabase.updatePositions('image', updates);
+      await this.crud.updatePositions('image', updates);
       // Reload images to reflect the new order
       await this.loadSectionImages(this.sections());
     } catch (err) {

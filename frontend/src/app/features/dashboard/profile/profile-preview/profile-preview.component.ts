@@ -1,5 +1,6 @@
 import { Component, OnInit, signal, inject, computed } from '@angular/core';
-import { SupabaseService } from '@core/services/supabase.service';
+import { CrudService } from '@core/services/crud.service';
+import { TranslationDataService } from '@core/services/translation-data.service';
 import { LanguageService } from '@core/services/language.service';
 import { TranslatePipe } from '@shared/pipes/translate.pipe';
 import { LoadingSpinnerComponent } from '@shared/components/loading-spinner/loading-spinner.component';
@@ -37,7 +38,8 @@ interface SkillCategoryWithSkills extends SkillCategory {
   templateUrl: './profile-preview.component.html',
 })
 export class ProfilePreviewComponent implements OnInit {
-  private supabase = inject(SupabaseService);
+  private crud = inject(CrudService);
+  private translationData = inject(TranslationDataService);
   private languageService = inject(LanguageService);
 
   loading = signal(true);
@@ -65,7 +67,7 @@ export class ProfilePreviewComponent implements OnInit {
   }
 
   private async loadProfile(): Promise<void> {
-    const { data } = await this.supabase
+    const { data } = await this.crud
       .from('profiles')
       .select('*, translations:profile_translations(*)')
       .single();
@@ -74,20 +76,20 @@ export class ProfilePreviewComponent implements OnInit {
     }
 
     // Load avatar from images table
-    const { data: avatarImages } = await this.supabase.getImagesBySourceType('profile');
+    const { data: avatarImages } = await this.translationData.getImagesBySourceType('profile');
     if (avatarImages && avatarImages.length > 0) {
       this.avatarUrl.set(avatarImages[0].url);
     }
 
     // Load banner from images table
-    const { data: bannerImages } = await this.supabase.getImagesBySourceType('profile_banner');
+    const { data: bannerImages } = await this.translationData.getImagesBySourceType('profile_banner');
     if (bannerImages && bannerImages.length > 0) {
       this.bannerUrl.set(bannerImages[0].url);
     }
   }
 
   private async loadProjects(): Promise<void> {
-    const { data } = await this.supabase
+    const { data } = await this.crud
       .from('projects')
       .select('*, translations:project_translations(*)')
       .eq('is_archived', false)
@@ -100,7 +102,7 @@ export class ProfilePreviewComponent implements OnInit {
   }
 
   private async loadExperiences(): Promise<void> {
-    const { data } = await this.supabase
+    const { data } = await this.crud
       .from('experiences')
       .select('*, translations:experience_translations(*)')
       .eq('is_archived', false)
@@ -111,7 +113,7 @@ export class ProfilePreviewComponent implements OnInit {
   }
 
   private async loadCompetitions(): Promise<void> {
-    const { data } = await this.supabase
+    const { data } = await this.crud
       .from('competitions')
       .select('*, translations:competition_translations(*)')
       .eq('is_archived', false)
@@ -122,7 +124,7 @@ export class ProfilePreviewComponent implements OnInit {
   }
 
   private async loadEvents(): Promise<void> {
-    const { data } = await this.supabase
+    const { data } = await this.crud
       .from('events')
       .select('*, translations:event_translations(*)')
       .eq('is_archived', false)
@@ -134,7 +136,7 @@ export class ProfilePreviewComponent implements OnInit {
 
   private async loadSkillsWithLevels(): Promise<void> {
     // Load all skills with their categories
-    const { data: skills } = await this.supabase
+    const { data: skills } = await this.crud
       .from('skills')
       .select(`
         *,
@@ -149,7 +151,7 @@ export class ProfilePreviewComponent implements OnInit {
     }
 
     // Load skill usages to calculate levels (get most recent per skill)
-    const { data: usages } = await this.supabase
+    const { data: usages } = await this.crud
       .from('skill_usages')
       .select('skill_id, level');
 

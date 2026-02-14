@@ -1,7 +1,8 @@
 import { Component, OnInit, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { SupabaseService } from '@core/services/supabase.service';
+import { CrudService } from '@core/services/crud.service';
+import { DocumentStorageService } from '@core/services/document-storage.service';
 import { LanguageService } from '@core/services/language.service';
 import { TranslateService } from '@core/services/translate.service';
 import { Document, Language } from '@core/models';
@@ -16,7 +17,8 @@ import { LoggerService } from '@core/services/logger.service';
   templateUrl: './cv-manager.component.html',
 })
 export class CvManagerComponent implements OnInit {
-  private supabase = inject(SupabaseService);
+  private crud = inject(CrudService);
+  private documentStorage = inject(DocumentStorageService);
   private languageService = inject(LanguageService);
   private t = inject(TranslateService);
   private logger = inject(LoggerService);
@@ -46,7 +48,7 @@ export class CvManagerComponent implements OnInit {
   }
 
   async loadCvDocuments(): Promise<void> {
-    const { data, error } = await this.supabase
+    const { data, error } = await this.crud
       .from('document')
       .select('*, language:language(*)')
       .eq('source_type', 'profile')
@@ -83,13 +85,13 @@ export class CvManagerComponent implements OnInit {
 
     try {
       // Upload file to documents storage bucket
-      const { path, error: uploadError } = await this.supabase.uploadDocument(file, 'cv');
+      const { path, error: uploadError } = await this.documentStorage.uploadDocument(file, 'cv');
       if (uploadError || !path) throw uploadError || new Error('Upload failed');
 
-      const url = this.supabase.getDocumentPublicUrl(path);
+      const url = this.documentStorage.getDocumentPublicUrl(path);
 
       // Create document record with source_type = 'profile'
-      const { error: insertError } = await this.supabase.from('document').insert({
+      const { error: insertError } = await this.crud.from('document').insert({
         source_type: 'profile',
         url,
         file_name: file.name,
@@ -125,11 +127,11 @@ export class CvManagerComponent implements OnInit {
       const urlParts = cv.url.split('/storage/v1/object/public/documents/');
       if (urlParts.length > 1) {
         const storagePath = urlParts[1];
-        await this.supabase.deleteDocumentFromStorage(storagePath);
+        await this.documentStorage.deleteDocumentFromStorage(storagePath);
       }
 
       // Delete the record
-      await this.supabase.from('document').delete().eq('id', cv.id);
+      await this.crud.from('document').delete().eq('id', cv.id);
 
       await this.loadCvDocuments();
       this.success.set(this.t.instant('success.cvDeleted'));

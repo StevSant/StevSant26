@@ -2,7 +2,6 @@ import { Component, OnInit, signal, viewChild, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
-import { SupabaseService } from '@core/services/supabase.service';
 import { TranslateService } from '@core/services/translate.service';
 import { Competition, CompetitionTranslation, Image } from '@core/models';
 import { ConfirmDialogComponent } from '@shared/components/confirm-dialog/confirm-dialog.component';
@@ -10,6 +9,7 @@ import { TranslatePipe } from '@shared/pipes/translate.pipe';
 import { DashboardFilterComponent, DashboardFilterOption } from '@shared/components/dashboard-filter/dashboard-filter.component';
 import { CompetitionItemComponent } from './competition-item/competition-item.component';
 import { LoggerService } from '@core/services/logger.service';
+import { CrudService, TranslationDataService } from '@core/services';
 
 @Component({
   selector: 'app-competition-list',
@@ -18,7 +18,8 @@ import { LoggerService } from '@core/services/logger.service';
   templateUrl: './competition-list.component.html',
 })
 export class CompetitionListComponent implements OnInit {
-  private supabase = inject(SupabaseService);
+  private translationDataService = inject(TranslationDataService);
+  private crudService = inject(CrudService);
   private translateService = inject(TranslateService);
   private logger = inject(LoggerService);
 
@@ -39,7 +40,7 @@ export class CompetitionListComponent implements OnInit {
   async loadItems(): Promise<void> {
     this.loading.set(true);
     try {
-      const { data, error } = await this.supabase.getAllWithTranslations<Competition>(
+      const { data, error } = await this.translationDataService.getAllWithTranslations<Competition>(
         'competitions',
         'competitions_translation',
         'position',
@@ -59,7 +60,7 @@ export class CompetitionListComponent implements OnInit {
   private async loadImages(items: Competition[]): Promise<void> {
     if (items.length === 0) return;
     const ids = items.map(i => i.id);
-    const { data } = await this.supabase
+    const { data } = await this.crudService
       .from('image')
       .select('*')
       .eq('source_type', 'competition')
@@ -144,19 +145,19 @@ export class CompetitionListComponent implements OnInit {
     const filtered = this.filteredItems();
     moveItemInArray(filtered, event.previousIndex, event.currentIndex);
     const updates = filtered.map((item, index) => ({ id: item.id, position: index }));
-    try { await this.supabase.updatePositions('competitions', updates); await this.loadItems(); }
+    try { await this.crudService.updatePositions('competitions', updates); await this.loadItems(); }
     catch (err) { this.logger.error('Error updating positions:', err); }
   }
 
   async togglePin(item: Competition): Promise<void> {
-    try { await this.supabase.togglePin('competitions', item.id, !item.is_pinned); await this.loadItems(); }
+    try { await this.crudService.togglePin('competitions', item.id, !item.is_pinned); await this.loadItems(); }
     catch (err) { this.logger.error('Error toggling pin:', err); }
   }
 
   async toggleArchive(item: Competition): Promise<void> {
     try {
-      if (item.is_archived) { await this.supabase.unarchive('competitions', item.id); }
-      else { await this.supabase.archive('competitions', item.id); }
+      if (item.is_archived) { await this.crudService.unarchive('competitions', item.id); }
+      else { await this.crudService.archive('competitions', item.id); }
       await this.loadItems();
     } catch (err) { this.logger.error('Error toggling archive:', err); }
   }
@@ -165,7 +166,7 @@ export class CompetitionListComponent implements OnInit {
 
   async deleteItem(): Promise<void> {
     if (!this.itemToDelete) return;
-    try { await this.supabase.delete('competitions', this.itemToDelete.id); await this.loadItems(); }
+    try { await this.crudService.delete('competitions', this.itemToDelete.id); await this.loadItems(); }
     catch (err) { this.logger.error('Error deleting item:', err); }
     finally { this.itemToDelete = null; }
   }

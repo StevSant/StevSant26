@@ -41,11 +41,7 @@
                     <span
                       class="absolute top-2 right-2 text-(--color-pin) bg-(--color-bg-primary)/80 rounded-full p-1"
                     >
-                      <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                        <path
-                          d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
-                        />
-                      </svg>
+                      <span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1">star</span>
                     </span>
                   }
                 </div>
@@ -62,11 +58,7 @@
                     </h3>
                     @if (project.is_pinned && !data.getFirstImageUrl('project', project.id)) {
                       <span class="text-(--color-pin) opacity-70">
-                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                          <path
-                            d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
-                          />
-                        </svg>
+                        <span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1">star</span>
                       </span>
                     }
                   </div>
@@ -122,19 +114,7 @@
                   <div
                     class="flex items-center gap-2 mb-4 px-2.5 py-1.5 rounded-lg bg-(--color-bg-tertiary) border border-(--color-border-primary) w-fit"
                   >
-                    <svg
-                      class="w-3.5 h-3.5 text-(--color-text-muted)"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"
-                      />
-                    </svg>
+                    <span class="material-symbols-outlined text-[14px] text-(--color-text-muted)">grid_view</span>
                     <span class="text-xs text-(--color-text-muted)">
                       {{ data.getSubProjects(project.id).length }}
                       {{ 'portfolio.subProjects' | translate }}
@@ -146,23 +126,13 @@
                 <div class="flex items-center gap-3 mt-auto pt-4 border-t border-(--color-divider)">
                   @if (project.url) {
                     <a [href]="project.url" target="_blank" rel="noopener noreferrer" class="btn-view-project">
-                      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          stroke-width="2"
-                          d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
-                        />
-                      </svg>
+                      <span class="material-symbols-outlined text-[20px]">open_in_new</span>
                       {{ 'portfolio.viewProject' | translate }}
                     </a>
                   }
                   @if (project.demo_url) {
                     <a [href]="project.demo_url" target="_blank" rel="noopener noreferrer" class="btn-view-project">
-                      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                      </svg>
+                      <span class="material-symbols-outlined text-[20px]">play_circle</span>
                       {{ 'portfolio.viewDemo' | translate }}
                     </a>
                   }
@@ -171,14 +141,7 @@
                     class="text-xs uppercase tracking-widest text-(--color-text-muted) hover:text-(--color-accent) flex items-center gap-1.5 transition-colors ml-auto"
                   >
                     {{ 'portfolio.viewDetails' | translate }}
-                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M9 5l7 7-7 7"
-                      />
-                    </svg>
+                    <span class="material-symbols-outlined text-[14px]">chevron_right</span>
                   </a>
                 </div>
               </div>

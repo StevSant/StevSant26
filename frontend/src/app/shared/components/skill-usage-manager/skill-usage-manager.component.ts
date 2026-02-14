@@ -1,7 +1,8 @@
 import { Component, input, signal, inject, effect, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { SupabaseService } from '@core/services/supabase.service';
+import { TranslationDataService } from '@core/services/translation-data.service';
+import { CrudService } from '@core/services/crud.service';
 import { LanguageService } from '@core/services/language.service';
 import { TranslateService } from '@core/services/translate.service';
 import { SkillUsage, Skill, SourceType, Language } from '@core/models';
@@ -29,7 +30,8 @@ export interface SkillUsageItem {
   templateUrl: './skill-usage-manager.component.html',
 })
 export class SkillUsageManagerComponent implements OnInit {
-  private supabase = inject(SupabaseService);
+  private translationData = inject(TranslationDataService);
+  private crud = inject(CrudService);
   private languageService = inject(LanguageService);
   private translateService = inject(TranslateService);
   private logger = inject(LoggerService);
@@ -81,7 +83,7 @@ export class SkillUsageManagerComponent implements OnInit {
 
   private async loadSkills(): Promise<void> {
     try {
-      const { data } = await this.supabase.getWithTranslations<Skill>(
+      const { data } = await this.translationData.getWithTranslations<Skill>(
         'skill',
         'skill_translation',
         'skill_id'
@@ -95,7 +97,7 @@ export class SkillUsageManagerComponent implements OnInit {
   private async loadSkillUsages(sourceId: number): Promise<void> {
     this.loading.set(true);
     try {
-      const { data, error } = await this.supabase
+      const { data, error } = await this.crud
         .from('skill_usages')
         .select(`
           *,
@@ -239,7 +241,7 @@ export class SkillUsageManagerComponent implements OnInit {
         notes: t.notes || null,
       }));
 
-      const result = await this.supabase.createWithTranslations(
+      const result = await this.translationData.createWithTranslations(
         'skill_usages',
         'skill_usages_translation',
         'skill_usages_id',
@@ -281,7 +283,7 @@ export class SkillUsageManagerComponent implements OnInit {
           notes: t.notes || null,
         }));
 
-        const result = await this.supabase.updateWithTranslations(
+        const result = await this.translationData.updateWithTranslations(
           'skill_usages',
           'skill_usages_translation',
           'skill_usages_id',
@@ -319,7 +321,7 @@ export class SkillUsageManagerComponent implements OnInit {
     if (usage.id) {
       // Existing usage - archive it
       try {
-        await this.supabase.archive('skill_usages', usage.id);
+        await this.crud.archive('skill_usages', usage.id);
         this.skillUsages.update(usages => usages.filter(u => u.id !== usage.id));
       } catch (err) {
         this.error.set(this.translateService.instant('skillUsages.errors.deleteError'));

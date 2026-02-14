@@ -1,7 +1,7 @@
 import { inject, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { CanActivateFn, Router } from '@angular/router';
-import { SupabaseService } from '../services/supabase.service';
+import { AuthService } from '../services/auth.service';
 
 /**
  * Auth guard to protect routes that require authentication
@@ -15,15 +15,15 @@ export const authGuard: CanActivateFn = async () => {
     return true;
   }
 
-  const supabase = inject(SupabaseService);
+  const authService = inject(AuthService);
   const router = inject(Router);
 
   // Wait for initial auth check to complete
-  while (supabase.loading()) {
+  while (authService.loading()) {
     await new Promise((resolve) => setTimeout(resolve, 50));
   }
 
-  const session = supabase.session();
+  const session = authService.session();
 
   if (!session) {
     router.navigate(['/login']);

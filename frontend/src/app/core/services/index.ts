@@ -6,7 +6,6 @@ export * from './profile.service';
 export * from './translation-data.service';
 export * from './storage.service';
 export * from './document-storage.service';
-export * from './supabase.service';
 export * from './language.service';
 export * from './translate.service';
 export * from './theme.types';

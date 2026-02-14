@@ -1,19 +1,7 @@
 <div class="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center">
   <!-- Search input -->
   <div class="relative flex-1 min-w-0">
-    <svg
-      class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--color-text-muted)]"
-      fill="none"
-      stroke="currentColor"
-      viewBox="0 0 24 24"
-    >
-      <path
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        stroke-width="2"
-        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-      />
-    </svg>
+    <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-[16px] text-[var(--color-text-muted)]">search</span>
     <input
       type="text"
       [ngModel]="searchText()"
@@ -27,14 +15,7 @@
         (click)="clearSearch()"
         class="absolute right-2.5 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)] transition-colors"
       >
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M6 18L18 6M6 6l12 12"
-          />
-        </svg>
+        <span class="material-symbols-outlined text-[16px]">close</span>
       </button>
     }
   </div>
@@ -42,19 +23,7 @@
   <!-- Dropdown filter -->
   @if (filterOptions().length > 0) {
     <div class="relative sm:w-56">
-      <svg
-        class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--color-text-muted)] pointer-events-none"
-        fill="none"
-        stroke="currentColor"
-        viewBox="0 0 24 24"
-      >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"
-        />
-      </svg>
+      <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-[16px] text-[var(--color-text-muted)] pointer-events-none">filter_list</span>
       <select
         [ngModel]="selectedFilter()"
         (ngModelChange)="onFilterSelect($event)"
@@ -69,14 +38,7 @@
           <option [value]="option.value">{{ option.label }}</option>
         }
       </select>
-      <svg
-        class="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--color-text-muted)] pointer-events-none"
-        fill="none"
-        stroke="currentColor"
-        viewBox="0 0 24 24"
-      >
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-      </svg>
+      <span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-[16px] text-[var(--color-text-muted)] pointer-events-none">expand_more</span>
     </div>
   }
 </div>

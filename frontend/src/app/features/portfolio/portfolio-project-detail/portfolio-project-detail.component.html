@@ -6,14 +6,7 @@
         [routerLink]="['../', parent.id]"
         class="inline-flex items-center gap-2 text-sm text-(--color-text-muted) hover:text-(--color-accent) transition-colors mb-2"
       >
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M15 19l-7-7 7-7"
-          />
-        </svg>
+        <span class="material-symbols-outlined text-[16px]">chevron_left</span>
         {{ data.getEntityTranslation(parent, 'title') }}
       </a>
     }
@@ -21,9 +14,7 @@
       routerLink="../"
       class="inline-flex items-center gap-2 text-sm text-(--color-text-muted) hover:text-(--color-accent) transition-colors mb-6 sm:mb-8"
     >
-      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-      </svg>
+      <span class="material-symbols-outlined text-[16px]">chevron_left</span>
       {{ 'portfolio.backToList' | translate }}
     </a>
 
@@ -39,11 +30,7 @@
             </h1>
             @if (p.is_pinned) {
               <span class="text-(--color-pin) mt-1">
-                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                  <path
-                    d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
-                  />
-                </svg>
+                <span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1">star</span>
               </span>
             }
           </div>
@@ -55,33 +42,13 @@
           <div class="flex flex-wrap gap-3">
             @if (p.url) {
               <a [href]="p.url" target="_blank" rel="noopener noreferrer" class="btn-view-project">
-                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
-                  />
-                </svg>
+                <span class="material-symbols-outlined text-[20px]">open_in_new</span>
                 {{ 'portfolio.viewProject' | translate }}
               </a>
             }
             @if (p.demo_url) {
               <a [href]="p.demo_url" target="_blank" rel="noopener noreferrer" class="btn-view-project">
-                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"
-                  />
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                  />
-                </svg>
+                <span class="material-symbols-outlined text-[20px]">play_circle</span>
                 {{ 'portfolio.viewDemo' | translate }}
               </a>
             }
@@ -166,19 +133,7 @@
                   }
                   <div class="p-5">
                     <div class="flex items-center gap-2 mb-2">
-                      <svg
-                        class="w-5 h-5 text-(--color-text-muted) shrink-0"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          stroke-width="2"
-                          d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"
-                        />
-                      </svg>
+                      <span class="material-symbols-outlined text-[20px] text-(--color-text-muted) shrink-0">grid_view</span>
                       <h3
                         class="text-base font-semibold text-(--color-text-primary) group-hover/sub:text-(--color-accent) transition-colors truncate"
                       >
@@ -224,23 +179,13 @@
                     >
                       @if (sub.url) {
                         <a [href]="sub.url" target="_blank" rel="noopener noreferrer" class="btn-view-project">
-                          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                              stroke-width="2"
-                              d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
-                            />
-                          </svg>
+                          <span class="material-symbols-outlined text-[20px]">open_in_new</span>
                           {{ 'portfolio.viewProject' | translate }}
                         </a>
                       }
                       @if (sub.demo_url) {
                         <a [href]="sub.demo_url" target="_blank" rel="noopener noreferrer" class="btn-view-project">
-                          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                          </svg>
+                          <span class="material-symbols-outlined text-[20px]">play_circle</span>
                           {{ 'portfolio.viewDemo' | translate }}
                         </a>
                       }
@@ -248,14 +193,7 @@
                         class="text-xs uppercase tracking-widest text-(--color-text-muted) group-hover/sub:text-(--color-accent) flex items-center gap-1 ml-auto transition-colors"
                       >
                         {{ 'portfolio.viewDetails' | translate }}
-                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            d="M9 5l7 7-7 7"
-                          />
-                        </svg>
+                        <span class="material-symbols-outlined text-[12px]">chevron_right</span>
                       </span>
                     </div>
                   </div>

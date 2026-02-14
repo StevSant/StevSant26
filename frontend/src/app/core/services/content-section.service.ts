@@ -1,22 +1,24 @@
 import { Injectable, inject } from '@angular/core';
-import { SupabaseService } from '@core/services/supabase.service';
 import { ContentSection, ContentSectionTranslation } from '@core/models';
 import { ContentSectionFormData } from '@core/models';
 import { SourceType } from '@core/models';
+import { CrudService } from './crud.service';
+import { TranslationDataService } from './translation-data.service';
 
 /**
  * Service for CRUD operations on content sections.
- * Uses SupabaseService generic helpers following existing patterns.
+ * Uses CrudService and TranslationDataService following Clean Architecture.
  */
 @Injectable({ providedIn: 'root' })
 export class ContentSectionService {
-  private supabase = inject(SupabaseService);
+  private crudService = inject(CrudService);
+  private translationData = inject(TranslationDataService);
 
   /**
    * Get all content sections for an entity, ordered by position
    */
   async getByEntity(entityType: SourceType, entityId: number): Promise<ContentSection[]> {
-    const { data, error } = await this.supabase
+    const { data, error } = await this.crudService
       .from('content_section')
       .select('*, translations:content_section_translation(*, language:language(*))')
       .eq('entity_type', entityType)
@@ -32,7 +34,7 @@ export class ContentSectionService {
    * Get a single content section by ID with translations
    */
   async getById(id: number): Promise<ContentSection | null> {
-    const { data, error } = await this.supabase
+    const { data, error } = await this.crudService
       .from('content_section')
       .select('*, translations:content_section_translation(*, language:language(*))')
       .eq('id', id)
@@ -62,7 +64,7 @@ export class ContentSectionService {
       body: t.body,
     }));
 
-    const { data, error } = await this.supabase.createWithTranslations<ContentSection>(
+    const { data, error } = await this.translationData.createWithTranslations<ContentSection>(
       'content_section',
       'content_section_translation',
       'content_section_id',
@@ -92,7 +94,7 @@ export class ContentSectionService {
       body: t.body,
     }));
 
-    const { data, error } = await this.supabase.updateWithTranslations<ContentSection>(
+    const { data, error } = await this.translationData.updateWithTranslations<ContentSection>(
       'content_section',
       'content_section_translation',
       'content_section_id',
@@ -109,7 +111,7 @@ export class ContentSectionService {
    * Archive a content section (soft delete)
    */
   async archive(id: number): Promise<void> {
-    const { error } = await this.supabase.archive('content_section', id);
+    const { error } = await this.crudService.archive('content_section', id);
     if (error) throw error;
   }
 
@@ -118,7 +120,7 @@ export class ContentSectionService {
    */
   async reorder(orderedIds: number[]): Promise<void> {
     const updates = orderedIds.map((id, index) => ({ id, position: index }));
-    const results = await this.supabase.updatePositions('content_section', updates);
+    const results = await this.crudService.updatePositions('content_section', updates);
     const failed = results.find(r => r.error);
     if (failed?.error) throw failed.error;
   }

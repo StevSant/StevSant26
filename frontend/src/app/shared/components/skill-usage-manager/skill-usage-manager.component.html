@@ -2,19 +2,7 @@
   <!-- Header -->
   <div class="flex items-center justify-between">
     <h3 class="text-lg font-semibold text-[var(--color-text-primary)] flex items-center gap-2">
-      <svg
-        class="w-5 h-5 text-[var(--color-accent)]"
-        fill="none"
-        stroke="currentColor"
-        viewBox="0 0 24 24"
-      >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"
-        />
-      </svg>
+      <span class="material-symbols-outlined text-[20px] text-[var(--color-accent)]">lightbulb</span>
       {{ 'skillUsages.sectionTitle' | translate }}
     </h3>
     @if (!showAddForm()) {
@@ -23,14 +11,7 @@
         (click)="openAddForm()"
         class="btn-secondary text-sm flex items-center gap-1"
       >
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M12 4v16m8-8H4"
-          />
-        </svg>
+        <span class="material-symbols-outlined text-[16px]">add</span>
         {{ 'skillUsages.addSkill' | translate }}
       </button>
     }
@@ -98,19 +79,7 @@
     } @else if (!showAddForm()) {
       <!-- Empty State -->
       <div class="text-center py-8 text-[var(--color-text-muted)]">
-        <svg
-          class="w-12 h-12 mx-auto mb-3 opacity-50"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"
-          />
-        </svg>
+        <span class="material-symbols-outlined text-[48px] mx-auto mb-3 opacity-50">lightbulb</span>
         <p>{{ 'skillUsages.emptyState' | translate }}</p>
         <p class="text-sm mt-1">{{ 'skillUsages.emptyStateHint' | translate }}</p>
       </div>

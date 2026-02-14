@@ -25,6 +25,11 @@ export class PortfolioExperienceDetailComponent implements OnInit {
   images = signal<import('@core/models').Image[]>([]);
   relatedProjects = signal<Project[]>([]);
   documents = signal<Document[]>([]);
+  showDocuments = signal(false);
+
+  toggleDocuments(): void {
+    this.showDocuments.update(v => !v);
+  }
 
   async ngOnInit(): Promise<void> {
     await this.data.initialize();

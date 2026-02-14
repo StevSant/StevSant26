@@ -2,7 +2,8 @@ import { Component, OnInit, signal, viewChild, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
-import { SupabaseService } from '@core/services/supabase.service';
+import { TranslationDataService } from '@core/services/translation-data.service';
+import { CrudService } from '@core/services/crud.service';
 import { TranslateService } from '@core/services/translate.service';
 import { Event, EventTranslation, Image } from '@core/models';
 import { ConfirmDialogComponent } from '@shared/components/confirm-dialog/confirm-dialog.component';
@@ -18,7 +19,8 @@ import { LoggerService } from '@core/services/logger.service';
   templateUrl: './event-list.component.html',
 })
 export class EventListComponent implements OnInit {
-  private supabase = inject(SupabaseService);
+  private translationData = inject(TranslationDataService);
+  private crud = inject(CrudService);
   private translateService = inject(TranslateService);
   private logger = inject(LoggerService);
 
@@ -42,7 +44,7 @@ export class EventListComponent implements OnInit {
   async loadItems(): Promise<void> {
     this.loading.set(true);
     try {
-      const { data, error } = await this.supabase.getAllWithTranslations<Event>(
+      const { data, error } = await this.translationData.getAllWithTranslations<Event>(
         'event',
         'event_translation',
         'position',
@@ -81,7 +83,7 @@ export class EventListComponent implements OnInit {
   private async loadImages(items: Event[]): Promise<void> {
     if (items.length === 0) return;
     const ids = items.map(i => i.id);
-    const { data } = await this.supabase
+    const { data } = await this.crud
       .from('image')
       .select('*')
       .eq('source_type', 'event')
@@ -148,7 +150,7 @@ export class EventListComponent implements OnInit {
     moveItemInArray(filtered, event.previousIndex, event.currentIndex);
     const updates = filtered.map((item, index) => ({ id: item.id, position: index }));
     try {
-      await this.supabase.updatePositions('event', updates);
+      await this.crud.updatePositions('event', updates);
       await this.loadItems();
     } catch (err) {
       this.logger.error('Error updating positions:', err);
@@ -157,7 +159,7 @@ export class EventListComponent implements OnInit {
 
   async togglePin(item: Event): Promise<void> {
     try {
-      await this.supabase.togglePin('event', item.id, !item.is_pinned);
+      await this.crud.togglePin('event', item.id, !item.is_pinned);
       await this.loadItems();
     } catch (err) {
       this.logger.error('Error toggling pin:', err);
@@ -167,9 +169,9 @@ export class EventListComponent implements OnInit {
   async toggleArchive(item: Event): Promise<void> {
     try {
       if (item.is_archived) {
-        await this.supabase.unarchive('event', item.id);
+        await this.crud.unarchive('event', item.id);
       } else {
-        await this.supabase.archive('event', item.id);
+        await this.crud.archive('event', item.id);
       }
       await this.loadItems();
     } catch (err) {
@@ -185,7 +187,7 @@ export class EventListComponent implements OnInit {
   async deleteItem(): Promise<void> {
     if (!this.itemToDelete) return;
     try {
-      await this.supabase.delete('event', this.itemToDelete.id);
+      await this.crud.delete('event', this.itemToDelete.id);
       await this.loadItems();
     } catch (err) {
       this.logger.error('Error deleting item:', err);

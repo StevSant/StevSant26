@@ -2,7 +2,7 @@ import { Component, OnInit, signal, inject } from '@angular/core';
 import { CommonModule, UpperCasePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-import { SupabaseService } from '@core/services/supabase.service';
+import { TranslationDataService } from '@core/services/translation-data.service';
 import { LanguageService } from '@core/services/language.service';
 import { TranslateService } from '@core/services/translate.service';
 import { TranslatePipe } from '@shared/pipes/translate.pipe';
@@ -17,7 +17,7 @@ import { LoggerService } from '@core/services/logger.service';
   templateUrl: './skill-category-form.component.html',
 })
 export class SkillCategoryFormComponent implements OnInit {
-  private supabase = inject(SupabaseService);
+  private translationData = inject(TranslationDataService);
   private languageService = inject(LanguageService);
   private t = inject(TranslateService);
   private logger = inject(LoggerService);
@@ -64,7 +64,7 @@ export class SkillCategoryFormComponent implements OnInit {
       }
 
       if (!this.isNew && this.currentId) {
-        const { data, error } = await this.supabase.getByIdWithTranslations<SkillCategory>(
+        const { data, error } = await this.translationData.getByIdWithTranslations<SkillCategory>(
           'skill_category',
           'skill_category_translation',
           this.currentId
@@ -125,7 +125,7 @@ export class SkillCategoryFormComponent implements OnInit {
 
       let result;
       if (this.isNew) {
-        result = await this.supabase.createWithTranslations(
+        result = await this.translationData.createWithTranslations(
           'skill_category',
           'skill_category_translation',
           'skill_category_id',
@@ -133,7 +133,7 @@ export class SkillCategoryFormComponent implements OnInit {
           translationsPayload
         );
       } else {
-        result = await this.supabase.updateWithTranslations(
+        result = await this.translationData.updateWithTranslations(
           'skill_category',
           'skill_category_translation',
           'skill_category_id',

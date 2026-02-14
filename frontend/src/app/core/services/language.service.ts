@@ -1,8 +1,8 @@
 import { Injectable, signal, PLATFORM_ID, inject } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { Language, DEFAULT_LANGUAGE_CODE, getTranslation } from '../models';
-import { SupabaseService } from './supabase.service';
 import { LoggerService } from './logger.service';
+import { CrudService } from './crud.service';
 
 const LANGUAGE_STORAGE_KEY = 'portfolio_language';
 
@@ -13,7 +13,7 @@ const LANGUAGE_STORAGE_KEY = 'portfolio_language';
 @Injectable({ providedIn: 'root' })
 export class LanguageService {
   private platformId = inject(PLATFORM_ID);
-  private supabase = inject(SupabaseService);
+  private crudService = inject(CrudService);
   private logger = inject(LoggerService);
 
   // Current language code signal
@@ -48,7 +48,7 @@ export class LanguageService {
    */
   async loadLanguages(): Promise<void> {
     try {
-      const { data, error } = await this.supabase.getAll<Language>('language', 'id', true);
+      const { data, error } = await this.crudService.getAll<Language>('language', 'id', true);
       if (error) {
         this.logger.error('Error loading languages:', error);
         return;

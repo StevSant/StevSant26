@@ -21,14 +21,7 @@
               <div
                 class="w-10 h-10 rounded-lg flex items-center justify-center bg-(--color-accent)/10 text-(--color-accent)"
               >
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    [attr.d]="getTypeIcon(group.type)"
-                  />
-                </svg>
+                <span class="material-symbols-outlined text-[20px]">{{ getTypeIcon(group.type) }}</span>
               </div>
               <div>
                 <h3 class="text-lg font-medium text-(--color-text-primary) tracking-tight">
@@ -70,19 +63,7 @@
                             class="w-8 h-8 sm:w-10 sm:h-10 rounded-full object-cover"
                           />
                         } @else {
-                          <svg
-                            class="w-5 h-5 sm:w-6 sm:h-6 text-(--color-text-muted)"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                              stroke-width="2"
-                              [attr.d]="getTypeIcon(group.type)"
-                            />
-                          </svg>
+                          <span class="material-symbols-outlined text-[20px] sm:text-[24px] text-(--color-text-muted)">{{ getTypeIcon(group.type) }}</span>
                         }
                       </div>
                       <!-- Pulse for ongoing -->
@@ -142,19 +123,7 @@
 
                       <!-- Institution -->
                       <p class="text-sm text-(--color-text-muted) mb-3 flex items-center gap-2">
-                        <svg
-                          class="w-4 h-4 shrink-0"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
-                          />
-                        </svg>
+                        <span class="material-symbols-outlined text-[16px] shrink-0">apartment</span>
                         {{ edu.institution }}
                       </p>
 
@@ -172,19 +141,7 @@
                             <span
                               class="inline-flex items-center gap-1 text-xs text-(--color-text-disabled)"
                             >
-                              <svg
-                                class="w-3.5 h-3.5"
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24"
-                              >
-                                <path
-                                  stroke-linecap="round"
-                                  stroke-linejoin="round"
-                                  stroke-width="2"
-                                  d="M7 20l4-16m2 16l4-16M6 9h14M4 15h14"
-                                />
-                              </svg>
+                              <span class="material-symbols-outlined text-[14px]">tag</span>
                               {{ edu.credential_id }}
                             </span>
                           }
@@ -195,19 +152,7 @@
                               rel="noopener noreferrer"
                               class="inline-flex items-center gap-1 text-xs text-(--color-accent) hover:underline"
                             >
-                              <svg
-                                class="w-3.5 h-3.5"
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24"
-                              >
-                                <path
-                                  stroke-linecap="round"
-                                  stroke-linejoin="round"
-                                  stroke-width="2"
-                                  d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
-                                />
-                              </svg>
+                              <span class="material-symbols-outlined text-[14px]">open_in_new</span>
                               {{ 'educations.viewCredential' | translate }}
                             </a>
                           }

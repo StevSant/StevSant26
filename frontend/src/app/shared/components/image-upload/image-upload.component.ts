@@ -1,5 +1,6 @@
 import { Component, input, output, signal, computed, inject, effect } from '@angular/core';
-import { SupabaseService } from '@core/services/supabase.service';
+import { StorageService } from '@core/services/storage.service';
+import { CrudService } from '@core/services/crud.service';
 import { TranslateService } from '@core/services/translate.service';
 import { MAX_IMAGE_SIZE_BYTES } from '@shared/config/constants';
 import { SourceType } from '@core/models';
@@ -29,7 +30,8 @@ export interface ExistingImage {
   templateUrl: './image-upload.component.html',
 })
 export class ImageUploadComponent {
-  private supabase = inject(SupabaseService);
+  private storageService = inject(StorageService);
+  private crud = inject(CrudService);
   private t = inject(TranslateService);
   private logger = inject(LoggerService);
 
@@ -149,14 +151,14 @@ export class ImageUploadComponent {
       const folderPath = this.folder() || this.sourceType() || 'misc';
 
       // Upload to Supabase Storage
-      const { path, error } = await this.supabase.uploadFile(file, folderPath);
+      const { path, error } = await this.storageService.uploadFile(file, folderPath);
 
       if (error) {
         throw error;
       }
 
       if (path) {
-        const url = this.supabase.getPublicUrl(path);
+        const url = this.storageService.getPublicUrl(path);
 
         if (this.multiple()) {
           this.uploadedImages.update((images) => [...images, { path, url, alt: this.altText() }]);
@@ -184,7 +186,7 @@ export class ImageUploadComponent {
     event.stopPropagation();
 
     try {
-      await this.supabase.deleteFromStorage(path);
+      await this.storageService.deleteFromStorage(path);
       this.uploadedImages.update((images) => images.filter((img) => img.path !== path));
       this.removed.emit(path);
     } catch (err) {
@@ -198,7 +200,7 @@ export class ImageUploadComponent {
 
     try {
       // Delete from the image table (soft delete by archiving)
-      await this.supabase.update('image', imageId, { is_archived: true });
+      await this.crud.update('image', imageId, { is_archived: true });
       this.loadedExistingImages.update((images) => images.filter((img) => img.id !== imageId));
       this.imageDeleted.emit(imageId);
     } catch (err) {
@@ -248,7 +250,7 @@ export class ImageUploadComponent {
 
   async onGalleryRemoveUploaded(path: string): Promise<void> {
     try {
-      await this.supabase.deleteFromStorage(path);
+      await this.storageService.deleteFromStorage(path);
       this.uploadedImages.update((images) => images.filter((img) => img.path !== path));
       this.removed.emit(path);
     } catch (err) {
@@ -259,7 +261,7 @@ export class ImageUploadComponent {
 
   async onGalleryRemoveExisting(imageId: number): Promise<void> {
     try {
-      await this.supabase.update('image', imageId, { is_archived: true });
+      await this.crud.update('image', imageId, { is_archived: true });
       this.loadedExistingImages.update((images) => images.filter((img) => img.id !== imageId));
       this.imageDeleted.emit(imageId);
     } catch (err) {

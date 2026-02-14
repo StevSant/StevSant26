@@ -2,12 +2,12 @@ import { Component, OnInit, signal, viewChild, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
-import { SupabaseService } from '@core/services/supabase.service';
 import { TranslateService } from '@core/services/translate.service';
 import { SkillUsage, Skill } from '@core/models';
 import { ConfirmDialogComponent } from '@shared/components/confirm-dialog/confirm-dialog.component';
 import { SkillUsageListItemComponent } from './skill-usage-list-item/skill-usage-list-item.component';
 import { LoggerService } from '@core/services/logger.service';
+import { CrudService, TranslationDataService } from '@core/services';
 
 @Component({
   selector: 'app-skill-usage-list',
@@ -16,7 +16,8 @@ import { LoggerService } from '@core/services/logger.service';
   templateUrl: './skill-usage-list.component.html',
 })
 export class SkillUsageListComponent implements OnInit {
-  private supabase = inject(SupabaseService);
+  private crudService = inject(CrudService);
+  private translationDataService = inject(TranslationDataService);
   private translateService = inject(TranslateService);
   private logger = inject(LoggerService);
 
@@ -31,7 +32,7 @@ export class SkillUsageListComponent implements OnInit {
   async loadItems(): Promise<void> {
     this.loading.set(true);
     try {
-      const { data, error } = await this.supabase.getSkillUsagesWithSkills<SkillUsage>();
+      const { data, error } = await this.translationDataService.getSkillUsagesWithSkills<SkillUsage>();
       if (error) throw error;
       this.items.set(data || []);
     } catch (err) { this.logger.error('Error loading skill usages:', err); }
@@ -67,14 +68,14 @@ export class SkillUsageListComponent implements OnInit {
     allItems.forEach((item, i) => (item as any).position = i);
     this.items.set(allItems);
     const updates = allItems.map((item, i) => ({ id: item.id, position: i }));
-    try { await this.supabase.updatePositions('skill_usages', updates); }
+    try { await this.crudService.updatePositions('skill_usages', updates); }
     catch (err) { this.logger.error('Error updating positions:', err); await this.loadItems(); }
   }
 
   async toggleArchive(item: SkillUsage): Promise<void> {
     try {
-      if (item.is_archived) { await this.supabase.unarchive('skill_usages', item.id); }
-      else { await this.supabase.archive('skill_usages', item.id); }
+      if (item.is_archived) { await this.crudService.unarchive('skill_usages', item.id); }
+      else { await this.crudService.archive('skill_usages', item.id); }
       await this.loadItems();
     } catch (err) { this.logger.error('Error toggling archive:', err); }
   }
@@ -83,7 +84,7 @@ export class SkillUsageListComponent implements OnInit {
 
   async deleteItem(): Promise<void> {
     if (!this.itemToDelete) return;
-    try { await this.supabase.delete('skill_usages', this.itemToDelete.id); await this.loadItems(); }
+    try { await this.crudService.delete('skill_usages', this.itemToDelete.id); await this.loadItems(); }
     catch (err) { this.logger.error('Error deleting item:', err); }
     finally { this.itemToDelete = null; }
   }

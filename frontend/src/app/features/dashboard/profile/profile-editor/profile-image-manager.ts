@@ -1,5 +1,6 @@
 import { signal } from '@angular/core';
-import { SupabaseService } from '@core/services/supabase.service';
+import { TranslationDataService } from '@core/services/translation-data.service';
+import { CrudService } from '@core/services/crud.service';
 import { TranslateService } from '@core/services/translate.service';
 
 /**
@@ -12,7 +13,8 @@ export class ProfileImageManager {
   readonly existingId = signal<number | null>(null);
 
   constructor(
-    private supabase: SupabaseService,
+    private translationData: TranslationDataService,
+    private crud: CrudService,
     private t: TranslateService,
     private sourceType: string,
     private altText: string,
@@ -20,7 +22,7 @@ export class ProfileImageManager {
 
   /** Load existing image from the database */
   async load(): Promise<void> {
-    const { data } = await this.supabase.getImagesBySourceType(this.sourceType);
+    const { data } = await this.translationData.getImagesBySourceType(this.sourceType);
     if (data && data.length > 0) {
       this.existingUrl.set(data[0].url);
       this.existingId.set(data[0].id);
@@ -35,7 +37,7 @@ export class ProfileImageManager {
     const img = this.pending();
     if (!img) return;
 
-    const result = await this.supabase.create('image', {
+    const result = await this.crud.create('image', {
       url: img.url,
       source_type: this.sourceType,
       alt_text: this.altText,
@@ -59,9 +61,9 @@ export class ProfileImageManager {
     if (profileExists) {
       const existingId = this.existingId();
       if (existingId) {
-        await this.supabase.update('image', existingId, { is_archived: true });
+        await this.crud.update('image', existingId, { is_archived: true });
       }
-      const result = await this.supabase.create('image', {
+      const result = await this.crud.create('image', {
         url: data.url,
         source_type: this.sourceType,
         alt_text: this.altText,
@@ -81,7 +83,7 @@ export class ProfileImageManager {
 
   /** Archive (soft-delete) the image */
   async onRemoved(imageId: number): Promise<string> {
-    await this.supabase.update('image', imageId, { is_archived: true });
+    await this.crud.update('image', imageId, { is_archived: true });
     this.existingUrl.set(null);
     this.existingId.set(null);
     return this.t.instant('success.imageDeleted', { name: this.altText });

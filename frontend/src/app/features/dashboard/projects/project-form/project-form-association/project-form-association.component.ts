@@ -2,7 +2,7 @@ import { Component, input, output, inject, OnInit, effect, signal } from '@angul
 import { FormsModule } from '@angular/forms';
 import { TranslatePipe } from '@shared/pipes/translate.pipe';
 import { TranslateService } from '@core/services/translate.service';
-import { SupabaseService } from '@core/services/supabase.service';
+import { TranslationDataService } from '@core/services/translation-data.service';
 import { Project, Event, Experience, Competition } from '@core/models';
 import { LoggerService } from '@core/services/logger.service';
 
@@ -18,7 +18,7 @@ interface SourceOption {
   templateUrl: './project-form-association.component.html',
 })
 export class ProjectFormAssociationComponent implements OnInit {
-  private supabase = inject(SupabaseService);
+  private translationData = inject(TranslationDataService);
   private translateService = inject(TranslateService);
   private logger = inject(LoggerService);
 
@@ -67,19 +67,19 @@ export class ProjectFormAssociationComponent implements OnInit {
       let options: SourceOption[] = [];
 
       if (type === 'event') {
-        const { data } = await this.supabase.getWithTranslations<Event>('event', 'event_translation', 'event_id');
+        const { data } = await this.translationData.getWithTranslations<Event>('event', 'event_translation', 'event_id');
         options = (data || []).map(e => ({
           id: e.id,
           label: this.getTranslatedName(e.translations, lang, 'name') || `Event #${e.id}`,
         }));
       } else if (type === 'experience') {
-        const { data } = await this.supabase.getWithTranslations<Experience>('experience', 'experience_translation', 'experience_id');
+        const { data } = await this.translationData.getWithTranslations<Experience>('experience', 'experience_translation', 'experience_id');
         options = (data || []).map(e => ({
           id: e.id,
           label: (this.getTranslatedName(e.translations, lang, 'role') || `Experience #${e.id}`) + (e.company ? ` - ${e.company}` : ''),
         }));
       } else if (type === 'competition') {
-        const { data } = await this.supabase.getWithTranslations<Competition>('competitions', 'competitions_translation', 'competitions_id');
+        const { data } = await this.translationData.getWithTranslations<Competition>('competitions', 'competitions_translation', 'competitions_id');
         options = (data || []).map(c => ({
           id: c.id,
           label: this.getTranslatedName(c.translations, lang, 'name') || `Competition #${c.id}`,

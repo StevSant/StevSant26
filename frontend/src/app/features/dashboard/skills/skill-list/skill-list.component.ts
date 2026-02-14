@@ -2,7 +2,6 @@ import { Component, OnInit, signal, viewChild, inject, computed } from '@angular
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
-import { SupabaseService } from '@core/services/supabase.service';
 import { TranslateService } from '@core/services/translate.service';
 import { Skill, SkillCategory } from '@core/models';
 import { ConfirmDialogComponent } from '@shared/components/confirm-dialog/confirm-dialog.component';
@@ -10,6 +9,7 @@ import { TranslatePipe } from '@shared/pipes/translate.pipe';
 import { DashboardFilterComponent, DashboardFilterOption } from '@shared/components/dashboard-filter/dashboard-filter.component';
 import { SkillItemComponent } from './skill-item/skill-item.component';
 import { LoggerService } from '@core/services/logger.service';
+import { CrudService, TranslationDataService } from '@core/services';
 
 @Component({
   selector: 'app-skill-list',
@@ -18,7 +18,8 @@ import { LoggerService } from '@core/services/logger.service';
   templateUrl: './skill-list.component.html',
 })
 export class SkillListComponent implements OnInit {
-  private supabase = inject(SupabaseService);
+  private crudService = inject(CrudService);
+  private translationDataService = inject(TranslationDataService);
   private translateService = inject(TranslateService);
   private logger = inject(LoggerService);
 
@@ -38,7 +39,7 @@ export class SkillListComponent implements OnInit {
   async loadItems(): Promise<void> {
     this.loading.set(true);
     try {
-      const { data, error } = await this.supabase.getSkillsWithCategories<Skill>();
+      const { data, error } = await this.translationDataService.getSkillsWithCategories<Skill>();
       if (error) throw error;
       this.items.set(data || []);
       this.buildCategoryOptions(data || []);
@@ -141,19 +142,19 @@ export class SkillListComponent implements OnInit {
     allItems.forEach((item, i) => (item as any).position = i);
     this.items.set(allItems);
     const updates = allItems.map((item, i) => ({ id: item.id, position: i }));
-    try { await this.supabase.updatePositions('skill', updates); }
+    try { await this.crudService.updatePositions('skill', updates); }
     catch (err) { this.logger.error('Error updating positions:', err); await this.loadItems(); }
   }
 
   async togglePin(item: Skill): Promise<void> {
-    try { await this.supabase.togglePin('skill', item.id, !item.is_pinned); await this.loadItems(); }
+    try { await this.crudService.togglePin('skill', item.id, !item.is_pinned); await this.loadItems(); }
     catch (err) { this.logger.error('Error toggling pin:', err); }
   }
 
   async toggleArchive(item: Skill): Promise<void> {
     try {
-      if (item.is_archived) { await this.supabase.unarchive('skill', item.id); }
-      else { await this.supabase.archive('skill', item.id); }
+      if (item.is_archived) { await this.crudService.unarchive('skill', item.id); }
+      else { await this.crudService.archive('skill', item.id); }
       await this.loadItems();
     } catch (err) { this.logger.error('Error toggling archive:', err); }
   }
@@ -162,7 +163,7 @@ export class SkillListComponent implements OnInit {
 
   async deleteItem(): Promise<void> {
     if (!this.itemToDelete) return;
-    try { await this.supabase.delete('skill', this.itemToDelete.id); await this.loadItems(); }
+    try { await this.crudService.delete('skill', this.itemToDelete.id); await this.loadItems(); }
     catch (err) { this.logger.error('Error deleting item:', err); }
     finally { this.itemToDelete = null; }
   }

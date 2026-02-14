@@ -2,7 +2,8 @@ import { Component, OnInit, signal, viewChild, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
-import { SupabaseService } from '@core/services/supabase.service';
+import { TranslationDataService } from '@core/services/translation-data.service';
+import { CrudService } from '@core/services/crud.service';
 import { TranslateService } from '@core/services/translate.service';
 import { Experience, ExperienceTranslation, Image } from '@core/models';
 import { ConfirmDialogComponent } from '@shared/components/confirm-dialog/confirm-dialog.component';
@@ -18,7 +19,8 @@ import { LoggerService } from '@core/services/logger.service';
   templateUrl: './experience-list.component.html',
 })
 export class ExperienceListComponent implements OnInit {
-  private supabase = inject(SupabaseService);
+  private translationData = inject(TranslationDataService);
+  private crud = inject(CrudService);
   private translateService = inject(TranslateService);
   private logger = inject(LoggerService);
 
@@ -39,7 +41,7 @@ export class ExperienceListComponent implements OnInit {
   async loadItems(): Promise<void> {
     this.loading.set(true);
     try {
-      const { data, error } = await this.supabase.getAllWithTranslations<Experience>(
+      const { data, error } = await this.translationData.getAllWithTranslations<Experience>(
         'experience',
         'experience_translation',
         'position',
@@ -72,7 +74,7 @@ export class ExperienceListComponent implements OnInit {
   private async loadImages(items: Experience[]): Promise<void> {
     if (items.length === 0) return;
     const ids = items.map(i => i.id);
-    const { data } = await this.supabase
+    const { data } = await this.crud
       .from('image')
       .select('*')
       .eq('source_type', 'experience')
@@ -135,19 +137,19 @@ export class ExperienceListComponent implements OnInit {
     allItems.forEach((item, i) => (item as any).position = i);
     this.items.set(allItems);
     const updates = allItems.map((item, i) => ({ id: item.id, position: i }));
-    try { await this.supabase.updatePositions('experience', updates); }
+    try { await this.crud.updatePositions('experience', updates); }
     catch (err) { this.logger.error('Error updating positions:', err); await this.loadItems(); }
   }
 
   async togglePin(item: Experience): Promise<void> {
-    try { await this.supabase.togglePin('experience', item.id, !item.is_pinned); await this.loadItems(); }
+    try { await this.crud.togglePin('experience', item.id, !item.is_pinned); await this.loadItems(); }
     catch (err) { this.logger.error('Error toggling pin:', err); }
   }
 
   async toggleArchive(item: Experience): Promise<void> {
     try {
-      if (item.is_archived) { await this.supabase.unarchive('experience', item.id); }
-      else { await this.supabase.archive('experience', item.id); }
+      if (item.is_archived) { await this.crud.unarchive('experience', item.id); }
+      else { await this.crud.archive('experience', item.id); }
       await this.loadItems();
     } catch (err) { this.logger.error('Error toggling archive:', err); }
   }
@@ -156,7 +158,7 @@ export class ExperienceListComponent implements OnInit {
 
   async deleteItem(): Promise<void> {
     if (!this.itemToDelete) return;
-    try { await this.supabase.delete('experience', this.itemToDelete.id); await this.loadItems(); }
+    try { await this.crud.delete('experience', this.itemToDelete.id); await this.loadItems(); }
     catch (err) { this.logger.error('Error deleting item:', err); }
     finally { this.itemToDelete = null; }
   }

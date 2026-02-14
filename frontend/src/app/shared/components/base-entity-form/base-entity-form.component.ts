@@ -1,6 +1,7 @@
 import { OnInit, signal, inject, Directive, Signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { SupabaseService } from '@core/services/supabase.service';
+import { TranslationDataService } from '@core/services/translation-data.service';
+import { CrudService } from '@core/services/crud.service';
 import { LanguageService } from '@core/services/language.service';
 import { TranslateService } from '@core/services/translate.service';
 import { Language } from '@core/models';
@@ -28,7 +29,8 @@ import { LoggerService } from '@core/services/logger.service';
  */
 @Directive()
 export abstract class BaseEntityFormComponent<TEntity, TTranslation> implements OnInit {
-  protected supabase = inject(SupabaseService);
+  protected translationData = inject(TranslationDataService);
+  protected crud = inject(CrudService);
   protected languageService = inject(LanguageService);
   protected t = inject(TranslateService);
   protected route = inject(ActivatedRoute);
@@ -133,7 +135,7 @@ export abstract class BaseEntityFormComponent<TEntity, TTranslation> implements 
       await this.onBeforeLoadEntity();
 
       if (!this.isNew && this.currentId) {
-        const { data, error } = await this.supabase.getByIdWithTranslations<TEntity>(
+        const { data, error } = await this.translationData.getByIdWithTranslations<TEntity>(
           this.getTableName(),
           this.getTranslationTableName(),
           this.currentId
@@ -149,14 +151,14 @@ export abstract class BaseEntityFormComponent<TEntity, TTranslation> implements 
           }
 
           // Load existing images
-          const { data: images } = await this.supabase.getImagesBySource(this.getSourceType(), this.currentId!);
+          const { data: images } = await this.translationData.getImagesBySource(this.getSourceType(), this.currentId!);
           if (images) {
             this.existingImages.set(images as ExistingImage[]);
           }
 
           // Load existing documents (if entity supports them)
           if (this.supportsDocuments()) {
-            const { data: documents } = await this.supabase.getDocumentsBySource(this.getSourceType(), this.currentId!);
+            const { data: documents } = await this.translationData.getDocumentsBySource(this.getSourceType(), this.currentId!);
             if (documents) {
               this.existingDocuments.set(documents as ExistingDocument[]);
             }
@@ -199,7 +201,7 @@ export abstract class BaseEntityFormComponent<TEntity, TTranslation> implements 
 
       let result;
       if (this.isNew) {
-        result = await this.supabase.createWithTranslations(
+        result = await this.translationData.createWithTranslations(
           this.getTableName(),
           this.getTranslationTableName(),
           this.getForeignKey(),
@@ -207,7 +209,7 @@ export abstract class BaseEntityFormComponent<TEntity, TTranslation> implements 
           translationsPayload
         );
       } else {
-        result = await this.supabase.updateWithTranslations(
+        result = await this.translationData.updateWithTranslations(
           this.getTableName(),
           this.getTranslationTableName(),
           this.getForeignKey(),
@@ -254,7 +256,7 @@ export abstract class BaseEntityFormComponent<TEntity, TTranslation> implements 
     for (let i = 0; i < images.length; i++) {
       const img = images[i];
       try {
-        await this.supabase.create('image', {
+        await this.crud.create('image', {
           url: img.url,
           source_type: this.getSourceType(),
           source_id: entityId,
@@ -272,7 +274,7 @@ export abstract class BaseEntityFormComponent<TEntity, TTranslation> implements 
     for (let i = 0; i < documents.length; i++) {
       const doc = documents[i];
       try {
-        await this.supabase.create('document', {
+        await this.crud.create('document', {
           url: doc.url,
           file_name: doc.file_name,
           file_type: doc.file_type,
@@ -292,7 +294,7 @@ export abstract class BaseEntityFormComponent<TEntity, TTranslation> implements 
     if (this.currentId) {
       try {
         const currentImages = this.existingImages();
-        await this.supabase.create('image', {
+        await this.crud.create('image', {
           url: data.url,
           source_type: this.getSourceType(),
           source_id: this.currentId,
@@ -311,7 +313,7 @@ export abstract class BaseEntityFormComponent<TEntity, TTranslation> implements 
     if (this.currentId) {
       try {
         const currentDocuments = this.existingDocuments();
-        await this.supabase.create('document', {
+        await this.crud.create('document', {
           url: data.url,
           file_name: data.file_name,
           file_type: data.file_type,
@@ -332,7 +334,7 @@ export abstract class BaseEntityFormComponent<TEntity, TTranslation> implements 
   async onImagesReordered(updates: { id: number; position: number }[]): Promise<void> {
     if (updates.length === 0) return;
     try {
-      await this.supabase.updatePositions('image', updates);
+      await this.crud.updatePositions('image', updates);
       // Update local existing images to reflect new order
       const sorted = [...this.existingImages()].sort((a, b) => {
         const posA = updates.find(u => u.id === a.id)?.position ?? 0;

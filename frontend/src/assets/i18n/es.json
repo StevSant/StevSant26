@@ -473,7 +473,8 @@
     "labelPlaceholder": "Etiqueta (ej. Certificado, Diploma...)",
     "descriptionPlaceholder": "Descripción (opcional)",
     "editTranslations": "Editar traducciones",
-    "saveTranslations": "Guardar"
+    "saveTranslations": "Guardar",
+    "translations": "Contenido Traducible"
   },
   "confirmDialog": {
     "defaultTitle": "¿Estás seguro?",

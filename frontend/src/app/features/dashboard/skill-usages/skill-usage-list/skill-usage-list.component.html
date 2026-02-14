@@ -8,25 +8,11 @@
     </div>
     <div class="flex gap-3">
       <button (click)="toggleShowArchived()" class="btn-secondary">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"
-          />
-        </svg>
+        <span class="material-symbols-outlined text-[20px]">inventory_2</span>
         {{ showArchived() ? 'Ocultar archivados' : 'Ver archivados' }}
       </button>
       <a routerLink="new" class="btn-primary">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M12 4v16m8-8H4"
-          />
-        </svg>
+        <span class="material-symbols-outlined text-[20px]">add</span>
         Nuevo Uso
       </a>
     </div>
@@ -52,32 +38,13 @@
     </div>
   } @else if (filteredItems().length === 0) {
     <div class="card p-12 text-center">
-      <svg
-        class="mx-auto h-16 w-16 text-[var(--color-text-disabled)]"
-        fill="none"
-        stroke="currentColor"
-        viewBox="0 0 24 24"
-      >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"
-        />
-      </svg>
+      <span class="material-symbols-outlined text-[64px] mx-auto text-[var(--color-text-disabled)]">link</span>
       <h3 class="mt-4 text-lg font-medium text-[var(--color-text-primary)]">
         No hay usos de habilidades
       </h3>
       <p class="mt-2 text-[var(--color-text-muted)]">Vincula habilidades con tus proyectos</p>
       <a routerLink="new" class="mt-6 btn-primary inline-flex">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M12 4v16m8-8H4"
-          />
-        </svg>
+        <span class="material-symbols-outlined text-[20px]">add</span>
         Crear vínculo
       </a>
     </div>

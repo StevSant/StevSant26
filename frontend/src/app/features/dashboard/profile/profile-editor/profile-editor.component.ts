@@ -1,7 +1,9 @@
 import { Component, OnInit, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { SupabaseService } from '@core/services/supabase.service';
+import { ProfileService } from '@core/services/profile.service';
+import { TranslationDataService } from '@core/services/translation-data.service';
+import { CrudService } from '@core/services/crud.service';
 import { LanguageService } from '@core/services/language.service';
 import { TranslateService } from '@core/services/translate.service';
 import { Profile, ProfileTranslation, Language } from '@core/models';
@@ -31,7 +33,9 @@ import { LoggerService } from '@core/services/logger.service';
   templateUrl: './profile-editor.component.html',
 })
 export class ProfileEditorComponent implements OnInit {
-  private supabase = inject(SupabaseService);
+  private profileService = inject(ProfileService);
+  private translationData = inject(TranslationDataService);
+  private crud = inject(CrudService);
   private languageService = inject(LanguageService);
   private t = inject(TranslateService);
   private logger = inject(LoggerService);
@@ -47,8 +51,8 @@ export class ProfileEditorComponent implements OnInit {
   currentEditLanguage = signal<string>('es');
 
   // Image managers for avatar and banner
-  avatarManager = new ProfileImageManager(this.supabase, this.t, 'profile', 'Avatar de perfil');
-  bannerManager = new ProfileImageManager(this.supabase, this.t, 'profile_banner', 'Banner de perfil');
+  avatarManager = new ProfileImageManager(this.translationData, this.crud, this.t, 'profile', 'Avatar de perfil');
+  bannerManager = new ProfileImageManager(this.translationData, this.crud, this.t, 'profile_banner', 'Banner de perfil');
 
   // Expose signals for template bindings
   get pendingAvatar() { return this.avatarManager.pending; }
@@ -121,7 +125,7 @@ export class ProfileEditorComponent implements OnInit {
   async loadProfile(): Promise<void> {
     this.loading.set(true);
     try {
-      const { data, error } = await this.supabase.getProfile();
+      const { data, error } = await this.profileService.getProfile();
 
       if (error && !error.message.includes('PGRST116')) {
         throw error;
@@ -163,15 +167,15 @@ export class ProfileEditorComponent implements OnInit {
 
     try {
       const result = this.profileExists
-        ? await this.supabase.updateProfile(this.formData)
-        : await this.supabase.createProfile(this.formData);
+        ? await this.profileService.updateProfile(this.formData)
+        : await this.profileService.createProfile(this.formData);
       if (!this.profileExists) this.profileExists = true;
       if (result.error) throw result.error;
 
       // Save translations
       for (const [langCode, translation] of this.translations) {
         if (translation.about) {
-          const { error: translationError } = await this.supabase.upsertProfileTranslation({
+          const { error: translationError } = await this.profileService.upsertProfileTranslation({
             language: langCode,
             about: translation.about,
           });

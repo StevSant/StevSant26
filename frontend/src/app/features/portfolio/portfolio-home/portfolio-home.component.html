@@ -94,14 +94,7 @@
             class="inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-(--color-accent) text-(--btn-primary-text) text-sm font-medium tracking-wide hover:opacity-90 transition-opacity"
           >
             {{ 'portfolio.home.viewProjects' | translate }}
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M9 5l7 7-7 7"
-              />
-            </svg>
+            <span class="material-symbols-outlined text-[16px]">chevron_right</span>
           </a>
           <a
             routerLink="contact"
@@ -116,29 +109,12 @@
                 (click)="toggleCvMenu()"
                 class="inline-flex items-center gap-2 px-6 py-2.5 rounded-full border border-(--color-divider) text-(--color-text-secondary) text-sm font-medium tracking-wide hover:border-(--color-accent) hover:text-(--color-accent) transition-all"
               >
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                  />
-                </svg>
+                <span class="material-symbols-outlined text-[16px]">download</span>
                 {{ 'portfolio.downloadCV' | translate }}
-                <svg
-                  class="w-3.5 h-3.5 transition-transform"
+                <span
+                  class="material-symbols-outlined text-[14px] transition-transform"
                   [class.rotate-180]="cvMenuOpen()"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M19 9l-7 7-7-7"
-                  />
-                </svg>
+                >expand_more</span>
               </button>
               @if (cvMenuOpen()) {
                 <div
@@ -174,25 +150,7 @@
                             class="p-1.5 rounded-md text-(--color-text-muted) hover:text-(--color-accent) hover:bg-(--color-bg-primary) transition-colors"
                             [title]="'portfolio.nav.viewCV' | translate"
                           >
-                            <svg
-                              class="w-4 h-4"
-                              fill="none"
-                              stroke="currentColor"
-                              viewBox="0 0 24 24"
-                            >
-                              <path
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                stroke-width="2"
-                                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                              />
-                              <path
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                stroke-width="2"
-                                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
-                              />
-                            </svg>
+                            <span class="material-symbols-outlined text-[16px]">visibility</span>
                           </a>
                           <!-- Download -->
                           <a
@@ -202,19 +160,7 @@
                             class="p-1.5 rounded-md text-(--color-text-muted) hover:text-(--color-accent) hover:bg-(--color-bg-primary) transition-colors"
                             [title]="'portfolio.downloadCV' | translate"
                           >
-                            <svg
-                              class="w-4 h-4"
-                              fill="none"
-                              stroke="currentColor"
-                              viewBox="0 0 24 24"
-                            >
-                              <path
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                stroke-width="2"
-                                d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
-                              />
-                            </svg>
+                            <span class="material-symbols-outlined text-[16px]">download</span>
                           </a>
                         </div>
                       </div>
@@ -358,14 +304,7 @@
           class="text-xs uppercase tracking-widest text-(--color-text-muted) hover:text-(--color-accent) transition-colors inline-flex items-center gap-1.5"
         >
           {{ 'portfolio.home.viewAllProjects' | translate }}
-          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M9 5l7 7-7 7"
-            />
-          </svg>
+          <span class="material-symbols-outlined text-[14px]">chevron_right</span>
         </a>
       </div>
     </div>
@@ -425,14 +364,7 @@
           class="text-xs uppercase tracking-widest text-(--color-text-muted) hover:text-(--color-accent) transition-colors inline-flex items-center gap-1.5"
         >
           {{ 'portfolio.home.viewAllSkills' | translate }}
-          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M9 5l7 7-7 7"
-            />
-          </svg>
+          <span class="material-symbols-outlined text-[14px]">chevron_right</span>
         </a>
       </div>
     </div>
@@ -454,14 +386,7 @@
         class="absolute -top-12 right-0 p-2 text-white hover:text-(--color-accent) transition-colors"
         aria-label="Cerrar"
       >
-        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M6 18L18 6M6 6l12 12"
-          />
-        </svg>
+        <span class="material-symbols-outlined text-[32px] text-white hover:text-(--color-accent) transition-colors">close</span>
       </button>
       <!-- Image -->
       <img

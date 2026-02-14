@@ -1,13 +1,17 @@
 import { Component, input, output, signal, inject, effect } from '@angular/core';
-import { NgClass } from '@angular/common';
+import { NgClass, UpperCasePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { SupabaseService } from '@core/services/supabase.service';
+import { DocumentStorageService } from '@core/services/document-storage.service';
+import { CrudService } from '@core/services/crud.service';
+import { TranslationDataService } from '@core/services/translation-data.service';
 import { TranslateService } from '@core/services/translate.service';
 import { LanguageService } from '@core/services/language.service';
 import { SourceType, Language } from '@core/models';
 import { MAX_DOCUMENT_SIZE_BYTES } from '@shared/config/constants';
 import { TranslatePipe } from '@shared/pipes/translate.pipe';
 import { LoggerService } from '@core/services/logger.service';
+
+import { LanguageTabsComponent } from '@shared/components/language-tabs/language-tabs.component';
 
 export interface ExistingDocumentTranslation {
   id?: number;
@@ -31,11 +35,13 @@ export interface ExistingDocument {
 @Component({
   selector: 'app-document-upload',
   standalone: true,
-  imports: [NgClass, FormsModule, TranslatePipe],
+  imports: [NgClass, FormsModule, TranslatePipe, UpperCasePipe, LanguageTabsComponent],
   templateUrl: './document-upload.component.html',
 })
 export class DocumentUploadComponent {
-  private supabase = inject(SupabaseService);
+  private documentStorage = inject(DocumentStorageService);
+  private crud = inject(CrudService);
+  private translationData = inject(TranslationDataService);
   private t = inject(TranslateService);
   private languageService = inject(LanguageService);
   private logger = inject(LoggerService);
@@ -61,6 +67,7 @@ export class DocumentUploadComponent {
   expandedDocId = signal<number | null>(null);
   editingTranslations = signal<Map<string, { label: string; description: string }>>(new Map());
   savingTranslation = signal(false);
+  currentDocLang = signal<string>('es');
 
   get supportedLanguages(): Language[] {
     return this.languageService.supportedLanguages();
@@ -143,12 +150,12 @@ export class DocumentUploadComponent {
 
     try {
       const folderPath = this.folder() || this.sourceType() || 'misc';
-      const { path, error } = await this.supabase.uploadDocument(file, folderPath);
+      const { path, error } = await this.documentStorage.uploadDocument(file, folderPath);
 
       if (error) throw error;
 
       if (path) {
-        const url = this.supabase.getDocumentPublicUrl(path);
+        const url = this.documentStorage.getDocumentPublicUrl(path);
         const docData = {
           path,
           url,
@@ -172,7 +179,7 @@ export class DocumentUploadComponent {
     event.stopPropagation();
 
     try {
-      await this.supabase.deleteDocumentFromStorage(path);
+      await this.documentStorage.deleteDocumentFromStorage(path);
       this.uploadedDocuments.update((docs) => docs.filter((d) => d.path !== path));
     } catch (err) {
       this.error.set(this.t.instant('errors.documentDeleteFailed'));
@@ -184,7 +191,7 @@ export class DocumentUploadComponent {
     event.stopPropagation();
 
     try {
-      await this.supabase.update('document', documentId, { is_archived: true });
+      await this.crud.update('document', documentId, { is_archived: true });
       this.loadedExistingDocuments.update((docs) => docs.filter((d) => d.id !== documentId));
       this.documentDeleted.emit(documentId);
     } catch (err) {
@@ -231,7 +238,7 @@ export class DocumentUploadComponent {
     this.savingTranslation.set(true);
     try {
       for (const [langCode, fields] of this.editingTranslations()) {
-        await this.supabase.upsertTranslation(
+        await this.translationData.upsertTranslation(
           'document_translation',
           'document_id',
           docId,

@@ -2,7 +2,6 @@ import { Component, OnInit, signal, viewChild, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
-import { SupabaseService } from '@core/services/supabase.service';
 import { TranslateService } from '@core/services/translate.service';
 import { Project, ProjectTranslation, Image } from '@core/models';
 import { ConfirmDialogComponent } from '@shared/components/confirm-dialog/confirm-dialog.component';
@@ -10,6 +9,7 @@ import { TranslatePipe } from '@shared/pipes/translate.pipe';
 import { DashboardFilterComponent, DashboardFilterOption } from '@shared/components/dashboard-filter/dashboard-filter.component';
 import { ProjectItemComponent } from './project-item/project-item.component';
 import { LoggerService } from '@core/services/logger.service';
+import { CrudService, TranslationDataService } from '@core/services';
 
 @Component({
   selector: 'app-project-list',
@@ -18,7 +18,8 @@ import { LoggerService } from '@core/services/logger.service';
   templateUrl: './project-list.component.html',
 })
 export class ProjectListComponent implements OnInit {
-  private supabase = inject(SupabaseService);
+    private crudService = inject(CrudService);
+    private translationDataService = inject(TranslationDataService);
   private translateService = inject(TranslateService);
   private logger = inject(LoggerService);
 
@@ -51,7 +52,7 @@ export class ProjectListComponent implements OnInit {
   async loadItems(): Promise<void> {
     this.loading.set(true);
     try {
-      const { data, error } = await this.supabase.getAllWithTranslations<Project>(
+      const { data, error } = await this.translationDataService.getAllWithTranslations<Project>(
         'project',
         'project_translation',
         'position',
@@ -73,7 +74,7 @@ export class ProjectListComponent implements OnInit {
   private async loadImages(items: Project[]): Promise<void> {
     if (items.length === 0) return;
     const ids = items.map(i => i.id);
-    const { data } = await this.supabase
+    const { data } = await this.crudService
       .from('image')
       .select('*')
       .eq('source_type', 'project')
@@ -198,7 +199,7 @@ export class ProjectListComponent implements OnInit {
     this.items.set(allItems);
     const updates = allItems.map((item, i) => ({ id: item.id, position: i }));
     try {
-      await this.supabase.updatePositions('project', updates);
+      await this.crudService.updatePositions('project', updates);
     } catch (err) {
       this.logger.error('Error updating positions:', err);
       await this.loadItems();
@@ -207,7 +208,7 @@ export class ProjectListComponent implements OnInit {
 
   async togglePin(item: Project): Promise<void> {
     try {
-      await this.supabase.togglePin('project', item.id, !item.is_pinned);
+      await this.crudService.togglePin('project', item.id, !item.is_pinned);
       await this.loadItems();
     } catch (err) {
       this.logger.error('Error toggling pin:', err);
@@ -217,9 +218,9 @@ export class ProjectListComponent implements OnInit {
   async toggleArchive(item: Project): Promise<void> {
     try {
       if (item.is_archived) {
-        await this.supabase.unarchive('project', item.id);
+        await this.crudService.unarchive('project', item.id);
       } else {
-        await this.supabase.archive('project', item.id);
+        await this.crudService.archive('project', item.id);
       }
       await this.loadItems();
     } catch (err) {
@@ -235,7 +236,7 @@ export class ProjectListComponent implements OnInit {
   async deleteItem(): Promise<void> {
     if (!this.itemToDelete) return;
     try {
-      await this.supabase.delete('project', this.itemToDelete.id);
+      await this.crudService.delete('project', this.itemToDelete.id);
       await this.loadItems();
     } catch (err) {
       this.logger.error('Error deleting item:', err);

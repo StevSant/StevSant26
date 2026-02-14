@@ -9,27 +9,13 @@
     </div>
     <div class="flex gap-3">
       <button (click)="toggleShowArchived()" class="btn-secondary">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"
-          />
-        </svg>
+        <span class="material-symbols-outlined text-[20px]">inventory_2</span>
         {{
           showArchived() ? ('common.hideArchived' | translate) : ('common.showArchived' | translate)
         }}
       </button>
       <a routerLink="new" class="btn-primary">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M12 4v16m8-8H4"
-          />
-        </svg>
+        <span class="material-symbols-outlined text-[20px]">add</span>
         {{ 'projects.create' | translate }}
       </a>
     </div>
@@ -66,32 +52,13 @@
   } @else if (filteredItems().length === 0) {
     <!-- Empty State -->
     <div class="card p-12 text-center">
-      <svg
-        class="mx-auto h-16 w-16 text-[var(--color-text-disabled)]"
-        fill="none"
-        stroke="currentColor"
-        viewBox="0 0 24 24"
-      >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"
-        />
-      </svg>
+      <span class="material-symbols-outlined text-[64px] mx-auto text-[var(--color-text-disabled)]">folder</span>
       <h3 class="mt-4 text-lg font-medium text-[var(--color-text-primary)]">
         {{ 'projects.empty' | translate }}
       </h3>
       <p class="mt-2 text-[var(--color-text-muted)]">{{ 'projects.emptyHint' | translate }}</p>
       <a routerLink="new" class="mt-6 inline-flex btn-primary">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M12 4v16m8-8H4"
-          />
-        </svg>
+        <span class="material-symbols-outlined text-[20px]">add</span>
         {{ 'projects.create' | translate }}
       </a>
     </div>

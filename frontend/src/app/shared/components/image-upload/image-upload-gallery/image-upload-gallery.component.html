@@ -31,28 +31,14 @@
             cdkDragHandle
             class="p-2 bg-(--color-bg-secondary)/80 rounded-full text-(--color-text-primary) cursor-grab active:cursor-grabbing"
           >
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"
-              />
-            </svg>
+            <span class="material-symbols-outlined text-[20px]">drag_indicator</span>
           </div>
           <button
             type="button"
             (click)="onRemoveUploaded(img.path, $event)"
             class="p-2 bg-(--color-error) hover:bg-(--color-error-hover) rounded-full text-(--color-text-primary) transition-colors"
           >
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-              />
-            </svg>
+            <span class="material-symbols-outlined text-[20px]">delete</span>
           </button>
         </div>
       </div>
@@ -99,28 +85,14 @@
               cdkDragHandle
               class="p-2 bg-(--color-bg-secondary)/80 rounded-full text-(--color-text-primary) cursor-grab active:cursor-grabbing"
             >
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"
-                />
-              </svg>
+              <span class="material-symbols-outlined text-[20px]">drag_indicator</span>
             </div>
             <button
               type="button"
               (click)="onRemoveExisting(img.id, $event)"
               class="p-2 bg-(--color-error) hover:bg-(--color-error-hover) rounded-full text-(--color-text-primary) transition-colors"
             >
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                />
-              </svg>
+              <span class="material-symbols-outlined text-[20px]">delete</span>
             </button>
           </div>
         </div>

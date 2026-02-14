@@ -1,7 +1,7 @@
 import { Component, signal, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { SupabaseService } from '@core/services/supabase.service';
+import { AuthService } from '@core/services/auth.service';
 import { TranslateService } from '@core/services/translate.service';
 import { TranslatePipe } from '@shared/pipes/translate.pipe';
 import { LanguageSelectorComponent } from '@shared/components/language-selector/language-selector.component';
@@ -14,7 +14,7 @@ import { ThemeToggleComponent } from '@shared/components/theme-toggle/theme-togg
   templateUrl: './login.component.html',
 })
 export class LoginComponent {
-  private supabase = inject(SupabaseService);
+  private authService = inject(AuthService);
   private router = inject(Router);
   private t = inject(TranslateService);
 
@@ -33,7 +33,7 @@ export class LoginComponent {
     this.error.set(null);
 
     try {
-      const { error } = await this.supabase.signIn(this.email, this.password);
+      const { error } = await this.authService.signIn(this.email, this.password);
 
       if (error) {
         this.error.set(this.getErrorMessage(error.message));

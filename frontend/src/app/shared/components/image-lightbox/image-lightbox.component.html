@@ -21,23 +21,9 @@
         class="w-10 h-10 rounded-full bg-white/10 text-white flex items-center justify-center hover:bg-white/20 transition-colors"
         [attr.aria-label]="zoomed() ? 'Zoom out' : 'Zoom in'"
       >
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          @if (zoomed()) {
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM13 10H7"
-            />
-          } @else {
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v6m3-3H7"
-            />
-          }
-        </svg>
+        <span class="material-symbols-outlined text-[20px]">
+          {{ zoomed() ? 'zoom_out' : 'zoom_in' }}
+        </span>
       </button>
 
       <!-- Close -->
@@ -47,14 +33,7 @@
         class="w-10 h-10 rounded-full bg-white/10 text-white flex items-center justify-center hover:bg-white/20 transition-colors"
         aria-label="Close lightbox"
       >
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M6 18L18 6M6 6l12 12"
-          />
-        </svg>
+        <span class="material-symbols-outlined text-[24px]">close</span>
       </button>
     </div>
   </div>
@@ -72,14 +51,7 @@
         class="absolute left-3 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full bg-white/10 text-white flex items-center justify-center hover:bg-white/25 transition-all z-10 backdrop-blur-sm"
         aria-label="Previous image"
       >
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M15 19l-7-7 7-7"
-          />
-        </svg>
+        <span class="material-symbols-outlined text-[20px]">chevron_left</span>
       </button>
     }
 
@@ -106,9 +78,7 @@
         class="absolute right-3 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full bg-white/10 text-white flex items-center justify-center hover:bg-white/25 transition-all z-10 backdrop-blur-sm"
         aria-label="Next image"
       >
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-        </svg>
+        <span class="material-symbols-outlined text-[20px]">chevron_right</span>
       </button>
     }
   </div>

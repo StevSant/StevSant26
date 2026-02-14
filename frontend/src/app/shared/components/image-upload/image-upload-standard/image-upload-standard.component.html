@@ -41,19 +41,7 @@
         </p>
       </div>
     } @else {
-      <svg
-        class="mx-auto h-12 w-12 text-(--color-text-muted)"
-        stroke="currentColor"
-        fill="none"
-        viewBox="0 0 48 48"
-      >
-        <path
-          d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        />
-      </svg>
+      <span class="material-symbols-outlined mx-auto text-[48px] text-(--color-text-muted)">add_photo_alternate</span>
       <p class="mt-2 text-sm text-(--color-text-muted)">
         <span class="text-(--color-accent) font-medium">Haz clic para subir</span> o arrastra y
         suelta
@@ -72,14 +60,7 @@
       (click)="onRemovePreview($event)"
       class="absolute top-2 right-2 p-1.5 bg-(--color-error) hover:bg-(--color-error-hover) rounded-full text-(--color-text-primary) transition-colors"
     >
-      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          d="M6 18L18 6M6 6l12 12"
-        />
-      </svg>
+      <span class="material-symbols-outlined text-[16px]">close</span>
     </button>
   </div>
 }
