@@ -1,8 +1,10 @@
 import { Component, input, output, signal } from '@angular/core';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
   selector: 'app-image-upload-avatar',
   standalone: true,
+  imports: [MatIcon],
   templateUrl: './image-upload-avatar.component.html',
 })
 export class ImageUploadAvatarComponent {

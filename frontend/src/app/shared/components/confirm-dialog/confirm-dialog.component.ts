@@ -1,9 +1,11 @@
 import { Component, inject, input, output, signal } from '@angular/core';
 import { TranslateService } from '@core/services/translate.service';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
   selector: 'app-confirm-dialog',
   standalone: true,
+  imports: [MatIcon],
   templateUrl: './confirm-dialog.component.html',
   styleUrl: './confirm-dialog.component.css',
 })

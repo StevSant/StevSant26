@@ -7,11 +7,12 @@ import { TranslateService } from '@core/services/translate.service';
 import { TranslatePipe } from '@shared/pipes/translate.pipe';
 import { PortfolioFilterComponent, FilterOption, FilterOptionGroup } from '@shared/components/portfolio-filter/portfolio-filter.component';
 import { ScrollRevealDirective } from '@shared/directives/scroll-reveal.directive';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
   selector: 'app-portfolio-projects',
   standalone: true,
-  imports: [CommonModule, DatePipe, RouterModule, TranslatePipe, PortfolioFilterComponent, ScrollRevealDirective],
+  imports: [CommonModule, DatePipe, RouterModule, TranslatePipe, PortfolioFilterComponent, ScrollRevealDirective, MatIcon],
   templateUrl: './portfolio-projects.component.html',
 })
 export class PortfolioProjectsComponent implements OnInit {

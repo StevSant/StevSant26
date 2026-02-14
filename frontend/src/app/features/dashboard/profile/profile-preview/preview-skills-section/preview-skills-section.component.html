@@ -22,13 +22,7 @@
                 <!-- Star Rating -->
                 <div class="flex gap-0.5" [title]="'preview.skillLevel' | translate">
                   @for (filled of getStarArray()(skill.calculatedLevel); track $index) {
-                    <span
-                      class="material-symbols-outlined text-[16px]"
-                      [class.text-yellow-400]="filled"
-                      [class.text-gray-300]="!filled"
-                      [style.font-variation-settings]="'FILL 1'"
-                      >star</span
-                    >
+                    <mat-icon class="text-[16px]" [class.text-yellow-400]="filled" [class.text-gray-300]="!filled" [style.font-variation-settings]="'FILL 1'" >star</mat-icon>
                   }
                 </div>
               </div>

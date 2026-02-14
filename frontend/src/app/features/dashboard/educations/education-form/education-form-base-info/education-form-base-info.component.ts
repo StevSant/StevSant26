@@ -2,11 +2,12 @@ import { Component, input, output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TranslatePipe } from '@shared/pipes/translate.pipe';
 import { EducationType } from '@core/models';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
   selector: 'app-education-form-base-info',
   standalone: true,
-  imports: [FormsModule, TranslatePipe],
+  imports: [FormsModule, TranslatePipe, MatIcon],
   templateUrl: './education-form-base-info.component.html',
 })
 export class EducationFormBaseInfoComponent {

@@ -1,6 +1,7 @@
 import { Component, input, output, signal, computed } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TranslatePipe } from '@shared/pipes/translate.pipe';
+import { MatIcon } from '@angular/material/icon';
 
 export interface FilterOption {
   label: string;
@@ -15,7 +16,7 @@ export interface FilterOptionGroup {
 @Component({
   selector: 'app-portfolio-filter',
   standalone: true,
-  imports: [FormsModule, TranslatePipe],
+  imports: [FormsModule, TranslatePipe, MatIcon],
   templateUrl: './portfolio-filter.component.html',
 })
 export class PortfolioFilterComponent {

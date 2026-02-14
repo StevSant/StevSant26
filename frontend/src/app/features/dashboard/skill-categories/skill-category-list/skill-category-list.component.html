@@ -10,13 +10,13 @@
     </div>
     <div class="flex gap-3">
       <button (click)="toggleShowArchived()" class="btn-secondary">
-        <span class="material-symbols-outlined text-[20px]">inventory_2</span>
+        <mat-icon class="text-[20px]">inventory_2</mat-icon>
         {{
           showArchived() ? ('common.hideArchived' | translate) : ('common.showArchived' | translate)
         }}
       </button>
       <a routerLink="new" class="btn-primary">
-        <span class="material-symbols-outlined text-[20px]">add</span>
+        <mat-icon class="text-[20px]">add</mat-icon>
         {{ 'skillCategories.create' | translate }}
       </a>
     </div>
@@ -42,8 +42,7 @@
     </div>
   } @else if (filteredItems().length === 0) {
     <div class="card p-12 text-center">
-      <span class="material-symbols-outlined text-[64px] mx-auto text-[var(--color-text-disabled)]"
-        >label</span
+      <mat-icon class="text-[64px] mx-auto text-[var(--color-text-disabled)]" >label</mat-icon
       >
       <h3 class="mt-4 text-lg font-medium text-[var(--color-text-primary)]">
         {{ 'skillCategories.empty' | translate }}
@@ -52,7 +51,7 @@
         {{ 'skillCategories.emptyHint' | translate }}
       </p>
       <a routerLink="new" class="mt-6 btn-primary inline-flex">
-        <span class="material-symbols-outlined text-[20px]">add</span>
+        <mat-icon class="text-[20px]">add</mat-icon>
         {{ 'skillCategories.create' | translate }}
       </a>
     </div>

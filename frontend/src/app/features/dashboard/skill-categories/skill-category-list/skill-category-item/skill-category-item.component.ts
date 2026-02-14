@@ -3,11 +3,12 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { SkillCategory } from '@core/models';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
   selector: 'app-skill-category-item',
   standalone: true,
-  imports: [CommonModule, RouterModule, DragDropModule],
+  imports: [CommonModule, RouterModule, DragDropModule, MatIcon],
   templateUrl: './skill-category-item.component.html',
 })
 export class SkillCategoryItemComponent {

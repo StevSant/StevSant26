@@ -9,11 +9,12 @@ import { Document, Language } from '@core/models';
 import { MAX_CV_SIZE_BYTES, SUCCESS_MESSAGE_DURATION_MS } from '@shared/config/constants';
 import { TranslatePipe } from '@shared/pipes/translate.pipe';
 import { LoggerService } from '@core/services/logger.service';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
   selector: 'app-cv-manager',
   standalone: true,
-  imports: [CommonModule, FormsModule, TranslatePipe],
+  imports: [CommonModule, FormsModule, TranslatePipe, MatIcon],
   templateUrl: './cv-manager.component.html',
 })
 export class CvManagerComponent implements OnInit {

@@ -5,7 +5,7 @@
       routerLink="../"
       class="inline-flex items-center gap-2 text-sm text-(--color-text-muted) hover:text-(--color-accent) transition-colors mb-6 sm:mb-8"
     >
-      <span class="material-symbols-outlined text-[16px]">chevron_left</span>
+      <mat-icon class="text-[16px]">chevron_left</mat-icon>
       {{ 'portfolio.backToList' | translate }}
     </a>
 
@@ -37,17 +37,17 @@
                   : 'bg-(--color-bg-secondary) border-(--color-border-primary) text-(--color-text-muted) hover:border-(--color-accent)/30 hover:text-(--color-accent)'
               "
             >
-              <span class="material-symbols-outlined text-[16px]">description</span>
+              <mat-icon class="text-[16px]">description</mat-icon>
               {{ 'portfolio.documents' | translate }}
               <span
                 class="inline-flex items-center justify-center w-5 h-5 text-xs font-medium rounded-full bg-(--color-accent)/15 text-(--color-accent)"
               >
                 {{ documents().length }}
               </span>
-              <span
-                class="material-symbols-outlined text-[14px] transition-transform"
+              <mat-icon
+                class="text-[14px] transition-transform"
                 [class.rotate-180]="showDocuments()"
-                >expand_more</span
+                >expand_more</mat-icon
               >
             </button>
 
@@ -60,9 +60,8 @@
                     rel="noopener noreferrer"
                     class="group flex items-center gap-3 px-3 py-2 rounded-lg bg-(--color-bg-secondary) border border-(--color-border-primary) hover:border-(--color-accent)/30 transition-all"
                   >
-                    <span
-                      class="material-symbols-outlined text-[16px] text-(--color-accent) shrink-0"
-                      >description</span
+                    <mat-icon class="text-[16px] text-(--color-accent) shrink-0"
+                      >description</mat-icon
                     >
                     <div class="flex-1 min-w-0">
                       <p
@@ -76,9 +75,9 @@
                         </p>
                       }
                     </div>
-                    <span
-                      class="material-symbols-outlined text-[14px] text-(--color-text-muted) group-hover:text-(--color-accent) transition-colors shrink-0"
-                      >open_in_new</span
+                    <mat-icon
+                      class="text-[14px] text-(--color-text-muted) group-hover:text-(--color-accent) transition-colors shrink-0"
+                      >open_in_new</mat-icon
                     >
                   </a>
                 }
@@ -170,7 +169,7 @@
                     }
                     <span class="inline-flex items-center gap-1 text-xs text-(--color-accent) mt-2">
                       {{ 'portfolio.viewProject' | translate }}
-                      <span class="material-symbols-outlined text-[12px]">chevron_right</span>
+                      <mat-icon class="text-[12px]">chevron_right</mat-icon>
                     </span>
                   </div>
                 </a>

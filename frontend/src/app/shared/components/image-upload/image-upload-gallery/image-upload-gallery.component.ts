@@ -1,11 +1,12 @@
 import { Component, input, output } from '@angular/core';
 import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
 import { ExistingImage } from '../image-upload.component';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
   selector: 'app-image-upload-gallery',
   standalone: true,
-  imports: [DragDropModule],
+  imports: [DragDropModule, MatIcon],
   templateUrl: './image-upload-gallery.component.html',
 })
 export class ImageUploadGalleryComponent {

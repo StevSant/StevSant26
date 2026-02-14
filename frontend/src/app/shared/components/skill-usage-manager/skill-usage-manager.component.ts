@@ -10,6 +10,7 @@ import { TranslatePipe } from '../../pipes/translate.pipe';
 import { SkillUsageAddFormComponent } from './skill-usage-add-form/skill-usage-add-form.component';
 import { SkillUsageItemComponent } from './skill-usage-item/skill-usage-item.component';
 import { LoggerService } from '@core/services/logger.service';
+import { MatIcon } from '@angular/material/icon';
 
 export interface SkillUsageItem {
   id?: number;
@@ -26,7 +27,7 @@ export interface SkillUsageItem {
 @Component({
   selector: 'app-skill-usage-manager',
   standalone: true,
-  imports: [CommonModule, FormsModule, TranslatePipe, SkillUsageAddFormComponent, SkillUsageItemComponent],
+  imports: [CommonModule, FormsModule, TranslatePipe, SkillUsageAddFormComponent, SkillUsageItemComponent, MatIcon],
   templateUrl: './skill-usage-manager.component.html',
 })
 export class SkillUsageManagerComponent implements OnInit {

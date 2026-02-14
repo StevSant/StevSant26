@@ -10,11 +10,12 @@ import { DashboardFilterComponent, DashboardFilterOption } from '@shared/compone
 import { SkillItemComponent } from './skill-item/skill-item.component';
 import { LoggerService } from '@core/services/logger.service';
 import { CrudService, TranslationDataService } from '@core/services';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
   selector: 'app-skill-list',
   standalone: true,
-  imports: [CommonModule, RouterModule, DragDropModule, ConfirmDialogComponent, TranslatePipe, DashboardFilterComponent, SkillItemComponent],
+  imports: [CommonModule, RouterModule, DragDropModule, ConfirmDialogComponent, TranslatePipe, DashboardFilterComponent, SkillItemComponent, MatIcon],
   templateUrl: './skill-list.component.html',
 })
 export class SkillListComponent implements OnInit {

@@ -12,6 +12,7 @@ import { TranslatePipe } from '@shared/pipes/translate.pipe';
 import { LoggerService } from '@core/services/logger.service';
 
 import { LanguageTabsComponent } from '@shared/components/language-tabs/language-tabs.component';
+import { MatIcon } from '@angular/material/icon';
 
 export interface ExistingDocumentTranslation {
   id?: number;
@@ -35,7 +36,7 @@ export interface ExistingDocument {
 @Component({
   selector: 'app-document-upload',
   standalone: true,
-  imports: [NgClass, FormsModule, TranslatePipe, UpperCasePipe, LanguageTabsComponent],
+  imports: [NgClass, FormsModule, TranslatePipe, UpperCasePipe, LanguageTabsComponent, MatIcon],
   templateUrl: './document-upload.component.html',
 })
 export class DocumentUploadComponent {

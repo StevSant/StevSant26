@@ -41,10 +41,7 @@
                     <span
                       class="absolute top-2 right-2 text-(--color-pin) bg-(--color-bg-primary)/80 rounded-full p-1"
                     >
-                      <span
-                        class="material-symbols-outlined text-[16px]"
-                        style="font-variation-settings: 'FILL' 1"
-                        >star</span
+                      <mat-icon class="text-[16px]" style="font-variation-settings: 'FILL' 1" >star</mat-icon
                       >
                     </span>
                   }
@@ -62,12 +59,9 @@
                     </h3>
                     @if (project.is_pinned && !data.getFirstImageUrl('project', project.id)) {
                       <span class="text-(--color-pin) opacity-70">
-                        <span
-                          class="material-symbols-outlined text-[16px]"
-                          style="font-variation-settings: 'FILL' 1"
-                          >star</span
+                        <mat-icon class="text-[16px]" style="font-variation-settings: 'FILL' 1" >star</mat-icon
                         >
-                      </span>
+                      </mat-icon>
                     }
                   </div>
 
@@ -122,13 +116,11 @@
                   <div
                     class="flex items-center gap-2 mb-4 px-2.5 py-1.5 rounded-lg bg-(--color-bg-tertiary) border border-(--color-border-primary) w-fit"
                   >
-                    <span class="material-symbols-outlined text-[14px] text-(--color-text-muted)"
-                      >grid_view</span
-                    >
+                    <mat-icon class="text-[14px] text-(--color-text-muted)" >grid_view</mat-icon>
                     <span class="text-xs text-(--color-text-muted)">
                       {{ data.getSubProjects(project.id).length }}
                       {{ 'portfolio.subProjects' | translate }}
-                    </span>
+                    </mat-icon>
                   </div>
                 }
 
@@ -141,7 +133,7 @@
                       rel="noopener noreferrer"
                       class="btn-view-project"
                     >
-                      <span class="material-symbols-outlined text-[20px]">open_in_new</span>
+                      <mat-icon class="text-[20px]">open_in_new</mat-icon>
                       {{ 'portfolio.viewProject' | translate }}
                     </a>
                   }
@@ -152,7 +144,7 @@
                       rel="noopener noreferrer"
                       class="btn-view-project"
                     >
-                      <span class="material-symbols-outlined text-[20px]">play_circle</span>
+                      <mat-icon class="text-[20px]">play_circle</mat-icon>
                       {{ 'portfolio.viewDemo' | translate }}
                     </a>
                   }
@@ -161,7 +153,7 @@
                     class="text-xs uppercase tracking-widest text-(--color-text-muted) hover:text-(--color-accent) flex items-center gap-1.5 transition-colors ml-auto"
                   >
                     {{ 'portfolio.viewDetails' | translate }}
-                    <span class="material-symbols-outlined text-[14px]">chevron_right</span>
+                    <mat-icon class="text-[14px]">chevron_right</mat-icon>
                   </a>
                 </div>
               </div>

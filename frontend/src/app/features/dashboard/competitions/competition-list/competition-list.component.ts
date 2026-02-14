@@ -10,11 +10,12 @@ import { DashboardFilterComponent, DashboardFilterOption } from '@shared/compone
 import { CompetitionItemComponent } from './competition-item/competition-item.component';
 import { LoggerService } from '@core/services/logger.service';
 import { CrudService, TranslationDataService } from '@core/services';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
   selector: 'app-competition-list',
   standalone: true,
-  imports: [CommonModule, RouterModule, DragDropModule, ConfirmDialogComponent, TranslatePipe, DashboardFilterComponent, CompetitionItemComponent],
+  imports: [CommonModule, RouterModule, DragDropModule, ConfirmDialogComponent, TranslatePipe, DashboardFilterComponent, CompetitionItemComponent, MatIcon],
   templateUrl: './competition-list.component.html',
 })
 export class CompetitionListComponent implements OnInit {

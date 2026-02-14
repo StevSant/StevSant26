@@ -15,9 +15,9 @@
             "
           >
             @if (group.isMaterialIcon) {
-              <span class="material-symbols-outlined text-[16px] leading-none">{{
+              <mat-icon class="text-[16px] leading-none">{{
                 group.icon
-              }}</span>
+              }}</mat-icon>
             } @else {
               <span class="text-sm">{{ group.icon }}</span>
             }
@@ -48,9 +48,9 @@
             class="text-xs uppercase tracking-[0.2em] text-(--color-text-muted) mb-3 font-medium flex items-center gap-2"
           >
             @if (group.isMaterialIcon) {
-              <span class="material-symbols-outlined text-[16px] leading-none">{{
+              <mat-icon class="text-[16px] leading-none">{{
                 group.icon
-              }}</span>
+              }}</mat-icon>
             } @else {
               <span>{{ group.icon }}</span>
             }
@@ -67,9 +67,9 @@
               >
                 @if (section.icon && showTabs) {
                   @if (isMaterialIcon(section.icon)) {
-                    <span class="material-symbols-outlined text-[16px] leading-none">{{
+                    <mat-icon class="text-[16px] leading-none">{{
                       section.icon
-                    }}</span>
+                    }}</mat-icon>
                   } @else {
                     <span>{{ section.icon }}</span>
                   }
@@ -109,10 +109,7 @@
                       <div
                         class="absolute inset-0 bg-black/0 group-hover/img:bg-black/15 transition-colors duration-300 flex items-center justify-center"
                       >
-                        <span
-                          class="material-symbols-outlined text-white text-3xl opacity-0 group-hover/img:opacity-100 transition-opacity duration-300 drop-shadow-lg"
-                          >zoom_in</span
-                        >
+                        <mat-icon class="text-white text-3xl opacity-0 group-hover/img:opacity-100 transition-opacity duration-300 drop-shadow-lg" >zoom_in</mat-icon>
                       </div>
                     </div>
                   </div>
@@ -136,10 +133,7 @@
                             <div
                               class="absolute inset-0 bg-black/0 group-hover/img:bg-black/15 transition-colors duration-300 flex items-center justify-center"
                             >
-                              <span
-                                class="material-symbols-outlined text-white text-2xl opacity-0 group-hover/img:opacity-100 transition-opacity duration-300 drop-shadow-lg"
-                                >zoom_in</span
-                              >
+                              <mat-icon class="text-white text-2xl opacity-0 group-hover/img:opacity-100 transition-opacity duration-300 drop-shadow-lg" >zoom_in</mat-icon>
                             </div>
                           </div>
                         </div>
@@ -162,10 +156,7 @@
                           <div
                             class="absolute inset-0 bg-black/0 group-hover/img:bg-black/15 transition-colors duration-300 flex items-center justify-center"
                           >
-                            <span
-                              class="material-symbols-outlined text-white text-2xl opacity-0 group-hover/img:opacity-100 transition-opacity duration-300 drop-shadow-lg"
-                              >zoom_in</span
-                            >
+                            <mat-icon class="text-white text-2xl opacity-0 group-hover/img:opacity-100 transition-opacity duration-300 drop-shadow-lg" >zoom_in</mat-icon>
                           </div>
                         </div>
                       </div>
@@ -188,10 +179,7 @@
                             <div
                               class="absolute inset-0 bg-black/0 group-hover/img:bg-black/15 transition-colors duration-300 flex items-center justify-center"
                             >
-                              <span
-                                class="material-symbols-outlined text-white text-2xl opacity-0 group-hover/img:opacity-100 transition-opacity duration-300 drop-shadow-lg"
-                                >zoom_in</span
-                              >
+                              <mat-icon class="text-white text-2xl opacity-0 group-hover/img:opacity-100 transition-opacity duration-300 drop-shadow-lg" >zoom_in</mat-icon>
                             </div>
                           </div>
                         </div>
@@ -219,10 +207,7 @@
                             <div
                               class="absolute inset-0 bg-black/0 group-hover/img:bg-black/15 transition-colors duration-300 flex items-center justify-center"
                             >
-                              <span
-                                class="material-symbols-outlined text-white text-2xl opacity-0 group-hover/img:opacity-100 transition-opacity duration-300 drop-shadow-lg"
-                                >zoom_in</span
-                              >
+                              <mat-icon class="text-white text-2xl opacity-0 group-hover/img:opacity-100 transition-opacity duration-300 drop-shadow-lg" >zoom_in</mat-icon>
                             </div>
                             <!-- "+N more" overlay on the last visible image -->
                             @if (i === 3 && getSectionImages(section.id).length > 4) {

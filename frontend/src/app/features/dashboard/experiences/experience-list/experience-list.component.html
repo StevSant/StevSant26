@@ -8,13 +8,13 @@
     </div>
     <div class="flex gap-3">
       <button (click)="toggleShowArchived()" class="btn-secondary">
-        <span class="material-symbols-outlined text-[20px]">inventory_2</span>
+        <mat-icon class="text-[20px]">inventory_2</mat-icon>
         {{
           showArchived() ? ('common.hideArchived' | translate) : ('common.showArchived' | translate)
         }}
       </button>
       <a routerLink="new" class="btn-primary">
-        <span class="material-symbols-outlined text-[20px]">add</span>
+        <mat-icon class="text-[20px]">add</mat-icon>
         {{ 'experiences.create' | translate }}
       </a>
     </div>
@@ -49,8 +49,7 @@
     </div>
   } @else if (filteredItems().length === 0) {
     <div class="bg-[var(--color-bg-secondary)] rounded-xl p-12 text-center">
-      <span class="material-symbols-outlined text-[64px] mx-auto text-[var(--color-text-disabled)]"
-        >work</span
+      <mat-icon class="text-[64px] mx-auto text-[var(--color-text-disabled)]" >work</mat-icon
       >
       <h3 class="mt-4 text-lg font-medium text-[var(--color-text-primary)]">
         {{ 'experiences.empty' | translate }}
@@ -59,7 +58,7 @@
         {{ 'experiences.emptyHint' | translate }}
       </p>
       <a routerLink="new" class="mt-6 inline-flex items-center gap-2 btn-primary">
-        <span class="material-symbols-outlined text-[20px]">add</span>
+        <mat-icon class="text-[20px]">add</mat-icon>
         {{ 'experiences.create' | translate }}
       </a>
     </div>

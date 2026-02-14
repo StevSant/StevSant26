@@ -8,11 +8,12 @@ import { TranslatePipe } from '@shared/pipes/translate.pipe';
 import { SafeHtmlPipe } from '@shared/pipes/safe-html.pipe';
 import { ScrollRevealDirective } from '@shared/directives/scroll-reveal.directive';
 import { PortfolioMapCardComponent } from '../components/portfolio-map-card/portfolio-map-card.component';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
   selector: 'app-portfolio-home',
   standalone: true,
-  imports: [CommonModule, RouterModule, TranslatePipe, SafeHtmlPipe, ScrollRevealDirective, PortfolioMapCardComponent],
+  imports: [CommonModule, RouterModule, TranslatePipe, SafeHtmlPipe, ScrollRevealDirective, PortfolioMapCardComponent, MatIcon],
   templateUrl: './portfolio-home.component.html',
 })
 export class PortfolioHomeComponent implements OnInit {

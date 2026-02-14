@@ -23,13 +23,13 @@
         >
           @switch (type) {
             @case ('formal') {
-              <span class="material-symbols-outlined text-[24px]">school</span>
+              <mat-icon class="text-[24px]">school</mat-icon>
             }
             @case ('course') {
-              <span class="material-symbols-outlined text-[24px]">menu_book</span>
+              <mat-icon class="text-[24px]">menu_book</mat-icon>
             }
             @case ('certification') {
-              <span class="material-symbols-outlined text-[24px]">verified</span>
+              <mat-icon class="text-[24px]">verified</mat-icon>
             }
           }
           <span class="text-xs font-medium">{{ 'educations.types.' + type | translate }}</span>

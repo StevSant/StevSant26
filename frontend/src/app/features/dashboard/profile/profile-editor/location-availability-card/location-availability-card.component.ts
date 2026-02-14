@@ -2,6 +2,7 @@ import { Component, input, output, computed } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TranslatePipe } from '@shared/pipes/translate.pipe';
 import { LocationPickerComponent, LocationResult } from '@shared/components/location-picker/location-picker.component';
+import { MatIcon } from '@angular/material/icon';
 
 export interface LocationAvailabilityData {
   city: string;
@@ -16,7 +17,7 @@ export interface LocationAvailabilityData {
 @Component({
   selector: 'app-location-availability-card',
   standalone: true,
-  imports: [FormsModule, TranslatePipe, LocationPickerComponent],
+  imports: [FormsModule, TranslatePipe, LocationPickerComponent, MatIcon],
   templateUrl: './location-availability-card.component.html',
 })
 export class LocationAvailabilityCardComponent {

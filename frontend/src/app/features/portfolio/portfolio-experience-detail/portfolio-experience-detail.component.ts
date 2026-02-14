@@ -8,11 +8,12 @@ import { TranslatePipe } from '@shared/pipes/translate.pipe';
 import { PortfolioContentSectionsComponent } from '../components/portfolio-content-sections/portfolio-content-sections.component';
 import { ImageGalleryComponent } from '@shared/components/image-gallery/image-gallery.component';
 import { Experience, Project, Document } from '@core/models';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
   selector: 'app-portfolio-experience-detail',
   standalone: true,
-  imports: [CommonModule, RouterModule, TranslatePipe, PortfolioContentSectionsComponent, ImageGalleryComponent],
+  imports: [CommonModule, RouterModule, TranslatePipe, PortfolioContentSectionsComponent, ImageGalleryComponent, MatIcon],
   templateUrl: './portfolio-experience-detail.component.html',
 })
 export class PortfolioExperienceDetailComponent implements OnInit {

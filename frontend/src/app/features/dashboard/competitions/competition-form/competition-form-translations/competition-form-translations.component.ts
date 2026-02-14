@@ -3,11 +3,12 @@ import { FormsModule } from '@angular/forms';
 import { UpperCasePipe } from '@angular/common';
 import { TranslatePipe } from '@shared/pipes/translate.pipe';
 import { LanguageTabsComponent } from '@shared/components/language-tabs/language-tabs.component';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
   selector: 'app-competition-form-translations',
   standalone: true,
-  imports: [FormsModule, UpperCasePipe, TranslatePipe, LanguageTabsComponent],
+  imports: [FormsModule, UpperCasePipe, TranslatePipe, LanguageTabsComponent, MatIcon],
   templateUrl: './competition-form-translations.component.html',
 })
 export class CompetitionFormTranslationsComponent {

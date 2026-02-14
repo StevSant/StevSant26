@@ -4,12 +4,10 @@
     (click)="toggleDropdown()"
     class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-(--color-bg-tertiary) transition-colors text-(--color-text-secondary)"
   >
-    <span class="material-symbols-outlined text-[20px]">language</span>
+    <mat-icon class="text-[20px]">language</mat-icon>
     <span class="text-sm font-medium uppercase">{{ translateService.currentLang() }}</span>
-    <span
-      class="material-symbols-outlined text-[16px] transition-transform"
-      [class.rotate-180]="isOpen()"
-      >expand_more</span
+    <mat-icon class="text-[16px] transition-transform" [class.rotate-180]="isOpen()"
+      >expand_more</mat-icon
     >
   </button>
 
@@ -28,7 +26,7 @@
           <span class="text-lg">{{ lang.flag }}</span>
           <span>{{ lang.name }}</span>
           @if (translateService.currentLang() === lang.code) {
-            <span class="material-symbols-outlined text-[16px] ml-auto">check</span>
+            <mat-icon class="text-[16px] ml-auto">check</mat-icon>
           }
         </button>
       }

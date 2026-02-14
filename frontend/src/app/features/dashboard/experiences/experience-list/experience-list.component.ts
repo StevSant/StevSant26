@@ -11,11 +11,12 @@ import { TranslatePipe } from '@shared/pipes/translate.pipe';
 import { DashboardFilterComponent, DashboardFilterOption } from '@shared/components/dashboard-filter/dashboard-filter.component';
 import { ExperienceItemComponent } from './experience-item/experience-item.component';
 import { LoggerService } from '@core/services/logger.service';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
   selector: 'app-experience-list',
   standalone: true,
-  imports: [CommonModule, RouterModule, DragDropModule, ConfirmDialogComponent, TranslatePipe, DashboardFilterComponent, ExperienceItemComponent],
+  imports: [CommonModule, RouterModule, DragDropModule, ConfirmDialogComponent, TranslatePipe, DashboardFilterComponent, ExperienceItemComponent, MatIcon],
   templateUrl: './experience-list.component.html',
 })
 export class ExperienceListComponent implements OnInit {

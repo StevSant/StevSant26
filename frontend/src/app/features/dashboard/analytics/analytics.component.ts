@@ -4,11 +4,12 @@ import { FormsModule } from '@angular/forms';
 import { AnalyticsService } from '@core/services/analytics.service';
 import { AnalyticsSummary, UniqueVisitor, VisitorSessionDetail } from '@core/models';
 import { TranslatePipe } from '@shared/pipes/translate.pipe';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
   selector: 'app-analytics',
   standalone: true,
-  imports: [CommonModule, DatePipe, TranslatePipe, FormsModule],
+  imports: [CommonModule, DatePipe, TranslatePipe, FormsModule, MatIcon],
   templateUrl: './analytics.component.html',
 })
 export class AnalyticsComponent implements OnInit {

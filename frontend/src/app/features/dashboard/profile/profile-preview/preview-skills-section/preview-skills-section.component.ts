@@ -1,10 +1,11 @@
 import { Component, input } from '@angular/core';
 import { TranslatePipe } from '@shared/pipes/translate.pipe';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
   selector: 'app-preview-skills-section',
   standalone: true,
-  imports: [TranslatePipe],
+  imports: [TranslatePipe, MatIcon],
   templateUrl: './preview-skills-section.component.html',
 })
 export class PreviewSkillsSectionComponent {

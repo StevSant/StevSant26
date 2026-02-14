@@ -3,11 +3,12 @@ import { ThemeService } from '@core/services/theme.service';
 import { ThemeId, ThemeIconType } from '@core/services/theme.types';
 import { AVAILABLE_THEMES } from '@core/services/theme.constants';
 import { TranslatePipe } from '@shared/pipes/translate.pipe';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
   selector: 'app-theme-toggle',
   standalone: true,
-  imports: [TranslatePipe],
+  imports: [TranslatePipe, MatIcon],
   templateUrl: './theme-toggle.component.html',
 })
 export class ThemeToggleComponent {

@@ -11,11 +11,12 @@ import { TranslatePipe } from '@shared/pipes/translate.pipe';
 import { DashboardFilterComponent, DashboardFilterOption } from '@shared/components/dashboard-filter/dashboard-filter.component';
 import { EventItemComponent } from './event-item/event-item.component';
 import { LoggerService } from '@core/services/logger.service';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
   selector: 'app-event-list',
   standalone: true,
-  imports: [CommonModule, RouterModule, DragDropModule, ConfirmDialogComponent, TranslatePipe, DashboardFilterComponent, EventItemComponent],
+  imports: [CommonModule, RouterModule, DragDropModule, ConfirmDialogComponent, TranslatePipe, DashboardFilterComponent, EventItemComponent, MatIcon],
   templateUrl: './event-list.component.html',
 })
 export class EventListComponent implements OnInit {

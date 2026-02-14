@@ -21,9 +21,9 @@
         class="w-10 h-10 rounded-full bg-white/10 text-white flex items-center justify-center hover:bg-white/20 transition-colors"
         [attr.aria-label]="zoomed() ? 'Zoom out' : 'Zoom in'"
       >
-        <span class="material-symbols-outlined text-[20px]">
+        <mat-icon class="text-[20px]">
           {{ zoomed() ? 'zoom_out' : 'zoom_in' }}
-        </span>
+        </mat-icon>
       </button>
 
       <!-- Close -->
@@ -33,7 +33,7 @@
         class="w-10 h-10 rounded-full bg-white/10 text-white flex items-center justify-center hover:bg-white/20 transition-colors"
         aria-label="Close lightbox"
       >
-        <span class="material-symbols-outlined text-[24px]">close</span>
+        <mat-icon class="text-[24px]">close</mat-icon>
       </button>
     </div>
   </div>
@@ -51,7 +51,7 @@
         class="absolute left-3 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full bg-white/10 text-white flex items-center justify-center hover:bg-white/25 transition-all z-10 backdrop-blur-sm"
         aria-label="Previous image"
       >
-        <span class="material-symbols-outlined text-[20px]">chevron_left</span>
+        <mat-icon class="text-[20px]">chevron_left</mat-icon>
       </button>
     }
 
@@ -78,7 +78,7 @@
         class="absolute right-3 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full bg-white/10 text-white flex items-center justify-center hover:bg-white/25 transition-all z-10 backdrop-blur-sm"
         aria-label="Next image"
       >
-        <span class="material-symbols-outlined text-[20px]">chevron_right</span>
+        <mat-icon class="text-[20px]">chevron_right</mat-icon>
       </button>
     }
   </div>

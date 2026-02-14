@@ -14,6 +14,7 @@ import { FormsModule } from '@angular/forms';
 import { LOCATION_SEARCH_DEBOUNCE_MS, LOCATION_SEARCH_MAX_RESULTS, NOMINATIM_API_URL } from '@shared/config/constants';
 import { TranslatePipe } from '@shared/pipes/translate.pipe';
 import { LoggerService } from '@core/services/logger.service';
+import { MatIcon } from '@angular/material/icon';
 
 export interface LocationResult {
   city: string;
@@ -112,7 +113,7 @@ const COUNTRY_TIMEZONES: Record<string, string[]> = {
 @Component({
   selector: 'app-location-picker',
   standalone: true,
-  imports: [CommonModule, FormsModule, TranslatePipe],
+  imports: [CommonModule, FormsModule, TranslatePipe, MatIcon],
   templateUrl: './location-picker.component.html',
 })
 export class LocationPickerComponent implements OnDestroy {

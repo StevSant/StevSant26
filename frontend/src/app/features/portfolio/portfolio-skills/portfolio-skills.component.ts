@@ -6,11 +6,12 @@ import { TranslatePipe } from '@shared/pipes/translate.pipe';
 import { TranslateService } from '@core/services/translate.service';
 import { PortfolioFilterComponent, FilterOption } from '@shared/components/portfolio-filter/portfolio-filter.component';
 import { ScrollRevealDirective } from '@shared/directives/scroll-reveal.directive';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
   selector: 'app-portfolio-skills',
   standalone: true,
-  imports: [CommonModule, TranslatePipe, PortfolioFilterComponent, ScrollRevealDirective],
+  imports: [CommonModule, TranslatePipe, PortfolioFilterComponent, ScrollRevealDirective, MatIcon],
   templateUrl: './portfolio-skills.component.html',
 })
 export class PortfolioSkillsComponent implements OnInit {

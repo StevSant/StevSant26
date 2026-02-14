@@ -3,11 +3,12 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { Event } from '@core/models';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
   selector: 'app-event-item',
   standalone: true,
-  imports: [CommonModule, RouterModule, DragDropModule],
+  imports: [CommonModule, RouterModule, DragDropModule, MatIcon],
   templateUrl: './event-item.component.html',
 })
 export class EventItemComponent {

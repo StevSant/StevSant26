@@ -1,8 +1,10 @@
 import { Component, input, output, signal } from '@angular/core';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
   selector: 'app-image-upload-standard',
   standalone: true,
+  imports: [MatIcon],
   templateUrl: './image-upload-standard.component.html',
 })
 export class ImageUploadStandardComponent {

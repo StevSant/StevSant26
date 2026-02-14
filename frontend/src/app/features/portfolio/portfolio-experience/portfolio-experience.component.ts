@@ -8,11 +8,12 @@ import { TranslatePipe } from '@shared/pipes/translate.pipe';
 import { PortfolioFilterComponent, FilterOption } from '@shared/components/portfolio-filter/portfolio-filter.component';
 import { ScrollRevealDirective } from '@shared/directives/scroll-reveal.directive';
 import { Experience } from '@core/models';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
   selector: 'app-portfolio-experience',
   standalone: true,
-  imports: [CommonModule, RouterModule, TranslatePipe, PortfolioFilterComponent, ScrollRevealDirective],
+  imports: [CommonModule, RouterModule, TranslatePipe, PortfolioFilterComponent, ScrollRevealDirective, MatIcon],
   templateUrl: './portfolio-experience.component.html',
 })
 export class PortfolioExperienceComponent implements OnInit {

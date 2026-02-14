@@ -9,11 +9,12 @@ import { TranslatePipe } from '@shared/pipes/translate.pipe';
 import { Skill, SkillTranslation, SkillCategory, Language } from '@core/models';
 import { LanguageTabsComponent } from '@shared/components/language-tabs/language-tabs.component';
 import { LoggerService } from '@core/services/logger.service';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
   selector: 'app-skill-form',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule, UpperCasePipe, TranslatePipe, LanguageTabsComponent],
+  imports: [CommonModule, FormsModule, RouterModule, UpperCasePipe, TranslatePipe, LanguageTabsComponent, MatIcon],
   templateUrl: './skill-form.component.html',
 })
 export class SkillFormComponent implements OnInit {

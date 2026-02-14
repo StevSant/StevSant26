@@ -11,10 +11,7 @@
       (click)="expandToggled.emit()"
       class="p-1 text-[var(--color-text-muted)] hover:text-[var(--color-accent)] transition-colors shrink-0"
     >
-      <span
-        class="material-symbols-outlined text-[20px] transition-transform duration-200"
-        [class.rotate-90]="isExpanded()"
-        >chevron_right</span
+      <mat-icon class="text-[20px] transition-transform duration-200" [class.rotate-90]="isExpanded()" >chevron_right</mat-icon
       >
     </button>
   }
@@ -22,7 +19,7 @@
   <!-- Drag Handle -->
   @if (showDragHandle()) {
     <div cdkDragHandle class="drag-handle">
-      <span class="material-symbols-outlined text-[20px]">drag_indicator</span>
+      <mat-icon class="text-[20px]">drag_indicator</mat-icon>
     </div>
   }
 
@@ -38,8 +35,7 @@
   <!-- Pin Indicator -->
   @if (item().is_pinned) {
     <div class="text-[var(--color-pin)]">
-      <span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1"
-        >star</span
+      <mat-icon class="text-[20px]" style="font-variation-settings: 'FILL' 1" >star</mat-icon
       >
     </div>
   }
@@ -49,7 +45,7 @@
     <h3 class="text-[var(--color-text-primary)] font-medium truncate">{{ title() }}</h3>
     @if (parentTitle()) {
       <span class="inline-flex items-center gap-1 text-xs text-[var(--color-text-muted)] mt-0.5">
-        <span class="material-symbols-outlined text-[12px]">account_tree</span>
+        <mat-icon class="text-[12px]">account_tree</mat-icon>
         {{ parentTitle() }}
       </span>
     }
@@ -58,7 +54,7 @@
         (click)="expandToggled.emit()"
         class="inline-flex items-center gap-1 text-xs text-[var(--color-accent-light)] mt-0.5 hover:underline cursor-pointer"
       >
-        <span class="material-symbols-outlined text-[12px]">grid_view</span>
+        <mat-icon class="text-[12px]">grid_view</mat-icon>
         {{ subProjectCount() }} sub-projects
       </button>
     }
@@ -68,7 +64,7 @@
     <div class="flex flex-wrap gap-2 mt-2">
       @if (item().url) {
         <a [href]="item().url" target="_blank" rel="noopener noreferrer" class="btn-view-project">
-          <span class="material-symbols-outlined text-[16px]">open_in_new</span>
+          <mat-icon class="text-[16px]">open_in_new</mat-icon>
           {{ 'projects.viewProject' | translate }}
         </a>
       }
@@ -79,7 +75,7 @@
           rel="noopener noreferrer"
           class="btn-view-project"
         >
-          <span class="material-symbols-outlined text-[16px]">play_circle</span>
+          <mat-icon class="text-[16px]">play_circle</mat-icon>
           {{ 'portfolio.viewDemo' | translate }}
         </a>
       }
@@ -103,14 +99,11 @@
       [title]="item().is_pinned ? ('common.unpin' | translate) : ('common.pin' | translate)"
       class="icon-btn-pin"
     >
-      <span
-        class="material-symbols-outlined text-[20px]"
-        [style.font-variation-settings]="item().is_pinned ? '\'FILL\' 1' : '\'FILL\' 0'"
-        >star</span
+      <mat-icon class="text-[20px]" [style.font-variation-settings]="item().is_pinned ? '\'FILL\' 1' : '\'FILL\' 0'" >star</mat-icon
       >
     </button>
     <a [routerLink]="[item().id]" class="icon-btn-edit" [title]="'common.edit' | translate">
-      <span class="material-symbols-outlined text-[20px]">edit</span>
+      <mat-icon class="text-[20px]">edit</mat-icon>
     </a>
     <button
       (click)="archiveToggled.emit()"
@@ -118,9 +111,9 @@
       class="icon-btn-archive"
     >
       @if (item().is_archived) {
-        <span class="material-symbols-outlined text-[20px]">unarchive</span>
+        <mat-icon class="text-[20px]">unarchive</mat-icon>
       } @else {
-        <span class="material-symbols-outlined text-[20px]">inventory_2</span>
+        <mat-icon class="text-[20px]">inventory_2</mat-icon>
       }
     </button>
     <button
@@ -128,7 +121,7 @@
       class="icon-btn-delete"
       [title]="'common.delete' | translate"
     >
-      <span class="material-symbols-outlined text-[20px]">delete</span>
+      <mat-icon class="text-[20px]">delete</mat-icon>
     </button>
   </div>
 </div>

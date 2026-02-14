@@ -32,13 +32,11 @@
       </div>
     } @else {
       <div class="flex flex-col items-center gap-2">
-        <span class="material-symbols-outlined text-[40px] text-[var(--color-text-tertiary)]"
-          >description</span
-        >
+        <mat-icon class="text-[40px] text-[var(--color-text-tertiary)]">description</mat-icon>
         <p class="text-sm text-[var(--color-text-secondary)]">
-          <span class="text-[var(--color-accent)] font-medium">{{
+          <mat-icon class="text-[var(--color-accent)] font-medium">{{
             'documentUpload.clickToUpload' | translate
-          }}</span>
+          }}</mat-icon>
           {{ 'documentUpload.orDragDrop' | translate }}
         </p>
         <p class="text-xs text-[var(--color-text-tertiary)]">
@@ -78,14 +76,14 @@
               (click)="openDocument(doc.url)"
               title="Ver documento"
             >
-              <span class="material-symbols-outlined text-[16px]">open_in_new</span>
+              <mat-icon class="text-[16px]">open_in_new</mat-icon>
             </button>
             <button
               type="button"
               class="p-1.5 rounded-lg text-[var(--color-text-tertiary)] hover:text-red-500 hover:bg-red-500/10 transition-colors"
               (click)="removeUploadedDocument(doc.path, $event)"
             >
-              <span class="material-symbols-outlined text-[16px]">delete</span>
+              <mat-icon class="text-[16px]">delete</mat-icon>
             </button>
           </div>
         </div>
@@ -142,7 +140,7 @@
                 (click)="toggleTranslationEdit(doc)"
                 [title]="'documentUpload.editTranslations' | translate"
               >
-                <span class="material-symbols-outlined text-[16px]">edit</span>
+                <mat-icon class="text-[16px]">edit</mat-icon>
               </button>
               <button
                 type="button"
@@ -150,14 +148,14 @@
                 (click)="openDocument(doc.url)"
                 title="Ver documento"
               >
-                <span class="material-symbols-outlined text-[16px]">open_in_new</span>
+                <mat-icon class="text-[16px]">open_in_new</mat-icon>
               </button>
               <button
                 type="button"
                 class="p-1.5 rounded-lg text-[var(--color-text-tertiary)] hover:text-red-500 hover:bg-red-500/10 transition-colors"
                 (click)="removeExistingDocument(doc.id, $event)"
               >
-                <span class="material-symbols-outlined text-[16px]">delete</span>
+                <mat-icon class="text-[16px]">delete</mat-icon>
               </button>
             </div>
           </div>
@@ -168,9 +166,7 @@
               <h2
                 class="text-lg font-semibold text-[var(--color-text-primary)] flex items-center gap-2"
               >
-                <span class="material-symbols-outlined text-[20px] text-[var(--color-accent)]"
-                  >translate</span
-                >
+                <mat-icon class="text-[20px] text-[var(--color-accent)]">translate</mat-icon>
                 {{ 'documentUpload.translations' | translate }}
               </h2>
 

@@ -4,11 +4,12 @@ import { TranslatePipe } from '@shared/pipes/translate.pipe';
 import { TranslateService } from '@core/services/translate.service';
 import { ContentSectionItem } from '../content-section-item.model';
 import { SECTION_KEY_OPTIONS, isMaterialIcon } from '../section-key-options';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
   selector: 'app-content-section-item',
   standalone: true,
-  imports: [TranslatePipe, CdkDragHandle],
+  imports: [TranslatePipe, CdkDragHandle, MatIcon],
   templateUrl: './content-section-item.component.html',
 })
 export class ContentSectionItemComponent {

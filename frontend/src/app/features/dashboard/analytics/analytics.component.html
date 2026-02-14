@@ -40,9 +40,7 @@
             {{ 'analytics.totalViews' | translate }}
           </p>
           <div class="p-2 bg-(--color-accent)/10 rounded-lg">
-            <span class="material-symbols-outlined text-[20px] text-(--color-accent)"
-              >visibility</span
-            >
+            <mat-icon class="text-[20px] text-(--color-accent)">visibility</mat-icon>
           </div>
         </div>
         <p class="text-3xl font-bold text-(--color-text-primary) mt-2">
@@ -60,7 +58,7 @@
             {{ 'analytics.uniqueVisitors' | translate }}
           </p>
           <div class="p-2 bg-emerald-500/10 rounded-lg">
-            <span class="material-symbols-outlined text-[20px] text-emerald-500">group</span>
+            <mat-icon class="text-[20px] text-emerald-500">group</mat-icon>
           </div>
         </div>
         <p class="text-3xl font-bold text-(--color-text-primary) mt-2">
@@ -78,7 +76,7 @@
             {{ 'analytics.avgDuration' | translate }}
           </p>
           <div class="p-2 bg-blue-500/10 rounded-lg">
-            <span class="material-symbols-outlined text-[20px] text-blue-500">schedule</span>
+            <mat-icon class="text-[20px] text-blue-500">schedule</mat-icon>
           </div>
         </div>
         <p class="text-3xl font-bold text-(--color-text-primary) mt-2">
@@ -97,7 +95,7 @@
             {{ 'analytics.potentialRecruiters' | translate }}
           </p>
           <div class="p-2 bg-purple-500/10 rounded-lg">
-            <span class="material-symbols-outlined text-[20px] text-purple-500">work</span>
+            <mat-icon class="text-[20px] text-purple-500">work</mat-icon>
           </div>
         </div>
         <p class="text-3xl font-bold text-(--color-text-primary) mt-2">
@@ -198,9 +196,9 @@
               @if (summary()!.device_breakdown?.length) {
                 @for (device of summary()!.device_breakdown; track device.device_type) {
                   <div class="flex items-center gap-3">
-                    <span class="material-symbols-outlined text-[20px] text-(--color-text-muted)">{{
+                    <mat-icon class="text-[20px] text-(--color-text-muted)">{{
                       getDeviceIcon(device.device_type)
-                    }}</span>
+                    }}</mat-icon>
                     <span class="text-sm text-(--color-text-primary) capitalize flex-1">{{
                       device.device_type
                     }}</span>
@@ -451,9 +449,9 @@
                     <div class="flex items-center gap-4 text-xs text-(--color-text-muted)">
                       @if (session.device_type) {
                         <span class="flex items-center gap-1">
-                          <span class="material-symbols-outlined text-[14px]">{{
+                          <mat-icon class="text-[14px]">{{
                             getDeviceIcon(session.device_type)
-                          }}</span>
+                          }}</mat-icon>
                           {{ session.device_type }}
                         </span>
                       }
@@ -499,10 +497,7 @@
             <div
               class="bg-(--color-bg-secondary) rounded-xl p-10 border border-(--color-border-primary) text-center"
             >
-              <span
-                class="material-symbols-outlined text-[48px] mx-auto text-(--color-text-muted) mb-3"
-                >work</span
-              >
+              <mat-icon class="text-[48px] mx-auto text-(--color-text-muted) mb-3">work</mat-icon>
               <p class="text-(--color-text-muted)">{{ 'analytics.noRecruiters' | translate }}</p>
             </div>
           }
@@ -519,9 +514,9 @@
             <div class="flex flex-col lg:flex-row gap-3">
               <!-- Search -->
               <div class="flex-1 relative">
-                <span
-                  class="material-symbols-outlined text-[16px] absolute left-3 top-1/2 -translate-y-1/2 text-(--color-text-muted)"
-                  >search</span
+                <mat-icon
+                  class="text-[16px] absolute left-3 top-1/2 -translate-y-1/2 text-(--color-text-muted)"
+                  >search</mat-icon
                 >
                 <input
                   type="text"
@@ -597,22 +592,22 @@
                           : 'bg-(--color-accent)/10'
                       "
                     >
-                      <span
-                        class="material-symbols-outlined text-[20px]"
+                      <mat-icon
+                        class="text-[20px]"
                         [class]="
                           visitor.is_potential_recruiter
                             ? 'text-purple-500'
                             : 'text-(--color-accent)'
                         "
-                        >{{ visitor.is_potential_recruiter ? 'work' : 'person' }}</span
+                        >{{ visitor.is_potential_recruiter ? 'work' : 'person' }}</mat-icon
                       >
                     </div>
                     <div>
                       <div class="flex items-center gap-2 flex-wrap">
-                        <span class="text-sm font-medium text-(--color-text-primary)">
+                        <mat-icon class="text-sm font-medium text-(--color-text-primary)">
                           {{ visitor.city ? visitor.city + ', ' : ''
                           }}{{ visitor.country || ('analytics.unknownLocation' | translate) }}
-                        </span>
+                        </mat-icon>
                         @if (visitor.is_potential_recruiter) {
                           <span
                             class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300"
@@ -658,10 +653,10 @@
                       <p>{{ 'analytics.avgTime' | translate }}</p>
                     </div>
                     <!-- Expand arrow -->
-                    <span
-                      class="material-symbols-outlined text-[16px] text-(--color-text-muted) transition-transform"
+                    <mat-icon
+                      class="text-[16px] text-(--color-text-muted) transition-transform"
                       [class.rotate-180]="expandedVisitor() === visitor.visitor_hash"
-                      >expand_more</span
+                      >expand_more</mat-icon
                     >
                   </div>
                 </button>
@@ -753,9 +748,8 @@
                                 class="px-3 py-2 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 bg-(--color-bg-primary)/30"
                               >
                                 <div class="flex items-center gap-2 flex-wrap">
-                                  <span
-                                    class="material-symbols-outlined text-[16px] text-(--color-accent) shrink-0"
-                                    >schedule</span
+                                  <mat-icon class="text-[16px] text-(--color-accent) shrink-0"
+                                    >schedule</mat-icon
                                   >
                                   <span class="text-xs font-medium text-(--color-text-primary)">
                                     {{ session.started_at | date: 'medium' }}
@@ -893,10 +887,7 @@
             <div
               class="bg-(--color-bg-secondary) rounded-xl p-10 border border-(--color-border-primary) text-center"
             >
-              <span
-                class="material-symbols-outlined text-[48px] mx-auto text-(--color-text-muted) mb-3"
-                >group</span
-              >
+              <mat-icon class="text-[48px] mx-auto text-(--color-text-muted) mb-3">group</mat-icon>
               <p class="text-(--color-text-muted)">
                 @if (hasActiveVisitorFilters()) {
                   {{ 'analytics.noVisitorsFiltered' | translate }}
@@ -912,9 +903,7 @@
   } @else {
     <!-- No data state -->
     <div class="flex flex-col items-center justify-center py-20 text-center">
-      <span class="material-symbols-outlined text-[64px] text-(--color-text-muted) mb-4"
-        >bar_chart</span
-      >
+      <mat-icon class="text-[64px] text-(--color-text-muted) mb-4">bar_chart</mat-icon>
       <h3 class="text-lg font-medium text-(--color-text-primary) mb-1">
         {{ 'analytics.noDataTitle' | translate }}
       </h3>

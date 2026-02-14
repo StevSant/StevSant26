@@ -2,7 +2,7 @@
   <!-- Header -->
   <div class="flex items-center justify-between">
     <h3 class="text-lg font-semibold text-[var(--color-text-primary)] flex items-center gap-2">
-      <span class="material-symbols-outlined text-[20px] text-[var(--color-accent)]">segment</span>
+      <mat-icon class="text-[20px] text-[var(--color-accent)]">segment</mat-icon>
       {{ 'contentSections.title' | translate }}
     </h3>
     @if (!showAddForm()) {
@@ -11,7 +11,7 @@
         (click)="openAddForm()"
         class="btn-secondary text-sm flex items-center gap-1"
       >
-        <span class="material-symbols-outlined text-[16px]">add</span>
+        <mat-icon class="text-[16px]">add</mat-icon>
         {{ 'contentSections.add' | translate }}
       </button>
     }
@@ -86,7 +86,7 @@
                 : 'bg-[var(--color-bg-tertiary)] text-[var(--color-text-muted)] border-[var(--color-border-primary)] hover:border-[var(--color-accent)]/50'
             "
           >
-            <span class="material-symbols-outlined text-[18px] leading-none">{{ opt.icon }}</span>
+            <mat-icon class="text-[18px] leading-none">{{ opt.icon }}</mat-icon>
             {{ opt.labelKey | translate }}
           </button>
         }
@@ -125,7 +125,7 @@
     } @else if (!showAddForm()) {
       <!-- Empty State -->
       <div class="text-center py-8 text-[var(--color-text-muted)]">
-        <span class="material-symbols-outlined text-[48px] mx-auto mb-3 opacity-50">segment</span>
+        <mat-icon class="text-[48px] mx-auto mb-3 opacity-50">segment</mat-icon>
         <p>{{ 'contentSections.empty' | translate }}</p>
         <p class="text-sm mt-1">{{ 'contentSections.emptyHint' | translate }}</p>
       </div>

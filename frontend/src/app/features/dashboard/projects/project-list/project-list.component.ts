@@ -10,11 +10,12 @@ import { DashboardFilterComponent, DashboardFilterOption } from '@shared/compone
 import { ProjectItemComponent } from './project-item/project-item.component';
 import { LoggerService } from '@core/services/logger.service';
 import { CrudService, TranslationDataService } from '@core/services';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
   selector: 'app-project-list',
   standalone: true,
-  imports: [CommonModule, RouterModule, DragDropModule, ConfirmDialogComponent, TranslatePipe, DashboardFilterComponent, ProjectItemComponent],
+  imports: [CommonModule, RouterModule, DragDropModule, ConfirmDialogComponent, TranslatePipe, DashboardFilterComponent, ProjectItemComponent, MatIcon],
   templateUrl: './project-list.component.html',
 })
 export class ProjectListComponent implements OnInit {

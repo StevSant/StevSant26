@@ -7,6 +7,7 @@ import { TranslateService } from '@core/services/translate.service';
 import { TranslatePipe } from '@shared/pipes/translate.pipe';
 import { ScrollRevealDirective } from '@shared/directives/scroll-reveal.directive';
 import { Education, EducationType } from '@core/models';
+import { MatIcon } from '@angular/material/icon';
 
 interface EducationGroup {
   type: EducationType;
@@ -16,7 +17,7 @@ interface EducationGroup {
 @Component({
   selector: 'app-portfolio-education',
   standalone: true,
-  imports: [CommonModule, RouterModule, TranslatePipe, ScrollRevealDirective],
+  imports: [CommonModule, RouterModule, TranslatePipe, ScrollRevealDirective, MatIcon],
   templateUrl: './portfolio-education.component.html',
 })
 export class PortfolioEducationComponent implements OnInit {

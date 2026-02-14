@@ -4,6 +4,7 @@ import { Skill, SourceType, Event, Experience, Competition, Project } from '@cor
 import { TranslationDataService } from '@core/services/translation-data.service';
 import { TranslateService } from '@core/services/translate.service';
 import { LoggerService } from '@core/services/logger.service';
+import { MatIcon } from '@angular/material/icon';
 
 interface SourceOption {
   id: number;
@@ -13,7 +14,7 @@ interface SourceOption {
 @Component({
   selector: 'app-skill-usage-form-base-info',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, MatIcon],
   templateUrl: './skill-usage-form-base-info.component.html',
 })
 export class SkillUsageFormBaseInfoComponent implements OnInit {

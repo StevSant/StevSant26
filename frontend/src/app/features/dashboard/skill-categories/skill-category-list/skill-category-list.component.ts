@@ -9,11 +9,12 @@ import { TranslatePipe } from '@shared/pipes/translate.pipe';
 import { SkillCategoryItemComponent } from './skill-category-item/skill-category-item.component';
 import { LoggerService } from '@core/services/logger.service';
 import { CrudService, TranslationDataService } from '@core/services';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
   selector: 'app-skill-category-list',
   standalone: true,
-  imports: [CommonModule, RouterModule, DragDropModule, ConfirmDialogComponent, TranslatePipe, SkillCategoryItemComponent],
+  imports: [CommonModule, RouterModule, DragDropModule, ConfirmDialogComponent, TranslatePipe, SkillCategoryItemComponent, MatIcon],
   templateUrl: './skill-category-list.component.html',
 })
 export class SkillCategoryListComponent implements OnInit {

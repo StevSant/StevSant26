@@ -2,11 +2,12 @@ import { Component, input, signal, computed, HostListener, ElementRef, inject } 
 import { Image } from '@core/models';
 import { TranslatePipe } from '@shared/pipes/translate.pipe';
 import { ImageLightboxComponent } from '../image-lightbox/image-lightbox.component';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
   selector: 'app-image-gallery',
   standalone: true,
-  imports: [TranslatePipe, ImageLightboxComponent],
+  imports: [TranslatePipe, ImageLightboxComponent, MatIcon],
   templateUrl: './image-gallery.component.html',
 })
 export class ImageGalleryComponent {

@@ -4,15 +4,15 @@ import { AuthService } from '@core/services/auth.service';
 import { TranslateService } from '@core/services/translate.service';
 import { NavItem } from './nav-item.interface';
 import { TranslatePipe } from '@shared/pipes/translate.pipe';
-import { SafeHtmlPipe } from '@shared/pipes/safe-html.pipe';
 import { LanguageSelectorComponent } from '@shared/components/language-selector/language-selector.component';
 import { ThemeToggleComponent } from '@shared/components/theme-toggle/theme-toggle.component';
 import { environment } from '../../../../environments/environment';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
   selector: 'app-dashboard-layout',
   standalone: true,
-  imports: [RouterModule, TranslatePipe, SafeHtmlPipe, LanguageSelectorComponent, ThemeToggleComponent],
+  imports: [RouterModule, TranslatePipe, LanguageSelectorComponent, ThemeToggleComponent, MatIcon],
   templateUrl: './dashboard-layout.component.html',
 })
 export class DashboardLayoutComponent {
@@ -29,47 +29,47 @@ export class DashboardLayoutComponent {
     {
       path: 'profile',
       labelKey: 'nav.profile',
-      icon: '<span class="material-symbols-outlined text-[20px]">person</span>',
+      icon: 'person',
     },
     {
       path: 'projects',
       labelKey: 'nav.projects',
-      icon: '<span class="material-symbols-outlined text-[20px]">folder</span>',
+      icon: 'folder',
     },
     {
       path: 'events',
       labelKey: 'nav.events',
-      icon: '<span class="material-symbols-outlined text-[20px]">event</span>',
+      icon: 'event',
     },
     {
       path: 'experiences',
       labelKey: 'nav.experiences',
-      icon: '<span class="material-symbols-outlined text-[20px]">work</span>',
+      icon: 'work',
     },
     {
       path: 'educations',
       labelKey: 'nav.educations',
-      icon: '<span class="material-symbols-outlined text-[20px]">school</span>',
+      icon: 'school',
     },
     {
       path: 'competitions',
       labelKey: 'nav.competitions',
-      icon: '<span class="material-symbols-outlined text-[20px]">emoji_events</span>',
+      icon: 'emoji_events',
     },
     {
       path: 'skill-categories',
       labelKey: 'nav.skillCategories',
-      icon: '<span class="material-symbols-outlined text-[20px]">label</span>',
+      icon: 'label',
     },
     {
       path: 'skills',
       labelKey: 'nav.skills',
-      icon: '<span class="material-symbols-outlined text-[20px]">lightbulb</span>',
+      icon: 'lightbulb',
     },
     {
       path: 'analytics',
       labelKey: 'nav.analytics',
-      icon: '<span class="material-symbols-outlined text-[20px]">bar_chart</span>',
+      icon: 'bar_chart',
     },
   ];
 

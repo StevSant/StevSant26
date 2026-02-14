@@ -1,8 +1,10 @@
 import { Component, input, output, signal } from '@angular/core';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
   selector: 'app-image-upload-banner',
   standalone: true,
+  imports: [MatIcon],
   templateUrl: './image-upload-banner.component.html',
 })
 export class ImageUploadBannerComponent {

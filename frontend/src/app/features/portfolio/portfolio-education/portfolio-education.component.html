@@ -21,9 +21,9 @@
               <div
                 class="w-10 h-10 rounded-lg flex items-center justify-center bg-(--color-accent)/10 text-(--color-accent)"
               >
-                <span class="material-symbols-outlined text-[20px]">{{
+                <mat-icon class="text-[20px]">{{
                   getTypeIcon(group.type)
-                }}</span>
+                }}</mat-icon>
               </div>
               <div>
                 <h3 class="text-lg font-medium text-(--color-text-primary) tracking-tight">
@@ -65,9 +65,7 @@
                             class="w-8 h-8 sm:w-10 sm:h-10 rounded-full object-cover"
                           />
                         } @else {
-                          <span
-                            class="material-symbols-outlined text-[20px] sm:text-[24px] text-(--color-text-muted)"
-                            >{{ getTypeIcon(group.type) }}</span
+                          <mat-icon class="text-[20px] sm:text-[24px] text-(--color-text-muted)" >{{ getTypeIcon(group.type) }}</mat-icon
                           >
                         }
                       </div>
@@ -75,7 +73,7 @@
                       @if (isOngoing(edu)) {
                         <span
                           class="absolute -top-0.5 -right-0.5 w-3 h-3 bg-(--color-accent) rounded-full animate-pulse"
-                        ></span>
+                        ></mat-icon>
                       }
                     </div>
 
@@ -128,8 +126,7 @@
 
                       <!-- Institution -->
                       <p class="text-sm text-(--color-text-muted) mb-3 flex items-center gap-2">
-                        <span class="material-symbols-outlined text-[16px] shrink-0"
-                          >apartment</span
+                        <mat-icon class="text-[16px] shrink-0" >apartment</mat-icon
                         >
                         {{ edu.institution }}
                       </p>
@@ -148,7 +145,7 @@
                             <span
                               class="inline-flex items-center gap-1 text-xs text-(--color-text-disabled)"
                             >
-                              <span class="material-symbols-outlined text-[14px]">tag</span>
+                              <mat-icon class="text-[14px]">tag</mat-icon>
                               {{ edu.credential_id }}
                             </span>
                           }
@@ -159,7 +156,7 @@
                               rel="noopener noreferrer"
                               class="inline-flex items-center gap-1 text-xs text-(--color-accent) hover:underline"
                             >
-                              <span class="material-symbols-outlined text-[14px]">open_in_new</span>
+                              <mat-icon class="text-[14px]">open_in_new</mat-icon>
                               {{ 'educations.viewCredential' | translate }}
                             </a>
                           }

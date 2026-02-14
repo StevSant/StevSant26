@@ -8,16 +8,14 @@
         class="cursor-grab active:cursor-grabbing text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)] shrink-0"
         cdkDragHandle
       >
-        <span class="material-symbols-outlined text-[20px]">drag_indicator</span>
+        <mat-icon class="text-[20px]">drag_indicator</mat-icon>
       </div>
     }
 
     @if (isIconMaterial) {
-      <span
-        class="material-symbols-outlined text-[22px] shrink-0 align-middle"
-        [attr.aria-hidden]="true"
-        >{{ sectionIcon }}</span
-      >
+      <mat-icon class="text-[22px] shrink-0 align-middle" [attr.aria-hidden]="true">{{
+        sectionIcon
+      }}</mat-icon>
     } @else {
       <span class="text-lg shrink-0">{{ sectionIcon }}</span>
     }
@@ -39,7 +37,7 @@
       (click)="edit.emit(section())"
       [title]="'common.edit' | translate"
     >
-      <span class="material-symbols-outlined text-[16px]">edit</span>
+      <mat-icon class="text-[16px]">edit</mat-icon>
     </button>
 
     <!-- Remove button -->
@@ -49,7 +47,7 @@
       (click)="remove.emit(section())"
       [title]="'common.delete' | translate"
     >
-      <span class="material-symbols-outlined text-[16px]">delete</span>
+      <mat-icon class="text-[16px]">delete</mat-icon>
     </button>
   </div>
 </div>

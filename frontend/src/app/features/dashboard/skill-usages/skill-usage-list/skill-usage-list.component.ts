@@ -8,11 +8,12 @@ import { ConfirmDialogComponent } from '@shared/components/confirm-dialog/confir
 import { SkillUsageListItemComponent } from './skill-usage-list-item/skill-usage-list-item.component';
 import { LoggerService } from '@core/services/logger.service';
 import { CrudService, TranslationDataService } from '@core/services';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
   selector: 'app-skill-usage-list',
   standalone: true,
-  imports: [CommonModule, RouterModule, DragDropModule, ConfirmDialogComponent, SkillUsageListItemComponent],
+  imports: [CommonModule, RouterModule, DragDropModule, ConfirmDialogComponent, SkillUsageListItemComponent, MatIcon],
   templateUrl: './skill-usage-list.component.html',
 })
 export class SkillUsageListComponent implements OnInit {

@@ -9,22 +9,19 @@
     <!-- Current theme icon -->
     @switch (currentIconType()) {
       @case ('moon') {
-        <span class="material-symbols-outlined text-[20px]">dark_mode</span>
+        <mat-icon class="text-[20px]">dark_mode</mat-icon>
       }
       @case ('sun') {
-        <span class="material-symbols-outlined text-[20px]">light_mode</span>
+        <mat-icon class="text-[20px]">light_mode</mat-icon>
       }
       @case ('waves') {
-        <span class="material-symbols-outlined text-[20px]">nights_stay</span>
+        <mat-icon class="text-[20px]">nights_stay</mat-icon>
       }
       @case ('book') {
-        <span class="material-symbols-outlined text-[20px]">menu_book</span>
+        <mat-icon class="text-[20px]">menu_book</mat-icon>
       }
     }
-    <span
-      class="material-symbols-outlined text-[14px] transition-transform"
-      [class.rotate-180]="isOpen()"
-      >expand_more</span
+    <mat-icon class="text-[14px] transition-transform" [class.rotate-180]="isOpen()" >expand_more</mat-icon
     >
   </button>
 
@@ -49,21 +46,21 @@
           <!-- Material icon per theme -->
           @switch (theme.iconType) {
             @case ('moon') {
-              <span class="material-symbols-outlined text-[16px]">dark_mode</span>
+              <mat-icon class="text-[16px]">dark_mode</mat-icon>
             }
             @case ('sun') {
-              <span class="material-symbols-outlined text-[16px]">light_mode</span>
+              <mat-icon class="text-[16px]">light_mode</mat-icon>
             }
             @case ('waves') {
-              <span class="material-symbols-outlined text-[16px]">nights_stay</span>
+              <mat-icon class="text-[16px]">nights_stay</mat-icon>
             }
             @case ('book') {
-              <span class="material-symbols-outlined text-[16px]">menu_book</span>
+              <mat-icon class="text-[16px]">menu_book</mat-icon>
             }
           }
           <span class="flex-1">{{ theme.nameKey | translate }}</span>
           @if (themeService.currentTheme() === theme.id) {
-            <span class="material-symbols-outlined text-[16px] text-(--color-accent)">check</span>
+            <mat-icon class="text-[16px] text-(--color-accent)">check</mat-icon>
           }
         </button>
       }

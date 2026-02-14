@@ -100,11 +100,7 @@
           [class.text-[var(--color-pin)]]="level() !== null && i <= level()!"
           [class.text-[var(--color-text-disabled)]]="level() === null || i > level()!"
         >
-          <span
-            class="material-symbols-outlined text-[32px]"
-            style="font-variation-settings: 'FILL' 1"
-            >star</span
-          >
+          <mat-icon class="text-[32px]" style="font-variation-settings: 'FILL' 1" >star</mat-icon>
         </button>
       }
       @if (level()) {

@@ -15,6 +15,7 @@ import { ContentSectionItemComponent } from './content-section-item/content-sect
 import { ImageUploadComponent, ExistingImage } from '@shared/components/image-upload/image-upload.component';
 import { SECTION_KEY_OPTIONS } from './section-key-options';
 import { LoggerService } from '@core/services/logger.service';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
   selector: 'app-content-section-manager',
@@ -27,6 +28,7 @@ import { LoggerService } from '@core/services/logger.service';
     ContentSectionAddFormComponent,
     ContentSectionItemComponent,
     ImageUploadComponent,
+    MatIcon,
   ],
   templateUrl: './content-section-manager.component.html',
 })

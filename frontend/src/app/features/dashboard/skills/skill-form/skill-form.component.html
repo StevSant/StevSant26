@@ -4,7 +4,7 @@
       routerLink="/dashboard/skills"
       class="p-2 text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-bg-tertiary)] rounded-lg transition-colors"
     >
-      <span class="material-symbols-outlined text-[20px]">chevron_left</span>
+      <mat-icon class="text-[20px]">chevron_left</mat-icon>
     </a>
     <h1 class="text-2xl font-bold text-[var(--color-text-primary)]">
       {{ isNew ? ('skills.create' | translate) : ('skills.edit' | translate) }}
@@ -82,9 +82,7 @@
       <!-- Translations Card -->
       <div class="card space-y-6">
         <h2 class="text-lg font-semibold text-[var(--color-text-primary)] flex items-center gap-2">
-          <span class="material-symbols-outlined text-[20px] text-[var(--color-accent)]"
-            >translate</span
-          >
+          <mat-icon class="text-[20px] text-[var(--color-accent)]">translate</mat-icon>
           {{ 'skills.translatableContent' | translate }}
         </h2>
 

@@ -16,6 +16,7 @@ import { ProfileTranslationsCardComponent } from './profile-translations-card/pr
 import { LocationAvailabilityCardComponent, LocationAvailabilityData } from './location-availability-card/location-availability-card.component';
 import { ProfileImageManager } from './profile-image-manager';
 import { LoggerService } from '@core/services/logger.service';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
   selector: 'app-profile-editor',
@@ -29,7 +30,7 @@ import { LoggerService } from '@core/services/logger.service';
     SocialLinksCardComponent,
     ProfileTranslationsCardComponent,
     LocationAvailabilityCardComponent,
-  ],
+  , MatIcon],
   templateUrl: './profile-editor.component.html',
 })
 export class ProfileEditorComponent implements OnInit {

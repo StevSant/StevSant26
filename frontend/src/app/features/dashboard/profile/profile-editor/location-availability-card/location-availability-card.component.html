@@ -1,6 +1,6 @@
 <div class="card space-y-6">
   <h2 class="text-xl font-semibold text-(--color-text-primary) flex items-center gap-2">
-    <span class="material-symbols-outlined text-[24px] text-(--color-accent)">location_on</span>
+    <mat-icon class="text-[24px] text-(--color-accent)">location_on</mat-icon>
     {{ 'profile.locationAvailability' | translate }}
   </h2>
 
@@ -34,8 +34,7 @@
         <span
           class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-(--color-bg-tertiary) border border-(--color-border-primary) text-xs text-(--color-text-secondary)"
         >
-          <span class="material-symbols-outlined text-[12px] text-(--color-text-muted)"
-            >location_on</span
+          <mat-icon class="text-[12px] text-(--color-text-muted)" >location_on</mat-icon
           >
           {{ formData().city }}
         </span>
@@ -69,10 +68,7 @@
       (click)="toggleDetails()"
       class="text-xs text-(--color-text-muted) hover:text-(--color-accent) transition-colors flex items-center gap-1 mt-1"
     >
-      <span
-        class="material-symbols-outlined text-[14px] transition-transform duration-200"
-        [class.rotate-180]="showDetails"
-        >expand_more</span
+      <mat-icon class="text-[14px] transition-transform duration-200" [class.rotate-180]="showDetails" >expand_more</mat-icon
       >
       {{ 'profile.locationAdjust' | translate }}
     </button>
@@ -167,7 +163,7 @@
             <span
               class="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75"
               style="background: var(--color-success)"
-            ></span>
+            ></mat-icon>
           }
           <span
             class="relative inline-flex rounded-full h-3 w-3"

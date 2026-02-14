@@ -2,6 +2,7 @@ import { Component, input, output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ImageUploadComponent } from '@shared/components/image-upload/image-upload.component';
 import { TranslatePipe } from '@shared/pipes/translate.pipe';
+import { MatIcon } from '@angular/material/icon';
 
 export interface PersonalInfoData {
   first_name: string;
@@ -12,7 +13,7 @@ export interface PersonalInfoData {
 @Component({
   selector: 'app-personal-info-card',
   standalone: true,
-  imports: [FormsModule, ImageUploadComponent, TranslatePipe],
+  imports: [FormsModule, ImageUploadComponent, TranslatePipe, MatIcon],
   templateUrl: './personal-info-card.component.html',
 })
 export class PersonalInfoCardComponent {

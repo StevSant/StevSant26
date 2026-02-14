@@ -10,10 +10,12 @@ import {
   effect,
 } from '@angular/core';
 import { Image } from '@core/models';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
   selector: 'app-image-lightbox',
   standalone: true,
+  imports: [MatIcon],
   templateUrl: './image-lightbox.component.html',
 })
 export class ImageLightboxComponent {

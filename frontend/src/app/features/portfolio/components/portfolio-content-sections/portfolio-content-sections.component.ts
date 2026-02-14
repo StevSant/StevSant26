@@ -7,6 +7,7 @@ import { ContentSectionKey } from '@core/models/entities/content-section.model';
 import { SECTION_KEY_OPTIONS, isMaterialIcon } from '@shared/components/content-section-manager/section-key-options';
 import { MarkdownPipe } from '@shared/pipes/markdown.pipe';
 import { ImageLightboxComponent } from '@shared/components/image-lightbox/image-lightbox.component';
+import { MatIcon } from '@angular/material/icon';
 
 interface SectionGroup {
   key: ContentSectionKey;
@@ -19,7 +20,7 @@ interface SectionGroup {
 @Component({
   selector: 'app-portfolio-content-sections',
   standalone: true,
-  imports: [CommonModule, MarkdownPipe, ImageLightboxComponent],
+  imports: [CommonModule, MarkdownPipe, ImageLightboxComponent, MatIcon],
   templateUrl: './portfolio-content-sections.component.html',
 })
 export class PortfolioContentSectionsComponent {

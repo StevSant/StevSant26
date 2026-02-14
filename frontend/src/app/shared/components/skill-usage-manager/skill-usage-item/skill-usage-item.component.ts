@@ -5,11 +5,12 @@ import { TranslatePipe } from '../../../pipes/translate.pipe';
 import { LanguageTabsComponent } from '../../language-tabs/language-tabs.component';
 import { Skill } from '@core/models';
 import { SkillUsageItem } from '../skill-usage-manager.component';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
   selector: 'app-skill-usage-item',
   standalone: true,
-  imports: [CommonModule, FormsModule, TranslatePipe, LanguageTabsComponent],
+  imports: [CommonModule, FormsModule, TranslatePipe, LanguageTabsComponent, MatIcon],
   templateUrl: './skill-usage-item.component.html',
 })
 export class SkillUsageItemComponent {

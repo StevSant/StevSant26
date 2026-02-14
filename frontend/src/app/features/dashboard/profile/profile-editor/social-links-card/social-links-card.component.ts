@@ -1,6 +1,7 @@
 import { Component, input, output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TranslatePipe } from '@shared/pipes/translate.pipe';
+import { MatIcon } from '@angular/material/icon';
 
 export interface SocialLinksData {
   email: string;
@@ -14,7 +15,7 @@ export interface SocialLinksData {
 @Component({
   selector: 'app-social-links-card',
   standalone: true,
-  imports: [FormsModule, TranslatePipe],
+  imports: [FormsModule, TranslatePipe, MatIcon],
   templateUrl: './social-links-card.component.html',
 })
 export class SocialLinksCardComponent {

@@ -31,14 +31,14 @@
             cdkDragHandle
             class="p-2 bg-(--color-bg-secondary)/80 rounded-full text-(--color-text-primary) cursor-grab active:cursor-grabbing"
           >
-            <span class="material-symbols-outlined text-[20px]">drag_indicator</span>
+            <mat-icon class="text-[20px]">drag_indicator</mat-icon>
           </div>
           <button
             type="button"
             (click)="onRemoveUploaded(img.path, $event)"
             class="p-2 bg-(--color-error) hover:bg-(--color-error-hover) rounded-full text-(--color-text-primary) transition-colors"
           >
-            <span class="material-symbols-outlined text-[20px]">delete</span>
+            <mat-icon class="text-[20px]">delete</mat-icon>
           </button>
         </div>
       </div>
@@ -85,14 +85,14 @@
               cdkDragHandle
               class="p-2 bg-(--color-bg-secondary)/80 rounded-full text-(--color-text-primary) cursor-grab active:cursor-grabbing"
             >
-              <span class="material-symbols-outlined text-[20px]">drag_indicator</span>
+              <mat-icon class="text-[20px]">drag_indicator</mat-icon>
             </div>
             <button
               type="button"
               (click)="onRemoveExisting(img.id, $event)"
               class="p-2 bg-(--color-error) hover:bg-(--color-error-hover) rounded-full text-(--color-text-primary) transition-colors"
             >
-              <span class="material-symbols-outlined text-[20px]">delete</span>
+              <mat-icon class="text-[20px]">delete</mat-icon>
             </button>
           </div>
         </div>

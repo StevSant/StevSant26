@@ -4,11 +4,12 @@ import { RouterModule } from '@angular/router';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { Project } from '@core/models';
 import { TranslatePipe } from '@shared/pipes/translate.pipe';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
   selector: 'app-project-item',
   standalone: true,
-  imports: [CommonModule, RouterModule, DragDropModule, TranslatePipe],
+  imports: [CommonModule, RouterModule, DragDropModule, TranslatePipe, MatIcon],
   templateUrl: './project-item.component.html',
 })
 export class ProjectItemComponent {

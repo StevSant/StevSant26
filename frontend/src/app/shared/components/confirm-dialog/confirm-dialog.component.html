@@ -17,15 +17,14 @@
           [class.bg-(--color-info-bg)]="variant() === 'info'"
         >
           @if (variant() === 'danger') {
-            <span class="material-symbols-outlined text-[32px] text-(--color-error)">delete</span>
+            <mat-icon class="text-[32px] text-(--color-error)">delete</mat-icon>
           }
           @if (variant() === 'warning') {
-            <span class="material-symbols-outlined text-[32px] text-(--color-warning)"
-              >warning</span
+            <mat-icon class="text-[32px] text-(--color-warning)" >warning</mat-icon
             >
           }
           @if (variant() === 'info') {
-            <span class="material-symbols-outlined text-[32px] text-(--color-info)">info</span>
+            <mat-icon class="text-[32px] text-(--color-info)">info</mat-icon>
           }
         </div>
       </div>

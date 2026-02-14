@@ -9,13 +9,13 @@
     </div>
     <div class="flex gap-3">
       <button (click)="toggleShowArchived()" class="btn-secondary">
-        <span class="material-symbols-outlined text-[20px]">inventory_2</span>
+        <mat-icon class="text-[20px]">inventory_2</mat-icon>
         {{
           showArchived() ? ('common.hideArchived' | translate) : ('common.showArchived' | translate)
         }}
       </button>
       <a routerLink="new" class="btn-primary">
-        <span class="material-symbols-outlined text-[20px]">add</span>
+        <mat-icon class="text-[20px]">add</mat-icon>
         {{ 'projects.create' | translate }}
       </a>
     </div>
@@ -52,15 +52,14 @@
   } @else if (filteredItems().length === 0) {
     <!-- Empty State -->
     <div class="card p-12 text-center">
-      <span class="material-symbols-outlined text-[64px] mx-auto text-[var(--color-text-disabled)]"
-        >folder</span
+      <mat-icon class="text-[64px] mx-auto text-[var(--color-text-disabled)]" >folder</mat-icon
       >
       <h3 class="mt-4 text-lg font-medium text-[var(--color-text-primary)]">
         {{ 'projects.empty' | translate }}
       </h3>
       <p class="mt-2 text-[var(--color-text-muted)]">{{ 'projects.emptyHint' | translate }}</p>
       <a routerLink="new" class="mt-6 inline-flex btn-primary">
-        <span class="material-symbols-outlined text-[20px]">add</span>
+        <mat-icon class="text-[20px]">add</mat-icon>
         {{ 'projects.create' | translate }}
       </a>
     </div>

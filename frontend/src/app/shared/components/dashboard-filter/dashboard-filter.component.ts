@@ -2,6 +2,7 @@ import { Component, input, output, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TranslatePipe } from '@shared/pipes/translate.pipe';
+import { MatIcon } from '@angular/material/icon';
 
 export interface DashboardFilterOption {
   label: string;
@@ -11,7 +12,7 @@ export interface DashboardFilterOption {
 @Component({
   selector: 'app-dashboard-filter',
   standalone: true,
-  imports: [CommonModule, FormsModule, TranslatePipe],
+  imports: [CommonModule, FormsModule, TranslatePipe, MatIcon],
   templateUrl: './dashboard-filter.component.html',
 })
 export class DashboardFilterComponent {

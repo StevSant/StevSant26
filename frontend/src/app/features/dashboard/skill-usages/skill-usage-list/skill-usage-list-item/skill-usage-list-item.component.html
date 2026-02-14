@@ -2,7 +2,7 @@
   <!-- Drag Handle -->
   @if (showDragHandle()) {
     <div cdkDragHandle class="drag-handle">
-      <span class="material-symbols-outlined text-[20px]">drag_indicator</span>
+      <mat-icon class="text-[20px]">drag_indicator</mat-icon>
     </div>
   }
 
@@ -13,12 +13,12 @@
       @if (item().level) {
         <div class="flex gap-0.5">
           @for (i of [1, 2, 3, 4, 5]; track i) {
-            <span
-              class="material-symbols-outlined text-[16px]"
+            <mat-icon
+              class="text-[16px]"
               [class.text-[var(--color-pin)]]="i <= item().level!"
               [class.text-[var(--color-text-disabled)]]="i > item().level!"
               style="font-variation-settings: 'FILL' 1"
-              >star</span
+              >star</mat-icon
             >
           }
         </div>
@@ -42,17 +42,17 @@
   <!-- Actions -->
   <div class="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
     <a [routerLink]="[item().id]" class="icon-btn-edit">
-      <span class="material-symbols-outlined text-[20px]">edit</span>
+      <mat-icon class="text-[20px]">edit</mat-icon>
     </a>
     <button (click)="archiveToggled.emit()" class="icon-btn-archive">
       @if (item().is_archived) {
-        <span class="material-symbols-outlined text-[20px]">unarchive</span>
+        <mat-icon class="text-[20px]">unarchive</mat-icon>
       } @else {
-        <span class="material-symbols-outlined text-[20px]">inventory_2</span>
+        <mat-icon class="text-[20px]">inventory_2</mat-icon>
       }
     </button>
     <button (click)="deleteClicked.emit()" class="icon-btn-delete">
-      <span class="material-symbols-outlined text-[20px]">delete</span>
+      <mat-icon class="text-[20px]">delete</mat-icon>
     </button>
   </div>
 </div>

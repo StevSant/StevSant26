@@ -3,11 +3,12 @@ import { FormsModule } from '@angular/forms';
 import { UpperCasePipe } from '@angular/common';
 import { Language } from '@core/models';
 import { TranslatePipe } from '@shared/pipes/translate.pipe';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
   selector: 'app-profile-translations-card',
   standalone: true,
-  imports: [FormsModule, UpperCasePipe, TranslatePipe],
+  imports: [FormsModule, UpperCasePipe, TranslatePipe, MatIcon],
   templateUrl: './profile-translations-card.component.html',
 })
 export class ProfileTranslationsCardComponent {

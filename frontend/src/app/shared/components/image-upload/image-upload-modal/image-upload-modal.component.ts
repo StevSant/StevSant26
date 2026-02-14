@@ -1,8 +1,10 @@
 import { Component, input, output } from '@angular/core';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
   selector: 'app-image-upload-modal',
   standalone: true,
+  imports: [MatIcon],
   templateUrl: './image-upload-modal.component.html',
 })
 export class ImageUploadModalComponent {
