@@ -94,7 +94,12 @@
                     </div>
                     <div class="flex gap-0.5">
                       @for (filled of data.getStarArray(skill.calculatedLevel); track $index) {
-                        <mat-icon class="text-[12px]" [class.text-(--color-accent)]="filled" [class.text-(--color-border-primary)]="!filled" [style.font-variation-settings]="'FILL 1'" >star</mat-icon
+                        <mat-icon
+                          class="text-[12px]"
+                          [class.text-(--color-accent)]="filled"
+                          [class.text-(--color-border-primary)]="!filled"
+                          [style.font-variation-settings]="'FILL 1'"
+                          >star</mat-icon
                         >
                       }
                     </div>
@@ -133,11 +138,19 @@
                             class="w-5 h-5 object-contain"
                           />
                         }
-                        <mat-icon class="text-(--color-text-primary) text-sm font-light">{{ data.getEntityTranslation(skill, 'name') }}</mat-icon>
+                        <span class="text-(--color-text-primary) text-sm font-light">{{
+                          data.getEntityTranslation(skill, 'name')
+                        }}</span>
                       </div>
                       <div class="flex gap-1">
                         @for (filled of data.getStarArray(skill.calculatedLevel); track $index) {
-                          <mat-icon class="text-[16px]" [class.text-(--color-accent)]="filled" [class.text-(--color-border-primary)]="!filled" [style.font-variation-settings]="'FILL 1'" >star</mat-icon>
+                          <mat-icon
+                            class="text-[16px]"
+                            [class.text-(--color-accent)]="filled"
+                            [class.text-(--color-border-primary)]="!filled"
+                            [style.font-variation-settings]="'FILL 1'"
+                            >star</mat-icon
+                          >
                         }
                       </div>
                     </div>
