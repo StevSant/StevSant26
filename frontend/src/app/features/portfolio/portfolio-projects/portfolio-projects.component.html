@@ -41,7 +41,11 @@
                     <span
                       class="absolute top-2 right-2 text-(--color-pin) bg-(--color-bg-primary)/80 rounded-full p-1"
                     >
-                      <span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1">star</span>
+                      <span
+                        class="material-symbols-outlined text-[16px]"
+                        style="font-variation-settings: 'FILL' 1"
+                        >star</span
+                      >
                     </span>
                   }
                 </div>
@@ -58,7 +62,11 @@
                     </h3>
                     @if (project.is_pinned && !data.getFirstImageUrl('project', project.id)) {
                       <span class="text-(--color-pin) opacity-70">
-                        <span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1">star</span>
+                        <span
+                          class="material-symbols-outlined text-[16px]"
+                          style="font-variation-settings: 'FILL' 1"
+                          >star</span
+                        >
                       </span>
                     }
                   </div>
@@ -114,7 +122,9 @@
                   <div
                     class="flex items-center gap-2 mb-4 px-2.5 py-1.5 rounded-lg bg-(--color-bg-tertiary) border border-(--color-border-primary) w-fit"
                   >
-                    <span class="material-symbols-outlined text-[14px] text-(--color-text-muted)">grid_view</span>
+                    <span class="material-symbols-outlined text-[14px] text-(--color-text-muted)"
+                      >grid_view</span
+                    >
                     <span class="text-xs text-(--color-text-muted)">
                       {{ data.getSubProjects(project.id).length }}
                       {{ 'portfolio.subProjects' | translate }}
@@ -125,13 +135,23 @@
                 <!-- Footer links -->
                 <div class="flex items-center gap-3 mt-auto pt-4 border-t border-(--color-divider)">
                   @if (project.url) {
-                    <a [href]="project.url" target="_blank" rel="noopener noreferrer" class="btn-view-project">
+                    <a
+                      [href]="project.url"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="btn-view-project"
+                    >
                       <span class="material-symbols-outlined text-[20px]">open_in_new</span>
                       {{ 'portfolio.viewProject' | translate }}
                     </a>
                   }
                   @if (project.demo_url) {
-                    <a [href]="project.demo_url" target="_blank" rel="noopener noreferrer" class="btn-view-project">
+                    <a
+                      [href]="project.demo_url"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="btn-view-project"
+                    >
                       <span class="material-symbols-outlined text-[20px]">play_circle</span>
                       {{ 'portfolio.viewDemo' | translate }}
                     </a>

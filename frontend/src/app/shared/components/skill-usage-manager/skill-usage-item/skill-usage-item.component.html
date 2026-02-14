@@ -1,11 +1,18 @@
 @if (isEditing() && editData) {
   <!-- Edit Mode -->
-  <div class="bg-[var(--color-bg-tertiary)] rounded-lg p-4 space-y-4 border border-[var(--color-accent)]">
-    <h4 class="font-medium text-[var(--color-text-primary)]">{{ 'skillUsages.edit' | translate }}</h4>
+  <div
+    class="bg-[var(--color-bg-tertiary)] rounded-lg p-4 space-y-4 border border-[var(--color-accent)]"
+  >
+    <h4 class="font-medium text-[var(--color-text-primary)]">
+      {{ 'skillUsages.edit' | translate }}
+    </h4>
 
     <!-- Skill Selection -->
     <div>
-      <label class="label">{{ 'skillUsages.fields.skill' | translate }} <span class="text-[var(--color-error)]">*</span></label>
+      <label class="label"
+        >{{ 'skillUsages.fields.skill' | translate }}
+        <span class="text-[var(--color-error)]">*</span></label
+      >
       <select [(ngModel)]="editData.skill_id" class="input">
         <option [ngValue]="0" disabled>{{ 'skillUsages.selectSkill' | translate }}</option>
         @for (skill of skills(); track skill.id) {
@@ -19,19 +26,25 @@
       <label class="label">{{ 'skillUsages.levelLabel' | translate }}</label>
       <div class="flex items-center gap-2">
         @for (i of [1, 2, 3, 4, 5]; track i) {
-          <button type="button" (click)="setEditLevel(i)"
+          <button
+            type="button"
+            (click)="setEditLevel(i)"
             class="w-10 h-10 rounded-lg border-2 transition-all duration-200 flex items-center justify-center text-lg"
             [class.border-[var(--color-accent)]]="editData.level === i"
             [class.bg-[var(--color-accent)]]="editData.level === i"
             [class.text-white]="editData.level === i"
             [class.border-[var(--color-border-secondary)]]="editData.level !== i"
-            [class.hover:border-[var(--color-accent)]]="editData.level !== i">
+            [class.hover:border-[var(--color-accent)]]="editData.level !== i"
+          >
             {{ i }}
           </button>
         }
         @if (editData.level) {
-          <button type="button" (click)="setEditLevel(null)"
-            class="ml-2 text-sm text-[var(--color-text-muted)] hover:text-[var(--color-error)]">
+          <button
+            type="button"
+            (click)="setEditLevel(null)"
+            class="ml-2 text-sm text-[var(--color-text-muted)] hover:text-[var(--color-error)]"
+          >
             {{ 'skillUsages.clearLevel' | translate }}
           </button>
         }
@@ -53,15 +66,27 @@
     <!-- Notes -->
     <div>
       <label class="label">{{ 'skillUsages.notesLabel' | translate }}</label>
-      <app-language-tabs [selectedLanguage]="editLanguage()" (languageChange)="editLanguage.set($event)" />
-      <textarea [ngModel]="currentEditTranslation.notes" (ngModelChange)="updateEditTranslation($event)"
-        rows="2" class="input-textarea mt-2" [placeholder]="'skillUsages.notesPlaceholder' | translate"></textarea>
+      <app-language-tabs
+        [selectedLanguage]="editLanguage()"
+        (languageChange)="editLanguage.set($event)"
+      />
+      <textarea
+        [ngModel]="currentEditTranslation.notes"
+        (ngModelChange)="updateEditTranslation($event)"
+        rows="2"
+        class="input-textarea mt-2"
+        [placeholder]="'skillUsages.notesPlaceholder' | translate"
+      ></textarea>
     </div>
 
     <!-- Actions -->
     <div class="flex justify-end gap-2">
-      <button type="button" (click)="cancelEdit()" class="btn-secondary text-sm">{{ 'common.cancel' | translate }}</button>
-      <button type="button" (click)="saveEdit()" class="btn-primary text-sm">{{ 'common.save' | translate }}</button>
+      <button type="button" (click)="cancelEdit()" class="btn-secondary text-sm">
+        {{ 'common.cancel' | translate }}
+      </button>
+      <button type="button" (click)="saveEdit()" class="btn-primary text-sm">
+        {{ 'common.save' | translate }}
+      </button>
     </div>
   </div>
 } @else {
@@ -74,7 +99,9 @@
       <div
         class="w-10 h-10 rounded-full bg-[var(--color-accent)]/10 flex items-center justify-center"
       >
-        <span class="material-symbols-outlined text-[20px] text-[var(--color-accent)]">lightbulb</span>
+        <span class="material-symbols-outlined text-[20px] text-[var(--color-accent)]"
+          >lightbulb</span
+        >
       </div>
 
       <!-- Skill Info -->

@@ -47,7 +47,8 @@
               <span
                 class="material-symbols-outlined text-[14px] transition-transform"
                 [class.rotate-180]="showDocuments()"
-              >expand_more</span>
+                >expand_more</span
+              >
             </button>
 
             @if (showDocuments()) {
@@ -59,7 +60,10 @@
                     rel="noopener noreferrer"
                     class="group flex items-center gap-3 px-3 py-2 rounded-lg bg-(--color-bg-secondary) border border-(--color-border-primary) hover:border-(--color-accent)/30 transition-all"
                   >
-                    <span class="material-symbols-outlined text-[16px] text-(--color-accent) shrink-0">description</span>
+                    <span
+                      class="material-symbols-outlined text-[16px] text-(--color-accent) shrink-0"
+                      >description</span
+                    >
                     <div class="flex-1 min-w-0">
                       <p
                         class="text-sm font-medium text-(--color-text-primary) group-hover:text-(--color-accent) transition-colors truncate"
@@ -72,7 +76,10 @@
                         </p>
                       }
                     </div>
-                    <span class="material-symbols-outlined text-[14px] text-(--color-text-muted) group-hover:text-(--color-accent) transition-colors shrink-0">open_in_new</span>
+                    <span
+                      class="material-symbols-outlined text-[14px] text-(--color-text-muted) group-hover:text-(--color-accent) transition-colors shrink-0"
+                      >open_in_new</span
+                    >
                   </a>
                 }
               </div>

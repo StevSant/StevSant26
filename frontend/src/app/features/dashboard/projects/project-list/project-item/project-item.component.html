@@ -14,7 +14,8 @@
       <span
         class="material-symbols-outlined text-[20px] transition-transform duration-200"
         [class.rotate-90]="isExpanded()"
-      >chevron_right</span>
+        >chevron_right</span
+      >
     </button>
   }
 
@@ -37,7 +38,9 @@
   <!-- Pin Indicator -->
   @if (item().is_pinned) {
     <div class="text-[var(--color-pin)]">
-      <span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1">star</span>
+      <span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1"
+        >star</span
+      >
     </div>
   }
 
@@ -70,7 +73,12 @@
         </a>
       }
       @if (item().demo_url) {
-        <a [href]="item().demo_url" target="_blank" rel="noopener noreferrer" class="btn-view-project">
+        <a
+          [href]="item().demo_url"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="btn-view-project"
+        >
           <span class="material-symbols-outlined text-[16px]">play_circle</span>
           {{ 'portfolio.viewDemo' | translate }}
         </a>
@@ -98,7 +106,8 @@
       <span
         class="material-symbols-outlined text-[20px]"
         [style.font-variation-settings]="item().is_pinned ? '\'FILL\' 1' : '\'FILL\' 0'"
-      >star</span>
+        >star</span
+      >
     </button>
     <a [routerLink]="[item().id]" class="icon-btn-edit" [title]="'common.edit' | translate">
       <span class="material-symbols-outlined text-[20px]">edit</span>

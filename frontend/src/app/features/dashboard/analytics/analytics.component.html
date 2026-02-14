@@ -40,7 +40,9 @@
             {{ 'analytics.totalViews' | translate }}
           </p>
           <div class="p-2 bg-(--color-accent)/10 rounded-lg">
-            <span class="material-symbols-outlined text-[20px] text-(--color-accent)">visibility</span>
+            <span class="material-symbols-outlined text-[20px] text-(--color-accent)"
+              >visibility</span
+            >
           </div>
         </div>
         <p class="text-3xl font-bold text-(--color-text-primary) mt-2">
@@ -196,7 +198,9 @@
               @if (summary()!.device_breakdown?.length) {
                 @for (device of summary()!.device_breakdown; track device.device_type) {
                   <div class="flex items-center gap-3">
-                    <span class="material-symbols-outlined text-[20px] text-(--color-text-muted)">{{ getDeviceIcon(device.device_type) }}</span>
+                    <span class="material-symbols-outlined text-[20px] text-(--color-text-muted)">{{
+                      getDeviceIcon(device.device_type)
+                    }}</span>
                     <span class="text-sm text-(--color-text-primary) capitalize flex-1">{{
                       device.device_type
                     }}</span>
@@ -447,7 +451,9 @@
                     <div class="flex items-center gap-4 text-xs text-(--color-text-muted)">
                       @if (session.device_type) {
                         <span class="flex items-center gap-1">
-                          <span class="material-symbols-outlined text-[14px]">{{ getDeviceIcon(session.device_type) }}</span>
+                          <span class="material-symbols-outlined text-[14px]">{{
+                            getDeviceIcon(session.device_type)
+                          }}</span>
                           {{ session.device_type }}
                         </span>
                       }
@@ -493,7 +499,10 @@
             <div
               class="bg-(--color-bg-secondary) rounded-xl p-10 border border-(--color-border-primary) text-center"
             >
-              <span class="material-symbols-outlined text-[48px] mx-auto text-(--color-text-muted) mb-3">work</span>
+              <span
+                class="material-symbols-outlined text-[48px] mx-auto text-(--color-text-muted) mb-3"
+                >work</span
+              >
               <p class="text-(--color-text-muted)">{{ 'analytics.noRecruiters' | translate }}</p>
             </div>
           }
@@ -510,7 +519,10 @@
             <div class="flex flex-col lg:flex-row gap-3">
               <!-- Search -->
               <div class="flex-1 relative">
-                <span class="material-symbols-outlined text-[16px] absolute left-3 top-1/2 -translate-y-1/2 text-(--color-text-muted)">search</span>
+                <span
+                  class="material-symbols-outlined text-[16px] absolute left-3 top-1/2 -translate-y-1/2 text-(--color-text-muted)"
+                  >search</span
+                >
                 <input
                   type="text"
                   [ngModel]="visitorSearch()"
@@ -592,7 +604,8 @@
                             ? 'text-purple-500'
                             : 'text-(--color-accent)'
                         "
-                      >{{ visitor.is_potential_recruiter ? 'work' : 'person' }}</span>
+                        >{{ visitor.is_potential_recruiter ? 'work' : 'person' }}</span
+                      >
                     </div>
                     <div>
                       <div class="flex items-center gap-2 flex-wrap">
@@ -648,7 +661,8 @@
                     <span
                       class="material-symbols-outlined text-[16px] text-(--color-text-muted) transition-transform"
                       [class.rotate-180]="expandedVisitor() === visitor.visitor_hash"
-                    >expand_more</span>
+                      >expand_more</span
+                    >
                   </div>
                 </button>
 
@@ -739,7 +753,10 @@
                                 class="px-3 py-2 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 bg-(--color-bg-primary)/30"
                               >
                                 <div class="flex items-center gap-2 flex-wrap">
-                                  <span class="material-symbols-outlined text-[16px] text-(--color-accent) shrink-0">schedule</span>
+                                  <span
+                                    class="material-symbols-outlined text-[16px] text-(--color-accent) shrink-0"
+                                    >schedule</span
+                                  >
                                   <span class="text-xs font-medium text-(--color-text-primary)">
                                     {{ session.started_at | date: 'medium' }}
                                   </span>
@@ -876,7 +893,10 @@
             <div
               class="bg-(--color-bg-secondary) rounded-xl p-10 border border-(--color-border-primary) text-center"
             >
-              <span class="material-symbols-outlined text-[48px] mx-auto text-(--color-text-muted) mb-3">group</span>
+              <span
+                class="material-symbols-outlined text-[48px] mx-auto text-(--color-text-muted) mb-3"
+                >group</span
+              >
               <p class="text-(--color-text-muted)">
                 @if (hasActiveVisitorFilters()) {
                   {{ 'analytics.noVisitorsFiltered' | translate }}
@@ -892,7 +912,9 @@
   } @else {
     <!-- No data state -->
     <div class="flex flex-col items-center justify-center py-20 text-center">
-      <span class="material-symbols-outlined text-[64px] text-(--color-text-muted) mb-4">bar_chart</span>
+      <span class="material-symbols-outlined text-[64px] text-(--color-text-muted) mb-4"
+        >bar_chart</span
+      >
       <h3 class="text-lg font-medium text-(--color-text-primary) mb-1">
         {{ 'analytics.noDataTitle' | translate }}
       </h3>

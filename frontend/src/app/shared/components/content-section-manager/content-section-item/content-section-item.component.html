@@ -13,7 +13,11 @@
     }
 
     @if (isIconMaterial) {
-      <span class="material-symbols-outlined text-[22px] shrink-0 align-middle" [attr.aria-hidden]="true">{{ sectionIcon }}</span>
+      <span
+        class="material-symbols-outlined text-[22px] shrink-0 align-middle"
+        [attr.aria-hidden]="true"
+        >{{ sectionIcon }}</span
+      >
     } @else {
       <span class="text-lg shrink-0">{{ sectionIcon }}</span>
     }

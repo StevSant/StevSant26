@@ -30,7 +30,11 @@
             </h1>
             @if (p.is_pinned) {
               <span class="text-(--color-pin) mt-1">
-                <span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1">star</span>
+                <span
+                  class="material-symbols-outlined text-[20px]"
+                  style="font-variation-settings: 'FILL' 1"
+                  >star</span
+                >
               </span>
             }
           </div>
@@ -47,7 +51,12 @@
               </a>
             }
             @if (p.demo_url) {
-              <a [href]="p.demo_url" target="_blank" rel="noopener noreferrer" class="btn-view-project">
+              <a
+                [href]="p.demo_url"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="btn-view-project"
+              >
                 <span class="material-symbols-outlined text-[20px]">play_circle</span>
                 {{ 'portfolio.viewDemo' | translate }}
               </a>
@@ -133,7 +142,10 @@
                   }
                   <div class="p-5">
                     <div class="flex items-center gap-2 mb-2">
-                      <span class="material-symbols-outlined text-[20px] text-(--color-text-muted) shrink-0">grid_view</span>
+                      <span
+                        class="material-symbols-outlined text-[20px] text-(--color-text-muted) shrink-0"
+                        >grid_view</span
+                      >
                       <h3
                         class="text-base font-semibold text-(--color-text-primary) group-hover/sub:text-(--color-accent) transition-colors truncate"
                       >
@@ -178,13 +190,23 @@
                       class="flex items-center gap-3 mt-4 pt-3 border-t border-(--color-border-primary)"
                     >
                       @if (sub.url) {
-                        <a [href]="sub.url" target="_blank" rel="noopener noreferrer" class="btn-view-project">
+                        <a
+                          [href]="sub.url"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          class="btn-view-project"
+                        >
                           <span class="material-symbols-outlined text-[20px]">open_in_new</span>
                           {{ 'portfolio.viewProject' | translate }}
                         </a>
                       }
                       @if (sub.demo_url) {
-                        <a [href]="sub.demo_url" target="_blank" rel="noopener noreferrer" class="btn-view-project">
+                        <a
+                          [href]="sub.demo_url"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          class="btn-view-project"
+                        >
                           <span class="material-symbols-outlined text-[20px]">play_circle</span>
                           {{ 'portfolio.viewDemo' | translate }}
                         </a>

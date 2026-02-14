@@ -1,6 +1,8 @@
 <div class="card space-y-6">
   <h2 class="text-xl font-semibold text-[var(--color-text-primary)] flex items-center gap-2">
-    <span class="material-symbols-outlined text-[24px] text-[var(--color-accent)]">description</span>
+    <span class="material-symbols-outlined text-[24px] text-[var(--color-accent)]"
+      >description</span
+    >
     {{ 'cv.title' | translate }}
   </h2>
   <p class="text-sm text-[var(--color-text-muted)]">
@@ -16,7 +18,9 @@
         >
           <div class="flex items-center gap-3 min-w-0">
             <!-- PDF icon -->
-            <span class="material-symbols-outlined text-[32px] text-[var(--color-accent)] shrink-0">picture_as_pdf</span>
+            <span class="material-symbols-outlined text-[32px] text-[var(--color-accent)] shrink-0"
+              >picture_as_pdf</span
+            >
             <div class="min-w-0">
               <p class="text-sm font-medium text-[var(--color-text-primary)] truncate">
                 {{ getDisplayName(cv) }}

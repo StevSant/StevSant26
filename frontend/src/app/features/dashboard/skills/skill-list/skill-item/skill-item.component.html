@@ -12,7 +12,9 @@
   <!-- Pin Indicator -->
   @if (item().is_pinned) {
     <div class="text-[var(--color-pin)]">
-      <span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1">star</span>
+      <span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1"
+        >star</span
+      >
     </div>
   }
 
@@ -36,7 +38,8 @@
       <span
         class="material-symbols-outlined text-[20px]"
         [style.font-variation-settings]="item().is_pinned ? '\'FILL\' 1' : '\'FILL\' 0'"
-      >star</span>
+        >star</span
+      >
     </button>
     <a [routerLink]="[item().id]" class="icon-btn-edit">
       <span class="material-symbols-outlined text-[20px]">edit</span>

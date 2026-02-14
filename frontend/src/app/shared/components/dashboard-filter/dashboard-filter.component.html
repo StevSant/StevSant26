@@ -1,7 +1,10 @@
 <div class="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center">
   <!-- Search input -->
   <div class="relative flex-1 min-w-0">
-    <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-[16px] text-[var(--color-text-muted)]">search</span>
+    <span
+      class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-[16px] text-[var(--color-text-muted)]"
+      >search</span
+    >
     <input
       type="text"
       [ngModel]="searchText()"
@@ -23,7 +26,10 @@
   <!-- Dropdown filter -->
   @if (filterOptions().length > 0) {
     <div class="relative sm:w-56">
-      <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-[16px] text-[var(--color-text-muted)] pointer-events-none">filter_list</span>
+      <span
+        class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-[16px] text-[var(--color-text-muted)] pointer-events-none"
+        >filter_list</span
+      >
       <select
         [ngModel]="selectedFilter()"
         (ngModelChange)="onFilterSelect($event)"
@@ -38,7 +44,10 @@
           <option [value]="option.value">{{ option.label }}</option>
         }
       </select>
-      <span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-[16px] text-[var(--color-text-muted)] pointer-events-none">expand_more</span>
+      <span
+        class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-[16px] text-[var(--color-text-muted)] pointer-events-none"
+        >expand_more</span
+      >
     </div>
   }
 </div>

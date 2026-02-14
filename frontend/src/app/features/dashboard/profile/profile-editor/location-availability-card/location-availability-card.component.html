@@ -34,7 +34,9 @@
         <span
           class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-(--color-bg-tertiary) border border-(--color-border-primary) text-xs text-(--color-text-secondary)"
         >
-          <span class="material-symbols-outlined text-[12px] text-(--color-text-muted)">location_on</span>
+          <span class="material-symbols-outlined text-[12px] text-(--color-text-muted)"
+            >location_on</span
+          >
           {{ formData().city }}
         </span>
       }
@@ -70,7 +72,8 @@
       <span
         class="material-symbols-outlined text-[14px] transition-transform duration-200"
         [class.rotate-180]="showDetails"
-      >expand_more</span>
+        >expand_more</span
+      >
       {{ 'profile.locationAdjust' | translate }}
     </button>
   }
