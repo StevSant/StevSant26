@@ -827,6 +827,12 @@
     "timePerPage": "Time per Page",
     "totalTime": "Total Time",
     "noVisitors": "No visitors yet",
-    "noVisitorsFiltered": "No visitors match the current filters"
+    "noVisitorsFiltered": "No visitors match the current filters",
+    "activeNow": "Active now",
+    "exitTime": "Exit",
+    "deleteVisitor": "Delete visitor",
+    "deleteConfirm": "Delete this visitor and all their data? This action cannot be undone.",
+    "confirmDelete": "Delete",
+    "cancel": "Cancel"
   }
 }

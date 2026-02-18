@@ -67,6 +67,16 @@ const DURATION_HEARTBEAT_MS = 30_000;
 /** First heartbeat delay — save duration quickly in case user leaves early (5 seconds) */
 const FIRST_HEARTBEAT_MS = 5_000;
 
+/** Idle timeout in milliseconds (5 minutes).
+ *  After this period without user interaction (mouse, keyboard, scroll, touch),
+ *  duration tracking pauses to prevent inflated times from idle tabs. */
+const IDLE_TIMEOUT_MS = 5 * 60 * 1000;
+
+/** User interaction events that reset the idle timer */
+const ACTIVITY_EVENTS: (keyof DocumentEventMap)[] = [
+  'mousemove', 'mousedown', 'keydown', 'scroll', 'touchstart', 'pointerdown',
+];
+
 /**
  * Analytics service for tracking portfolio visitors and retrieving dashboard metrics.
  *
@@ -90,6 +100,14 @@ export class AnalyticsService {
   private heartbeatInterval: ReturnType<typeof setInterval> | null = null;
   private heartbeatTimeout: ReturnType<typeof setTimeout> | null = null;
   private lastHeartbeatDuration: number = 0;
+
+  /** Idle detection state */
+  private idleTimeout: ReturnType<typeof setTimeout> | null = null;
+  private isIdle = false;
+  private idleSince: number = 0;
+  private accumulatedIdleMs: number = 0;
+  private activityListenersBound = false;
+  private boundOnActivity = this.onUserActivity.bind(this);
 
   constructor() {
     // Capture referrer source immediately before Angular router strips them
@@ -234,6 +252,9 @@ export class AnalyticsService {
       this.currentPageStartTime = Date.now();
       this.lastHeartbeatDuration = 0;
       this.currentPageViewId = insertedRows?.[0]?.id ?? null;
+      this.accumulatedIdleMs = 0;
+      this.isIdle = false;
+      this.idleSince = 0;
 
       // Start periodic heartbeat to keep duration updated
       this.startHeartbeat();
@@ -265,7 +286,7 @@ export class AnalyticsService {
   async updateCurrentPageDuration(): Promise<void> {
     if (!this.sessionId || !this.currentPagePath || !this.currentPageStartTime) return;
 
-    const durationSeconds = Math.round((Date.now() - this.currentPageStartTime) / 1000);
+    const durationSeconds = this.getActiveDurationSeconds();
     if (durationSeconds <= 0) return;
 
     try {
@@ -299,17 +320,22 @@ export class AnalyticsService {
 
   /**
    * Finalize duration tracking when user leaves. Called from component OnDestroy.
+   * Updates both the page view duration and the session's last_seen_at (exit time).
    */
   finalizeSession(): void {
     this.stopHeartbeat();
+    this.stopIdleDetection();
 
     if (!this.sessionId || !this.currentPagePath || !this.currentPageStartTime) return;
 
-    const durationSeconds = Math.round((Date.now() - this.currentPageStartTime) / 1000);
+    const durationSeconds = this.getActiveDurationSeconds();
     if (durationSeconds <= 0) return;
+
+    const now = new Date().toISOString();
 
     // Use fetch with keepalive for reliable delivery on page unload
     try {
+      // 1. Update page view duration
       const url = this.buildPageViewUpdateUrl();
       const body = JSON.stringify({ duration_seconds: durationSeconds });
 
@@ -322,6 +348,20 @@ export class AnalyticsService {
           'Prefer': 'return=minimal',
         },
         body,
+        keepalive: true,
+      }).catch(() => {});
+
+      // 2. Update session last_seen_at (exit timestamp)
+      const sessionUrl = `${environment.supabaseUrl}/rest/v1/visitor_session?id=eq.${this.sessionId}`;
+      fetch(sessionUrl, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': environment.supabaseKey,
+          'Authorization': `Bearer ${environment.supabaseKey}`,
+          'Prefer': 'return=minimal',
+        },
+        body: JSON.stringify({ last_seen_at: now }),
         keepalive: true,
       }).catch(() => {});
     } catch {
@@ -352,21 +392,28 @@ export class AnalyticsService {
     window.addEventListener('pagehide', () => {
       this.flushCurrentDuration();
     });
+
+    // Start idle detection
+    this.startIdleDetection();
   }
 
   /**
    * Flush the current page duration to the DB using fetch+keepalive.
    * Called from visibility/lifecycle events — must be fast and non-blocking.
+   * Also updates session last_seen_at to track exit time.
    */
   private flushCurrentDuration(): void {
     this.stopHeartbeat();
 
     if (!this.sessionId || !this.currentPagePath || !this.currentPageStartTime) return;
 
-    const durationSeconds = Math.round((Date.now() - this.currentPageStartTime) / 1000);
+    const durationSeconds = this.getActiveDurationSeconds();
     if (durationSeconds <= 0 || durationSeconds === this.lastHeartbeatDuration) return;
 
+    const now = new Date().toISOString();
+
     try {
+      // 1. Update page view duration
       const url = this.buildPageViewUpdateUrl();
       const body = JSON.stringify({ duration_seconds: durationSeconds });
 
@@ -379,6 +426,20 @@ export class AnalyticsService {
           'Prefer': 'return=minimal',
         },
         body,
+        keepalive: true,
+      }).catch(() => {});
+
+      // 2. Update session last_seen_at (exit timestamp)
+      const sessionUrl = `${environment.supabaseUrl}/rest/v1/visitor_session?id=eq.${this.sessionId}`;
+      fetch(sessionUrl, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': environment.supabaseKey,
+          'Authorization': `Bearer ${environment.supabaseKey}`,
+          'Prefer': 'return=minimal',
+        },
+        body: JSON.stringify({ last_seen_at: now }),
         keepalive: true,
       }).catch(() => {});
 
@@ -422,6 +483,7 @@ export class AnalyticsService {
 
   /**
    * Single heartbeat tick — updates the current page view's duration in the DB.
+   * Skips update when user is idle (no interaction for 5 minutes).
    */
   private async heartbeatTick(): Promise<void> {
     if (!this.currentPageViewId || !this.currentPageStartTime) {
@@ -429,10 +491,11 @@ export class AnalyticsService {
       return;
     }
 
-    // Only update if page is visible
+    // Only update if page is visible and user is NOT idle
     if (document.visibilityState !== 'visible') return;
+    if (this.isIdle) return;
 
-    const durationSeconds = Math.round((Date.now() - this.currentPageStartTime) / 1000);
+    const durationSeconds = this.getActiveDurationSeconds();
     if (durationSeconds <= 0 || durationSeconds === this.lastHeartbeatDuration) return;
 
     try {
@@ -441,6 +504,12 @@ export class AnalyticsService {
         .update({ duration_seconds: durationSeconds })
         .eq('id', this.currentPageViewId);
       this.lastHeartbeatDuration = durationSeconds;
+
+      // Also update last_seen_at on the session
+      await this.client.client
+        .from('visitor_session')
+        .update({ last_seen_at: new Date().toISOString() })
+        .eq('id', this.sessionId!);
     } catch {
       // Silently fail
     }
@@ -455,6 +524,82 @@ export class AnalyticsService {
       clearInterval(this.heartbeatInterval);
       this.heartbeatInterval = null;
     }
+  }
+
+  // ==================== IDLE DETECTION ====================
+
+  /**
+   * Calculates the active (non-idle) duration in seconds for the current page view.
+   * Subtracts accumulated idle time from the total elapsed time.
+   */
+  private getActiveDurationSeconds(): number {
+    if (!this.currentPageStartTime) return 0;
+    const elapsed = Date.now() - this.currentPageStartTime;
+    const currentIdleMs = this.isIdle ? (Date.now() - this.idleSince) : 0;
+    const activeMs = elapsed - this.accumulatedIdleMs - currentIdleMs;
+    return Math.max(0, Math.round(activeMs / 1000));
+  }
+
+  /**
+   * Start idle detection: listen for user interaction events and
+   * pause duration tracking when user is inactive for IDLE_TIMEOUT_MS.
+   */
+  private startIdleDetection(): void {
+    if (!isPlatformBrowser(this.platformId) || this.activityListenersBound) return;
+
+    for (const event of ACTIVITY_EVENTS) {
+      document.addEventListener(event, this.boundOnActivity, { passive: true });
+    }
+    this.activityListenersBound = true;
+    this.resetIdleTimer();
+  }
+
+  /**
+   * Stop idle detection and clean up event listeners.
+   */
+  private stopIdleDetection(): void {
+    if (!isPlatformBrowser(this.platformId)) return;
+
+    for (const event of ACTIVITY_EVENTS) {
+      document.removeEventListener(event, this.boundOnActivity);
+    }
+    this.activityListenersBound = false;
+
+    if (this.idleTimeout) {
+      clearTimeout(this.idleTimeout);
+      this.idleTimeout = null;
+    }
+  }
+
+  /**
+   * Called on every user interaction. Resets the idle timer.
+   * If the user was idle, resumes tracking.
+   */
+  private onUserActivity(): void {
+    if (this.isIdle) {
+      // User returned from idle — accumulate the idle period
+      this.accumulatedIdleMs += Date.now() - this.idleSince;
+      this.isIdle = false;
+      this.idleSince = 0;
+      // Resume heartbeat
+      this.startHeartbeat();
+    }
+    this.resetIdleTimer();
+  }
+
+  /**
+   * Reset the idle timer. After IDLE_TIMEOUT_MS of no activity, mark as idle.
+   */
+  private resetIdleTimer(): void {
+    if (this.idleTimeout) {
+      clearTimeout(this.idleTimeout);
+    }
+    this.idleTimeout = setTimeout(() => {
+      this.isIdle = true;
+      this.idleSince = Date.now();
+      // Flush current duration before going idle
+      this.flushCurrentDuration();
+    }, IDLE_TIMEOUT_MS);
   }
 
   // ==================== DASHBOARD (Authenticated) ====================
@@ -541,6 +686,27 @@ export class AnalyticsService {
 
     if (error) return [];
     return data as VisitorSession[];
+  }
+
+  /**
+   * Delete all data for a specific visitor (all sessions + page views).
+   * Page views are auto-deleted via ON DELETE CASCADE on the session FK.
+   */
+  async deleteVisitor(visitorHash: string): Promise<boolean> {
+    try {
+      const { error } = await this.client.client
+        .from('visitor_session')
+        .delete()
+        .eq('visitor_hash', visitorHash);
+
+      if (error) {
+        console.error('Error deleting visitor:', error.message);
+        return false;
+      }
+      return true;
+    } catch {
+      return false;
+    }
   }
 
   // ==================== PRIVATE HELPERS ====================

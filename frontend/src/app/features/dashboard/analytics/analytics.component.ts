@@ -30,6 +30,8 @@ export class AnalyticsComponent implements OnInit {
   visitorFilterReferrer = signal<string | null>(null);
   expandedVisitor = signal<string | null>(null);
   expandedVisitorTab = signal<'history' | 'pages'>('history');
+  deletingVisitor = signal<string | null>(null);
+  confirmDeleteVisitor = signal<string | null>(null);
 
   // Computed values for display
   avgViewsPerVisitor = computed(() => {
@@ -162,6 +164,55 @@ export class AnalyticsComponent implements OnInit {
    */
   getSessionTotalDuration(session: VisitorSessionDetail): number {
     return session.session_duration || 0;
+  }
+
+  /**
+   * Determine if a session appears to still be active.
+   * A session is "active" if last_seen_at is within the last 2 minutes.
+   */
+  isSessionActive(session: VisitorSessionDetail): boolean {
+    if (!session.last_seen_at) return false;
+    const lastSeen = new Date(session.last_seen_at).getTime();
+    const twoMinutesAgo = Date.now() - 2 * 60 * 1000;
+    return lastSeen > twoMinutesAgo;
+  }
+
+  /**
+   * Show delete confirmation for a visitor.
+   */
+  showDeleteConfirm(visitorHash: string, event: Event): void {
+    event.stopPropagation();
+    this.confirmDeleteVisitor.set(visitorHash);
+  }
+
+  /**
+   * Cancel delete confirmation.
+   */
+  cancelDelete(event: Event): void {
+    event.stopPropagation();
+    this.confirmDeleteVisitor.set(null);
+  }
+
+  /**
+   * Delete a visitor and all their session data.
+   */
+  async deleteVisitor(visitorHash: string, event: Event): Promise<void> {
+    event.stopPropagation();
+    this.deletingVisitor.set(visitorHash);
+    try {
+      const success = await this.analyticsService.deleteVisitor(visitorHash);
+      if (success) {
+        // Remove from local list immediately
+        this.visitors.update((v) => v.filter((vis) => vis.visitor_hash !== visitorHash));
+        this.confirmDeleteVisitor.set(null);
+        // Reload summary to update KPIs
+        await this.loadData();
+      }
+    } catch (err) {
+      console.error('[Analytics] Error deleting visitor:', err);
+    } finally {
+      this.deletingVisitor.set(null);
+    }
   }
 
   hasActiveVisitorFilters(): boolean {

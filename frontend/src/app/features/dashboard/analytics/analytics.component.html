@@ -658,8 +658,48 @@
                       [class.rotate-180]="expandedVisitor() === visitor.visitor_hash"
                       >expand_more</mat-icon
                     >
+                    <!-- Delete button -->
+                    <button
+                      (click)="showDeleteConfirm(visitor.visitor_hash, $event)"
+                      class="p-1 rounded-md text-(--color-text-muted) hover:text-red-500 hover:bg-red-500/10 transition-colors"
+                      [title]="'analytics.deleteVisitor' | translate"
+                    >
+                      <mat-icon class="text-[16px]">delete_outline</mat-icon>
+                    </button>
                   </div>
                 </button>
+
+                <!-- Delete Confirmation Banner -->
+                @if (confirmDeleteVisitor() === visitor.visitor_hash) {
+                  <div
+                    class="px-4 py-3 bg-red-50 dark:bg-red-900/20 border-t border-red-200 dark:border-red-800/50 flex items-center justify-between gap-3"
+                  >
+                    <div class="flex items-center gap-2 text-sm text-red-700 dark:text-red-300">
+                      <mat-icon class="text-[18px]">warning</mat-icon>
+                      <span>{{ 'analytics.deleteConfirm' | translate }}</span>
+                    </div>
+                    <div class="flex items-center gap-2 shrink-0">
+                      <button
+                        (click)="cancelDelete($event)"
+                        class="px-3 py-1 text-xs font-medium rounded-md bg-(--color-bg-secondary) text-(--color-text-primary) border border-(--color-border-primary) hover:bg-(--color-bg-primary) transition-colors"
+                      >
+                        {{ 'analytics.cancel' | translate }}
+                      </button>
+                      <button
+                        (click)="deleteVisitor(visitor.visitor_hash, $event)"
+                        [disabled]="deletingVisitor() === visitor.visitor_hash"
+                        class="px-3 py-1 text-xs font-medium rounded-md bg-red-600 text-white hover:bg-red-700 disabled:opacity-50 transition-colors flex items-center gap-1"
+                      >
+                        @if (deletingVisitor() === visitor.visitor_hash) {
+                          <div
+                            class="animate-spin rounded-full h-3 w-3 border-b-2 border-white"
+                          ></div>
+                        }
+                        {{ 'analytics.confirmDelete' | translate }}
+                      </button>
+                    </div>
+                  </div>
+                }
 
                 <!-- Expanded Details -->
                 @if (expandedVisitor() === visitor.visitor_hash) {
@@ -754,6 +794,23 @@
                                   <span class="text-xs font-medium text-(--color-text-primary)">
                                     {{ session.started_at | date: 'medium' }}
                                   </span>
+                                  <mat-icon class="text-[12px] text-(--color-text-muted) shrink-0"
+                                    >arrow_forward</mat-icon
+                                  >
+                                  @if (isSessionActive(session)) {
+                                    <span
+                                      class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full text-[10px] font-medium bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300"
+                                    >
+                                      <span
+                                        class="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"
+                                      ></span>
+                                      {{ 'analytics.activeNow' | translate }}
+                                    </span>
+                                  } @else {
+                                    <span class="text-xs text-(--color-text-muted)">
+                                      {{ session.last_seen_at | date: 'medium' }}
+                                    </span>
+                                  }
                                   @if (session.referrer_source) {
                                     @if (getReferrerBadge(session.referrer_source); as badge) {
                                       <span
