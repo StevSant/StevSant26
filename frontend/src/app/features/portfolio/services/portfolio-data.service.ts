@@ -186,7 +186,8 @@ export class PortfolioDataService {
         translations:skill_translation(*, language:language(*)),
         category:skill_category(*, translations:skill_category_translation(*, language:language(*)))
       `)
-      .eq('is_archived', false);
+      .eq('is_archived', false)
+      .order('position', { ascending: true });
 
     if (!skills || skills.length === 0) {
       this.skillCategories.set([]);
@@ -200,8 +201,9 @@ export class PortfolioDataService {
     const levelMap = new Map<number, number>();
     if (usages) {
       for (const usage of usages) {
-        if (!levelMap.has(usage.skill_id) && usage.level) {
-          levelMap.set(usage.skill_id, usage.level);
+        if (usage.level) {
+          const current = levelMap.get(usage.skill_id) ?? 0;
+          levelMap.set(usage.skill_id, Math.max(current, usage.level));
         }
       }
     }
@@ -210,7 +212,15 @@ export class PortfolioDataService {
 
     for (const skill of skills as any[]) {
       const categoryId = skill.skill_category_id || null;
-      const calculatedLevel = levelMap.get(skill.id) || 0;
+      const usageLevel = levelMap.get(skill.id) ?? 0;
+      const predefinedLevel = skill.predefined_level ?? 0;
+      const calculatedLevel = Math.max(usageLevel, predefinedLevel);
+      const hasUsages = usageLevel > 0;
+      const isLanguage = skill.category?.code === 'languages';
+
+      // Hide skills that have no usage in any project and no predefined level
+      if (calculatedLevel === 0 && !isLanguage) continue;
+      if (!hasUsages && !predefinedLevel && !isLanguage) continue;
 
       const skillWithLevel: SkillWithLevel = {
         ...skill,
@@ -239,7 +249,16 @@ export class PortfolioDataService {
       category.skills.sort((a, b) => b.calculatedLevel - a.calculatedLevel);
     }
 
-    this.skillCategories.set(Array.from(categoryMap.values()));
+    // Remove empty categories (all skills were filtered out)
+    for (const [key, category] of categoryMap.entries()) {
+      if (category.skills.length === 0) categoryMap.delete(key);
+    }
+
+    // Sort categories by position to maintain consistent display order
+    const sortedCategories = Array.from(categoryMap.values())
+      .sort((a, b) => (a.position ?? 999) - (b.position ?? 999));
+
+    this.skillCategories.set(sortedCategories);
   }
 
   // Helper methods

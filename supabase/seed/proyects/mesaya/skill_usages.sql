@@ -156,9 +156,8 @@ INSERT INTO skill_usages (skill_id, source_id, source_type, level, started_at, i
 VALUES
   ((SELECT id FROM skill WHERE code = 'typescript'), (SELECT id FROM project WHERE code = 'mesaya-auth-ms'), 'project', 5, '2024-02-01', true,  1),
   ((SELECT id FROM skill WHERE code = 'nestjs'),     (SELECT id FROM project WHERE code = 'mesaya-auth-ms'), 'project', 5, '2024-02-01', true,  2),
-  ((SELECT id FROM skill WHERE code = 'jwt'),        (SELECT id FROM project WHERE code = 'mesaya-auth-ms'), 'project', 4, '2024-02-01', true,  3),
-  ((SELECT id FROM skill WHERE code = 'postgresql'), (SELECT id FROM project WHERE code = 'mesaya-auth-ms'), 'project', 4, '2024-02-01', false, 4),
-  ((SELECT id FROM skill WHERE code = 'nodejs'),     (SELECT id FROM project WHERE code = 'mesaya-auth-ms'), 'project', 4, '2024-02-01', false, 5)
+  ((SELECT id FROM skill WHERE code = 'postgresql'), (SELECT id FROM project WHERE code = 'mesaya-auth-ms'), 'project', 4, '2024-02-01', false, 3),
+  ((SELECT id FROM skill WHERE code = 'nodejs'),     (SELECT id FROM project WHERE code = 'mesaya-auth-ms'), 'project', 4, '2024-02-01', false, 4)
 ON CONFLICT DO NOTHING;
 
 INSERT INTO skill_usages_translation (skill_usages_id, language_id, notes)
@@ -172,11 +171,6 @@ VALUES
    (SELECT id FROM language WHERE code = 'es'), 'Framework principal con módulos de autenticación, guards JWT y middleware de verificación.'),
   ((SELECT su.id FROM skill_usages su WHERE su.skill_id = (SELECT id FROM skill WHERE code = 'nestjs') AND su.source_id = (SELECT id FROM project WHERE code = 'mesaya-auth-ms') AND su.source_type = 'project'),
    (SELECT id FROM language WHERE code = 'en'), 'Main framework with authentication modules, JWT guards, and verification middleware.'),
-
-  ((SELECT su.id FROM skill_usages su WHERE su.skill_id = (SELECT id FROM skill WHERE code = 'jwt') AND su.source_id = (SELECT id FROM project WHERE code = 'mesaya-auth-ms') AND su.source_type = 'project'),
-   (SELECT id FROM language WHERE code = 'es'), 'Autenticación basada en tokens JWT con refresh tokens, hash de contraseñas y middleware de verificación.'),
-  ((SELECT su.id FROM skill_usages su WHERE su.skill_id = (SELECT id FROM skill WHERE code = 'jwt') AND su.source_id = (SELECT id FROM project WHERE code = 'mesaya-auth-ms') AND su.source_type = 'project'),
-   (SELECT id FROM language WHERE code = 'en'), 'JWT-based authentication with refresh tokens, password hashing, and verification middleware.'),
 
   ((SELECT su.id FROM skill_usages su WHERE su.skill_id = (SELECT id FROM skill WHERE code = 'postgresql') AND su.source_id = (SELECT id FROM project WHERE code = 'mesaya-auth-ms') AND su.source_type = 'project'),
    (SELECT id FROM language WHERE code = 'es'), 'Base de datos para usuarios, roles y permisos con TypeORM.'),

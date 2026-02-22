@@ -12,11 +12,10 @@ VALUES
   ((SELECT id FROM skill WHERE code = 'python'),             (SELECT id FROM project WHERE code = 'rosseta-stone-script-a'), 'project', 4, '2025-01-26', true,  1),
   ((SELECT id FROM skill WHERE code = 'playwright'),         (SELECT id FROM project WHERE code = 'rosseta-stone-script-a'), 'project', 4, '2025-01-26', true,  2),
   ((SELECT id FROM skill WHERE code = 'pydantic'),           (SELECT id FROM project WHERE code = 'rosseta-stone-script-a'), 'project', 3, '2025-01-26', false, 3),
-  ((SELECT id FROM skill WHERE code = 'asyncio'),            (SELECT id FROM project WHERE code = 'rosseta-stone-script-a'), 'project', 4, '2025-01-26', false, 4),
-  ((SELECT id FROM skill WHERE code = 'clean_architecture'), (SELECT id FROM project WHERE code = 'rosseta-stone-script-a'), 'project', 4, '2025-01-26', true,  5),
-  ((SELECT id FROM skill WHERE code = 'web_scraping'),       (SELECT id FROM project WHERE code = 'rosseta-stone-script-a'), 'project', 3, '2025-01-26', false, 6),
-  ((SELECT id FROM skill WHERE code = 'rest_api'),           (SELECT id FROM project WHERE code = 'rosseta-stone-script-a'), 'project', 3, '2025-01-26', false, 7),
-  ((SELECT id FROM skill WHERE code = 'graphql'),            (SELECT id FROM project WHERE code = 'rosseta-stone-script-a'), 'project', 3, '2025-01-26', false, 8)
+  ((SELECT id FROM skill WHERE code = 'clean_architecture'), (SELECT id FROM project WHERE code = 'rosseta-stone-script-a'), 'project', 4, '2025-01-26', true,  4),
+  ((SELECT id FROM skill WHERE code = 'web_scraping'),       (SELECT id FROM project WHERE code = 'rosseta-stone-script-a'), 'project', 3, '2025-01-26', false, 5),
+  ((SELECT id FROM skill WHERE code = 'rest_api'),           (SELECT id FROM project WHERE code = 'rosseta-stone-script-a'), 'project', 3, '2025-01-26', false, 6),
+  ((SELECT id FROM skill WHERE code = 'graphql'),            (SELECT id FROM project WHERE code = 'rosseta-stone-script-a'), 'project', 3, '2025-01-26', false, 7)
 ON CONFLICT DO NOTHING;
 
 -- Translations
@@ -45,14 +44,6 @@ VALUES
   ((SELECT su.id FROM skill_usages su WHERE su.skill_id = (SELECT id FROM skill WHERE code = 'pydantic') AND su.source_id = (SELECT id FROM project WHERE code = 'rosseta-stone-script-a') AND su.source_type = 'project'),
    (SELECT id FROM language WHERE code = 'en'),
    'Pydantic Settings for all project configuration: BaseSettings with SettingsConfigDict, @field_validator for CSV parsing from .env.'),
-
-  -- asyncio
-  ((SELECT su.id FROM skill_usages su WHERE su.skill_id = (SELECT id FROM skill WHERE code = 'asyncio') AND su.source_id = (SELECT id FROM project WHERE code = 'rosseta-stone-script-a') AND su.source_type = 'project'),
-   (SELECT id FROM language WHERE code = 'es'),
-   'Async/await como paradigma principal. asyncio.Semaphore(50) para concurrencia controlada, asyncio.gather para ejecución paralela de completación de paths.'),
-  ((SELECT su.id FROM skill_usages su WHERE su.skill_id = (SELECT id FROM skill WHERE code = 'asyncio') AND su.source_id = (SELECT id FROM project WHERE code = 'rosseta-stone-script-a') AND su.source_type = 'project'),
-   (SELECT id FROM language WHERE code = 'en'),
-   'Async/await as main paradigm. asyncio.Semaphore(50) for controlled concurrency, asyncio.gather for parallel execution of path completion.'),
 
   -- clean_architecture
   ((SELECT su.id FROM skill_usages su WHERE su.skill_id = (SELECT id FROM skill WHERE code = 'clean_architecture') AND su.source_id = (SELECT id FROM project WHERE code = 'rosseta-stone-script-a') AND su.source_type = 'project'),

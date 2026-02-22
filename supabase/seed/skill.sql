@@ -2,97 +2,95 @@
 -- Seed: skill
 -- =============================================
 
-INSERT INTO skill (code, skill_category_id, position)
+INSERT INTO skill (code, skill_category_id, position, predefined_level)
 VALUES
--- Idiomas
-('spanish', (SELECT id FROM skill_category WHERE code = 'languages'), 1),
-('english', (SELECT id FROM skill_category WHERE code = 'languages'), 2),
+-- Idiomas (predefined_level: 5=nativo, 4=C1 avanzado)
+('spanish', (SELECT id FROM skill_category WHERE code = 'languages'), 1, 5),
+('english', (SELECT id FROM skill_category WHERE code = 'languages'), 2, 4),
 
 -- Backend
-('django', (SELECT id FROM skill_category WHERE code = 'backend'), 1),
-('drf', (SELECT id FROM skill_category WHERE code = 'backend'), 2),
-('flask', (SELECT id FROM skill_category WHERE code = 'backend'), 3),
-('fastapi', (SELECT id FROM skill_category WHERE code = 'backend'), 4),
-('nestjs', (SELECT id FROM skill_category WHERE code = 'backend'), 5),
+('django', (SELECT id FROM skill_category WHERE code = 'backend'), 1, NULL),
+('drf', (SELECT id FROM skill_category WHERE code = 'backend'), 2, NULL),
+('flask', (SELECT id FROM skill_category WHERE code = 'backend'), 3, NULL),
+('fastapi', (SELECT id FROM skill_category WHERE code = 'backend'), 4, NULL),
+('nestjs', (SELECT id FROM skill_category WHERE code = 'backend'), 5, NULL),
 
 -- Frontend
-('angular', (SELECT id FROM skill_category WHERE code = 'frontend'), 1),
-('react', (SELECT id FROM skill_category WHERE code = 'frontend'), 2),
+('angular', (SELECT id FROM skill_category WHERE code = 'frontend'), 1, NULL),
+('react', (SELECT id FROM skill_category WHERE code = 'frontend'), 2, NULL),
 
 -- Móviles
-('kotlin', (SELECT id FROM skill_category WHERE code = 'mobile'), 1),
+('kotlin', (SELECT id FROM skill_category WHERE code = 'mobile'), 1, NULL),
 
 -- Lenguajes
-('python', (SELECT id FROM skill_category WHERE code = 'programming_languages'), 1),
-('javascript', (SELECT id FROM skill_category WHERE code = 'programming_languages'), 2),
-('typescript', (SELECT id FROM skill_category WHERE code = 'programming_languages'), 3),
-('java_kotlin', (SELECT id FROM skill_category WHERE code = 'programming_languages'), 4),
+('python', (SELECT id FROM skill_category WHERE code = 'programming_languages'), 1, NULL),
+('javascript', (SELECT id FROM skill_category WHERE code = 'programming_languages'), 2, NULL),
+('typescript', (SELECT id FROM skill_category WHERE code = 'programming_languages'), 3, NULL),
+('java_kotlin', (SELECT id FROM skill_category WHERE code = 'programming_languages'), 4, NULL),
 
 -- Bases de datos
-('mysql', (SELECT id FROM skill_category WHERE code = 'databases'), 1),
-('postgresql', (SELECT id FROM skill_category WHERE code = 'databases'), 2),
-('mongodb', (SELECT id FROM skill_category WHERE code = 'databases'), 3),
+('mysql', (SELECT id FROM skill_category WHERE code = 'databases'), 1, NULL),
+('postgresql', (SELECT id FROM skill_category WHERE code = 'databases'), 2, NULL),
+('mongodb', (SELECT id FROM skill_category WHERE code = 'databases'), 3, NULL),
 
 -- Herramientas
-('git', (SELECT id FROM skill_category WHERE code = 'tools'), 1),
-('docker', (SELECT id FROM skill_category WHERE code = 'tools'), 2),
-('github_gitlab', (SELECT id FROM skill_category WHERE code = 'tools'), 3),
-('postman', (SELECT id FROM skill_category WHERE code = 'tools'), 4),
-('vscode', (SELECT id FROM skill_category WHERE code = 'tools'), 5),
+('git', (SELECT id FROM skill_category WHERE code = 'tools'), 1, NULL),
+('docker', (SELECT id FROM skill_category WHERE code = 'tools'), 2, NULL),
+('github_gitlab', (SELECT id FROM skill_category WHERE code = 'tools'), 3, NULL),
+('postman', (SELECT id FROM skill_category WHERE code = 'tools'), 4, NULL),
+('vscode', (SELECT id FROM skill_category WHERE code = 'tools'), 5, NULL),
 
 -- Cloud
-('vercel', (SELECT id FROM skill_category WHERE code = 'cloud'), 1),
-('azure', (SELECT id FROM skill_category WHERE code = 'cloud'), 2),
-('gcloud_run', (SELECT id FROM skill_category WHERE code = 'cloud'), 3),
+('vercel', (SELECT id FROM skill_category WHERE code = 'cloud'), 1, NULL),
+('azure', (SELECT id FROM skill_category WHERE code = 'cloud'), 2, NULL),
+('gcloud_run', (SELECT id FROM skill_category WHERE code = 'cloud'), 3, NULL),
 
 -- Metodologías
-('scrum', (SELECT id FROM skill_category WHERE code = 'methodologies'), 1),
-('agile', (SELECT id FROM skill_category WHERE code = 'methodologies'), 2),
-('ci_cd', (SELECT id FROM skill_category WHERE code = 'methodologies'), 3),
-('clean_architecture', (SELECT id FROM skill_category WHERE code = 'methodologies'), 4),
-('rest_api', (SELECT id FROM skill_category WHERE code = 'methodologies'), 5),
-('ddd', (SELECT id FROM skill_category WHERE code = 'methodologies'), 6),
+('scrum', (SELECT id FROM skill_category WHERE code = 'methodologies'), 1, NULL),
+('agile', (SELECT id FROM skill_category WHERE code = 'methodologies'), 2, NULL),
+('ci_cd', (SELECT id FROM skill_category WHERE code = 'methodologies'), 3, NULL),
+('clean_architecture', (SELECT id FROM skill_category WHERE code = 'methodologies'), 4, NULL),
+('rest_api', (SELECT id FROM skill_category WHERE code = 'methodologies'), 5, NULL),
+('ddd', (SELECT id FROM skill_category WHERE code = 'methodologies'), 6, NULL),
 
 -- Backend (nuevos)
-('langchain', (SELECT id FROM skill_category WHERE code = 'backend'), 6),
-('pydantic', (SELECT id FROM skill_category WHERE code = 'backend'), 7),
-('graphql', (SELECT id FROM skill_category WHERE code = 'backend'), 8),
-('websocket', (SELECT id FROM skill_category WHERE code = 'backend'), 9),
-('nodejs', (SELECT id FROM skill_category WHERE code = 'backend'), 10),
-('jwt', (SELECT id FROM skill_category WHERE code = 'backend'), 11),
-('strawberry_graphql', (SELECT id FROM skill_category WHERE code = 'backend'), 12),
-('asyncio', (SELECT id FROM skill_category WHERE code = 'backend'), 13),
+('langchain', (SELECT id FROM skill_category WHERE code = 'backend'), 6, NULL),
+('pydantic', (SELECT id FROM skill_category WHERE code = 'backend'), 7, NULL),
+('graphql', (SELECT id FROM skill_category WHERE code = 'backend'), 8, NULL),
+('websocket', (SELECT id FROM skill_category WHERE code = 'backend'), 9, NULL),
+('nodejs', (SELECT id FROM skill_category WHERE code = 'backend'), 10, NULL),
+('strawberry_graphql', (SELECT id FROM skill_category WHERE code = 'backend'), 11, NULL),
 
 -- Frontend (nuevos)
-('tailwindcss', (SELECT id FROM skill_category WHERE code = 'frontend'), 3),
-('scss', (SELECT id FROM skill_category WHERE code = 'frontend'), 4),
-('html_css', (SELECT id FROM skill_category WHERE code = 'frontend'), 5),
-('ngrx', (SELECT id FROM skill_category WHERE code = 'frontend'), 6),
-('leaflet', (SELECT id FROM skill_category WHERE code = 'frontend'), 7),
+('tailwindcss', (SELECT id FROM skill_category WHERE code = 'frontend'), 3, NULL),
+('scss', (SELECT id FROM skill_category WHERE code = 'frontend'), 4, NULL),
+('html_css', (SELECT id FROM skill_category WHERE code = 'frontend'), 5, NULL),
+('ngrx', (SELECT id FROM skill_category WHERE code = 'frontend'), 6, NULL),
+('leaflet', (SELECT id FROM skill_category WHERE code = 'frontend'), 7, NULL),
 
 -- Bases de datos (nuevas)
-('chromadb', (SELECT id FROM skill_category WHERE code = 'databases'), 4),
-('sql', (SELECT id FROM skill_category WHERE code = 'databases'), 5),
-('typeorm', (SELECT id FROM skill_category WHERE code = 'databases'), 6),
+('chromadb', (SELECT id FROM skill_category WHERE code = 'databases'), 4, NULL),
+('sql', (SELECT id FROM skill_category WHERE code = 'databases'), 5, NULL),
+('typeorm', (SELECT id FROM skill_category WHERE code = 'databases'), 6, NULL),
 
 -- Herramientas (nuevas)
-('playwright', (SELECT id FROM skill_category WHERE code = 'tools'), 6),
-('jest', (SELECT id FROM skill_category WHERE code = 'tools'), 7),
-('pytest', (SELECT id FROM skill_category WHERE code = 'tools'), 8),
-('kafka', (SELECT id FROM skill_category WHERE code = 'tools'), 9),
-('sonarqube', (SELECT id FROM skill_category WHERE code = 'tools'), 10),
-('swagger_openapi', (SELECT id FROM skill_category WHERE code = 'tools'), 11),
-('web_scraping', (SELECT id FROM skill_category WHERE code = 'tools'), 12),
-('github_actions', (SELECT id FROM skill_category WHERE code = 'tools'), 13),
-('n8n', (SELECT id FROM skill_category WHERE code = 'tools'), 14),
+('playwright', (SELECT id FROM skill_category WHERE code = 'tools'), 6, NULL),
+('jest', (SELECT id FROM skill_category WHERE code = 'tools'), 7, NULL),
+('pytest', (SELECT id FROM skill_category WHERE code = 'tools'), 8, NULL),
+('kafka', (SELECT id FROM skill_category WHERE code = 'tools'), 9, NULL),
+('sonarqube', (SELECT id FROM skill_category WHERE code = 'tools'), 10, NULL),
+('swagger_openapi', (SELECT id FROM skill_category WHERE code = 'tools'), 11, NULL),
+('web_scraping', (SELECT id FROM skill_category WHERE code = 'tools'), 12, NULL),
+('github_actions', (SELECT id FROM skill_category WHERE code = 'tools'), 13, NULL),
+('n8n', (SELECT id FROM skill_category WHERE code = 'tools'), 14, NULL),
 
 -- Cloud (nuevos)
-('supabase', (SELECT id FROM skill_category WHERE code = 'cloud'), 4),
-('openai', (SELECT id FROM skill_category WHERE code = 'cloud'), 5),
-('groq', (SELECT id FROM skill_category WHERE code = 'cloud'), 6),
+('supabase', (SELECT id FROM skill_category WHERE code = 'cloud'), 4, NULL),
+('openai', (SELECT id FROM skill_category WHERE code = 'cloud'), 5, NULL),
+('groq', (SELECT id FROM skill_category WHERE code = 'cloud'), 6, NULL),
 
 -- Lenguajes (nuevos)
-('shell_bash', (SELECT id FROM skill_category WHERE code = 'programming_languages'), 5);
+('shell_bash', (SELECT id FROM skill_category WHERE code = 'programming_languages'), 5, NULL);
 
 
 
@@ -575,18 +573,6 @@ VALUES
   'JavaScript runtime for backend development.'
 ),
 (
-  (SELECT id FROM skill WHERE code = 'jwt'),
-  (SELECT id FROM language WHERE code = 'es'),
-  'JWT',
-  'Autenticación y autorización basada en JSON Web Tokens.'
-),
-(
-  (SELECT id FROM skill WHERE code = 'jwt'),
-  (SELECT id FROM language WHERE code = 'en'),
-  'JWT',
-  'Authentication and authorization based on JSON Web Tokens.'
-),
-(
   (SELECT id FROM skill WHERE code = 'strawberry_graphql'),
   (SELECT id FROM language WHERE code = 'es'),
   'Strawberry GraphQL',
@@ -598,19 +584,6 @@ VALUES
   'Strawberry GraphQL',
   'Python GraphQL library with native typing and declarative resolvers.'
 ),
-(
-  (SELECT id FROM skill WHERE code = 'asyncio'),
-  (SELECT id FROM language WHERE code = 'es'),
-  'asyncio',
-  'Programación asíncrona en Python con async/await y concurrencia controlada.'
-),
-(
-  (SELECT id FROM skill WHERE code = 'asyncio'),
-  (SELECT id FROM language WHERE code = 'en'),
-  'asyncio',
-  'Asynchronous Python programming with async/await and controlled concurrency.'
-),
-
 -- ======================
 -- FRONTEND (nuevos)
 -- ======================
