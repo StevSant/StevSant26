@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { TranslatePipe } from '@shared/pipes/translate.pipe';
 import { PortfolioDataService } from '../../services/portfolio-data.service';
+import { AnalyticsService } from '@core/services/analytics.service';
+import { Document } from '@core/models';
 
 @Component({
   selector: 'app-portfolio-mobile-menu',
@@ -12,6 +14,15 @@ import { PortfolioDataService } from '../../services/portfolio-data.service';
 })
 export class PortfolioMobileMenuComponent {
   protected data = inject(PortfolioDataService);
+  private analytics = inject(AnalyticsService);
 
   closeMobileMenu = output<void>();
+
+  onCvDownload(cv: Document): void {
+    this.analytics.trackCvDownload({
+      documentId: cv.id,
+      fileName: cv.label || cv.file_name || 'CV',
+      language: cv.language?.name || undefined,
+    });
+  }
 }

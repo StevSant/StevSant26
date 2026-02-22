@@ -5,6 +5,8 @@ import { TranslatePipe } from '@shared/pipes/translate.pipe';
 import { LanguageSelectorComponent } from '@shared/components/language-selector/language-selector.component';
 import { ThemeToggleComponent } from '@shared/components/theme-toggle/theme-toggle.component';
 import { PortfolioDataService } from '../../services/portfolio-data.service';
+import { AnalyticsService } from '@core/services/analytics.service';
+import { Document } from '@core/models';
 
 @Component({
   selector: 'app-portfolio-navbar',
@@ -14,6 +16,7 @@ import { PortfolioDataService } from '../../services/portfolio-data.service';
 })
 export class PortfolioNavbarComponent {
   protected data = inject(PortfolioDataService);
+  private analytics = inject(AnalyticsService);
 
   moreMenuOpen = input<boolean>(false);
   cvMenuOpen = input<boolean>(false);
@@ -21,4 +24,12 @@ export class PortfolioNavbarComponent {
   toggleMoreMenu = output<void>();
   toggleCvMenu = output<void>();
   closeAllMenus = output<void>();
+
+  onCvDownload(cv: Document): void {
+    this.analytics.trackCvDownload({
+      documentId: cv.id,
+      fileName: cv.label || cv.file_name || 'CV',
+      language: cv.language?.name || undefined,
+    });
+  }
 }

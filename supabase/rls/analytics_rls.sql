@@ -59,3 +59,21 @@ CREATE POLICY "Admin delete page_view"
 ON page_view
 FOR DELETE
 USING (auth.uid() IS NOT NULL);
+
+-- ========= cv_download RLS =========
+ALTER TABLE cv_download ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Allow anonymous insert cv_download"
+ON cv_download FOR INSERT
+TO anon
+WITH CHECK (true);
+
+CREATE POLICY "Allow anon read cv_download"
+ON cv_download FOR SELECT
+TO anon
+USING (true);
+
+CREATE POLICY "Allow authenticated read cv_download"
+ON cv_download FOR SELECT
+TO authenticated
+USING (true);

@@ -209,6 +209,7 @@ export class AnalyticsService {
           os: deviceInfo.os,
           country: geo?.country || null,
           city: geo?.city || null,
+          browser_language: navigator.language || null,
         });
 
       if (!error) {
@@ -706,6 +707,29 @@ export class AnalyticsService {
       return true;
     } catch {
       return false;
+    }
+  }
+
+  /**
+   * Track a CV download event. Called when a visitor clicks the download button.
+   * Captures which document was downloaded, its language, and the session context.
+   */
+  async trackCvDownload(params: {
+    documentId?: number;
+    fileName?: string;
+    language?: string;
+  }): Promise<void> {
+    if (!isPlatformBrowser(this.platformId)) return;
+
+    try {
+      await this.client.client.from('cv_download').insert({
+        session_id: this.sessionId || null,
+        document_id: params.documentId || null,
+        file_name: params.fileName || null,
+        language: params.language || null,
+      });
+    } catch {
+      // Silently fail — analytics should never break the portfolio
     }
   }
 

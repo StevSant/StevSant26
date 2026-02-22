@@ -112,6 +112,51 @@ BEGIN
         ORDER BY vs.started_at DESC
         LIMIT 50
       ) t
+    ),
+    'cv_downloads_total', (
+      SELECT COUNT(*) FROM cv_download WHERE created_at >= start_date
+    ),
+    'cv_downloads_today', (
+      SELECT COUNT(*) FROM cv_download WHERE created_at >= CURRENT_DATE
+    ),
+    'cv_downloads_breakdown', (
+      SELECT COALESCE(json_agg(row_to_json(t)), '[]'::json)
+      FROM (
+        SELECT
+          COALESCE(file_name, 'Unknown') as file_name,
+          COALESCE(language, 'Unknown') as language,
+          COUNT(*) as downloads
+        FROM cv_download
+        WHERE created_at >= start_date
+        GROUP BY file_name, language
+        ORDER BY downloads DESC
+      ) t
+    ),
+    'language_breakdown', (
+      SELECT COALESCE(json_agg(row_to_json(t)), '[]'::json)
+      FROM (
+        SELECT
+          COALESCE(browser_language, 'unknown') as browser_language,
+          COUNT(*) as count
+        FROM visitor_session
+        WHERE started_at >= start_date AND browser_language IS NOT NULL
+        GROUP BY browser_language
+        ORDER BY count DESC
+        LIMIT 15
+      ) t
+    ),
+    'country_breakdown', (
+      SELECT COALESCE(json_agg(row_to_json(t)), '[]'::json)
+      FROM (
+        SELECT
+          COALESCE(country, 'Unknown') as country,
+          COUNT(*) as count
+        FROM visitor_session
+        WHERE started_at >= start_date AND country IS NOT NULL
+        GROUP BY country
+        ORDER BY count DESC
+        LIMIT 15
+      ) t
     )
   ) INTO result;
 

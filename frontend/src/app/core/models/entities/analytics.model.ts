@@ -49,6 +49,11 @@ export interface AnalyticsSummary {
   daily_views: DailyView[] | null;
   recruiter_sessions: RecruiterSession[] | null;
   avg_session_duration: number;
+  cv_downloads_total: number;
+  cv_downloads_today: number;
+  cv_downloads_breakdown: CvDownloadBreakdown[] | null;
+  language_breakdown: LanguageBreakdown[] | null;
+  country_breakdown: CountryBreakdown[] | null;
 }
 
 export interface TopPage {
@@ -88,6 +93,22 @@ export interface RecruiterSession {
   started_at: string;
   total_page_views: number;
   pages_visited: { page_path: string; created_at: string; duration_seconds: number }[] | null;
+}
+
+export interface CvDownloadBreakdown {
+  file_name: string;
+  language: string;
+  downloads: number;
+}
+
+export interface LanguageBreakdown {
+  browser_language: string;
+  count: number;
+}
+
+export interface CountryBreakdown {
+  country: string;
+  count: number;
 }
 
 /**

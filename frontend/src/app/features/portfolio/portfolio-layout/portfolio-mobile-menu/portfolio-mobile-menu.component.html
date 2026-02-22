@@ -170,7 +170,7 @@
               <a
                 [href]="cv.url"
                 download
-                (click)="closeMobileMenu.emit()"
+                (click)="onCvDownload(cv); closeMobileMenu.emit()"
                 class="p-1.5 rounded-md text-(--color-text-muted) hover:text-(--color-accent) transition-colors"
               >
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

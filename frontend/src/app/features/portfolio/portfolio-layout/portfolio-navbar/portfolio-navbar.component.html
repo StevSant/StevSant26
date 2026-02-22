@@ -211,7 +211,7 @@
                   <a
                     [href]="cv.url"
                     download
-                    (click)="closeAllMenus.emit()"
+                    (click)="onCvDownload(cv); closeAllMenus.emit()"
                     class="p-1.5 rounded-md text-(--color-text-muted) hover:text-(--color-accent) hover:bg-(--color-bg-primary) transition-colors"
                     [title]="'portfolio.downloadCV' | translate"
                   >

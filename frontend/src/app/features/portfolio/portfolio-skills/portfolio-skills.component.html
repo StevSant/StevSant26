@@ -96,9 +96,10 @@
                       @for (filled of data.getStarArray(skill.calculatedLevel); track $index) {
                         <mat-icon
                           class="text-[12px]"
-                          [class.text-(--color-accent)]="filled"
-                          [class.text-(--color-border-primary)]="!filled"
-                          [style.font-variation-settings]="'FILL 1'"
+                          [ngClass]="
+                            filled ? 'text-(--color-accent)' : 'text-(--color-border-primary)'
+                          "
+                          [style.font-variation-settings]="filled ? 'FILL 1' : 'FILL 0'"
                           >star</mat-icon
                         >
                       }
@@ -146,9 +147,10 @@
                         @for (filled of data.getStarArray(skill.calculatedLevel); track $index) {
                           <mat-icon
                             class="text-[16px]"
-                            [class.text-(--color-accent)]="filled"
-                            [class.text-(--color-border-primary)]="!filled"
-                            [style.font-variation-settings]="'FILL 1'"
+                            [ngClass]="
+                              filled ? 'text-(--color-accent)' : 'text-(--color-border-primary)'
+                            "
+                            [style.font-variation-settings]="filled ? 'FILL 1' : 'FILL 0'"
                             >star</mat-icon
                           >
                         }

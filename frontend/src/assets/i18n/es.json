@@ -831,6 +831,10 @@
     "deleteVisitor": "Eliminar visitante",
     "deleteConfirm": "¿Eliminar este visitante y todos sus datos? Esta acción no se puede deshacer.",
     "confirmDelete": "Eliminar",
-    "cancel": "Cancelar"
+    "cancel": "Cancelar",
+    "cvDownloads": "Descargas de CV",
+    "cvDownloadsBreakdown": "Detalle de Descargas de CV",
+    "languages": "Idiomas de Visitantes",
+    "countries": "Países de Visitantes"
   }
 }

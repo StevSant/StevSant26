@@ -32,7 +32,7 @@
     </div>
   } @else if (summary()) {
     <!-- KPI Cards -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
       <!-- Total Views -->
       <div class="bg-(--color-bg-secondary) rounded-xl p-5 border border-(--color-border-primary)">
         <div class="flex items-center justify-between">
@@ -105,6 +105,24 @@
           {{ 'analytics.recruiterHint' | translate }}
         </p>
       </div>
+
+      <!-- CV Downloads -->
+      <div class="bg-(--color-bg-secondary) rounded-xl p-5 border border-(--color-border-primary)">
+        <div class="flex items-center justify-between">
+          <p class="text-sm font-medium text-(--color-text-muted)">
+            {{ 'analytics.cvDownloads' | translate }}
+          </p>
+          <div class="p-2 bg-amber-500/10 rounded-lg">
+            <mat-icon class="text-[20px] text-amber-500">download</mat-icon>
+          </div>
+        </div>
+        <p class="text-3xl font-bold text-(--color-text-primary) mt-2">
+          {{ summary()!.cv_downloads_total }}
+        </p>
+        <p class="text-xs text-(--color-text-muted) mt-1">
+          {{ 'analytics.todayCount' | translate }}: {{ summary()!.cv_downloads_today }}
+        </p>
+      </div>
     </div>
 
     <!-- Tab Navigation -->
@@ -139,7 +157,6 @@
       <!-- OVERVIEW TAB -->
       @case ('overview') {
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <!-- Daily Views Chart -->
           <div
             class="bg-(--color-bg-secondary) rounded-xl p-5 border border-(--color-border-primary)"
           >
@@ -236,6 +253,90 @@
               }
             </div>
           </div>
+
+          <!-- Visitor Languages -->
+          <div
+            class="bg-(--color-bg-secondary) rounded-xl p-5 border border-(--color-border-primary)"
+          >
+            <h3 class="text-lg font-semibold text-(--color-text-primary) mb-4">
+              {{ 'analytics.languages' | translate }}
+            </h3>
+            <div class="space-y-3">
+              @if (summary()!.language_breakdown?.length) {
+                @for (lang of summary()!.language_breakdown; track lang.browser_language) {
+                  <div class="flex items-center gap-3">
+                    <mat-icon class="text-[20px] text-(--color-text-muted)">language</mat-icon>
+                    <span class="text-sm text-(--color-text-primary) flex-1">{{
+                      formatLanguageTag(lang.browser_language)
+                    }}</span>
+                    <span class="text-xs text-(--color-text-muted) mr-2">{{
+                      lang.browser_language
+                    }}</span>
+                    <span class="text-sm font-medium text-(--color-text-primary)">{{
+                      lang.count
+                    }}</span>
+                  </div>
+                }
+              } @else {
+                <p class="text-sm text-(--color-text-muted)">
+                  {{ 'analytics.noData' | translate }}
+                </p>
+              }
+            </div>
+          </div>
+
+          <!-- Country Breakdown -->
+          <div
+            class="bg-(--color-bg-secondary) rounded-xl p-5 border border-(--color-border-primary)"
+          >
+            <h3 class="text-lg font-semibold text-(--color-text-primary) mb-4">
+              {{ 'analytics.countries' | translate }}
+            </h3>
+            <div class="space-y-3">
+              @if (summary()!.country_breakdown?.length) {
+                @for (c of summary()!.country_breakdown; track c.country) {
+                  <div class="flex items-center gap-3">
+                    <mat-icon class="text-[20px] text-(--color-text-muted)">public</mat-icon>
+                    <span class="text-sm text-(--color-text-primary) flex-1">{{ c.country }}</span>
+                    <span class="text-sm font-medium text-(--color-text-primary)">{{
+                      c.count
+                    }}</span>
+                  </div>
+                }
+              } @else {
+                <p class="text-sm text-(--color-text-muted)">
+                  {{ 'analytics.noData' | translate }}
+                </p>
+              }
+            </div>
+          </div>
+
+          <!-- CV Downloads Breakdown -->
+          @if (summary()!.cv_downloads_breakdown?.length) {
+            <div
+              class="bg-(--color-bg-secondary) rounded-xl p-5 border border-(--color-border-primary)"
+            >
+              <h3 class="text-lg font-semibold text-(--color-text-primary) mb-4">
+                {{ 'analytics.cvDownloadsBreakdown' | translate }}
+              </h3>
+              <div class="space-y-3">
+                @for (dl of summary()!.cv_downloads_breakdown; track dl.file_name) {
+                  <div class="flex items-center gap-3">
+                    <mat-icon class="text-[20px] text-amber-500">description</mat-icon>
+                    <div class="flex-1 min-w-0">
+                      <span class="text-sm text-(--color-text-primary) block truncate">{{
+                        dl.file_name
+                      }}</span>
+                      <span class="text-xs text-(--color-text-muted)">{{ dl.language }}</span>
+                    </div>
+                    <span class="text-sm font-medium text-(--color-text-primary)">{{
+                      dl.downloads
+                    }}</span>
+                  </div>
+                }
+              </div>
+            </div>
+          }
         </div>
       }
 

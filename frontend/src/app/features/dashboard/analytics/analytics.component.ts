@@ -318,4 +318,29 @@ export class AnalyticsComponent implements OnInit {
     }
     return null;
   }
+
+  /**
+   * Format a browser language tag (e.g., "es", "en-US") into a readable label.
+   */
+  formatLanguageTag(tag: string): string {
+    if (!tag || tag === 'unknown') return 'Unknown';
+    try {
+      const names = new Intl.DisplayNames(['en'], { type: 'language' });
+      return names.of(tag) || tag;
+    } catch {
+      return tag;
+    }
+  }
+
+  /**
+   * Get a flag emoji for a language code (uses the region subtag if present).
+   */
+  getLanguageIcon(tag: string): string {
+    const langMap: Record<string, string> = {
+      en: 'language', es: 'language', fr: 'language', de: 'language',
+      pt: 'language', it: 'language', zh: 'language', ja: 'language',
+      ko: 'language', ru: 'language', ar: 'language', hi: 'language',
+    };
+    return langMap[tag.split('-')[0]] || 'language';
+  }
 }
