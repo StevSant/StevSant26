@@ -10,7 +10,8 @@ VALUES
 ('supabase_pitch_day_club_ia', '2025-09-25', false, true, 3),
 ('cursor_meetup_manta', '2025-10-16', false, false, 4),
 ('uleam_tech_fest_2025', '2025-11-06', false, true, 5),
-('supabase_workshop', '2025-12-06', false, true, 6);
+('supabase_workshop', '2025-12-06', false, true, 6),
+('coffee-cursor-2026','2026-2-24',false,true,1);
 
 -- ======================
 -- TRANSLATIONS
@@ -119,3 +120,23 @@ VALUES
   'Supabase Workshop',
   'Hands-on workshop led by Tomás Pozo, exploring Supabase as a modern backend solution, covering authentication, PostgreSQL databases, auto-generated APIs, and AI integration using Cursor.'
 );
+
+
+
+-- =====================
+-- COOFFE CURSOR
+-- =====================
+(
+  (SELECT id FROM event WHERE code = 'coffee-cursor-2026'),
+  (SELECT id FROM language WHERE code = 'es'),
+  'Coffee Cursor 2026',
+  'Un encuentro de la comunidad de Cursor para conectar, compartir ideas y conversar sobre desarrollo impulsado por IA.'
+),
+(
+  (SELECT id FROM event WHERE code = 'coffee-cursor-2026'),
+  (SELECT id FROM language WHERE code = 'en'),
+  'Coffee Cursor 2026',
+  'A community meetup for Cursor users to connect, share ideas, and discuss AI-powered development.'
+);
+
+

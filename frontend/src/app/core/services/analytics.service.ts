@@ -72,6 +72,12 @@ const FIRST_HEARTBEAT_MS = 5_000;
  *  duration tracking pauses to prevent inflated times from idle tabs. */
 const IDLE_TIMEOUT_MS = 5 * 60 * 1000;
 
+/** Maximum number of retry attempts for transient Supabase errors (520, network failures) */
+const MAX_RETRIES = 3;
+
+/** Base delay in ms for exponential backoff (doubles each attempt: 500, 1000, 2000) */
+const RETRY_BASE_DELAY_MS = 500;
+
 /** User interaction events that reset the idle timer */
 const ACTIVITY_EVENTS: (keyof DocumentEventMap)[] = [
   'mousemove', 'mousedown', 'keydown', 'scroll', 'touchstart', 'pointerdown',
@@ -108,6 +114,9 @@ export class AnalyticsService {
   private accumulatedIdleMs: number = 0;
   private activityListenersBound = false;
   private boundOnActivity = this.onUserActivity.bind(this);
+
+  /** Flag to prevent concurrent session recovery loops */
+  private isRecoveringSession = false;
 
   constructor() {
     // Capture referrer source immediately before Angular router strips them
@@ -149,6 +158,7 @@ export class AnalyticsService {
   /**
    * Initialize a visitor session. Called once when the portfolio layout loads.
    * Creates or resumes a session based on a visitor fingerprint hash.
+   * Includes retry with exponential backoff for transient Supabase errors.
    */
   async initSession(referrer?: string): Promise<void> {
     if (!isPlatformBrowser(this.platformId)) return;
@@ -166,7 +176,7 @@ export class AnalyticsService {
     const deviceInfo = this.getDeviceInfo();
     const geo = await this.fetchGeolocation();
 
-    try {
+    await this.withRetry(async () => {
       const existingSessionId = this.getStoredSessionId();
 
       if (existingSessionId) {
@@ -189,46 +199,58 @@ export class AnalyticsService {
           this.sessionId = existingSessionId;
           return;
         }
+        // If the stored session no longer exists (FK error / 404), clear it and create a new one
+        this.clearStoredSession();
       }
 
       // Create a new session — generate ID client-side to avoid needing SELECT after INSERT
-      const isRecruiter = this.isRecruiterReferrer(referrerSource);
-      const sessionId = crypto.randomUUID();
+      await this.createNewSession(visitorHash, referrerSource, deviceInfo, geo);
+    }, 'initSession');
+  }
 
+  /**
+   * Create a brand-new visitor session row and store it locally.
+   */
+  private async createNewSession(
+    visitorHash: string,
+    referrerSource: string | null,
+    deviceInfo: { deviceType: string; browser: string; os: string },
+    geo: { country: string; city: string } | null,
+  ): Promise<void> {
+    const isRecruiter = this.isRecruiterReferrer(referrerSource);
+    const sessionId = crypto.randomUUID();
 
-      const { error } = await this.client.client
-        .from('visitor_session')
-        .insert({
-          id: sessionId,
-          visitor_hash: visitorHash,
-          referrer_source: referrerSource,
-          is_potential_recruiter: isRecruiter,
-          user_agent: navigator.userAgent,
-          device_type: deviceInfo.deviceType,
-          browser: deviceInfo.browser,
-          os: deviceInfo.os,
-          country: geo?.country || null,
-          city: geo?.city || null,
-          browser_language: navigator.language || null,
-        });
+    const { error } = await this.client.client
+      .from('visitor_session')
+      .insert({
+        id: sessionId,
+        visitor_hash: visitorHash,
+        referrer_source: referrerSource,
+        is_potential_recruiter: isRecruiter,
+        user_agent: navigator.userAgent,
+        device_type: deviceInfo.deviceType,
+        browser: deviceInfo.browser,
+        os: deviceInfo.os,
+        country: geo?.country || null,
+        city: geo?.city || null,
+        browser_language: navigator.language || null,
+      });
 
-      if (!error) {
-        this.sessionId = sessionId;
-        this.storeSessionId(sessionId);
-        this.storePageCount(1);
-        // Clear captured ref so it doesn't persist to future sessions
-        try {
-          sessionStorage.removeItem('analytics_ref');
-          document.cookie = 'analytics_ref=;path=/;max-age=0';
-        } catch {}
-      }
-    } catch {
-      // Silently fail — analytics should never break the portfolio
-    }
+    if (error) throw error; // Let retry handle it
+
+    this.sessionId = sessionId;
+    this.storeSessionId(sessionId);
+    this.storePageCount(1);
+    // Clear captured ref so it doesn't persist to future sessions
+    try {
+      sessionStorage.removeItem('analytics_ref');
+      document.cookie = 'analytics_ref=;path=/;max-age=0';
+    } catch {}
   }
 
   /**
    * Track a page view. Called on each route navigation.
+   * Includes retry and automatic session recovery if the FK constraint fails.
    */
   async trackPageView(pagePath: string, pageTitle?: string): Promise<void> {
     if (!isPlatformBrowser(this.platformId) || !this.sessionId) return;
@@ -241,24 +263,31 @@ export class AnalyticsService {
     const cleanPath = pagePath.split('?')[0].split('#')[0] || '/';
     this.pagesVisitedInSession.push(cleanPath);
 
-    try {
-      const { data: insertedRows } = await this.client.client.from('page_view').insert({
+    await this.withRetry(async () => {
+      const { data: insertedRows, error } = await this.client.client.from('page_view').insert({
         session_id: this.sessionId,
         page_path: cleanPath,
         page_title: pageTitle || null,
         referrer: document.referrer || null,
       }).select('id');
 
-      this.currentPagePath = cleanPath;
-      this.currentPageStartTime = Date.now();
-      this.lastHeartbeatDuration = 0;
-      this.currentPageViewId = insertedRows?.[0]?.id ?? null;
-      this.accumulatedIdleMs = 0;
-      this.isIdle = false;
-      this.idleSince = 0;
+      // FK violation (409/23503) = session no longer exists → recover
+      if (error && this.isForeignKeyError(error)) {
+        await this.recoverSession();
+        // Retry the insert with the new session
+        const { data: retryRows } = await this.client.client.from('page_view').insert({
+          session_id: this.sessionId,
+          page_path: cleanPath,
+          page_title: pageTitle || null,
+          referrer: document.referrer || null,
+        }).select('id');
+        this.applyPageViewState(cleanPath, retryRows?.[0]?.id ?? null);
+        return;
+      }
 
-      // Start periodic heartbeat to keep duration updated
-      this.startHeartbeat();
+      if (error) throw error; // Let retry handle transient errors
+
+      this.applyPageViewState(cleanPath, insertedRows?.[0]?.id ?? null);
 
       // Update page count and check recruiter pattern
       const count = this.getStoredPageCount() + 1;
@@ -272,14 +301,27 @@ export class AnalyticsService {
           is_potential_recruiter: this.detectRecruiterPattern(),
         })
         .eq('id', this.sessionId);
-    } catch {
-      // Silently fail
-    }
+    }, 'trackPageView');
+  }
+
+  /**
+   * Apply shared page-view state after a successful insert.
+   */
+  private applyPageViewState(cleanPath: string, pageViewId: number | null): void {
+    this.currentPagePath = cleanPath;
+    this.currentPageStartTime = Date.now();
+    this.lastHeartbeatDuration = 0;
+    this.currentPageViewId = pageViewId;
+    this.accumulatedIdleMs = 0;
+    this.isIdle = false;
+    this.idleSince = 0;
+    this.startHeartbeat();
   }
 
   /**
    * Update the duration of the current page view.
    * Called when navigating away from a page or leaving the site.
+   * Includes retry with exponential backoff for transient errors.
    *
    * PostgREST does not support .order()/.limit() on UPDATE, so we first
    * SELECT the most recent page_view row, then update it by ID.
@@ -290,33 +332,35 @@ export class AnalyticsService {
     const durationSeconds = this.getActiveDurationSeconds();
     if (durationSeconds <= 0) return;
 
-    try {
+    await this.withRetry(async () => {
       if (this.currentPageViewId) {
         // Fast path: update by known ID
-        await this.client.client
+        const { error } = await this.client.client
           .from('page_view')
           .update({ duration_seconds: durationSeconds })
           .eq('id', this.currentPageViewId);
+        if (error) throw error;
       } else {
         // Fallback: find the most recent page_view for this session + path
-        const { data: rows } = await this.client.client
+        const { data: rows, error: selectError } = await this.client.client
           .from('page_view')
           .select('id')
-          .eq('session_id', this.sessionId)
-          .eq('page_path', this.currentPagePath)
+          .eq('session_id', this.sessionId!)
+          .eq('page_path', this.currentPagePath!)
           .order('created_at', { ascending: false })
           .limit(1);
 
+        if (selectError) throw selectError;
+
         if (rows && rows.length > 0) {
-          await this.client.client
+          const { error: updateError } = await this.client.client
             .from('page_view')
             .update({ duration_seconds: durationSeconds })
             .eq('id', rows[0].id);
+          if (updateError) throw updateError;
         }
       }
-    } catch {
-      // Silently fail
-    }
+    }, 'updateCurrentPageDuration');
   }
 
   /**
@@ -485,6 +529,7 @@ export class AnalyticsService {
   /**
    * Single heartbeat tick — updates the current page view's duration in the DB.
    * Skips update when user is idle (no interaction for 5 minutes).
+   * Uses a single retry attempt (non-blocking) to handle transient errors.
    */
   private async heartbeatTick(): Promise<void> {
     if (!this.currentPageViewId || !this.currentPageStartTime) {
@@ -499,11 +544,12 @@ export class AnalyticsService {
     const durationSeconds = this.getActiveDurationSeconds();
     if (durationSeconds <= 0 || durationSeconds === this.lastHeartbeatDuration) return;
 
-    try {
-      await this.client.client
+    await this.withRetry(async () => {
+      const { error } = await this.client.client
         .from('page_view')
         .update({ duration_seconds: durationSeconds })
-        .eq('id', this.currentPageViewId);
+        .eq('id', this.currentPageViewId!);
+      if (error) throw error;
       this.lastHeartbeatDuration = durationSeconds;
 
       // Also update last_seen_at on the session
@@ -511,9 +557,7 @@ export class AnalyticsService {
         .from('visitor_session')
         .update({ last_seen_at: new Date().toISOString() })
         .eq('id', this.sessionId!);
-    } catch {
-      // Silently fail
-    }
+    }, 'heartbeatTick', 1); // Only 1 retry for heartbeat — next tick will cover it
   }
 
   private stopHeartbeat(): void {
@@ -608,22 +652,21 @@ export class AnalyticsService {
   /**
    * Get aggregated analytics summary.
    * Calls the Supabase function get_analytics_summary.
+   * Includes retry with exponential backoff for transient 520 errors.
    */
   async getAnalyticsSummary(days: number = 30): Promise<AnalyticsSummary | null> {
-    try {
+    return this.withRetry(async () => {
       const { data, error } = await this.client.client.rpc('get_analytics_summary', {
         p_days: days,
       });
 
       if (error) {
         console.error('Error fetching analytics summary:', error.message, error.details, error.hint, error.code);
-        return null;
+        throw error; // Let retry handle it
       }
 
       return data as AnalyticsSummary;
-    } catch {
-      return null;
-    }
+    }, 'getAnalyticsSummary') as Promise<AnalyticsSummary | null>;
   }
 
   /**
@@ -935,5 +978,86 @@ export class AnalyticsService {
     } catch {
       return null;
     }
+  }
+
+  // ==================== RETRY & SESSION RECOVERY ====================
+
+  /**
+   * Execute an async operation with exponential backoff retry.
+   * Catches transient errors (network failures, Supabase 520s) and retries.
+   * Returns null on final failure — analytics should never break the portfolio.
+   *
+   * @param fn        The async operation to attempt
+   * @param label     Human-readable label for debug logging
+   * @param maxRetries Override default MAX_RETRIES (e.g., 1 for heartbeat)
+   */
+  private async withRetry<T>(
+    fn: () => Promise<T>,
+    label: string,
+    maxRetries: number = MAX_RETRIES,
+  ): Promise<T | null> {
+    for (let attempt = 0; attempt <= maxRetries; attempt++) {
+      try {
+        return await fn();
+      } catch (err: unknown) {
+        const isLast = attempt === maxRetries;
+        if (isLast) {
+          // Final attempt failed — give up silently
+          if (!environment.production) {
+            console.warn(`[Analytics] ${label} failed after ${maxRetries + 1} attempts`, err);
+          }
+          return null;
+        }
+        // Exponential backoff: 500ms, 1000ms, 2000ms …
+        const delay = RETRY_BASE_DELAY_MS * Math.pow(2, attempt);
+        await new Promise(resolve => setTimeout(resolve, delay));
+      }
+    }
+    return null;
+  }
+
+  /**
+   * Check whether a Supabase error is a foreign-key violation (session row deleted).
+   * PostgREST returns HTTP 409 with PGRST code 23503 for FK violations.
+   */
+  private isForeignKeyError(error: { code?: string; message?: string; details?: string }): boolean {
+    return (
+      error.code === '23503' ||
+      error.code === '409' ||
+      (error.message || '').includes('foreign key') ||
+      (error.details || '').includes('is not present in table')
+    );
+  }
+
+  /**
+   * Recover the analytics session when the stored session ID is stale
+   * (e.g., the row was deleted or the FK constraint fails).
+   * Creates a fresh session and updates the local state.
+   */
+  private async recoverSession(): Promise<void> {
+    if (this.isRecoveringSession) return;
+    this.isRecoveringSession = true;
+
+    try {
+      this.clearStoredSession();
+      const visitorHash = this.generateVisitorHash();
+      const deviceInfo = this.getDeviceInfo();
+      // Skip geolocation on recovery to save time
+      await this.createNewSession(visitorHash, this.resolvedReferrerSource, deviceInfo, null);
+    } finally {
+      this.isRecoveringSession = false;
+    }
+  }
+
+  /**
+   * Clear all locally stored session data so a fresh session can be created.
+   */
+  private clearStoredSession(): void {
+    this.sessionId = null;
+    this.currentPageViewId = null;
+    try {
+      sessionStorage.removeItem('analytics_session_id');
+      sessionStorage.removeItem('analytics_page_count');
+    } catch {}
   }
 }
