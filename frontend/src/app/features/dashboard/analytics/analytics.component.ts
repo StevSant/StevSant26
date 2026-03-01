@@ -14,7 +14,6 @@ import { MatIcon } from '@angular/material/icon';
 })
 export class AnalyticsComponent implements OnInit {
   private analyticsService = inject(AnalyticsService);
-  Math = Math;
 
   summary = signal<AnalyticsSummary | null>(null);
   loading = signal(true);
@@ -73,6 +72,8 @@ export class AnalyticsComponent implements OnInit {
     if (!filled.length) return 1;
     return Math.max(1, ...filled.map((d) => d.views));
   });
+
+  midDailyViews = computed(() => Math.round(this.maxDailyViews() / 2));
 
   /**
    * Normalizes language breakdown by grouping variants under the base language.
