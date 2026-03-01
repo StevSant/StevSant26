@@ -669,6 +669,31 @@
                 <option [ngValue]="true">{{ 'analytics.onlyRecruiters' | translate }}</option>
                 <option [ngValue]="false">{{ 'analytics.nonRecruiters' | translate }}</option>
               </select>
+              <!-- Country Filter -->
+              @if (availableCountries().length > 1) {
+                <select
+                  [ngModel]="visitorFilterCountry()"
+                  (ngModelChange)="visitorFilterCountry.set($event || null); onVisitorFilterChange()"
+                  class="px-3 py-2 text-sm bg-(--color-bg-primary) border border-(--color-border-primary) rounded-lg text-(--color-text-primary) focus:outline-none focus:ring-2 focus:ring-(--color-accent)/50"
+                >
+                  <option [ngValue]="null">{{ 'analytics.allCountries' | translate }}</option>
+                  @for (country of availableCountries(); track country) {
+                    <option [value]="country">{{ getCountryFlagEmoji(country) }} {{ country }}</option>
+                  }
+                </select>
+              }
+              <!-- Sort -->
+              <select
+                [ngModel]="visitorSort()"
+                (ngModelChange)="onVisitorSortChange($event)"
+                class="px-3 py-2 text-sm bg-(--color-bg-primary) border border-(--color-border-primary) rounded-lg text-(--color-text-primary) focus:outline-none focus:ring-2 focus:ring-(--color-accent)/50"
+              >
+                <option value="recent">{{ 'analytics.sortRecent' | translate }}</option>
+                <option value="sessions">{{ 'analytics.sortSessions' | translate }}</option>
+                <option value="views">{{ 'analytics.sortViews' | translate }}</option>
+                <option value="duration">{{ 'analytics.sortDuration' | translate }}</option>
+                <option value="country">{{ 'analytics.sortCountry' | translate }}</option>
+              </select>
               <!-- Active referrer filter badge -->
               @if (visitorFilterReferrer()) {
                 <div class="flex items-center gap-1 px-3 py-2 text-sm bg-(--color-accent)/10 border border-(--color-accent)/30 rounded-lg text-(--color-accent) font-medium">
@@ -705,7 +730,7 @@
             </p>
 
             <!-- Visitor Cards -->
-            @for (visitor of visitors(); track visitor.visitor_hash) {
+            @for (visitor of paginatedVisitors(); track visitor.visitor_hash) {
               <div
                 class="bg-(--color-bg-secondary) rounded-xl border border-(--color-border-primary) overflow-hidden transition-all"
               >
@@ -1074,6 +1099,14 @@
                 }
               </div>
             }
+
+            <!-- Visitor Pagination -->
+            <app-pagination
+              [totalItems]="sortedVisitors().length"
+              [currentPage]="visitorPage()"
+              [pageSize]="visitorPageSize"
+              (pageChange)="onVisitorPageChange($event)"
+            />
           } @else {
             <!-- Empty state -->
             <div

@@ -10,13 +10,14 @@ import { ConfirmDialogComponent } from '@shared/components/confirm-dialog/confir
 import { TranslatePipe } from '@shared/pipes/translate.pipe';
 import { DashboardFilterComponent, DashboardFilterOption } from '@shared/components/dashboard-filter/dashboard-filter.component';
 import { ExperienceItemComponent } from './experience-item/experience-item.component';
+import { PaginationComponent } from '@shared/components/pagination/pagination.component';
 import { LoggerService } from '@core/services/logger.service';
 import { MatIcon } from '@angular/material/icon';
 
 @Component({
   selector: 'app-experience-list',
   standalone: true,
-  imports: [CommonModule, RouterModule, DragDropModule, ConfirmDialogComponent, TranslatePipe, DashboardFilterComponent, ExperienceItemComponent, MatIcon],
+  imports: [CommonModule, RouterModule, DragDropModule, ConfirmDialogComponent, TranslatePipe, DashboardFilterComponent, ExperienceItemComponent, MatIcon, PaginationComponent],
   templateUrl: './experience-list.component.html',
 })
 export class ExperienceListComponent implements OnInit {
@@ -31,6 +32,10 @@ export class ExperienceListComponent implements OnInit {
   items = signal<Experience[]>([]);
   itemToDelete: Experience | null = null;
   imageMap = new Map<number, string>();
+
+  // Pagination
+  currentPage = signal(1);
+  pageSize = 10;
 
   // Filter state
   searchText = signal('');
@@ -121,10 +126,17 @@ export class ExperienceListComponent implements OnInit {
     return filtered;
   }
 
-  onSearchChange(text: string): void { this.searchText.set(text); }
-  onCompanyFilterChange(value: string): void { this.selectedCompany.set(value); }
+  paginatedItems(): Experience[] {
+    const start = (this.currentPage() - 1) * this.pageSize;
+    return this.filteredItems().slice(start, start + this.pageSize);
+  }
 
-  toggleShowArchived(): void { this.showArchived.update((v) => !v); }
+  onPageChange(page: number): void { this.currentPage.set(page); }
+
+  onSearchChange(text: string): void { this.searchText.set(text); this.currentPage.set(1); }
+  onCompanyFilterChange(value: string): void { this.selectedCompany.set(value); this.currentPage.set(1); }
+
+  toggleShowArchived(): void { this.showArchived.update((v) => !v); this.currentPage.set(1); }
 
   async drop(event: CdkDragDrop<Experience[]>): Promise<void> {
     const allItems = [...this.items()];

@@ -10,13 +10,14 @@ import { ConfirmDialogComponent } from '@shared/components/confirm-dialog/confir
 import { TranslatePipe } from '@shared/pipes/translate.pipe';
 import { DashboardFilterComponent, DashboardFilterOption } from '@shared/components/dashboard-filter/dashboard-filter.component';
 import { EventItemComponent } from './event-item/event-item.component';
+import { PaginationComponent } from '@shared/components/pagination/pagination.component';
 import { LoggerService } from '@core/services/logger.service';
 import { MatIcon } from '@angular/material/icon';
 
 @Component({
   selector: 'app-event-list',
   standalone: true,
-  imports: [CommonModule, RouterModule, DragDropModule, ConfirmDialogComponent, TranslatePipe, DashboardFilterComponent, EventItemComponent, MatIcon],
+  imports: [CommonModule, RouterModule, DragDropModule, ConfirmDialogComponent, TranslatePipe, DashboardFilterComponent, EventItemComponent, MatIcon, PaginationComponent],
   templateUrl: './event-list.component.html',
 })
 export class EventListComponent implements OnInit {
@@ -32,6 +33,10 @@ export class EventListComponent implements OnInit {
   items = signal<Event[]>([]);
   itemToDelete: Event | null = null;
   imageMap = new Map<number, string>();
+
+  // Pagination
+  currentPage = signal(1);
+  pageSize = 10;
 
   // Filter state
   searchText = signal('');
@@ -139,11 +144,19 @@ export class EventListComponent implements OnInit {
     return filtered;
   }
 
-  onSearchChange(text: string): void { this.searchText.set(text); }
-  onYearFilterChange(value: string): void { this.selectedYear.set(value); }
+  paginatedItems(): Event[] {
+    const start = (this.currentPage() - 1) * this.pageSize;
+    return this.filteredItems().slice(start, start + this.pageSize);
+  }
+
+  onPageChange(page: number): void { this.currentPage.set(page); }
+
+  onSearchChange(text: string): void { this.searchText.set(text); this.currentPage.set(1); }
+  onYearFilterChange(value: string): void { this.selectedYear.set(value); this.currentPage.set(1); }
 
   toggleShowArchived(): void {
     this.showArchived.update((v) => !v);
+    this.currentPage.set(1);
   }
 
   async drop(event: CdkDragDrop<Event[]>): Promise<void> {

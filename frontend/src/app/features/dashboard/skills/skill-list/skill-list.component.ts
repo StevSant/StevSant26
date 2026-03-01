@@ -8,6 +8,7 @@ import { ConfirmDialogComponent } from '@shared/components/confirm-dialog/confir
 import { TranslatePipe } from '@shared/pipes/translate.pipe';
 import { DashboardFilterComponent, DashboardFilterOption } from '@shared/components/dashboard-filter/dashboard-filter.component';
 import { SkillItemComponent } from './skill-item/skill-item.component';
+import { PaginationComponent } from '@shared/components/pagination/pagination.component';
 import { LoggerService } from '@core/services/logger.service';
 import { CrudService, TranslationDataService } from '@core/services';
 import { MatIcon } from '@angular/material/icon';
@@ -15,7 +16,7 @@ import { MatIcon } from '@angular/material/icon';
 @Component({
   selector: 'app-skill-list',
   standalone: true,
-  imports: [CommonModule, RouterModule, DragDropModule, ConfirmDialogComponent, TranslatePipe, DashboardFilterComponent, SkillItemComponent, MatIcon],
+  imports: [CommonModule, RouterModule, DragDropModule, ConfirmDialogComponent, TranslatePipe, DashboardFilterComponent, SkillItemComponent, MatIcon, PaginationComponent],
   templateUrl: './skill-list.component.html',
 })
 export class SkillListComponent implements OnInit {
@@ -29,6 +30,10 @@ export class SkillListComponent implements OnInit {
   showArchived = signal(false);
   items = signal<Skill[]>([]);
   itemToDelete: Skill | null = null;
+
+  // Pagination
+  currentPage = signal(1);
+  pageSize = 10;
 
   // Filter state
   searchText = signal('');
@@ -126,10 +131,17 @@ export class SkillListComponent implements OnInit {
     return filtered;
   }
 
-  onSearchChange(text: string): void { this.searchText.set(text); }
-  onCategoryFilterChange(value: string): void { this.selectedCategoryId.set(value); }
+  paginatedItems(): Skill[] {
+    const start = (this.currentPage() - 1) * this.pageSize;
+    return this.filteredItems().slice(start, start + this.pageSize);
+  }
 
-  toggleShowArchived(): void { this.showArchived.update((v) => !v); }
+  onPageChange(page: number): void { this.currentPage.set(page); }
+
+  onSearchChange(text: string): void { this.searchText.set(text); this.currentPage.set(1); }
+  onCategoryFilterChange(value: string): void { this.selectedCategoryId.set(value); this.currentPage.set(1); }
+
+  toggleShowArchived(): void { this.showArchived.update((v) => !v); this.currentPage.set(1); }
 
   async drop(event: CdkDragDrop<Skill[]>): Promise<void> {
     const allItems = [...this.items()];

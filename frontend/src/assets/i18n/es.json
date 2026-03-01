@@ -478,13 +478,19 @@
   },
   "confirmDialog": {
     "defaultTitle": "¿Estás seguro?",
-    "defaultMessage": "Esta acción no se puede deshacer."
+    "defaultMessage": "Esta acción no se puede deshacer.",
+    "confirm": "Confirmar",
+    "cancel": "Cancelar",
+    "deleteCv": "¿Eliminar este CV?"
   },
   "validation": {
-    "required": "Este campo es obligatorio",
-    "email": "Ingresa un correo electrónico válido",
-    "minLength": "Mínimo {{min}} caracteres",
-    "maxLength": "Máximo {{max}} caracteres"
+    "nameRequiredOneLanguage": "El nombre es requerido en al menos un idioma",
+    "titleRequiredOneLanguage": "El título es requerido en al menos un idioma",
+    "degreeRequiredOneLanguage": "El título/grado es requerido en al menos un idioma",
+    "institutionRequired": "La institución es requerida",
+    "companyRequired": "La empresa es requerida",
+    "roleRequiredOneLanguage": "El rol es requerido en al menos un idioma",
+    "skillAndSourceRequired": "La habilidad y el ID de fuente son requeridos"
   },
   "portfolio": {
     "nav": {
@@ -741,28 +747,12 @@
     "emailNotConfirmed": "Tu correo no ha sido confirmado. Revisa tu bandeja de entrada.",
     "tooManyRequests": "Demasiados intentos. Por favor espera un momento."
   },
-  "validation": {
-    "nameRequiredOneLanguage": "El nombre es requerido en al menos un idioma",
-    "titleRequiredOneLanguage": "El título es requerido en al menos un idioma",
-    "degreeRequiredOneLanguage": "El título/grado es requerido en al menos un idioma",
-    "institutionRequired": "La institución es requerida",
-    "companyRequired": "La empresa es requerida",
-    "roleRequiredOneLanguage": "El rol es requerido en al menos un idioma",
-    "skillAndSourceRequired": "La habilidad y el ID de fuente son requeridos"
-  },
   "success": {
     "profileUpdated": "Perfil actualizado correctamente",
     "imageUpdated": "{{name}} actualizado correctamente",
     "imageDeleted": "{{name}} eliminado correctamente",
     "cvUploaded": "CV subido correctamente",
     "cvDeleted": "CV eliminado"
-  },
-  "confirmDialog": {
-    "defaultTitle": "¿Estás seguro?",
-    "defaultMessage": "Esta acción no se puede deshacer.",
-    "confirm": "Confirmar",
-    "cancel": "Cancelar",
-    "deleteCv": "¿Eliminar este CV?"
   },
   "analytics": {
     "title": "Analíticas",
@@ -835,6 +825,18 @@
     "cvDownloads": "Descargas de CV",
     "cvDownloadsBreakdown": "Detalle de Descargas de CV",
     "languages": "Idiomas de Visitantes",
-    "countries": "Países de Visitantes"
+    "countries": "Países de Visitantes",
+    "sortBy": "Ordenar por",
+    "sortSessions": "Más sesiones",
+    "sortViews": "Más vistas",
+    "sortDuration": "Mayor duración prom.",
+    "sortRecent": "Más reciente",
+    "sortCountry": "País (A-Z)",
+    "allCountries": "Todos los países"
+  },
+  "pagination": {
+    "showing": "Mostrando",
+    "of": "de",
+    "items": "elementos"
   }
 }

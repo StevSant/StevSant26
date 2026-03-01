@@ -8,6 +8,7 @@ import { ConfirmDialogComponent } from '@shared/components/confirm-dialog/confir
 import { TranslatePipe } from '@shared/pipes/translate.pipe';
 import { DashboardFilterComponent, DashboardFilterOption } from '@shared/components/dashboard-filter/dashboard-filter.component';
 import { CompetitionItemComponent } from './competition-item/competition-item.component';
+import { PaginationComponent } from '@shared/components/pagination/pagination.component';
 import { LoggerService } from '@core/services/logger.service';
 import { CrudService, TranslationDataService } from '@core/services';
 import { MatIcon } from '@angular/material/icon';
@@ -15,7 +16,7 @@ import { MatIcon } from '@angular/material/icon';
 @Component({
   selector: 'app-competition-list',
   standalone: true,
-  imports: [CommonModule, RouterModule, DragDropModule, ConfirmDialogComponent, TranslatePipe, DashboardFilterComponent, CompetitionItemComponent, MatIcon],
+  imports: [CommonModule, RouterModule, DragDropModule, ConfirmDialogComponent, TranslatePipe, DashboardFilterComponent, CompetitionItemComponent, MatIcon, PaginationComponent],
   templateUrl: './competition-list.component.html',
 })
 export class CompetitionListComponent implements OnInit {
@@ -30,6 +31,10 @@ export class CompetitionListComponent implements OnInit {
   items = signal<Competition[]>([]);
   itemToDelete: Competition | null = null;
   imageMap = new Map<number, string>();
+
+  // Pagination
+  currentPage = signal(1);
+  pageSize = 10;
 
   // Filter state
   searchText = signal('');
@@ -137,10 +142,17 @@ export class CompetitionListComponent implements OnInit {
     return filtered;
   }
 
-  onSearchChange(text: string): void { this.searchText.set(text); }
-  onOrganizerFilterChange(value: string): void { this.selectedOrganizer.set(value); }
+  paginatedItems(): Competition[] {
+    const start = (this.currentPage() - 1) * this.pageSize;
+    return this.filteredItems().slice(start, start + this.pageSize);
+  }
 
-  toggleShowArchived(): void { this.showArchived.update((v) => !v); }
+  onPageChange(page: number): void { this.currentPage.set(page); }
+
+  onSearchChange(text: string): void { this.searchText.set(text); this.currentPage.set(1); }
+  onOrganizerFilterChange(value: string): void { this.selectedOrganizer.set(value); this.currentPage.set(1); }
+
+  toggleShowArchived(): void { this.showArchived.update((v) => !v); this.currentPage.set(1); }
 
   async drop(event: CdkDragDrop<Competition[]>): Promise<void> {
     const filtered = this.filteredItems();

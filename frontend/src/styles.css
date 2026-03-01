@@ -734,9 +734,9 @@ html * {
 
 .skills-ticker {
   display: flex;
-  gap: 0.75rem;
+  gap: 1.5rem;
   width: max-content;
-  animation: skills-scroll 30s linear infinite;
+  animation: skills-scroll 60s linear infinite;
 }
 
 .skills-ticker:hover {

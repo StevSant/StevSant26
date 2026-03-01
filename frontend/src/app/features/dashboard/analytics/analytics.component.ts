@@ -6,11 +6,12 @@ import { AnalyticsSummary, UniqueVisitor, VisitorSessionDetail } from '@core/mod
 import { TranslatePipe } from '@shared/pipes/translate.pipe';
 import { MatIcon } from '@angular/material/icon';
 import { getCountryFlag, getLanguageFlag } from '@shared/utils/flag-utils';
+import { PaginationComponent } from '@shared/components/pagination/pagination.component';
 
 @Component({
   selector: 'app-analytics',
   standalone: true,
-  imports: [CommonModule, DatePipe, TranslatePipe, FormsModule, MatIcon],
+  imports: [CommonModule, DatePipe, TranslatePipe, FormsModule, MatIcon, PaginationComponent],
   templateUrl: './analytics.component.html',
 })
 export class AnalyticsComponent implements OnInit {
@@ -29,6 +30,9 @@ export class AnalyticsComponent implements OnInit {
   visitorFilterRecruiter = signal<boolean | null>(null);
   visitorFilterCountry = signal<string | null>(null);
   visitorFilterReferrer = signal<string | null>(null);
+  visitorSort = signal<string>('recent');
+  visitorPage = signal(1);
+  visitorPageSize = 10;
   expandedVisitor = signal<string | null>(null);
   expandedVisitorTab = signal<'history' | 'pages'>('history');
   deletingVisitor = signal<string | null>(null);
@@ -100,6 +104,50 @@ export class AnalyticsComponent implements OnInit {
     return this.formatDuration(s?.avg_session_duration ?? 0);
   });
 
+  /** Unique countries from loaded visitors for the country filter dropdown */
+  availableCountries = computed(() => {
+    const countries = new Set<string>();
+    for (const v of this.visitors()) {
+      if (v.country) countries.add(v.country);
+    }
+    return Array.from(countries).sort();
+  });
+
+  /** Sorted visitors based on selected sort option */
+  sortedVisitors = computed(() => {
+    const list = [...this.visitors()];
+    const sort = this.visitorSort();
+    switch (sort) {
+      case 'sessions':
+        return list.sort((a, b) => b.total_sessions - a.total_sessions);
+      case 'views':
+        return list.sort((a, b) => b.total_page_views - a.total_page_views);
+      case 'duration':
+        return list.sort((a, b) => b.avg_session_duration - a.avg_session_duration);
+      case 'country':
+        return list.sort((a, b) => (a.country || '').localeCompare(b.country || ''));
+      case 'recent':
+      default:
+        return list.sort((a, b) => new Date(b.last_visit).getTime() - new Date(a.last_visit).getTime());
+    }
+  });
+
+  /** Paginated slice of sorted visitors */
+  paginatedVisitors = computed(() => {
+    const all = this.sortedVisitors();
+    const start = (this.visitorPage() - 1) * this.visitorPageSize;
+    return all.slice(start, start + this.visitorPageSize);
+  });
+
+  onVisitorPageChange(page: number): void {
+    this.visitorPage.set(page);
+  }
+
+  onVisitorSortChange(sort: string): void {
+    this.visitorSort.set(sort);
+    this.visitorPage.set(1);
+  }
+
   async ngOnInit(): Promise<void> {
     await this.loadData();
   }
@@ -142,6 +190,7 @@ export class AnalyticsComponent implements OnInit {
 
   async loadVisitors(): Promise<void> {
     this.visitorsLoading.set(true);
+    this.visitorPage.set(1);
     try {
       const data = await this.analyticsService.getUniqueVisitors({
         days: this.selectedDays(),
