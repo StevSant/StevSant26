@@ -384,7 +384,7 @@
               </span>
             }
             <!-- Duplicate for seamless loop -->
-            @for (skill of allSkills(); track 'dup-' + skill.id) {
+            @for (skill of allSkills(); track $index) {
               <span
                 class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-full bg-(--color-bg-secondary) text-(--color-text-secondary) border border-(--color-card-border) whitespace-nowrap"
               >

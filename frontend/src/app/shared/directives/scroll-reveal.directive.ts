@@ -23,6 +23,7 @@ export class ScrollRevealDirective implements OnInit, OnDestroy {
   revealParallaxSpeed = input<number>(0.05);
 
   private scrollHandler?: () => void;
+  private rafId?: number;
 
   ngOnInit(): void {
     if (!isPlatformBrowser(this.platformId)) return;
@@ -59,15 +60,23 @@ export class ScrollRevealDirective implements OnInit, OnDestroy {
 
     this.observer.observe(element);
 
-    // Parallax effect
-    if (this.revealParallax()) {
+    // Parallax effect (only applied to elements that don't use reveal variants)
+    if (this.revealParallax() && variant === 'default') {
       const speed = this.revealParallaxSpeed();
+      let ticking = false;
+
       this.scrollHandler = () => {
-        const rect = element.getBoundingClientRect();
-        const windowHeight = window.innerHeight;
-        const elementCenter = rect.top + rect.height / 2;
-        const offset = (elementCenter - windowHeight / 2) * speed;
-        element.style.transform = `translateY(${offset}px)`;
+        if (!ticking) {
+          ticking = true;
+          this.rafId = requestAnimationFrame(() => {
+            const rect = element.getBoundingClientRect();
+            const windowHeight = window.innerHeight;
+            const elementCenter = rect.top + rect.height / 2;
+            const offset = (elementCenter - windowHeight / 2) * speed;
+            element.style.transform = `translateY(${offset}px)`;
+            ticking = false;
+          });
+        }
       };
       window.addEventListener('scroll', this.scrollHandler, { passive: true });
     }
@@ -77,6 +86,9 @@ export class ScrollRevealDirective implements OnInit, OnDestroy {
     this.observer?.disconnect();
     if (this.scrollHandler) {
       window.removeEventListener('scroll', this.scrollHandler);
+    }
+    if (this.rafId) {
+      cancelAnimationFrame(this.rafId);
     }
   }
 }
