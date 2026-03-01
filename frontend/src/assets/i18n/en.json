@@ -480,13 +480,19 @@
   },
   "confirmDialog": {
     "defaultTitle": "Are you sure?",
-    "defaultMessage": "This action cannot be undone."
+    "defaultMessage": "This action cannot be undone.",
+    "confirm": "Confirm",
+    "cancel": "Cancel",
+    "deleteCv": "Delete this CV?"
   },
   "validation": {
-    "required": "This field is required",
-    "email": "Enter a valid email address",
-    "minLength": "Minimum {{min}} characters",
-    "maxLength": "Maximum {{max}} characters"
+    "nameRequiredOneLanguage": "Name is required in at least one language",
+    "titleRequiredOneLanguage": "Title is required in at least one language",
+    "degreeRequiredOneLanguage": "Degree is required in at least one language",
+    "institutionRequired": "Institution is required",
+    "companyRequired": "Company is required",
+    "roleRequiredOneLanguage": "Role is required in at least one language",
+    "skillAndSourceRequired": "Skill and source ID are required"
   },
   "portfolio": {
     "nav": {
@@ -743,28 +749,12 @@
     "emailNotConfirmed": "Your email has not been confirmed. Check your inbox.",
     "tooManyRequests": "Too many attempts. Please wait a moment."
   },
-  "validation": {
-    "nameRequiredOneLanguage": "Name is required in at least one language",
-    "titleRequiredOneLanguage": "Title is required in at least one language",
-    "degreeRequiredOneLanguage": "Degree is required in at least one language",
-    "institutionRequired": "Institution is required",
-    "companyRequired": "Company is required",
-    "roleRequiredOneLanguage": "Role is required in at least one language",
-    "skillAndSourceRequired": "Skill and source ID are required"
-  },
   "success": {
     "profileUpdated": "Profile updated successfully",
     "imageUpdated": "{{name}} updated successfully",
     "imageDeleted": "{{name}} deleted successfully",
     "cvUploaded": "CV uploaded successfully",
     "cvDeleted": "CV deleted"
-  },
-  "confirmDialog": {
-    "defaultTitle": "Are you sure?",
-    "defaultMessage": "This action cannot be undone.",
-    "confirm": "Confirm",
-    "cancel": "Cancel",
-    "deleteCv": "Delete this CV?"
   },
   "analytics": {
     "title": "Analytics",
@@ -837,6 +827,18 @@
     "cvDownloads": "CV Downloads",
     "cvDownloadsBreakdown": "CV Downloads Detail",
     "languages": "Visitor Languages",
-    "countries": "Visitor Countries"
+    "countries": "Visitor Countries",
+    "sortBy": "Sort by",
+    "sortSessions": "Most sessions",
+    "sortViews": "Most views",
+    "sortDuration": "Longest avg. duration",
+    "sortRecent": "Most recent",
+    "sortCountry": "Country (A-Z)",
+    "allCountries": "All countries"
+  },
+  "pagination": {
+    "showing": "Showing",
+    "of": "of",
+    "items": "items"
   }
 }

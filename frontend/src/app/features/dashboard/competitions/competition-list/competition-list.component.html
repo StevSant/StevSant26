@@ -62,7 +62,7 @@
     </div>
   } @else {
     <div cdkDropList (cdkDropListDropped)="drop($event)" class="space-y-2">
-      @for (item of filteredItems(); track item.id) {
+      @for (item of paginatedItems(); track item.id) {
         <app-competition-item
           cdkDrag
           [cdkDragDisabled]="showArchived()"
@@ -78,6 +78,12 @@
         />
       }
     </div>
+    <app-pagination
+      [totalItems]="filteredItems().length"
+      [currentPage]="currentPage()"
+      [pageSize]="pageSize"
+      (pageChange)="onPageChange($event)"
+    />
   }
 
   <app-confirm-dialog

@@ -7,6 +7,7 @@ import { SkillCategory, SkillCategoryTranslation } from '@core/models';
 import { ConfirmDialogComponent } from '@shared/components/confirm-dialog/confirm-dialog.component';
 import { TranslatePipe } from '@shared/pipes/translate.pipe';
 import { SkillCategoryItemComponent } from './skill-category-item/skill-category-item.component';
+import { PaginationComponent } from '@shared/components/pagination/pagination.component';
 import { LoggerService } from '@core/services/logger.service';
 import { CrudService, TranslationDataService } from '@core/services';
 import { MatIcon } from '@angular/material/icon';
@@ -14,7 +15,7 @@ import { MatIcon } from '@angular/material/icon';
 @Component({
   selector: 'app-skill-category-list',
   standalone: true,
-  imports: [CommonModule, RouterModule, DragDropModule, ConfirmDialogComponent, TranslatePipe, SkillCategoryItemComponent, MatIcon],
+  imports: [CommonModule, RouterModule, DragDropModule, ConfirmDialogComponent, TranslatePipe, SkillCategoryItemComponent, MatIcon, PaginationComponent],
   templateUrl: './skill-category-list.component.html',
 })
 export class SkillCategoryListComponent implements OnInit {
@@ -28,6 +29,10 @@ export class SkillCategoryListComponent implements OnInit {
   showArchived = signal(false);
   items = signal<SkillCategory[]>([]);
   itemToDelete: SkillCategory | null = null;
+
+  // Pagination
+  currentPage = signal(1);
+  pageSize = 10;
 
   async ngOnInit(): Promise<void> {
     await this.loadItems();
@@ -74,8 +79,16 @@ export class SkillCategoryListComponent implements OnInit {
     return this.showArchived() ? all.filter((i) => i.is_archived) : all.filter((i) => !i.is_archived);
   }
 
+  paginatedItems(): SkillCategory[] {
+    const start = (this.currentPage() - 1) * this.pageSize;
+    return this.filteredItems().slice(start, start + this.pageSize);
+  }
+
+  onPageChange(page: number): void { this.currentPage.set(page); }
+
   toggleShowArchived(): void {
     this.showArchived.update((v) => !v);
+    this.currentPage.set(1);
   }
 
   async drop(event: CdkDragDrop<SkillCategory[]>): Promise<void> {

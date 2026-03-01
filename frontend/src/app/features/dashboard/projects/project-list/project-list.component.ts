@@ -8,6 +8,7 @@ import { ConfirmDialogComponent } from '@shared/components/confirm-dialog/confir
 import { TranslatePipe } from '@shared/pipes/translate.pipe';
 import { DashboardFilterComponent, DashboardFilterOption } from '@shared/components/dashboard-filter/dashboard-filter.component';
 import { ProjectItemComponent } from './project-item/project-item.component';
+import { PaginationComponent } from '@shared/components/pagination/pagination.component';
 import { LoggerService } from '@core/services/logger.service';
 import { CrudService, TranslationDataService } from '@core/services';
 import { MatIcon } from '@angular/material/icon';
@@ -15,7 +16,7 @@ import { MatIcon } from '@angular/material/icon';
 @Component({
   selector: 'app-project-list',
   standalone: true,
-  imports: [CommonModule, RouterModule, DragDropModule, ConfirmDialogComponent, TranslatePipe, DashboardFilterComponent, ProjectItemComponent, MatIcon],
+  imports: [CommonModule, RouterModule, DragDropModule, ConfirmDialogComponent, TranslatePipe, DashboardFilterComponent, ProjectItemComponent, MatIcon, PaginationComponent],
   templateUrl: './project-list.component.html',
 })
 export class ProjectListComponent implements OnInit {
@@ -34,6 +35,10 @@ export class ProjectListComponent implements OnInit {
 
   // Expanded parent projects (track which parents are expanded)
   expandedParents = signal<Set<number>>(new Set());
+
+  // Pagination
+  currentPage = signal(1);
+  pageSize = 10;
 
   // Filter state
   searchText = signal('');
@@ -180,11 +185,19 @@ export class ProjectListComponent implements OnInit {
     return this.expandedParents().has(projectId);
   }
 
-  onSearchChange(text: string): void { this.searchText.set(text); }
-  onSourceTypeFilterChange(value: string): void { this.selectedSourceType.set(value); }
+  paginatedItems(): Project[] {
+    const start = (this.currentPage() - 1) * this.pageSize;
+    return this.filteredItems().slice(start, start + this.pageSize);
+  }
+
+  onPageChange(page: number): void { this.currentPage.set(page); }
+
+  onSearchChange(text: string): void { this.searchText.set(text); this.currentPage.set(1); }
+  onSourceTypeFilterChange(value: string): void { this.selectedSourceType.set(value); this.currentPage.set(1); }
 
   toggleShowArchived(): void {
     this.showArchived.update((v) => !v);
+    this.currentPage.set(1);
   }
 
   async drop(event: CdkDragDrop<Project[]>): Promise<void> {

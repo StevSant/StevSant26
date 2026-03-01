@@ -369,15 +369,15 @@
           <div class="skills-ticker">
             @for (skill of allSkills(); track skill.id) {
               <span
-                class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-full bg-(--color-bg-secondary) text-(--color-text-secondary) border border-(--color-card-border) whitespace-nowrap"
+                class="inline-flex items-center gap-2 px-4 py-2 text-sm rounded-full bg-(--color-bg-secondary) text-(--color-text-secondary) border border-(--color-card-border) whitespace-nowrap"
               >
                 @if (skill.icon_url) {
-                  <img [src]="skill.icon_url" class="w-4 h-4 object-contain" />
+                  <img [src]="skill.icon_url" class="w-6 h-6 object-contain" />
                 } @else if (getSkillFallback(data.getEntityTranslation(skill, 'name')); as fb) {
                   @if (fb.type === 'url') {
-                    <img [src]="fb.value" class="w-4 h-4 object-contain" />
+                    <img [src]="fb.value" class="w-6 h-6 object-contain" />
                   } @else {
-                    <span class="text-sm leading-none">{{ fb.value }}</span>
+                    <span class="text-base leading-none">{{ fb.value }}</span>
                   }
                 }
                 {{ data.getEntityTranslation(skill, 'name') }}
@@ -386,15 +386,15 @@
             <!-- Duplicate for seamless loop -->
             @for (skill of allSkills(); track $index) {
               <span
-                class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-full bg-(--color-bg-secondary) text-(--color-text-secondary) border border-(--color-card-border) whitespace-nowrap"
+                class="inline-flex items-center gap-2 px-4 py-2 text-sm rounded-full bg-(--color-bg-secondary) text-(--color-text-secondary) border border-(--color-card-border) whitespace-nowrap"
               >
                 @if (skill.icon_url) {
-                  <img [src]="skill.icon_url" class="w-4 h-4 object-contain" />
+                  <img [src]="skill.icon_url" class="w-6 h-6 object-contain" />
                 } @else if (getSkillFallback(data.getEntityTranslation(skill, 'name')); as fb) {
                   @if (fb.type === 'url') {
-                    <img [src]="fb.value" class="w-4 h-4 object-contain" />
+                    <img [src]="fb.value" class="w-6 h-6 object-contain" />
                   } @else {
-                    <span class="text-sm leading-none">{{ fb.value }}</span>
+                    <span class="text-base leading-none">{{ fb.value }}</span>
                   }
                 }
                 {{ data.getEntityTranslation(skill, 'name') }}
