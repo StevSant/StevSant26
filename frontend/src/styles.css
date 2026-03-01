@@ -698,6 +698,66 @@ html * {
   transform: translateY(0);
 }
 
+/* Scroll reveal variants */
+.scroll-reveal--slide-left {
+  opacity: 0;
+  transform: translateX(-32px);
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+
+.scroll-reveal--slide-right {
+  opacity: 0;
+  transform: translateX(32px);
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+
+.scroll-reveal--scale {
+  opacity: 0;
+  transform: scale(0.95);
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+
+.scroll-reveal--slide-left.scroll-reveal--visible,
+.scroll-reveal--slide-right.scroll-reveal--visible,
+.scroll-reveal--scale.scroll-reveal--visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* ============================================
+   Skills Ticker Animation
+   ============================================ */
+.skills-ticker-container {
+  mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);
+  -webkit-mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);
+}
+
+.skills-ticker {
+  display: flex;
+  gap: 0.75rem;
+  width: max-content;
+  animation: skills-scroll 30s linear infinite;
+}
+
+.skills-ticker:hover {
+  animation-play-state: paused;
+}
+
+@keyframes skills-scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+/* Parallax subtle effect for sections */
+.parallax-section {
+  will-change: transform;
+  transition: transform 0.1s linear;
+}
+
 /* ============================================
    Markdown Rendered Content (section bodies)
    ============================================ */

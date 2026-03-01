@@ -54,6 +54,16 @@
                         [alt]="data.getEntityTranslation(skill, 'name')"
                         class="w-8 h-8 object-contain"
                       />
+                    } @else if (getSkillFallback(skill); as fallback) {
+                      @if (fallback.type === 'url') {
+                        <img
+                          [src]="fallback.value"
+                          [alt]="data.getEntityTranslation(skill, 'name')"
+                          class="w-8 h-8 object-contain"
+                        />
+                      } @else {
+                        <span class="text-2xl leading-none">{{ fallback.value }}</span>
+                      }
                     } @else {
                       <div
                         class="w-8 h-8 rounded bg-(--color-accent)/10 flex items-center justify-center"
@@ -138,6 +148,16 @@
                             [alt]="data.getEntityTranslation(skill, 'name')"
                             class="w-5 h-5 object-contain"
                           />
+                        } @else if (getSkillFallback(skill); as fallback) {
+                          @if (fallback.type === 'url') {
+                            <img
+                              [src]="fallback.value"
+                              [alt]="data.getEntityTranslation(skill, 'name')"
+                              class="w-5 h-5 object-contain"
+                            />
+                          } @else {
+                            <span class="text-base leading-none">{{ fallback.value }}</span>
+                          }
                         }
                         <span class="text-(--color-text-primary) text-sm font-light">{{
                           data.getEntityTranslation(skill, 'name')

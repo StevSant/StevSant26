@@ -9,6 +9,7 @@ import { SafeHtmlPipe } from '@shared/pipes/safe-html.pipe';
 import { ScrollRevealDirective } from '@shared/directives/scroll-reveal.directive';
 import { PortfolioMapCardComponent } from '../components/portfolio-map-card/portfolio-map-card.component';
 import { MatIcon } from '@angular/material/icon';
+import { getSkillFallbackIcon } from '@shared/utils/skill-icons';
 
 @Component({
   selector: 'app-portfolio-home',
@@ -37,6 +38,16 @@ export class PortfolioHomeComponent implements OnInit {
   topSkillCategories = computed(() =>
     this.data.skillCategories().slice(0, 4)
   );
+
+  /** All skills flattened for the scrolling ticker */
+  allSkills = computed(() =>
+    this.data.skillCategories().flatMap(c => c.skills)
+  );
+
+  /** Get a fallback icon for a skill when icon_url is not set. */
+  getSkillFallback(skillName: string): { type: 'url' | 'flag'; value: string } | null {
+    return getSkillFallbackIcon(skillName);
+  }
 
   /** Whether the profile has location data configured */
   hasLocationData = computed(() => {

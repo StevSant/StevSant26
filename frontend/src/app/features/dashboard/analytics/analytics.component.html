@@ -274,7 +274,11 @@
               @if (normalizedLanguages().length) {
                 @for (lang of normalizedLanguages(); track lang.browser_language) {
                   <div class="flex items-center gap-3">
-                    <mat-icon class="text-[20px] text-(--color-text-muted)">language</mat-icon>
+                    @if (getLanguageFlagEmoji(lang.browser_language)) {
+                      <span class="text-[20px] leading-none">{{ getLanguageFlagEmoji(lang.browser_language) }}</span>
+                    } @else {
+                      <mat-icon class="text-[20px] text-(--color-text-muted)">language</mat-icon>
+                    }
                     <span class="text-sm text-(--color-text-primary) flex-1">{{
                       formatLanguageTag(lang.browser_language)
                     }}</span>
@@ -305,7 +309,11 @@
               @if (summary()!.country_breakdown?.length) {
                 @for (c of summary()!.country_breakdown; track c.country) {
                   <div class="flex items-center gap-3">
-                    <mat-icon class="text-[20px] text-(--color-text-muted)">public</mat-icon>
+                    @if (getCountryFlagEmoji(c.country)) {
+                      <span class="text-[20px] leading-none">{{ getCountryFlagEmoji(c.country) }}</span>
+                    } @else {
+                      <mat-icon class="text-[20px] text-(--color-text-muted)">public</mat-icon>
+                    }
                     <span class="text-sm text-(--color-text-primary) flex-1">{{ c.country }}</span>
                     <span class="text-sm font-medium text-(--color-text-primary)">{{
                       c.count
