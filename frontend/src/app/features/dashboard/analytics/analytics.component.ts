@@ -14,6 +14,7 @@ import { MatIcon } from '@angular/material/icon';
 })
 export class AnalyticsComponent implements OnInit {
   private analyticsService = inject(AnalyticsService);
+  Math = Math;
 
   summary = signal<AnalyticsSummary | null>(null);
   loading = signal(true);
@@ -73,6 +74,25 @@ export class AnalyticsComponent implements OnInit {
     return Math.max(1, ...filled.map((d) => d.views));
   });
 
+  /**
+   * Normalizes language breakdown by grouping variants under the base language.
+   * e.g., en-US, en-GB, en → English; es-EC, es-ES, es → Spanish
+   */
+  normalizedLanguages = computed(() => {
+    const s = this.summary();
+    if (!s?.language_breakdown?.length) return [];
+
+    const grouped = new Map<string, number>();
+    for (const lang of s.language_breakdown) {
+      const base = lang.browser_language.split('-')[0].toLowerCase();
+      grouped.set(base, (grouped.get(base) ?? 0) + lang.count);
+    }
+
+    return Array.from(grouped.entries())
+      .map(([code, count]) => ({ browser_language: code, count }))
+      .sort((a, b) => b.count - a.count);
+  });
+
   avgSessionDuration = computed(() => {
     const s = this.summary();
     return this.formatDuration(s?.avg_session_duration ?? 0);
@@ -107,6 +127,15 @@ export class AnalyticsComponent implements OnInit {
     if (tab === 'visitors' && this.visitors().length === 0) {
       this.loadVisitors();
     }
+  }
+
+  /**
+   * Navigate to the Visitors tab pre-filtered by a specific referrer source.
+   */
+  filterVisitorsByReferrer(referrer: string): void {
+    this.visitorFilterReferrer.set(referrer);
+    this.activeTab.set('visitors');
+    this.loadVisitors();
   }
 
   async loadVisitors(): Promise<void> {
@@ -261,7 +290,12 @@ export class AnalyticsComponent implements OnInit {
     total_page_views: number;
     pages_visited: { page_path: string }[] | null;
   }): 'high' | 'medium' | 'low' {
-    const recruiterReferrers = ['linkedin.com', 'indeed.com', 'glassdoor.com', 'hired.com'];
+    const recruiterReferrers = [
+      'linkedin.com', 'indeed.com', 'glassdoor.com', 'hired.com',
+      'computrabajo.com', 'cletonboard', 'infojobs.net', 'ziprecruiter.com',
+      'manpower.com', 'hays.com', 'randstad.com', 'adecco.com',
+      'michaelpage.com', 'roberthalf.com',
+    ];
     const hasRecruiterReferrer = session.referrer_source
       ? recruiterReferrers.some((r) => session.referrer_source!.includes(r))
       : false;

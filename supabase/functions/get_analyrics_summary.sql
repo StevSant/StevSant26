@@ -20,7 +20,7 @@ BEGIN
     'unique_visitors', (SELECT COUNT(DISTINCT visitor_hash) FROM visitor_session WHERE started_at >= start_date),
     'potential_recruiters', (SELECT COUNT(DISTINCT visitor_hash) FROM visitor_session WHERE started_at >= start_date AND is_potential_recruiter = TRUE),
     'views_today', (SELECT COUNT(*) FROM page_view WHERE created_at >= CURRENT_DATE),
-    'visitors_today', (SELECT COUNT(DISTINCT session_id) FROM page_view WHERE created_at >= CURRENT_DATE),
+    'visitors_today', (SELECT COUNT(DISTINCT vs.visitor_hash) FROM visitor_session vs JOIN page_view pv ON pv.session_id = vs.id WHERE pv.created_at >= CURRENT_DATE),
     'avg_session_duration', (
       SELECT COALESCE(ROUND(AVG(session_dur)::numeric, 0), 0)
       FROM (
@@ -136,11 +136,17 @@ BEGIN
       SELECT COALESCE(json_agg(row_to_json(t)), '[]'::json)
       FROM (
         SELECT
-          COALESCE(browser_language, 'unknown') as browser_language,
-          COUNT(*) as count
-        FROM visitor_session
-        WHERE started_at >= start_date AND browser_language IS NOT NULL
-        GROUP BY browser_language
+          COALESCE(split_part(browser_language, '-', 1), 'unknown') as browser_language,
+          SUM(cnt)::int as count
+        FROM (
+          SELECT
+            COALESCE(browser_language, 'unknown') as browser_language,
+            COUNT(*) as cnt
+          FROM visitor_session
+          WHERE started_at >= start_date AND browser_language IS NOT NULL
+          GROUP BY browser_language
+        ) raw
+        GROUP BY split_part(browser_language, '-', 1)
         ORDER BY count DESC
         LIMIT 15
       ) t

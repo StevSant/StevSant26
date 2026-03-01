@@ -164,30 +164,39 @@
               {{ 'analytics.dailyViews' | translate }}
             </h3>
             @if (filledDailyViews().length) {
-              <div class="flex items-end gap-0.5 h-40">
-                @for (day of filledDailyViews(); track day.date) {
-                  <div class="flex-1 flex flex-col items-center group relative min-w-0.75">
-                    <div
-                      class="w-full rounded-t-sm transition-colors cursor-pointer"
-                      [class]="
-                        day.views > 0
-                          ? 'bg-(--color-accent)/80 hover:bg-(--color-accent)'
-                          : 'bg-(--color-text-muted)/15'
-                      "
-                      [style.height.%]="getBarHeight(day.views)"
-                      [style.min-height]="day.views === 0 ? '2px' : '4px'"
-                    ></div>
-                    <!-- Tooltip -->
-                    <div
-                      class="absolute bottom-full mb-2 hidden group-hover:block bg-(--color-bg-primary) border border-(--color-border-primary) rounded-lg px-2 py-1 text-xs shadow-lg whitespace-nowrap z-10"
-                    >
-                      <p class="font-medium text-(--color-text-primary)">
-                        {{ day.views }} {{ 'analytics.views' | translate }}
-                      </p>
-                      <p class="text-(--color-text-muted)">{{ day.date | date: 'shortDate' }}</p>
+              <div class="flex h-40">
+                <!-- Y-axis labels -->
+                <div class="flex flex-col justify-between items-end pr-2 text-[10px] text-(--color-text-muted) shrink-0 py-0.5">
+                  <span>{{ maxDailyViews() }}</span>
+                  <span>{{ Math.round(maxDailyViews() / 2) }}</span>
+                  <span>0</span>
+                </div>
+                <!-- Bars -->
+                <div class="flex gap-0.5 flex-1 min-w-0">
+                  @for (day of filledDailyViews(); track day.date) {
+                    <div class="flex-1 flex flex-col items-center justify-end group relative min-w-0.75">
+                      <div
+                        class="w-full rounded-t-sm transition-colors cursor-pointer"
+                        [class]="
+                          day.views > 0
+                            ? 'bg-(--color-accent)/80 hover:bg-(--color-accent)'
+                            : 'bg-(--color-text-muted)/15'
+                        "
+                        [style.height.%]="getBarHeight(day.views)"
+                        [style.min-height]="day.views === 0 ? '2px' : '4px'"
+                      ></div>
+                      <!-- Tooltip -->
+                      <div
+                        class="absolute bottom-full mb-2 hidden group-hover:block bg-(--color-bg-primary) border border-(--color-border-primary) rounded-lg px-2 py-1 text-xs shadow-lg whitespace-nowrap z-10"
+                      >
+                        <p class="font-medium text-(--color-text-primary)">
+                          {{ day.views }} {{ 'analytics.views' | translate }}
+                        </p>
+                        <p class="text-(--color-text-muted)">{{ day.date | date: 'shortDate' }}</p>
+                      </div>
                     </div>
-                  </div>
-                }
+                  }
+                </div>
               </div>
               <div class="flex justify-between mt-2 text-xs text-(--color-text-muted)">
                 <span>{{ filledDailyViews()[0].date | date: 'mediumDate' }}</span>
@@ -262,8 +271,8 @@
               {{ 'analytics.languages' | translate }}
             </h3>
             <div class="space-y-3">
-              @if (summary()!.language_breakdown?.length) {
-                @for (lang of summary()!.language_breakdown; track lang.browser_language) {
+              @if (normalizedLanguages().length) {
+                @for (lang of normalizedLanguages(); track lang.browser_language) {
                   <div class="flex items-center gap-3">
                     <mat-icon class="text-[20px] text-(--color-text-muted)">language</mat-icon>
                     <span class="text-sm text-(--color-text-primary) flex-1">{{
@@ -449,7 +458,8 @@
               <tbody>
                 @for (ref of summary()!.top_referrers; track ref.referrer_source) {
                   <tr
-                    class="border-t border-(--color-border-primary) hover:bg-(--color-bg-primary)/30"
+                    class="border-t border-(--color-border-primary) hover:bg-(--color-bg-primary)/30 cursor-pointer"
+                    (click)="filterVisitorsByReferrer(ref.referrer_source)"
                   >
                     <td class="px-5 py-3 text-sm text-(--color-text-primary)">
                       <div class="flex items-center gap-2">
@@ -466,7 +476,10 @@
                     <td
                       class="px-5 py-3 text-sm text-(--color-text-primary) text-right font-medium"
                     >
-                      {{ ref.visits }}
+                      <div class="flex items-center justify-end gap-2">
+                        {{ ref.visits }}
+                        <mat-icon class="text-[14px] text-(--color-text-muted)">open_in_new</mat-icon>
+                      </div>
                     </td>
                   </tr>
                 }
@@ -648,6 +661,16 @@
                 <option [ngValue]="true">{{ 'analytics.onlyRecruiters' | translate }}</option>
                 <option [ngValue]="false">{{ 'analytics.nonRecruiters' | translate }}</option>
               </select>
+              <!-- Active referrer filter badge -->
+              @if (visitorFilterReferrer()) {
+                <div class="flex items-center gap-1 px-3 py-2 text-sm bg-(--color-accent)/10 border border-(--color-accent)/30 rounded-lg text-(--color-accent) font-medium">
+                  <mat-icon class="text-[14px]">filter_alt</mat-icon>
+                  {{ visitorFilterReferrer() }}
+                  <button (click)="visitorFilterReferrer.set(null); onVisitorFilterChange()" class="ml-1 hover:text-(--color-accent)/60">
+                    <mat-icon class="text-[14px]">close</mat-icon>
+                  </button>
+                </div>
+              }
               <!-- Clear Filters -->
               @if (hasActiveVisitorFilters()) {
                 <button
@@ -729,6 +752,9 @@
                       </div>
                       <p class="text-xs text-(--color-text-muted) mt-0.5">
                         {{ visitor.browser }} · {{ visitor.os }} · {{ visitor.device_type }}
+                        @if (visitor.referrer_sources.length) {
+                          · <span class="text-(--color-accent)">{{ visitor.referrer_sources.join(', ') }}</span>
+                        }
                       </p>
                     </div>
                   </div>
