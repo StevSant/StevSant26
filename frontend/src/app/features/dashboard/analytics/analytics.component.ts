@@ -5,6 +5,7 @@ import { AnalyticsService } from '@core/services/analytics.service';
 import { AnalyticsSummary, UniqueVisitor, VisitorSessionDetail } from '@core/models';
 import { TranslatePipe } from '@shared/pipes/translate.pipe';
 import { MatIcon } from '@angular/material/icon';
+import { getCountryFlag, getLanguageFlag } from '@shared/utils/flag-utils';
 
 @Component({
   selector: 'app-analytics',
@@ -368,14 +369,16 @@ export class AnalyticsComponent implements OnInit {
   }
 
   /**
-   * Get a flag emoji for a language code (uses the region subtag if present).
+   * Get a flag emoji for a language code.
    */
-  getLanguageIcon(tag: string): string {
-    const langMap: Record<string, string> = {
-      en: 'language', es: 'language', fr: 'language', de: 'language',
-      pt: 'language', it: 'language', zh: 'language', ja: 'language',
-      ko: 'language', ru: 'language', ar: 'language', hi: 'language',
-    };
-    return langMap[tag.split('-')[0]] || 'language';
+  getLanguageFlagEmoji(tag: string): string {
+    return getLanguageFlag(tag);
+  }
+
+  /**
+   * Get a flag emoji for a country name.
+   */
+  getCountryFlagEmoji(country: string): string {
+    return getCountryFlag(country);
   }
 }

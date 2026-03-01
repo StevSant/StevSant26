@@ -1,8 +1,9 @@
 <!-- Hero Section -->
 <section class="relative pt-8 pb-12 sm:pt-10 sm:pb-16 lg:pt-12 lg:pb-24 px-4 sm:px-6 lg:px-8">
-  <!-- Banner Background -->
+  <!-- Banner Background with parallax -->
   @if (data.bannerUrl()) {
     <div
+      appScrollReveal [revealParallax]="true" [revealParallaxSpeed]="0.03"
       class="absolute inset-0 z-0 cursor-pointer overflow-hidden"
       (dblclick)="openImageModal(data.bannerUrl()!, 'Banner')"
       title="Doble clic para ver en grande"
@@ -235,7 +236,7 @@
   <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="h-px bg-(--color-divider)"></div>
   </div>
-  <section appScrollReveal class="py-12 sm:py-16 lg:py-24 px-4 sm:px-6 lg:px-8">
+  <section appScrollReveal revealVariant="scale" class="py-12 sm:py-16 lg:py-24 px-4 sm:px-6 lg:px-8">
     <div class="max-w-6xl mx-auto">
       <h2
         class="text-sm uppercase tracking-[0.3em] text-(--color-text-muted) mb-3 text-center font-medium"
@@ -340,6 +341,12 @@
                 >
                   @if (skill.icon_url) {
                     <img [src]="skill.icon_url" class="w-3.5 h-3.5 object-contain" />
+                  } @else if (getSkillFallback(data.getEntityTranslation(skill, 'name')); as fb) {
+                    @if (fb.type === 'url') {
+                      <img [src]="fb.value" class="w-3.5 h-3.5 object-contain" />
+                    } @else {
+                      <span class="text-xs leading-none">{{ fb.value }}</span>
+                    }
                   }
                   {{ data.getEntityTranslation(skill, 'name') }}
                 </span>
@@ -355,6 +362,47 @@
           </div>
         }
       </div>
+
+      <!-- Animated scrolling skill ticker -->
+      @if (allSkills().length > 0) {
+        <div class="mt-10 overflow-hidden skills-ticker-container">
+          <div class="skills-ticker">
+            @for (skill of allSkills(); track skill.id) {
+              <span
+                class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-full bg-(--color-bg-secondary) text-(--color-text-secondary) border border-(--color-card-border) whitespace-nowrap"
+              >
+                @if (skill.icon_url) {
+                  <img [src]="skill.icon_url" class="w-4 h-4 object-contain" />
+                } @else if (getSkillFallback(data.getEntityTranslation(skill, 'name')); as fb) {
+                  @if (fb.type === 'url') {
+                    <img [src]="fb.value" class="w-4 h-4 object-contain" />
+                  } @else {
+                    <span class="text-sm leading-none">{{ fb.value }}</span>
+                  }
+                }
+                {{ data.getEntityTranslation(skill, 'name') }}
+              </span>
+            }
+            <!-- Duplicate for seamless loop -->
+            @for (skill of allSkills(); track $index) {
+              <span
+                class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-full bg-(--color-bg-secondary) text-(--color-text-secondary) border border-(--color-card-border) whitespace-nowrap"
+              >
+                @if (skill.icon_url) {
+                  <img [src]="skill.icon_url" class="w-4 h-4 object-contain" />
+                } @else if (getSkillFallback(data.getEntityTranslation(skill, 'name')); as fb) {
+                  @if (fb.type === 'url') {
+                    <img [src]="fb.value" class="w-4 h-4 object-contain" />
+                  } @else {
+                    <span class="text-sm leading-none">{{ fb.value }}</span>
+                  }
+                }
+                {{ data.getEntityTranslation(skill, 'name') }}
+              </span>
+            }
+          </div>
+        </div>
+      }
 
       <div class="text-center mt-10">
         <a

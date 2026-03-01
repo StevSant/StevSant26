@@ -7,6 +7,7 @@ import { TranslateService } from '@core/services/translate.service';
 import { PortfolioFilterComponent, FilterOption } from '@shared/components/portfolio-filter/portfolio-filter.component';
 import { ScrollRevealDirective } from '@shared/directives/scroll-reveal.directive';
 import { MatIcon } from '@angular/material/icon';
+import { getSkillFallbackIcon } from '@shared/utils/skill-icons';
 
 @Component({
   selector: 'app-portfolio-skills',
@@ -78,6 +79,12 @@ export class PortfolioSkillsComponent implements OnInit {
 
   onCategoryFilterChange(categoryId: string): void {
     this.selectedCategory.set(categoryId);
+  }
+
+  /** Get a fallback icon for a skill when icon_url is not set. */
+  getSkillFallback(skill: SkillWithLevel): { type: 'url' | 'flag'; value: string } | null {
+    const name = this.data.getEntityTranslation(skill, 'name');
+    return getSkillFallbackIcon(name);
   }
 
   async ngOnInit(): Promise<void> {
