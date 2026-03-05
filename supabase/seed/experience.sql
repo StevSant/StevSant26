@@ -13,13 +13,23 @@ INSERT INTO experience (
   company_image_url
 )
 VALUES (
+  'patrimore',
+  'Patrimore',
+  '2026-03-01',
+  '2026-05-29',
+  false,
+  true,
+  1,
+  NULL
+),
+(
   'club_ia_uleam',
   'Club IA ULEAM',
   '2025-02-01',
   NULL,
   false,
   true,
-  1,
+  2,
   'https://media.licdn.com/dms/image/v2/D4E0BAQFQbfP6wYLPfQ/company-logo_200_200/B4EZpwVGiAKoAM-/0/1762821172224?e=1772064000&v=beta&t=os0g6Gz9W6DJMl_eV9OvaCuOS9lWRiBi5Tp3o6MsGHE'
 ),
 (
@@ -29,7 +39,7 @@ VALUES (
   NULL,
   false,
   true,
-  2,
+  3,
   NULL
 )
 ON CONFLICT (code) DO NOTHING;
@@ -42,6 +52,22 @@ INSERT INTO experience_translation (
   description
 )
 VALUES
+
+-- ======================
+-- Patrimore
+-- ======================
+(
+  (SELECT id FROM experience WHERE code = 'patrimore'),
+  (SELECT id FROM language WHERE code = 'es'),
+  'AI Agent Developer Intern',
+  'Desarrollador de agentes autónomos asistidos por IA utilizando LangGraph, FastAPI y los SDKs de Anthropic (incluyendo Model Context Protocol, MCP). Integración de servicios con AWS mediante boto y aioboto. Implementación de herramientas de observabilidad del sistema utilizando OpenTelemetry, Prometheus y Grafana.'
+),
+(
+  (SELECT id FROM experience WHERE code = 'patrimore'),
+  (SELECT id FROM language WHERE code = 'en'),
+  'AI Agent Developer Intern',
+  'Developer of autonomous AI agents using LangGraph, FastAPI, and Anthropic SDKs (including Model Context Protocol, MCP). AWS service integration using boto and aioboto. Implementation of system observability tools with OpenTelemetry, Prometheus, and Grafana.'
+),
 
 -- ======================
 -- Club IA ULEAM
