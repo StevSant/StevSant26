@@ -42,12 +42,17 @@
       <!-- Hero Content -->
       <div class="text-center md:text-left flex-1">
         <h1
-          class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-(--color-text-primary) mb-4 tracking-tight leading-tight"
+          class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 tracking-tight leading-tight gradient-text-animated"
         >
           {{ data.profile()?.first_name }} {{ data.profile()?.last_name }}
         </h1>
+        @if (profileJobTitle()) {
+          <p class="text-(--color-text-secondary) text-lg sm:text-xl mb-2 font-light min-h-[1.75rem]">
+            {{ typingText() }}@if (showTypingCursor()) {<span class="typing-cursor"></span>}
+          </p>
+        }
         @if (data.profile()?.nickname) {
-          <p class="text-(--color-text-muted) text-lg mb-4 font-light">
+          <p class="text-(--color-text-muted) text-base mb-4 font-light">
             &#64;{{ data.profile()?.nickname }}
           </p>
         }
