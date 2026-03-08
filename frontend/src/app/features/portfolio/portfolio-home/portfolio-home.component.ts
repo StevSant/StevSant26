@@ -1,5 +1,5 @@
-import { Component, inject, OnInit, computed, signal, HostListener, ElementRef } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, inject, OnInit, OnDestroy, computed, signal, HostListener, ElementRef, PLATFORM_ID } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { PortfolioDataService } from '../services/portfolio-data.service';
 import { SeoService } from '@core/services/seo.service';
@@ -18,11 +18,18 @@ import { getSkillFallbackIcon } from '@shared/utils/skill-icons';
   imports: [CommonModule, RouterModule, TranslatePipe, SafeHtmlPipe, ScrollRevealDirective, CountUpDirective, PortfolioMapCardComponent, MatIcon],
   templateUrl: './portfolio-home.component.html',
 })
-export class PortfolioHomeComponent implements OnInit {
+export class PortfolioHomeComponent implements OnInit, OnDestroy {
   protected data = inject(PortfolioDataService);
   private seoService = inject(SeoService);
   private translate = inject(TranslateService);
   private elRef = inject(ElementRef);
+  private platformId = inject(PLATFORM_ID);
+
+  /** Typing animation state */
+  typingText = signal('');
+  showTypingCursor = signal(false);
+  private typingInterval?: ReturnType<typeof setInterval>;
+  private cursorTimeout?: ReturnType<typeof setTimeout>;
 
   // Image modal state
   showImageModal = signal(false);
@@ -81,6 +88,38 @@ export class PortfolioHomeComponent implements OnInit {
   async ngOnInit(): Promise<void> {
     await this.data.initialize();
     this.updateSeo();
+    this.startTypingAnimation();
+  }
+
+  ngOnDestroy(): void {
+    if (this.typingInterval) clearInterval(this.typingInterval);
+    if (this.cursorTimeout) clearTimeout(this.cursorTimeout);
+  }
+
+  private startTypingAnimation(): void {
+    if (!isPlatformBrowser(this.platformId)) {
+      this.typingText.set(this.profileJobTitle());
+      return;
+    }
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      this.typingText.set(this.profileJobTitle());
+      return;
+    }
+
+    const text = this.profileJobTitle();
+    if (!text) return;
+
+    this.showTypingCursor.set(true);
+    let i = 0;
+
+    this.typingInterval = setInterval(() => {
+      i++;
+      this.typingText.set(text.slice(0, i));
+      if (i >= text.length) {
+        clearInterval(this.typingInterval);
+        this.cursorTimeout = setTimeout(() => this.showTypingCursor.set(false), 2000);
+      }
+    }, 60);
   }
 
   private updateSeo(): void {
