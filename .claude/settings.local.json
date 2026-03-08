@@ -1,10 +1,28 @@
 {
   "permissions": {
     "allow": [
-      "Bash(powershell.exe:*)",
-      "Bash(rm:*)",
-      "Bash(wc:*)",
-      "Bash(xargs grep:*)"
+      "Bash(npm *)",
+      "Bash(npx *)",
+      "Bash(git *)",
+      "Bash(cd *)",
+      "Bash(ls *)",
+      "Bash(cat *)",
+      "Bash(rm *)",
+      "Bash(mkdir *)",
+      "Bash(cp *)",
+      "Bash(mv *)",
+      "Bash(wc *)",
+      "Bash(xargs *)",
+      "Bash(powershell.exe *)",
+      "Bash(node *)",
+      "Bash(ng *)",
+      "Edit",
+      "Write",
+      "Agent",
+      "Skill",
+      "mcp__supabase__*",
+      "mcp__plugin_context7_context7__*",
+      "mcp__playwright__*"
     ]
   },
   "enableAllProjectMcpServers": true,
