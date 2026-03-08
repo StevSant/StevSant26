@@ -32,7 +32,7 @@
           ></div>
 
           @for (exp of filteredExperiences(); track exp.id; let i = $index; let last = $last) {
-            <div class="relative mb-12 md:mb-16">
+            <div appScrollReveal [revealVariant]="i % 2 === 0 ? 'slide-left' : 'slide-right'" [revealDelay]="i * 120" class="relative mb-12 md:mb-16">
               <!-- Date label on the timeline (centered on md+, left-aligned on mobile) -->
               <div class="absolute left-4 md:left-1/2 -translate-x-1/2 -top-5 z-20">
                 <span

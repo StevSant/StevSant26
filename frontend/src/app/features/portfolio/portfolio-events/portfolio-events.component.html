@@ -40,8 +40,9 @@
         </p>
       } @else {
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
-          @for (event of filteredEvents(); track event.id) {
+          @for (event of filteredEvents(); track event.id; let i = $index) {
             <div
+              appScrollReveal [revealDelay]="i * 100"
               class="group bg-(--color-bg-secondary) rounded-xl overflow-hidden border border-(--color-card-border) hover:border-(--color-accent)/30 transition-all duration-300 flex flex-col shadow-sm hover:shadow-xl hover:-translate-y-1"
             >
               <!-- Image -->
