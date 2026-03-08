@@ -867,6 +867,29 @@ html * {
 }
 
 /* ============================================
+   Animated skill proficiency bars
+   ============================================ */
+.skill-bar-track {
+  height: 6px;
+  border-radius: 3px;
+  background-color: var(--color-bg-tertiary);
+  overflow: hidden;
+}
+
+.skill-bar-fill {
+  height: 100%;
+  border-radius: 3px;
+  background-color: var(--color-accent);
+  transform-origin: left;
+  transform: scaleX(0);
+  transition: transform 1s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.skill-bar-fill.animate {
+  transform: scaleX(var(--bar-width));
+}
+
+/* ============================================
    Skeleton loader shimmer
    ============================================ */
 @keyframes shimmer {

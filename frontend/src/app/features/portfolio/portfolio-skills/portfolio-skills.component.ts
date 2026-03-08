@@ -1,5 +1,5 @@
-import { Component, inject, OnInit, signal, computed } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, inject, OnInit, OnDestroy, signal, computed, ElementRef, PLATFORM_ID, AfterViewInit } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { PortfolioDataService, SkillCategoryWithSkills, SkillWithLevel } from '../services/portfolio-data.service';
 import { SeoService } from '@core/services/seo.service';
 import { TranslatePipe } from '@shared/pipes/translate.pipe';
@@ -15,10 +15,13 @@ import { getSkillFallbackIcon } from '@shared/utils/skill-icons';
   imports: [CommonModule, TranslatePipe, PortfolioFilterComponent, ScrollRevealDirective, MatIcon],
   templateUrl: './portfolio-skills.component.html',
 })
-export class PortfolioSkillsComponent implements OnInit {
+export class PortfolioSkillsComponent implements OnInit, OnDestroy, AfterViewInit {
   protected data = inject(PortfolioDataService);
   private translate = inject(TranslateService);
   private seoService = inject(SeoService);
+  private elRef = inject(ElementRef);
+  private platformId = inject(PLATFORM_ID);
+  private barObserver?: IntersectionObserver;
 
   searchText = signal('');
   selectedCategory = signal('');
@@ -85,6 +88,30 @@ export class PortfolioSkillsComponent implements OnInit {
   getSkillFallback(skill: SkillWithLevel): { type: 'url' | 'flag'; value: string } | null {
     const name = this.data.getEntityTranslation(skill, 'name');
     return getSkillFallbackIcon(name);
+  }
+
+  barsAnimated = signal(false);
+
+  ngAfterViewInit(): void {
+    if (!isPlatformBrowser(this.platformId)) return;
+    this.barObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            this.barsAnimated.set(true);
+            this.barObserver?.disconnect();
+          }
+        });
+      },
+      { threshold: 0.1 }
+    );
+    // Observe the section element to trigger bar animation
+    const section = this.elRef.nativeElement.querySelector('section');
+    if (section) this.barObserver.observe(section);
+  }
+
+  ngOnDestroy(): void {
+    this.barObserver?.disconnect();
   }
 
   async ngOnInit(): Promise<void> {
