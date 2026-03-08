@@ -94,12 +94,11 @@
 
                   <!-- Progress bar -->
                   <div class="flex items-center gap-3">
-                    <div
-                      class="flex-1 h-1.5 bg-(--color-border-primary) rounded-full overflow-hidden"
-                    >
+                    <div class="flex-1 skill-bar-track">
                       <div
-                        class="h-full bg-(--color-accent) rounded-full transition-all duration-500"
-                        [style.width.%]="getLevelPercentage(skill.calculatedLevel)"
+                        class="skill-bar-fill"
+                        [class.animate]="barsAnimated()"
+                        [style.--bar-width]="getLevelPercentage(skill.calculatedLevel) / 100"
                       ></div>
                     </div>
                     <div class="flex gap-0.5">
@@ -177,10 +176,11 @@
                       </div>
                     </div>
                     <!-- Mini progress bar in overview -->
-                    <div class="h-1 bg-(--color-border-primary) rounded-full overflow-hidden">
+                    <div class="skill-bar-track" style="height: 4px;">
                       <div
-                        class="h-full bg-(--color-accent)/60 rounded-full transition-all duration-500"
-                        [style.width.%]="getLevelPercentage(skill.calculatedLevel)"
+                        class="skill-bar-fill"
+                        [class.animate]="barsAnimated()"
+                        [style.--bar-width]="getLevelPercentage(skill.calculatedLevel) / 100"
                       ></div>
                     </div>
                   </div>

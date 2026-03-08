@@ -14,6 +14,9 @@ import { PortfolioDataService } from '../services/portfolio-data.service';
 import { PortfolioNavbarComponent } from './portfolio-navbar/portfolio-navbar.component';
 import { PortfolioMobileMenuComponent } from './portfolio-mobile-menu/portfolio-mobile-menu.component';
 import { PortfolioFooterComponent } from './portfolio-footer/portfolio-footer.component';
+import { ScrollProgressComponent } from '@shared/components/scroll-progress/scroll-progress.component';
+import { SkeletonComponent } from '@shared/components/skeleton/skeleton.component';
+import { WebVitalsService } from '@core/services/web-vitals.service';
 
 @Component({
   selector: 'app-portfolio-layout',
@@ -27,11 +30,14 @@ import { PortfolioFooterComponent } from './portfolio-footer/portfolio-footer.co
     PortfolioNavbarComponent,
     PortfolioMobileMenuComponent,
     PortfolioFooterComponent,
+    ScrollProgressComponent,
+    SkeletonComponent,
   ],
   templateUrl: './portfolio-layout.component.html',
 })
 export class PortfolioLayoutComponent implements OnInit, OnDestroy {
   protected data = inject(PortfolioDataService);
+  private webVitals = inject(WebVitalsService);
   // Theme service injected to ensure initialization
   protected themeService = inject(ThemeService);
   private seoService = inject(SeoService);
@@ -50,6 +56,7 @@ export class PortfolioLayoutComponent implements OnInit, OnDestroy {
 
   async ngOnInit(): Promise<void> {
     await this.data.initialize();
+    this.webVitals.init();
 
     // Initialize analytics only in browser (not during SSR)
     if (isPlatformBrowser(this.platformId)) {

@@ -44,8 +44,8 @@
               <div class="absolute left-6 sm:left-8 top-0 bottom-0 w-px bg-(--color-divider)"></div>
 
               <div class="space-y-8">
-                @for (edu of group.items; track edu.id) {
-                  <div appScrollReveal class="relative flex gap-6 sm:gap-8">
+                @for (edu of group.items; track edu.id; let j = $index) {
+                  <div appScrollReveal [revealDelay]="j * 100" class="relative flex gap-6 sm:gap-8">
                     <!-- Timeline dot -->
                     <div class="relative z-10 shrink-0 mt-1">
                       <div

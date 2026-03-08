@@ -13,7 +13,7 @@ export class ScrollRevealDirective implements OnInit, OnDestroy {
   /** Delay in ms before animation triggers (stagger support) */
   revealDelay = input<number>(0);
 
-  /** Animation variant: 'default' | 'slide-left' | 'slide-right' | 'scale' */
+  /** Animation variant: 'default' | 'slide-left' | 'slide-right' | 'scale' | 'blur' | 'fade' */
   revealVariant = input<string>('default');
 
   /** Enable subtle parallax movement on scroll */
@@ -37,6 +37,10 @@ export class ScrollRevealDirective implements OnInit, OnDestroy {
       element.classList.add('scroll-reveal--slide-right');
     } else if (variant === 'scale') {
       element.classList.add('scroll-reveal--scale');
+    } else if (variant === 'blur') {
+      element.classList.add('scroll-reveal--blur');
+    } else if (variant === 'fade') {
+      element.classList.add('scroll-reveal--fade');
     } else {
       element.classList.add('scroll-reveal');
     }

@@ -254,7 +254,7 @@ export class AnalyticsService {
     try {
       sessionStorage.removeItem('analytics_ref');
       document.cookie = 'analytics_ref=;path=/;max-age=0';
-    } catch {}
+    } catch { /* sessionStorage may be unavailable */ }
   }
 
   /**
@@ -1067,6 +1067,6 @@ export class AnalyticsService {
     try {
       sessionStorage.removeItem('analytics_session_id');
       sessionStorage.removeItem('analytics_page_count');
-    } catch {}
+    } catch { /* sessionStorage may be unavailable */ }
   }
 }

@@ -8,11 +8,12 @@ import { TranslatePipe } from '@shared/pipes/translate.pipe';
 import { PortfolioFilterComponent, FilterOption, FilterOptionGroup } from '@shared/components/portfolio-filter/portfolio-filter.component';
 import { ScrollRevealDirective } from '@shared/directives/scroll-reveal.directive';
 import { MatIcon } from '@angular/material/icon';
+import { ProgressiveImageComponent } from '@shared/components/progressive-image/progressive-image.component';
 
 @Component({
   selector: 'app-portfolio-projects',
   standalone: true,
-  imports: [CommonModule, DatePipe, RouterModule, TranslatePipe, PortfolioFilterComponent, ScrollRevealDirective, MatIcon],
+  imports: [CommonModule, DatePipe, RouterModule, TranslatePipe, PortfolioFilterComponent, ScrollRevealDirective, MatIcon, ProgressiveImageComponent],
   templateUrl: './portfolio-projects.component.html',
 })
 export class PortfolioProjectsComponent implements OnInit {

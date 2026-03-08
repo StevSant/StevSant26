@@ -558,6 +558,11 @@
       "featuredProjects": "Proyectos Destacados",
       "viewAllProjects": "Ver todos los proyectos",
       "viewAllSkills": "Ver todas las habilidades",
+      "stats": {
+        "yearsExperience": "Años de Experiencia",
+        "projects": "Proyectos",
+        "skills": "Habilidades"
+      },
       "map": {
         "basedIn": "Ubicado en",
         "available": "Disponible para trabajar",
@@ -586,6 +591,18 @@
       "send": "Enviar Mensaje",
       "sent": "¡Mensaje preparado! Se abrirá tu cliente de correo.",
       "orFindMe": "O encuéntrame en"
+    },
+    "notFound": {
+      "title": "Página no encontrada",
+      "message": "La página que buscas no existe o ha sido movida.",
+      "backHome": "Volver al inicio"
+    },
+    "a11y": {
+      "skipToContent": "Saltar al contenido",
+      "openMenu": "Abrir menú",
+      "closeMenu": "Cerrar menú",
+      "closeModal": "Cerrar",
+      "resultsFound": "resultados encontrados"
     },
     "filter": {
       "searchPlaceholder": "Buscar...",

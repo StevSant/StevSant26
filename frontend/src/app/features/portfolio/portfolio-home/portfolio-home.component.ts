@@ -1,5 +1,5 @@
-import { Component, inject, OnInit, computed, signal, HostListener, ElementRef } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, inject, OnInit, OnDestroy, computed, signal, HostListener, ElementRef, PLATFORM_ID } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { PortfolioDataService } from '../services/portfolio-data.service';
 import { SeoService } from '@core/services/seo.service';
@@ -7,21 +7,30 @@ import { TranslateService } from '@core/services/translate.service';
 import { TranslatePipe } from '@shared/pipes/translate.pipe';
 import { SafeHtmlPipe } from '@shared/pipes/safe-html.pipe';
 import { ScrollRevealDirective } from '@shared/directives/scroll-reveal.directive';
+
 import { PortfolioMapCardComponent } from '../components/portfolio-map-card/portfolio-map-card.component';
 import { MatIcon } from '@angular/material/icon';
 import { getSkillFallbackIcon } from '@shared/utils/skill-icons';
+import { ProgressiveImageComponent } from '@shared/components/progressive-image/progressive-image.component';
 
 @Component({
   selector: 'app-portfolio-home',
   standalone: true,
-  imports: [CommonModule, RouterModule, TranslatePipe, SafeHtmlPipe, ScrollRevealDirective, PortfolioMapCardComponent, MatIcon],
+  imports: [CommonModule, RouterModule, TranslatePipe, SafeHtmlPipe, ScrollRevealDirective, PortfolioMapCardComponent, MatIcon, ProgressiveImageComponent],
   templateUrl: './portfolio-home.component.html',
 })
-export class PortfolioHomeComponent implements OnInit {
+export class PortfolioHomeComponent implements OnInit, OnDestroy {
   protected data = inject(PortfolioDataService);
   private seoService = inject(SeoService);
   private translate = inject(TranslateService);
   private elRef = inject(ElementRef);
+  private platformId = inject(PLATFORM_ID);
+
+  /** Typing animation state */
+  typingText = signal('');
+  showTypingCursor = signal(false);
+  private typingInterval?: ReturnType<typeof setInterval>;
+  private cursorTimeout?: ReturnType<typeof setTimeout>;
 
   // Image modal state
   showImageModal = signal(false);
@@ -43,6 +52,20 @@ export class PortfolioHomeComponent implements OnInit {
   allSkills = computed(() =>
     this.data.skillCategories().flatMap(c => c.skills)
   );
+
+  /** Stats for the animated counter section */
+  totalProjects = computed(() => this.data.projects().length);
+  totalSkills = computed(() => this.allSkills().length);
+  yearsOfExperience = computed(() => {
+    const experiences = this.data.experiences();
+    if (experiences.length === 0) return 0;
+    const earliest = experiences.reduce((min, exp) => {
+      const start = exp.start_date ? new Date(exp.start_date).getTime() : Infinity;
+      return start < min ? start : min;
+    }, Infinity);
+    if (earliest === Infinity) return 0;
+    return Math.max(1, Math.floor((Date.now() - earliest) / (365.25 * 24 * 60 * 60 * 1000)));
+  });
 
   /** Get a fallback icon for a skill when icon_url is not set. */
   getSkillFallback(skillName: string): { type: 'url' | 'flag'; value: string } | null {
@@ -66,6 +89,38 @@ export class PortfolioHomeComponent implements OnInit {
   async ngOnInit(): Promise<void> {
     await this.data.initialize();
     this.updateSeo();
+    this.startTypingAnimation();
+  }
+
+  ngOnDestroy(): void {
+    if (this.typingInterval) clearInterval(this.typingInterval);
+    if (this.cursorTimeout) clearTimeout(this.cursorTimeout);
+  }
+
+  private startTypingAnimation(): void {
+    if (!isPlatformBrowser(this.platformId)) {
+      this.typingText.set(this.profileJobTitle());
+      return;
+    }
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      this.typingText.set(this.profileJobTitle());
+      return;
+    }
+
+    const text = this.profileJobTitle();
+    if (!text) return;
+
+    this.showTypingCursor.set(true);
+    let i = 0;
+
+    this.typingInterval = setInterval(() => {
+      i++;
+      this.typingText.set(text.slice(0, i));
+      if (i >= text.length) {
+        clearInterval(this.typingInterval);
+        this.cursorTimeout = setTimeout(() => this.showTypingCursor.set(false), 2000);
+      }
+    }, 60);
   }
 
   private updateSeo(): void {

@@ -34,25 +34,28 @@
         (filterChange)="onSkillFilterChange($event)"
       />
 
+      <span class="sr-only" aria-live="polite">
+        {{ filteredCompetitions().length }} {{ 'portfolio.a11y.resultsFound' | translate }}
+      </span>
       @if (filteredCompetitions().length === 0) {
         <p class="text-(--color-text-muted) text-center italic font-light py-8">
           {{ 'portfolio.filter.noResults' | translate }}
         </p>
       } @else {
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
-          @for (comp of filteredCompetitions(); track comp.id) {
+          @for (comp of filteredCompetitions(); track comp.id; let i = $index) {
             <div
+              appScrollReveal [revealDelay]="i * 100"
               class="group bg-(--color-bg-secondary) rounded-xl overflow-hidden border border-(--color-card-border) hover:border-(--color-accent)/30 transition-all duration-300 flex flex-col shadow-sm hover:shadow-xl hover:-translate-y-1"
             >
               <!-- Image -->
               @if (data.getFirstImageUrl('competition', comp.id)) {
-                <div class="relative h-32 sm:h-40 overflow-hidden">
-                  <img
-                    [src]="data.getFirstImageUrl('competition', comp.id)"
-                    [alt]="data.getEntityTranslation(comp, 'name')"
-                    class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                  />
-                </div>
+                <app-progressive-image
+                  [src]="data.getFirstImageUrl('competition', comp.id)!"
+                  [alt]="data.getEntityTranslation(comp, 'name')"
+                  containerClass="h-32 sm:h-40"
+                  imgClass="object-cover group-hover:scale-105 transition-transform duration-500"
+                />
               }
 
               <div class="p-4 sm:p-6 flex flex-col flex-1">
