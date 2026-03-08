@@ -335,12 +335,24 @@ html * {
   padding: 1.5rem;
   border: 1px solid var(--color-card-border);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform;
 }
 
 .card-hover:hover {
   background-color: var(--color-bg-tertiary);
   border-color: var(--color-accent-muted);
-  box-shadow: 0 8px 32px -8px var(--color-card-glow);
+  box-shadow: 0 12px 40px -8px var(--color-card-glow);
+  transform: translateY(-4px);
+}
+
+/* Skill chip hover effect */
+.skill-chip {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.skill-chip:hover {
+  transform: scale(1.05);
+  box-shadow: 0 2px 8px -2px var(--color-card-glow);
 }
 
 /* Form Inputs */

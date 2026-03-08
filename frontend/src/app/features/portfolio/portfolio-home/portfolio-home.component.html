@@ -314,7 +314,7 @@
                     track usage.id
                   ) {
                     <span
-                      class="px-2 py-0.5 text-xs rounded-full bg-(--color-bg-tertiary) text-(--color-text-secondary) border border-(--color-border-primary) inline-flex items-center gap-1"
+                      class="skill-chip px-2 py-0.5 text-xs rounded-full bg-(--color-bg-tertiary) text-(--color-text-secondary) border border-(--color-border-primary) inline-flex items-center gap-1"
                     >
                       @if (data.getSkillIconUrl(usage)) {
                         <img
@@ -372,7 +372,7 @@
             <div class="flex flex-wrap gap-1.5">
               @for (skill of category.skills.slice(0, 6); track skill.id) {
                 <span
-                  class="px-2 py-0.5 text-xs rounded-full bg-(--color-bg-tertiary) text-(--color-text-secondary) border border-(--color-border-primary) inline-flex items-center gap-1"
+                  class="skill-chip px-2 py-0.5 text-xs rounded-full bg-(--color-bg-tertiary) text-(--color-text-secondary) border border-(--color-border-primary) inline-flex items-center gap-1"
                 >
                   @if (skill.icon_url) {
                     <img [src]="skill.icon_url" class="w-3.5 h-3.5 object-contain" />
