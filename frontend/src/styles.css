@@ -724,6 +724,49 @@ html * {
   transform: none;
 }
 
+/* Blur-to-sharp reveal */
+.scroll-reveal--blur {
+  opacity: 0;
+  filter: blur(8px);
+  transform: translateY(16px);
+  transition: opacity 0.7s ease-out, filter 0.7s ease-out, transform 0.7s ease-out;
+}
+
+.scroll-reveal--blur.scroll-reveal--visible {
+  opacity: 1;
+  filter: blur(0);
+  transform: none;
+}
+
+/* Fade-only (no transform) */
+.scroll-reveal--fade {
+  opacity: 0;
+  transition: opacity 0.6s ease-out;
+}
+
+.scroll-reveal--fade.scroll-reveal--visible {
+  opacity: 1;
+}
+
+/* Reduced motion: disable all scroll animations */
+@media (prefers-reduced-motion: reduce) {
+  .scroll-reveal,
+  .scroll-reveal--slide-left,
+  .scroll-reveal--slide-right,
+  .scroll-reveal--scale,
+  .scroll-reveal--blur,
+  .scroll-reveal--fade {
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+    transition: none !important;
+  }
+
+  .skills-ticker {
+    animation: none !important;
+  }
+}
+
 /* ============================================
    Skills Ticker Animation
    ============================================ */
