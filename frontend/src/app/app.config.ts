@@ -1,5 +1,5 @@
 import { ApplicationConfig, provideBrowserGlobalErrorListeners, APP_INITIALIZER, PLATFORM_ID } from '@angular/core';
-import { provideRouter } from '@angular/router';
+import { provideRouter, withViewTransitions } from '@angular/router';
 import { provideHttpClient, withFetch } from '@angular/common/http';
 import { isPlatformBrowser } from '@angular/common';
 import { MAT_ICON_DEFAULT_OPTIONS } from '@angular/material/icon';
@@ -28,7 +28,7 @@ function captureAnalyticsRef(platformId: object) {
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
-    provideRouter(routes),
+    provideRouter(routes, withViewTransitions()),
     provideClientHydration(withEventReplay()),
     provideHttpClient(withFetch()),
     {

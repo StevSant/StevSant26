@@ -802,6 +802,27 @@ html * {
 }
 
 /* ============================================
+   View Transitions for route changes
+   ============================================ */
+::view-transition-old(root) {
+  animation: vt-fade-out 0.2s ease-in;
+}
+
+::view-transition-new(root) {
+  animation: vt-fade-in 0.3s ease-out;
+}
+
+@keyframes vt-fade-out {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+@keyframes vt-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* ============================================
    Markdown Rendered Content (section bodies)
    ============================================ */
 .section-body strong {
