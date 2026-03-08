@@ -34,6 +34,9 @@
         (filterChange)="onSkillFilterChange($event)"
       />
 
+      <span class="sr-only" aria-live="polite">
+        {{ filteredCompetitions().length }} {{ 'portfolio.a11y.resultsFound' | translate }}
+      </span>
       @if (filteredCompetitions().length === 0) {
         <p class="text-(--color-text-muted) text-center italic font-light py-8">
           {{ 'portfolio.filter.noResults' | translate }}
@@ -47,13 +50,12 @@
             >
               <!-- Image -->
               @if (data.getFirstImageUrl('competition', comp.id)) {
-                <div class="relative h-32 sm:h-40 overflow-hidden">
-                  <img
-                    [src]="data.getFirstImageUrl('competition', comp.id)"
-                    [alt]="data.getEntityTranslation(comp, 'name')"
-                    class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                  />
-                </div>
+                <app-progressive-image
+                  [src]="data.getFirstImageUrl('competition', comp.id)!"
+                  [alt]="data.getEntityTranslation(comp, 'name')"
+                  containerClass="h-32 sm:h-40"
+                  imgClass="object-cover group-hover:scale-105 transition-transform duration-500"
+                />
               }
 
               <div class="p-4 sm:p-6 flex flex-col flex-1">

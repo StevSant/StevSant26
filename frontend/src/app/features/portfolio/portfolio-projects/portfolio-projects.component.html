@@ -19,6 +19,9 @@
         (filterChange)="onSkillFilterChange($event)"
       />
 
+      <span class="sr-only" aria-live="polite">
+        {{ filteredProjects().length }} {{ 'portfolio.a11y.resultsFound' | translate }}
+      </span>
       @if (filteredProjects().length === 0) {
         <p class="text-(--color-text-muted) text-center italic font-light py-8">
           {{ 'portfolio.filter.noResults' | translate }}
@@ -32,15 +35,16 @@
             >
               <!-- Image -->
               @if (data.getFirstImageUrl('project', project.id)) {
-                <div class="relative h-36 sm:h-44 overflow-hidden">
-                  <img
-                    [src]="data.getFirstImageUrl('project', project.id)"
+                <div class="relative">
+                  <app-progressive-image
+                    [src]="data.getFirstImageUrl('project', project.id)!"
                     [alt]="data.getEntityTranslation(project, 'title')"
-                    class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    containerClass="h-36 sm:h-44"
+                    imgClass="object-cover group-hover:scale-105 transition-transform duration-500"
                   />
                   @if (project.is_pinned) {
                     <span
-                      class="absolute top-2 right-2 text-(--color-pin) bg-(--color-bg-primary)/80 rounded-full p-1"
+                      class="absolute top-2 right-2 text-(--color-pin) bg-(--color-bg-primary)/80 rounded-full p-1 z-10"
                     >
                       <mat-icon class="text-[16px]" style="font-variation-settings: 'FILL' 1"
                         >star</mat-icon

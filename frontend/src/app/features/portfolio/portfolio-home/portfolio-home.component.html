@@ -8,7 +8,7 @@
       (dblclick)="openImageModal(data.bannerUrl()!, 'Banner')"
       title="Doble clic para ver en grande"
     >
-      <img [src]="data.bannerUrl()" alt="Banner" class="w-full h-full object-cover" />
+      <img [src]="data.bannerUrl()" alt="Banner" class="w-full h-full object-cover" fetchpriority="high" />
       <div
         class="absolute inset-0 opacity-70"
         style="
@@ -34,6 +34,7 @@
           <img
             [src]="data.avatarUrl()"
             alt="Avatar"
+            fetchpriority="high"
             class="w-32 h-32 sm:w-44 sm:h-44 md:w-56 md:h-56 rounded-full object-cover shadow-2xl ring-2 ring-(--color-accent)/20 ring-offset-4 ring-offset-(--color-bg-primary) hover:ring-4 hover:ring-(--color-accent)/40 transition-all"
           />
         </div>
@@ -57,9 +58,9 @@
           </p>
         }
 
-        <!-- Availability badge -->
-        @if (data.profile()?.is_available !== undefined) {
-          <div class="flex justify-center md:justify-start mb-5">
+        <!-- Badges -->
+        <div class="flex flex-wrap justify-center md:justify-start gap-2 mb-5">
+          @if (data.profile()?.is_available !== undefined) {
             <div
               class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider border"
               [class]="
@@ -90,8 +91,15 @@
                 ) | translate
               }}
             </div>
-          </div>
-        }
+          }
+          @if (yearsOfExperience() > 0) {
+            <div
+              class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider border bg-(--color-bg-tertiary) text-(--color-text-secondary) border-(--color-border-primary)"
+            >
+              {{ yearsOfExperience() }}+ {{ 'portfolio.home.stats.yearsExperience' | translate }}
+            </div>
+          }
+        </div>
 
         <!-- CTA Buttons -->
         <div class="flex flex-wrap gap-3 justify-center md:justify-start mt-6">
@@ -182,46 +190,6 @@
   </div>
 </section>
 
-<!-- Stats Section -->
-@if (totalProjects() > 0 || totalSkills() > 0 || yearsOfExperience() > 0) {
-  <section class="py-8 sm:py-10 px-4 sm:px-6 lg:px-8 border-y border-(--color-divider)">
-    <div class="max-w-4xl mx-auto">
-      <div class="grid grid-cols-3 gap-4 sm:gap-8 text-center">
-        @if (yearsOfExperience() > 0) {
-          <div appScrollReveal>
-            <p class="text-3xl sm:text-4xl lg:text-5xl font-bold text-(--color-accent) mb-1">
-              <span [appCountUp]="yearsOfExperience()">0</span>+
-            </p>
-            <p class="text-xs sm:text-sm uppercase tracking-widest text-(--color-text-muted)">
-              {{ 'portfolio.home.stats.yearsExperience' | translate }}
-            </p>
-          </div>
-        }
-        @if (totalProjects() > 0) {
-          <div appScrollReveal [revealDelay]="150">
-            <p class="text-3xl sm:text-4xl lg:text-5xl font-bold text-(--color-accent) mb-1">
-              <span [appCountUp]="totalProjects()">0</span>+
-            </p>
-            <p class="text-xs sm:text-sm uppercase tracking-widest text-(--color-text-muted)">
-              {{ 'portfolio.home.stats.projects' | translate }}
-            </p>
-          </div>
-        }
-        @if (totalSkills() > 0) {
-          <div appScrollReveal [revealDelay]="300">
-            <p class="text-3xl sm:text-4xl lg:text-5xl font-bold text-(--color-accent) mb-1">
-              <span [appCountUp]="totalSkills()">0</span>+
-            </p>
-            <p class="text-xs sm:text-sm uppercase tracking-widest text-(--color-text-muted)">
-              {{ 'portfolio.home.stats.skills' | translate }}
-            </p>
-          </div>
-        }
-      </div>
-    </div>
-  </section>
-}
-
 <!-- About & Map Section -->
 <section appScrollReveal class="py-12 sm:py-16 lg:py-24 px-4 sm:px-6 lg:px-8">
   <div class="max-w-6xl mx-auto">
@@ -292,13 +260,12 @@
             class="group bg-(--color-bg-secondary) rounded-xl overflow-hidden border border-(--color-card-border) hover:border-(--color-accent)/30 transition-all duration-300 flex flex-col shadow-sm hover:shadow-xl hover:-translate-y-1"
           >
             @if (data.getFirstImageUrl('project', project.id)) {
-              <div class="relative h-32 sm:h-40 overflow-hidden">
-                <img
-                  [src]="data.getFirstImageUrl('project', project.id)"
-                  [alt]="data.getEntityTranslation(project, 'title')"
-                  class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                />
-              </div>
+              <app-progressive-image
+                [src]="data.getFirstImageUrl('project', project.id)!"
+                [alt]="data.getEntityTranslation(project, 'title')"
+                containerClass="h-32 sm:h-40"
+                imgClass="object-cover group-hover:scale-105 transition-transform duration-500"
+              />
             }
             <div class="p-4 sm:p-6 flex flex-col flex-1">
               <h3 class="text-lg font-medium text-(--color-text-primary) mb-2 tracking-tight">
@@ -460,6 +427,8 @@
 <!-- Image Modal -->
 @if (showImageModal()) {
   <div
+    role="dialog"
+    aria-modal="true"
     class="modal-backdrop fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm"
     (click)="onModalBackdropClick($event)"
     (keydown.escape)="closeImageModal()"
@@ -470,7 +439,7 @@
         type="button"
         (click)="closeImageModal()"
         class="absolute -top-12 right-0 p-2 text-white hover:text-(--color-accent) transition-colors"
-        aria-label="Cerrar"
+        [attr.aria-label]="'portfolio.a11y.closeModal' | translate"
       >
         <mat-icon class="text-[32px] text-white hover:text-(--color-accent) transition-colors" >close</mat-icon>
       </button>

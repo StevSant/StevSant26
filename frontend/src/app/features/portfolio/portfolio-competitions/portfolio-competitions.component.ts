@@ -7,11 +7,12 @@ import { TranslateService } from '@core/services/translate.service';
 import { TranslatePipe } from '@shared/pipes/translate.pipe';
 import { PortfolioFilterComponent, FilterOption, FilterOptionGroup } from '@shared/components/portfolio-filter/portfolio-filter.component';
 import { ScrollRevealDirective } from '@shared/directives/scroll-reveal.directive';
+import { ProgressiveImageComponent } from '@shared/components/progressive-image/progressive-image.component';
 
 @Component({
   selector: 'app-portfolio-competitions',
   standalone: true,
-  imports: [CommonModule, DatePipe, RouterModule, TranslatePipe, PortfolioFilterComponent, ScrollRevealDirective],
+  imports: [CommonModule, DatePipe, RouterModule, TranslatePipe, PortfolioFilterComponent, ScrollRevealDirective, ProgressiveImageComponent],
   templateUrl: './portfolio-competitions.component.html',
 })
 export class PortfolioCompetitionsComponent implements OnInit {

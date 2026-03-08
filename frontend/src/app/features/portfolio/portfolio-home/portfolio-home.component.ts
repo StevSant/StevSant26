@@ -7,15 +7,16 @@ import { TranslateService } from '@core/services/translate.service';
 import { TranslatePipe } from '@shared/pipes/translate.pipe';
 import { SafeHtmlPipe } from '@shared/pipes/safe-html.pipe';
 import { ScrollRevealDirective } from '@shared/directives/scroll-reveal.directive';
-import { CountUpDirective } from '@shared/directives/count-up.directive';
+
 import { PortfolioMapCardComponent } from '../components/portfolio-map-card/portfolio-map-card.component';
 import { MatIcon } from '@angular/material/icon';
 import { getSkillFallbackIcon } from '@shared/utils/skill-icons';
+import { ProgressiveImageComponent } from '@shared/components/progressive-image/progressive-image.component';
 
 @Component({
   selector: 'app-portfolio-home',
   standalone: true,
-  imports: [CommonModule, RouterModule, TranslatePipe, SafeHtmlPipe, ScrollRevealDirective, CountUpDirective, PortfolioMapCardComponent, MatIcon],
+  imports: [CommonModule, RouterModule, TranslatePipe, SafeHtmlPipe, ScrollRevealDirective, PortfolioMapCardComponent, MatIcon, ProgressiveImageComponent],
   templateUrl: './portfolio-home.component.html',
 })
 export class PortfolioHomeComponent implements OnInit, OnDestroy {
