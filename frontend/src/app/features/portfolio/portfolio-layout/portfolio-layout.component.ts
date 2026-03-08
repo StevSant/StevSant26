@@ -14,6 +14,7 @@ import { PortfolioDataService } from '../services/portfolio-data.service';
 import { PortfolioNavbarComponent } from './portfolio-navbar/portfolio-navbar.component';
 import { PortfolioMobileMenuComponent } from './portfolio-mobile-menu/portfolio-mobile-menu.component';
 import { PortfolioFooterComponent } from './portfolio-footer/portfolio-footer.component';
+import { ScrollProgressComponent } from '@shared/components/scroll-progress/scroll-progress.component';
 
 @Component({
   selector: 'app-portfolio-layout',
@@ -27,6 +28,7 @@ import { PortfolioFooterComponent } from './portfolio-footer/portfolio-footer.co
     PortfolioNavbarComponent,
     PortfolioMobileMenuComponent,
     PortfolioFooterComponent,
+    ScrollProgressComponent,
   ],
   templateUrl: './portfolio-layout.component.html',
 })
