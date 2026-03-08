@@ -560,6 +560,11 @@
       "featuredProjects": "Featured Projects",
       "viewAllProjects": "View all projects",
       "viewAllSkills": "View all skills",
+      "stats": {
+        "yearsExperience": "Years Experience",
+        "projects": "Projects",
+        "skills": "Skills"
+      },
       "map": {
         "basedIn": "Based in",
         "available": "Available for hire",

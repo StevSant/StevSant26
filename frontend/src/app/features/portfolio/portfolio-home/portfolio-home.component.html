@@ -177,10 +177,45 @@
   </div>
 </section>
 
-<!-- Divider -->
-<div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-  <div class="h-px bg-(--color-divider)"></div>
-</div>
+<!-- Stats Section -->
+@if (totalProjects() > 0 || totalSkills() > 0 || yearsOfExperience() > 0) {
+  <section class="py-8 sm:py-10 px-4 sm:px-6 lg:px-8 border-y border-(--color-divider)">
+    <div class="max-w-4xl mx-auto">
+      <div class="grid grid-cols-3 gap-4 sm:gap-8 text-center">
+        @if (yearsOfExperience() > 0) {
+          <div appScrollReveal>
+            <p class="text-3xl sm:text-4xl lg:text-5xl font-bold text-(--color-accent) mb-1">
+              <span [appCountUp]="yearsOfExperience()">0</span>+
+            </p>
+            <p class="text-xs sm:text-sm uppercase tracking-widest text-(--color-text-muted)">
+              {{ 'portfolio.home.stats.yearsExperience' | translate }}
+            </p>
+          </div>
+        }
+        @if (totalProjects() > 0) {
+          <div appScrollReveal [revealDelay]="150">
+            <p class="text-3xl sm:text-4xl lg:text-5xl font-bold text-(--color-accent) mb-1">
+              <span [appCountUp]="totalProjects()">0</span>+
+            </p>
+            <p class="text-xs sm:text-sm uppercase tracking-widest text-(--color-text-muted)">
+              {{ 'portfolio.home.stats.projects' | translate }}
+            </p>
+          </div>
+        }
+        @if (totalSkills() > 0) {
+          <div appScrollReveal [revealDelay]="300">
+            <p class="text-3xl sm:text-4xl lg:text-5xl font-bold text-(--color-accent) mb-1">
+              <span [appCountUp]="totalSkills()">0</span>+
+            </p>
+            <p class="text-xs sm:text-sm uppercase tracking-widest text-(--color-text-muted)">
+              {{ 'portfolio.home.stats.skills' | translate }}
+            </p>
+          </div>
+        }
+      </div>
+    </div>
+  </section>
+}
 
 <!-- About & Map Section -->
 <section appScrollReveal class="py-12 sm:py-16 lg:py-24 px-4 sm:px-6 lg:px-8">

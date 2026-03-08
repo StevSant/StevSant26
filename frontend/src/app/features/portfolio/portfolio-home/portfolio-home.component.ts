@@ -7,6 +7,7 @@ import { TranslateService } from '@core/services/translate.service';
 import { TranslatePipe } from '@shared/pipes/translate.pipe';
 import { SafeHtmlPipe } from '@shared/pipes/safe-html.pipe';
 import { ScrollRevealDirective } from '@shared/directives/scroll-reveal.directive';
+import { CountUpDirective } from '@shared/directives/count-up.directive';
 import { PortfolioMapCardComponent } from '../components/portfolio-map-card/portfolio-map-card.component';
 import { MatIcon } from '@angular/material/icon';
 import { getSkillFallbackIcon } from '@shared/utils/skill-icons';
@@ -14,7 +15,7 @@ import { getSkillFallbackIcon } from '@shared/utils/skill-icons';
 @Component({
   selector: 'app-portfolio-home',
   standalone: true,
-  imports: [CommonModule, RouterModule, TranslatePipe, SafeHtmlPipe, ScrollRevealDirective, PortfolioMapCardComponent, MatIcon],
+  imports: [CommonModule, RouterModule, TranslatePipe, SafeHtmlPipe, ScrollRevealDirective, CountUpDirective, PortfolioMapCardComponent, MatIcon],
   templateUrl: './portfolio-home.component.html',
 })
 export class PortfolioHomeComponent implements OnInit {
@@ -43,6 +44,20 @@ export class PortfolioHomeComponent implements OnInit {
   allSkills = computed(() =>
     this.data.skillCategories().flatMap(c => c.skills)
   );
+
+  /** Stats for the animated counter section */
+  totalProjects = computed(() => this.data.projects().length);
+  totalSkills = computed(() => this.allSkills().length);
+  yearsOfExperience = computed(() => {
+    const experiences = this.data.experiences();
+    if (experiences.length === 0) return 0;
+    const earliest = experiences.reduce((min, exp) => {
+      const start = exp.start_date ? new Date(exp.start_date).getTime() : Infinity;
+      return start < min ? start : min;
+    }, Infinity);
+    if (earliest === Infinity) return 0;
+    return Math.max(1, Math.floor((Date.now() - earliest) / (365.25 * 24 * 60 * 60 * 1000)));
+  });
 
   /** Get a fallback icon for a skill when icon_url is not set. */
   getSkillFallback(skillName: string): { type: 'url' | 'flag'; value: string } | null {

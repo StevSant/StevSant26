@@ -558,6 +558,11 @@
       "featuredProjects": "Proyectos Destacados",
       "viewAllProjects": "Ver todos los proyectos",
       "viewAllSkills": "Ver todas las habilidades",
+      "stats": {
+        "yearsExperience": "Años de Experiencia",
+        "projects": "Proyectos",
+        "skills": "Habilidades"
+      },
       "map": {
         "basedIn": "Ubicado en",
         "available": "Disponible para trabajar",
