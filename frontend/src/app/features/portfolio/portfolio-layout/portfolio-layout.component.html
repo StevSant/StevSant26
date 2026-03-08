@@ -47,10 +47,14 @@
     </div>
   </div>
 } @else {
+  <a href="#main-content" class="skip-link">
+    {{ 'portfolio.a11y.skipToContent' | translate }}
+  </a>
   <app-scroll-progress />
   <div class="min-h-screen bg-(--color-bg-primary) flex flex-col">
     <!-- Navigation -->
     <nav
+      aria-label="Main navigation"
       class="fixed top-0 left-0 right-0 z-50 bg-(--color-bg-primary)/90 backdrop-blur-md border-b border-(--color-divider)"
     >
       <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -78,6 +82,8 @@
             <app-language-selector />
             <button
               (click)="toggleMobileMenu()"
+              [attr.aria-label]="mobileMenuOpen() ? ('portfolio.a11y.closeMenu' | translate) : ('portfolio.a11y.openMenu' | translate)"
+              [attr.aria-expanded]="mobileMenuOpen()"
               class="text-(--color-text-muted) hover:text-(--color-text-primary) p-1"
             >
               @if (mobileMenuOpen()) {
@@ -116,7 +122,7 @@
     }
 
     <!-- Main content -->
-    <main class="flex-1 pt-16">
+    <main id="main-content" class="flex-1 pt-16" role="main">
       <router-outlet></router-outlet>
     </main>
 

@@ -13,21 +13,29 @@ import { isPlatformBrowser } from '@angular/common';
   selector: 'app-scroll-progress',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  template: `<div class="scroll-progress-bar" [style.width.%]="progress()"></div>`,
+  template: `<div class="scroll-progress-track"><div class="scroll-progress-bar" [style.transform]="'scaleX(' + progress() / 100 + ')'"></div></div>`,
   styles: [
     `
-      .scroll-progress-bar {
+      .scroll-progress-track {
         position: fixed;
         top: 0;
         left: 0;
-        height: 3px;
+        right: 0;
+        height: 2px;
         z-index: 9999;
+        pointer-events: none;
+      }
+
+      .scroll-progress-bar {
+        height: 100%;
         background: var(--color-accent);
-        transition: width 0.1s linear;
+        transform-origin: left;
+        opacity: 0.7;
+        will-change: transform;
       }
 
       @media (prefers-reduced-motion: reduce) {
-        .scroll-progress-bar {
+        .scroll-progress-track {
           display: none;
         }
       }

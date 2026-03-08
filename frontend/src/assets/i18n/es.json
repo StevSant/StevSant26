@@ -592,6 +592,18 @@
       "sent": "¡Mensaje preparado! Se abrirá tu cliente de correo.",
       "orFindMe": "O encuéntrame en"
     },
+    "notFound": {
+      "title": "Página no encontrada",
+      "message": "La página que buscas no existe o ha sido movida.",
+      "backHome": "Volver al inicio"
+    },
+    "a11y": {
+      "skipToContent": "Saltar al contenido",
+      "openMenu": "Abrir menú",
+      "closeMenu": "Cerrar menú",
+      "closeModal": "Cerrar",
+      "resultsFound": "resultados encontrados"
+    },
     "filter": {
       "searchPlaceholder": "Buscar...",
       "searchProjects": "Buscar proyectos...",
