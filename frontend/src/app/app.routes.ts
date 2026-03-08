@@ -64,6 +64,11 @@ const portfolioChildren: Routes = [
     loadComponent: () =>
       import('./features/portfolio/portfolio-contact/portfolio-contact.component').then((m) => m.PortfolioContactComponent),
   },
+  {
+    path: '**',
+    loadComponent: () =>
+      import('./features/portfolio/portfolio-not-found/portfolio-not-found.component').then((m) => m.PortfolioNotFoundComponent),
+  },
 ];
 
 const portfolioRoute = {
