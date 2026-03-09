@@ -2,95 +2,95 @@
 -- Seed: skill
 -- =============================================
 
-INSERT INTO skill (code, skill_category_id, position, predefined_level)
+INSERT INTO skill (code, skill_category_id, position, predefined_level, icon_url)
 VALUES
 -- Idiomas (predefined_level: 5=nativo, 4=C1 avanzado)
-('spanish', (SELECT id FROM skill_category WHERE code = 'languages'), 1, 5),
-('english', (SELECT id FROM skill_category WHERE code = 'languages'), 2, 4),
+('spanish', (SELECT id FROM skill_category WHERE code = 'languages'), 1, 5, NULL),
+('english', (SELECT id FROM skill_category WHERE code = 'languages'), 2, 4, NULL),
 
 -- Backend
-('django', (SELECT id FROM skill_category WHERE code = 'backend'), 1, NULL),
-('drf', (SELECT id FROM skill_category WHERE code = 'backend'), 2, NULL),
-('flask', (SELECT id FROM skill_category WHERE code = 'backend'), 3, NULL),
-('fastapi', (SELECT id FROM skill_category WHERE code = 'backend'), 4, NULL),
-('nestjs', (SELECT id FROM skill_category WHERE code = 'backend'), 5, NULL),
+('django', (SELECT id FROM skill_category WHERE code = 'backend'), 1, NULL, NULL),
+('drf', (SELECT id FROM skill_category WHERE code = 'backend'), 2, NULL, 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/django/django-plain.svg'),
+('flask', (SELECT id FROM skill_category WHERE code = 'backend'), 3, NULL, NULL),
+('fastapi', (SELECT id FROM skill_category WHERE code = 'backend'), 4, NULL, NULL),
+('nestjs', (SELECT id FROM skill_category WHERE code = 'backend'), 5, NULL, NULL),
 
 -- Frontend
-('angular', (SELECT id FROM skill_category WHERE code = 'frontend'), 1, NULL),
-('react', (SELECT id FROM skill_category WHERE code = 'frontend'), 2, NULL),
+('angular', (SELECT id FROM skill_category WHERE code = 'frontend'), 1, NULL, NULL),
+('react', (SELECT id FROM skill_category WHERE code = 'frontend'), 2, NULL, NULL),
 
 -- Móviles
-('kotlin', (SELECT id FROM skill_category WHERE code = 'mobile'), 1, NULL),
+('kotlin', (SELECT id FROM skill_category WHERE code = 'mobile'), 1, NULL, NULL),
 
 -- Lenguajes
-('python', (SELECT id FROM skill_category WHERE code = 'programming_languages'), 1, NULL),
-('javascript', (SELECT id FROM skill_category WHERE code = 'programming_languages'), 2, NULL),
-('typescript', (SELECT id FROM skill_category WHERE code = 'programming_languages'), 3, NULL),
-('java_kotlin', (SELECT id FROM skill_category WHERE code = 'programming_languages'), 4, NULL),
+('python', (SELECT id FROM skill_category WHERE code = 'programming_languages'), 1, NULL, NULL),
+('javascript', (SELECT id FROM skill_category WHERE code = 'programming_languages'), 2, NULL, NULL),
+('typescript', (SELECT id FROM skill_category WHERE code = 'programming_languages'), 3, NULL, NULL),
+('java_kotlin', (SELECT id FROM skill_category WHERE code = 'programming_languages'), 4, NULL, 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/java/java-original.svg'),
 
 -- Bases de datos
-('mysql', (SELECT id FROM skill_category WHERE code = 'databases'), 1, NULL),
-('postgresql', (SELECT id FROM skill_category WHERE code = 'databases'), 2, NULL),
-('mongodb', (SELECT id FROM skill_category WHERE code = 'databases'), 3, NULL),
+('mysql', (SELECT id FROM skill_category WHERE code = 'databases'), 1, NULL, NULL),
+('postgresql', (SELECT id FROM skill_category WHERE code = 'databases'), 2, NULL, NULL),
+('mongodb', (SELECT id FROM skill_category WHERE code = 'databases'), 3, NULL, NULL),
 
 -- Herramientas
-('git', (SELECT id FROM skill_category WHERE code = 'tools'), 1, NULL),
-('docker', (SELECT id FROM skill_category WHERE code = 'tools'), 2, NULL),
-('github_gitlab', (SELECT id FROM skill_category WHERE code = 'tools'), 3, NULL),
-('postman', (SELECT id FROM skill_category WHERE code = 'tools'), 4, NULL),
-('vscode', (SELECT id FROM skill_category WHERE code = 'tools'), 5, NULL),
+('git', (SELECT id FROM skill_category WHERE code = 'tools'), 1, NULL, NULL),
+('docker', (SELECT id FROM skill_category WHERE code = 'tools'), 2, NULL, NULL),
+('github_gitlab', (SELECT id FROM skill_category WHERE code = 'tools'), 3, NULL, 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/github/github-original.svg'),
+('postman', (SELECT id FROM skill_category WHERE code = 'tools'), 4, NULL, NULL),
+('vscode', (SELECT id FROM skill_category WHERE code = 'tools'), 5, NULL, NULL),
 
 -- Cloud
-('vercel', (SELECT id FROM skill_category WHERE code = 'cloud'), 1, NULL),
-('azure', (SELECT id FROM skill_category WHERE code = 'cloud'), 2, NULL),
-('gcloud_run', (SELECT id FROM skill_category WHERE code = 'cloud'), 3, NULL),
+('vercel', (SELECT id FROM skill_category WHERE code = 'cloud'), 1, NULL, NULL),
+('azure', (SELECT id FROM skill_category WHERE code = 'cloud'), 2, NULL, NULL),
+('gcloud_run', (SELECT id FROM skill_category WHERE code = 'cloud'), 3, NULL, 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/googlecloud/googlecloud-original.svg'),
 
 -- Metodologías
-('scrum', (SELECT id FROM skill_category WHERE code = 'methodologies'), 1, NULL),
-('agile', (SELECT id FROM skill_category WHERE code = 'methodologies'), 2, NULL),
-('ci_cd', (SELECT id FROM skill_category WHERE code = 'methodologies'), 3, NULL),
-('clean_architecture', (SELECT id FROM skill_category WHERE code = 'methodologies'), 4, NULL),
-('rest_api', (SELECT id FROM skill_category WHERE code = 'methodologies'), 5, NULL),
-('ddd', (SELECT id FROM skill_category WHERE code = 'methodologies'), 6, NULL),
+('scrum', (SELECT id FROM skill_category WHERE code = 'methodologies'), 1, NULL, NULL),
+('agile', (SELECT id FROM skill_category WHERE code = 'methodologies'), 2, NULL, NULL),
+('ci_cd', (SELECT id FROM skill_category WHERE code = 'methodologies'), 3, NULL, NULL),
+('clean_architecture', (SELECT id FROM skill_category WHERE code = 'methodologies'), 4, NULL, NULL),
+('rest_api', (SELECT id FROM skill_category WHERE code = 'methodologies'), 5, NULL, NULL),
+('ddd', (SELECT id FROM skill_category WHERE code = 'methodologies'), 6, NULL, NULL),
 
 -- Backend (nuevos)
-('langchain', (SELECT id FROM skill_category WHERE code = 'backend'), 6, NULL),
-('pydantic', (SELECT id FROM skill_category WHERE code = 'backend'), 7, NULL),
-('graphql', (SELECT id FROM skill_category WHERE code = 'backend'), 8, NULL),
-('websocket', (SELECT id FROM skill_category WHERE code = 'backend'), 9, NULL),
-('nodejs', (SELECT id FROM skill_category WHERE code = 'backend'), 10, NULL),
-('strawberry_graphql', (SELECT id FROM skill_category WHERE code = 'backend'), 11, NULL),
+('langchain', (SELECT id FROM skill_category WHERE code = 'backend'), 6, NULL, 'https://cdn.simpleicons.org/langchain'),
+('pydantic', (SELECT id FROM skill_category WHERE code = 'backend'), 7, NULL, 'https://cdn.simpleicons.org/pydantic'),
+('graphql', (SELECT id FROM skill_category WHERE code = 'backend'), 8, NULL, NULL),
+('websocket', (SELECT id FROM skill_category WHERE code = 'backend'), 9, NULL, 'https://cdn.simpleicons.org/webSocket/white'),
+('nodejs', (SELECT id FROM skill_category WHERE code = 'backend'), 10, NULL, NULL),
+('strawberry_graphql', (SELECT id FROM skill_category WHERE code = 'backend'), 11, NULL, 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/graphql/graphql-plain.svg'),
 
 -- Frontend (nuevos)
-('tailwindcss', (SELECT id FROM skill_category WHERE code = 'frontend'), 3, NULL),
-('scss', (SELECT id FROM skill_category WHERE code = 'frontend'), 4, NULL),
-('html_css', (SELECT id FROM skill_category WHERE code = 'frontend'), 5, NULL),
-('ngrx', (SELECT id FROM skill_category WHERE code = 'frontend'), 6, NULL),
-('leaflet', (SELECT id FROM skill_category WHERE code = 'frontend'), 7, NULL),
+('tailwindcss', (SELECT id FROM skill_category WHERE code = 'frontend'), 3, NULL, NULL),
+('scss', (SELECT id FROM skill_category WHERE code = 'frontend'), 4, NULL, NULL),
+('html_css', (SELECT id FROM skill_category WHERE code = 'frontend'), 5, NULL, 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/html5/html5-original.svg'),
+('ngrx', (SELECT id FROM skill_category WHERE code = 'frontend'), 6, NULL, 'https://cdn.simpleicons.org/ngrx'),
+('leaflet', (SELECT id FROM skill_category WHERE code = 'frontend'), 7, NULL, 'https://cdn.simpleicons.org/leaflet'),
 
 -- Bases de datos (nuevas)
-('chromadb', (SELECT id FROM skill_category WHERE code = 'databases'), 4, NULL),
-('sql', (SELECT id FROM skill_category WHERE code = 'databases'), 5, NULL),
-('typeorm', (SELECT id FROM skill_category WHERE code = 'databases'), 6, NULL),
+('chromadb', (SELECT id FROM skill_category WHERE code = 'databases'), 4, NULL, 'https://cdn.simpleicons.org/chroma'),
+('sql', (SELECT id FROM skill_category WHERE code = 'databases'), 5, NULL, 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/azuresqldatabase/azuresqldatabase-original.svg'),
+('typeorm', (SELECT id FROM skill_category WHERE code = 'databases'), 6, NULL, 'https://cdn.simpleicons.org/typeorm'),
 
 -- Herramientas (nuevas)
-('playwright', (SELECT id FROM skill_category WHERE code = 'tools'), 6, NULL),
-('jest', (SELECT id FROM skill_category WHERE code = 'tools'), 7, NULL),
-('pytest', (SELECT id FROM skill_category WHERE code = 'tools'), 8, NULL),
-('kafka', (SELECT id FROM skill_category WHERE code = 'tools'), 9, NULL),
-('sonarqube', (SELECT id FROM skill_category WHERE code = 'tools'), 10, NULL),
-('swagger_openapi', (SELECT id FROM skill_category WHERE code = 'tools'), 11, NULL),
-('web_scraping', (SELECT id FROM skill_category WHERE code = 'tools'), 12, NULL),
-('github_actions', (SELECT id FROM skill_category WHERE code = 'tools'), 13, NULL),
-('n8n', (SELECT id FROM skill_category WHERE code = 'tools'), 14, NULL),
+('playwright', (SELECT id FROM skill_category WHERE code = 'tools'), 6, NULL, 'https://cdn.simpleicons.org/playwright'),
+('jest', (SELECT id FROM skill_category WHERE code = 'tools'), 7, NULL, NULL),
+('pytest', (SELECT id FROM skill_category WHERE code = 'tools'), 8, NULL, NULL),
+('kafka', (SELECT id FROM skill_category WHERE code = 'tools'), 9, NULL, 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/apachekafka/apachekafka-original.svg'),
+('sonarqube', (SELECT id FROM skill_category WHERE code = 'tools'), 10, NULL, 'https://cdn.simpleicons.org/sonarqube'),
+('swagger_openapi', (SELECT id FROM skill_category WHERE code = 'tools'), 11, NULL, 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/swagger/swagger-original.svg'),
+('web_scraping', (SELECT id FROM skill_category WHERE code = 'tools'), 12, NULL, NULL),
+('github_actions', (SELECT id FROM skill_category WHERE code = 'tools'), 13, NULL, 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/githubactions/githubactions-original.svg'),
+('n8n', (SELECT id FROM skill_category WHERE code = 'tools'), 14, NULL, 'https://cdn.simpleicons.org/n8n'),
 
 -- Cloud (nuevos)
-('supabase', (SELECT id FROM skill_category WHERE code = 'cloud'), 4, NULL),
-('openai', (SELECT id FROM skill_category WHERE code = 'cloud'), 5, NULL),
-('groq', (SELECT id FROM skill_category WHERE code = 'cloud'), 6, NULL),
+('supabase', (SELECT id FROM skill_category WHERE code = 'cloud'), 4, NULL, NULL),
+('openai', (SELECT id FROM skill_category WHERE code = 'cloud'), 5, NULL, 'https://cdn.simpleicons.org/openai'),
+('groq', (SELECT id FROM skill_category WHERE code = 'cloud'), 6, NULL, 'https://cdn.simpleicons.org/groq'),
 
 -- Lenguajes (nuevos)
-('shell_bash', (SELECT id FROM skill_category WHERE code = 'programming_languages'), 5, NULL);
+('shell_bash', (SELECT id FROM skill_category WHERE code = 'programming_languages'), 5, NULL, 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/bash/bash-original.svg');
 
 
 
