@@ -1,7 +1,7 @@
 import { Component, OnInit, signal, inject, computed } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { AnalyticsService } from '@core/services/analytics.service';
+import { AnalyticsDashboardService } from '@core/services/analytics-dashboard.service';
 import { AnalyticsSummary, UniqueVisitor, VisitorSessionDetail } from '@core/models';
 import { TranslatePipe } from '@shared/pipes/translate.pipe';
 import { MatIcon } from '@angular/material/icon';
@@ -15,7 +15,7 @@ import { PaginationComponent } from '@shared/components/pagination/pagination.co
   templateUrl: './analytics.component.html',
 })
 export class AnalyticsComponent implements OnInit {
-  private analyticsService = inject(AnalyticsService);
+  private analyticsService = inject(AnalyticsDashboardService);
 
   summary = signal<AnalyticsSummary | null>(null);
   loading = signal(true);
@@ -128,7 +128,9 @@ export class AnalyticsComponent implements OnInit {
         return list.sort((a, b) => (a.country || '').localeCompare(b.country || ''));
       case 'recent':
       default:
-        return list.sort((a, b) => new Date(b.last_visit).getTime() - new Date(a.last_visit).getTime());
+        return list.sort(
+          (a, b) => new Date(b.last_visit).getTime() - new Date(a.last_visit).getTime(),
+        );
     }
   });
 
@@ -296,7 +298,13 @@ export class AnalyticsComponent implements OnInit {
   }
 
   hasActiveVisitorFilters(): boolean {
-    return !!(this.visitorSearch() || this.visitorFilterDevice() || this.visitorFilterRecruiter() !== null || this.visitorFilterCountry() || this.visitorFilterReferrer());
+    return !!(
+      this.visitorSearch() ||
+      this.visitorFilterDevice() ||
+      this.visitorFilterRecruiter() !== null ||
+      this.visitorFilterCountry() ||
+      this.visitorFilterReferrer()
+    );
   }
 
   /**
@@ -342,10 +350,20 @@ export class AnalyticsComponent implements OnInit {
     pages_visited: { page_path: string }[] | null;
   }): 'high' | 'medium' | 'low' {
     const recruiterReferrers = [
-      'linkedin.com', 'indeed.com', 'glassdoor.com', 'hired.com',
-      'computrabajo.com', 'cletonboard', 'infojobs.net', 'ziprecruiter.com',
-      'manpower.com', 'hays.com', 'randstad.com', 'adecco.com',
-      'michaelpage.com', 'roberthalf.com',
+      'linkedin.com',
+      'indeed.com',
+      'glassdoor.com',
+      'hired.com',
+      'computrabajo.com',
+      'cletonboard',
+      'infojobs.net',
+      'ziprecruiter.com',
+      'manpower.com',
+      'hays.com',
+      'randstad.com',
+      'adecco.com',
+      'michaelpage.com',
+      'roberthalf.com',
     ];
     const hasRecruiterReferrer = session.referrer_source
       ? recruiterReferrers.some((r) => session.referrer_source!.includes(r))
@@ -375,31 +393,58 @@ export class AnalyticsComponent implements OnInit {
   getReferrerBadge(source: string): { label: string; classes: string } | null {
     const s = source.toLowerCase();
     if (s.includes('linkedin')) {
-      return { label: 'LinkedIn', classes: 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300' };
+      return {
+        label: 'LinkedIn',
+        classes: 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300',
+      };
     }
     if (s.includes('cv') || s.includes('curriculum') || s.includes('resume')) {
-      return { label: 'CV', classes: 'bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300' };
+      return {
+        label: 'CV',
+        classes: 'bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300',
+      };
     }
     if (s.includes('github')) {
-      return { label: 'GitHub', classes: 'bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-300' };
+      return {
+        label: 'GitHub',
+        classes: 'bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-300',
+      };
     }
     if (s.includes('google')) {
-      return { label: 'Google', classes: 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300' };
+      return {
+        label: 'Google',
+        classes: 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300',
+      };
     }
     if (s.includes('indeed')) {
-      return { label: 'Indeed', classes: 'bg-indigo-100 text-indigo-800 dark:bg-indigo-900/30 dark:text-indigo-300' };
+      return {
+        label: 'Indeed',
+        classes: 'bg-indigo-100 text-indigo-800 dark:bg-indigo-900/30 dark:text-indigo-300',
+      };
     }
     if (s.includes('glassdoor')) {
-      return { label: 'Glassdoor', classes: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300' };
+      return {
+        label: 'Glassdoor',
+        classes: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300',
+      };
     }
     if (s.includes('twitter') || s.includes('x.com')) {
-      return { label: 'X / Twitter', classes: 'bg-sky-100 text-sky-800 dark:bg-sky-900/30 dark:text-sky-300' };
+      return {
+        label: 'X / Twitter',
+        classes: 'bg-sky-100 text-sky-800 dark:bg-sky-900/30 dark:text-sky-300',
+      };
     }
     if (s.includes('instagram')) {
-      return { label: 'Instagram', classes: 'bg-pink-100 text-pink-800 dark:bg-pink-900/30 dark:text-pink-300' };
+      return {
+        label: 'Instagram',
+        classes: 'bg-pink-100 text-pink-800 dark:bg-pink-900/30 dark:text-pink-300',
+      };
     }
     if (s.includes('facebook')) {
-      return { label: 'Facebook', classes: 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300' };
+      return {
+        label: 'Facebook',
+        classes: 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300',
+      };
     }
     return null;
   }
