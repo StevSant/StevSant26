@@ -1,5 +1,5 @@
 <div
-  class="bg-[var(--color-bg-secondary)] rounded-lg p-4 flex items-center gap-4 group hover:bg-[var(--color-bg-tertiary)] transition-colors"
+  class="rounded-lg p-4 flex items-center gap-4 group bg-[var(--color-bg-secondary)]/50 border border-[var(--color-card-border)] border-l-2 border-l-transparent hover:bg-[var(--color-bg-secondary)] hover:border-l-[var(--color-accent)] hover:shadow-[0_2px_12px_-4px_var(--color-card-glow)] transition-all"
   [class.opacity-60]="item().is_archived"
 >
   <!-- Drag Handle -->
@@ -21,8 +21,7 @@
   <!-- Pin Indicator -->
   @if (item().is_pinned) {
     <div class="text-[var(--color-pin)]">
-      <mat-icon class="text-[20px]" style="font-variation-settings: 'FILL' 1" >star</mat-icon
-      >
+      <mat-icon class="text-[20px]" style="font-variation-settings: 'FILL' 1">star</mat-icon>
     </div>
   }
 
@@ -42,7 +41,10 @@
   <!-- Actions -->
   <div class="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
     <button (click)="pinToggled.emit()" class="icon-btn-pin">
-      <mat-icon class="text-[20px]" [style.font-variation-settings]="item().is_pinned ? '\'FILL\' 1' : '\'FILL\' 0'" >star</mat-icon
+      <mat-icon
+        class="text-[20px]"
+        [style.font-variation-settings]="item().is_pinned ? '\'FILL\' 1' : '\'FILL\' 0'"
+        >star</mat-icon
       >
     </button>
     <a [routerLink]="[item().id]" class="icon-btn-edit">
