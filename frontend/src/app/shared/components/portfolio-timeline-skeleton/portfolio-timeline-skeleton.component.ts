@@ -5,66 +5,6 @@ import { SkeletonComponent } from '@shared/components/skeleton/skeleton.componen
   selector: 'app-portfolio-timeline-skeleton',
   standalone: true,
   imports: [SkeletonComponent],
-  template: `
-    <section class="py-12 sm:py-16 lg:py-24 px-4 sm:px-6 lg:px-8">
-      <div class="max-w-5xl mx-auto">
-        <!-- Section title -->
-        <div class="flex flex-col items-center gap-3 mb-8 sm:mb-10 lg:mb-14">
-          <app-skeleton width="140px" height="0.75rem" />
-          <div class="w-12 h-px bg-(--color-accent) opacity-60"></div>
-        </div>
-
-        <!-- Filter placeholder -->
-        <div class="mb-10 flex flex-col items-center gap-3">
-          <div class="max-w-md w-full">
-            <app-skeleton width="100%" height="2.5rem" />
-          </div>
-        </div>
-
-        <!-- Timeline -->
-        <div class="relative">
-          <!-- Vertical line -->
-          <div
-            class="absolute left-4 md:left-1/2 md:-translate-x-px top-0 bottom-0 w-0.5 bg-(--color-border-primary) opacity-40"
-          ></div>
-
-          <div class="space-y-12">
-            @for (item of [0, 1, 2]; track item) {
-              <div
-                class="relative flex flex-col md:flex-row items-start gap-6"
-                [class.md:flex-row-reverse]="item % 2 !== 0"
-              >
-                <!-- Timeline dot -->
-                <div
-                  class="absolute left-4 md:left-1/2 -translate-x-1/2 w-3 h-3 rounded-full bg-(--color-border-primary) mt-6"
-                ></div>
-
-                <!-- Card -->
-                <div
-                  class="ml-12 md:ml-0 md:w-[calc(50%-2rem)] bg-(--color-bg-secondary) rounded-xl border border-(--color-card-border) p-6"
-                >
-                  <div class="flex flex-col gap-3">
-                    <app-skeleton width="70%" height="1.25rem" />
-                    <app-skeleton width="50%" height="0.875rem" />
-                    <app-skeleton width="35%" height="0.75rem" />
-                    <div class="mt-2">
-                      <app-skeleton width="100%" height="0.75rem" />
-                      <div class="mt-1">
-                        <app-skeleton width="80%" height="0.75rem" />
-                      </div>
-                    </div>
-                    <div class="flex gap-2 mt-2">
-                      <app-skeleton width="50px" height="1.25rem" />
-                      <app-skeleton width="60px" height="1.25rem" />
-                    </div>
-                  </div>
-                </div>
-              </div>
-            }
-          </div>
-        </div>
-      </div>
-    </section>
-  `,
+  templateUrl: './portfolio-timeline-skeleton.component.html',
 })
 export class PortfolioTimelineSkeletonComponent {}

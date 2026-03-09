@@ -27,29 +27,7 @@ import { isPlatformBrowser } from '@angular/common';
   selector: 'app-progressive-image',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  template: `
-    <div [class]="'relative overflow-hidden ' + containerClass()">
-      <!-- Blurred placeholder (uses same src with CSS blur until loaded) -->
-      <div
-        class="absolute inset-0 bg-(--color-bg-tertiary) transition-opacity duration-500"
-        [class.opacity-0]="loaded()"
-      >
-        <div class="w-full h-full animate-pulse bg-(--color-bg-tertiary)"></div>
-      </div>
-      <!-- Full image -->
-      <img
-        [src]="src()"
-        [alt]="alt()"
-        [loading]="loading()"
-        [decoding]="decoding()"
-        [class]="'w-full h-full transition-all duration-500 ' + imgClass()"
-        [style.filter]="loaded() ? 'blur(0)' : 'blur(20px)'"
-        [style.transform]="loaded() ? 'scale(1)' : 'scale(1.1)'"
-        (load)="onImageLoad()"
-        (error)="onImageError()"
-      />
-    </div>
-  `,
+  templateUrl: './progressive-image.component.html',
 })
 export class ProgressiveImageComponent implements AfterViewInit, OnDestroy {
   /** Full-resolution image URL */
