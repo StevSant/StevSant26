@@ -8,16 +8,31 @@ import { TranslateService } from '@core/services/translate.service';
 import { Experience, ExperienceTranslation, Image } from '@core/models';
 import { ConfirmDialogComponent } from '@shared/components/confirm-dialog/confirm-dialog.component';
 import { TranslatePipe } from '@shared/pipes/translate.pipe';
-import { DashboardFilterComponent, DashboardFilterOption } from '@shared/components/dashboard-filter/dashboard-filter.component';
+import {
+  DashboardFilterComponent,
+  DashboardFilterOption,
+} from '@shared/components/dashboard-filter/dashboard-filter.component';
 import { ExperienceItemComponent } from './experience-item/experience-item.component';
 import { PaginationComponent } from '@shared/components/pagination/pagination.component';
 import { LoggerService } from '@core/services/logger.service';
 import { MatIcon } from '@angular/material/icon';
+import { DashboardListSkeletonComponent } from '@shared/components/dashboard-list-skeleton/dashboard-list-skeleton.component';
 
 @Component({
   selector: 'app-experience-list',
   standalone: true,
-  imports: [CommonModule, RouterModule, DragDropModule, ConfirmDialogComponent, TranslatePipe, DashboardFilterComponent, ExperienceItemComponent, MatIcon, PaginationComponent],
+  imports: [
+    CommonModule,
+    RouterModule,
+    DragDropModule,
+    ConfirmDialogComponent,
+    TranslatePipe,
+    DashboardFilterComponent,
+    ExperienceItemComponent,
+    MatIcon,
+    PaginationComponent,
+    DashboardListSkeletonComponent,
+  ],
   templateUrl: './experience-list.component.html',
 })
 export class ExperienceListComponent implements OnInit {
@@ -42,7 +57,9 @@ export class ExperienceListComponent implements OnInit {
   selectedCompany = signal('');
   companyFilterOptions = signal<DashboardFilterOption[]>([]);
 
-  async ngOnInit(): Promise<void> { await this.loadItems(); }
+  async ngOnInit(): Promise<void> {
+    await this.loadItems();
+  }
 
   async loadItems(): Promise<void> {
     this.loading.set(true);
@@ -51,14 +68,17 @@ export class ExperienceListComponent implements OnInit {
         'experience',
         'experience_translation',
         'position',
-        true
+        true,
       );
       if (error) throw error;
       this.items.set(data || []);
       this.buildCompanyOptions(data || []);
       await this.loadImages(data || []);
-    } catch (err) { this.logger.error('Error loading experiences:', err); }
-    finally { this.loading.set(false); }
+    } catch (err) {
+      this.logger.error('Error loading experiences:', err);
+    } finally {
+      this.loading.set(false);
+    }
   }
 
   /**
@@ -70,7 +90,9 @@ export class ExperienceListComponent implements OnInit {
       if (exp.company) companies.add(exp.company);
     }
     this.companyFilterOptions.set(
-      Array.from(companies).sort().map(c => ({ label: c, value: c }))
+      Array.from(companies)
+        .sort()
+        .map((c) => ({ label: c, value: c })),
     );
   }
 
@@ -79,7 +101,7 @@ export class ExperienceListComponent implements OnInit {
    */
   private async loadImages(items: Experience[]): Promise<void> {
     if (items.length === 0) return;
-    const ids = items.map(i => i.id);
+    const ids = items.map((i) => i.id);
     const { data } = await this.crud
       .from('image')
       .select('*')
@@ -99,24 +121,26 @@ export class ExperienceListComponent implements OnInit {
 
   getItemRole(item: Experience): string {
     const lang = this.translateService.currentLang();
-    const translation = item.translations?.find(t => t.language?.code === lang);
+    const translation = item.translations?.find((t) => t.language?.code === lang);
     return translation?.role || item.translations?.[0]?.role || `Experience #${item.id}`;
   }
 
   filteredItems(): Experience[] {
     const all = this.items();
-    let filtered = this.showArchived() ? all.filter((i) => i.is_archived) : all.filter((i) => !i.is_archived);
+    let filtered = this.showArchived()
+      ? all.filter((i) => i.is_archived)
+      : all.filter((i) => !i.is_archived);
 
     // Filter by company
     const company = this.selectedCompany();
     if (company) {
-      filtered = filtered.filter(i => i.company === company);
+      filtered = filtered.filter((i) => i.company === company);
     }
 
     // Filter by search text
     const search = this.searchText().toLowerCase().trim();
     if (search) {
-      filtered = filtered.filter(i => {
+      filtered = filtered.filter((i) => {
         const role = this.getItemRole(i).toLowerCase();
         const comp = (i.company || '').toLowerCase();
         return role.includes(search) || comp.includes(search);
@@ -131,12 +155,23 @@ export class ExperienceListComponent implements OnInit {
     return this.filteredItems().slice(start, start + this.pageSize);
   }
 
-  onPageChange(page: number): void { this.currentPage.set(page); }
+  onPageChange(page: number): void {
+    this.currentPage.set(page);
+  }
 
-  onSearchChange(text: string): void { this.searchText.set(text); this.currentPage.set(1); }
-  onCompanyFilterChange(value: string): void { this.selectedCompany.set(value); this.currentPage.set(1); }
+  onSearchChange(text: string): void {
+    this.searchText.set(text);
+    this.currentPage.set(1);
+  }
+  onCompanyFilterChange(value: string): void {
+    this.selectedCompany.set(value);
+    this.currentPage.set(1);
+  }
 
-  toggleShowArchived(): void { this.showArchived.update((v) => !v); this.currentPage.set(1); }
+  toggleShowArchived(): void {
+    this.showArchived.update((v) => !v);
+    this.currentPage.set(1);
+  }
 
   async drop(event: CdkDragDrop<Experience[]>): Promise<void> {
     const allItems = [...this.items()];
@@ -147,32 +182,53 @@ export class ExperienceListComponent implements OnInit {
     const toIndex = allItems.indexOf(targetItem);
     if (fromIndex < 0 || toIndex < 0) return;
     moveItemInArray(allItems, fromIndex, toIndex);
-    allItems.forEach((item, i) => (item as any).position = i);
+    allItems.forEach((item, i) => ((item as any).position = i));
     this.items.set(allItems);
     const updates = allItems.map((item, i) => ({ id: item.id, position: i }));
-    try { await this.crud.updatePositions('experience', updates); }
-    catch (err) { this.logger.error('Error updating positions:', err); await this.loadItems(); }
+    try {
+      await this.crud.updatePositions('experience', updates);
+    } catch (err) {
+      this.logger.error('Error updating positions:', err);
+      await this.loadItems();
+    }
   }
 
   async togglePin(item: Experience): Promise<void> {
-    try { await this.crud.togglePin('experience', item.id, !item.is_pinned); await this.loadItems(); }
-    catch (err) { this.logger.error('Error toggling pin:', err); }
+    try {
+      await this.crud.togglePin('experience', item.id, !item.is_pinned);
+      await this.loadItems();
+    } catch (err) {
+      this.logger.error('Error toggling pin:', err);
+    }
   }
 
   async toggleArchive(item: Experience): Promise<void> {
     try {
-      if (item.is_archived) { await this.crud.unarchive('experience', item.id); }
-      else { await this.crud.archive('experience', item.id); }
+      if (item.is_archived) {
+        await this.crud.unarchive('experience', item.id);
+      } else {
+        await this.crud.archive('experience', item.id);
+      }
       await this.loadItems();
-    } catch (err) { this.logger.error('Error toggling archive:', err); }
+    } catch (err) {
+      this.logger.error('Error toggling archive:', err);
+    }
   }
 
-  confirmDelete(item: Experience): void { this.itemToDelete = item; this.confirmDialog().open(); }
+  confirmDelete(item: Experience): void {
+    this.itemToDelete = item;
+    this.confirmDialog().open();
+  }
 
   async deleteItem(): Promise<void> {
     if (!this.itemToDelete) return;
-    try { await this.crud.delete('experience', this.itemToDelete.id); await this.loadItems(); }
-    catch (err) { this.logger.error('Error deleting item:', err); }
-    finally { this.itemToDelete = null; }
+    try {
+      await this.crud.delete('experience', this.itemToDelete.id);
+      await this.loadItems();
+    } catch (err) {
+      this.logger.error('Error deleting item:', err);
+    } finally {
+      this.itemToDelete = null;
+    }
   }
 }

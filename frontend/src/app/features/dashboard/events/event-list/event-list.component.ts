@@ -8,16 +8,31 @@ import { TranslateService } from '@core/services/translate.service';
 import { Event, EventTranslation, Image } from '@core/models';
 import { ConfirmDialogComponent } from '@shared/components/confirm-dialog/confirm-dialog.component';
 import { TranslatePipe } from '@shared/pipes/translate.pipe';
-import { DashboardFilterComponent, DashboardFilterOption } from '@shared/components/dashboard-filter/dashboard-filter.component';
+import {
+  DashboardFilterComponent,
+  DashboardFilterOption,
+} from '@shared/components/dashboard-filter/dashboard-filter.component';
 import { EventItemComponent } from './event-item/event-item.component';
 import { PaginationComponent } from '@shared/components/pagination/pagination.component';
 import { LoggerService } from '@core/services/logger.service';
 import { MatIcon } from '@angular/material/icon';
+import { DashboardListSkeletonComponent } from '@shared/components/dashboard-list-skeleton/dashboard-list-skeleton.component';
 
 @Component({
   selector: 'app-event-list',
   standalone: true,
-  imports: [CommonModule, RouterModule, DragDropModule, ConfirmDialogComponent, TranslatePipe, DashboardFilterComponent, EventItemComponent, MatIcon, PaginationComponent],
+  imports: [
+    CommonModule,
+    RouterModule,
+    DragDropModule,
+    ConfirmDialogComponent,
+    TranslatePipe,
+    DashboardFilterComponent,
+    EventItemComponent,
+    MatIcon,
+    PaginationComponent,
+    DashboardListSkeletonComponent,
+  ],
   templateUrl: './event-list.component.html',
 })
 export class EventListComponent implements OnInit {
@@ -54,7 +69,7 @@ export class EventListComponent implements OnInit {
         'event',
         'event_translation',
         'position',
-        true
+        true,
       );
       if (error) throw error;
       this.items.set(data || []);
@@ -79,7 +94,9 @@ export class EventListComponent implements OnInit {
       }
     }
     this.yearFilterOptions.set(
-      Array.from(years).sort((a, b) => b.localeCompare(a)).map(y => ({ label: y, value: y }))
+      Array.from(years)
+        .sort((a, b) => b.localeCompare(a))
+        .map((y) => ({ label: y, value: y })),
     );
   }
 
@@ -88,7 +105,7 @@ export class EventListComponent implements OnInit {
    */
   private async loadImages(items: Event[]): Promise<void> {
     if (items.length === 0) return;
-    const ids = items.map(i => i.id);
+    const ids = items.map((i) => i.id);
     const { data } = await this.crud
       .from('image')
       .select('*')
@@ -108,24 +125,26 @@ export class EventListComponent implements OnInit {
 
   getItemName(item: Event): string {
     const lang = this.translateService.currentLang();
-    const translation = item.translations?.find(t => t.language?.code === lang);
+    const translation = item.translations?.find((t) => t.language?.code === lang);
     return translation?.name || item.translations?.[0]?.name || `Event #${item.id}`;
   }
 
   getItemDescription(item: Event): string | null {
     const lang = this.translateService.currentLang();
-    const translation = item.translations?.find(t => t.language?.code === lang);
+    const translation = item.translations?.find((t) => t.language?.code === lang);
     return translation?.description || item.translations?.[0]?.description || null;
   }
 
   filteredItems(): Event[] {
     const all = this.items();
-    let filtered = this.showArchived() ? all.filter((i) => i.is_archived) : all.filter((i) => !i.is_archived);
+    let filtered = this.showArchived()
+      ? all.filter((i) => i.is_archived)
+      : all.filter((i) => !i.is_archived);
 
     // Filter by year
     const year = this.selectedYear();
     if (year) {
-      filtered = filtered.filter(i => {
+      filtered = filtered.filter((i) => {
         if (!i.assisted_at) return false;
         return new Date(i.assisted_at).getFullYear().toString() === year;
       });
@@ -134,7 +153,7 @@ export class EventListComponent implements OnInit {
     // Filter by search text
     const search = this.searchText().toLowerCase().trim();
     if (search) {
-      filtered = filtered.filter(i => {
+      filtered = filtered.filter((i) => {
         const name = this.getItemName(i).toLowerCase();
         const desc = (this.getItemDescription(i) || '').toLowerCase();
         return name.includes(search) || desc.includes(search);
@@ -149,10 +168,18 @@ export class EventListComponent implements OnInit {
     return this.filteredItems().slice(start, start + this.pageSize);
   }
 
-  onPageChange(page: number): void { this.currentPage.set(page); }
+  onPageChange(page: number): void {
+    this.currentPage.set(page);
+  }
 
-  onSearchChange(text: string): void { this.searchText.set(text); this.currentPage.set(1); }
-  onYearFilterChange(value: string): void { this.selectedYear.set(value); this.currentPage.set(1); }
+  onSearchChange(text: string): void {
+    this.searchText.set(text);
+    this.currentPage.set(1);
+  }
+  onYearFilterChange(value: string): void {
+    this.selectedYear.set(value);
+    this.currentPage.set(1);
+  }
 
   toggleShowArchived(): void {
     this.showArchived.update((v) => !v);
