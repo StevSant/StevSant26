@@ -1,173 +1,180 @@
-<section appScrollReveal class="py-12 sm:py-16 lg:py-24 px-4 sm:px-6 lg:px-8">
-  <div class="max-w-6xl mx-auto">
-    <h2
-      class="text-sm uppercase tracking-[0.3em] text-(--color-text-muted) mb-3 text-center font-medium"
-    >
-      {{ 'portfolio.sections.projects' | translate }}
-    </h2>
-    <div class="w-12 h-px bg-(--color-accent) mx-auto mb-8 sm:mb-10 lg:mb-14 opacity-60"></div>
+@if (data.loading()) {
+  <app-portfolio-grid-skeleton />
+} @else {
+  <section appScrollReveal class="py-12 sm:py-16 lg:py-24 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-6xl mx-auto">
+      <h2
+        class="text-sm uppercase tracking-[0.3em] text-(--color-text-muted) mb-3 text-center font-medium"
+      >
+        {{ 'portfolio.sections.projects' | translate }}
+      </h2>
+      <div class="w-12 h-px bg-(--color-accent) mx-auto mb-8 sm:mb-10 lg:mb-14 opacity-60"></div>
 
-    @if (data.projects().length === 0) {
-      <p class="text-(--color-text-muted) text-center italic font-light">
-        {{ 'portfolio.empty.projects' | translate }}
-      </p>
-    } @else {
-      <app-portfolio-filter
-        placeholder="portfolio.filter.searchProjects"
-        [filterGroups]="skillFilterGroups()"
-        (searchChange)="onSearchChange($event)"
-        (filterChange)="onSkillFilterChange($event)"
-      />
-
-      <span class="sr-only" aria-live="polite">
-        {{ filteredProjects().length }} {{ 'portfolio.a11y.resultsFound' | translate }}
-      </span>
-      @if (filteredProjects().length === 0) {
-        <p class="text-(--color-text-muted) text-center italic font-light py-8">
-          {{ 'portfolio.filter.noResults' | translate }}
+      @if (data.projects().length === 0) {
+        <p class="text-(--color-text-muted) text-center italic font-light">
+          {{ 'portfolio.empty.projects' | translate }}
         </p>
       } @else {
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
-          @for (project of filteredProjects(); track project.id; let i = $index) {
-            <div
-              appScrollReveal [revealDelay]="i * 100"
-              class="group bg-(--color-bg-secondary) rounded-xl overflow-hidden border border-(--color-card-border) hover:border-(--color-accent)/30 transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 flex flex-col shadow-sm"
-            >
-              <!-- Image -->
-              @if (data.getFirstImageUrl('project', project.id)) {
-                <div class="relative">
-                  <app-progressive-image
-                    [src]="data.getFirstImageUrl('project', project.id)!"
-                    [alt]="data.getEntityTranslation(project, 'title')"
-                    containerClass="h-36 sm:h-44"
-                    imgClass="object-cover group-hover:scale-105 transition-transform duration-500"
-                  />
-                  @if (project.is_pinned) {
-                    <span
-                      class="absolute top-2 right-2 text-(--color-pin) bg-(--color-bg-primary)/80 rounded-full p-1 z-10"
-                    >
-                      <mat-icon class="text-[16px]" style="font-variation-settings: 'FILL' 1"
-                        >star</mat-icon
-                      >
-                    </span>
-                  }
-                </div>
-              }
+        <app-portfolio-filter
+          placeholder="portfolio.filter.searchProjects"
+          [filterGroups]="skillFilterGroups()"
+          (searchChange)="onSearchChange($event)"
+          (filterChange)="onSkillFilterChange($event)"
+        />
 
-              <div class="flex flex-col flex-1 p-4 sm:p-6">
-                <div class="flex-1">
-                  <!-- Title + Pin (no image case) -->
-                  <div class="flex items-start justify-between mb-2">
-                    <h3
-                      class="text-lg font-medium text-(--color-text-primary) group-hover:text-(--color-accent) transition-colors tracking-tight"
-                    >
-                      {{ data.getEntityTranslation(project, 'title') }}
-                    </h3>
-                    @if (project.is_pinned && !data.getFirstImageUrl('project', project.id)) {
-                      <span class="text-(--color-pin) opacity-70">
+        <span class="sr-only" aria-live="polite">
+          {{ filteredProjects().length }} {{ 'portfolio.a11y.resultsFound' | translate }}
+        </span>
+        @if (filteredProjects().length === 0) {
+          <p class="text-(--color-text-muted) text-center italic font-light py-8">
+            {{ 'portfolio.filter.noResults' | translate }}
+          </p>
+        } @else {
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
+            @for (project of filteredProjects(); track project.id; let i = $index) {
+              <div
+                appScrollReveal
+                [revealDelay]="i * 100"
+                class="group bg-(--color-bg-secondary) rounded-xl overflow-hidden border border-(--color-card-border) hover:border-(--color-accent)/30 transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 flex flex-col shadow-sm"
+              >
+                <!-- Image -->
+                @if (data.getFirstImageUrl('project', project.id)) {
+                  <div class="relative">
+                    <app-progressive-image
+                      [src]="data.getFirstImageUrl('project', project.id)!"
+                      [alt]="data.getEntityTranslation(project, 'title')"
+                      containerClass="h-36 sm:h-44"
+                      imgClass="object-cover group-hover:scale-105 transition-transform duration-500"
+                    />
+                    @if (project.is_pinned) {
+                      <span
+                        class="absolute top-2 right-2 text-(--color-pin) bg-(--color-bg-primary)/80 rounded-full p-1 z-10"
+                      >
                         <mat-icon class="text-[16px]" style="font-variation-settings: 'FILL' 1"
                           >star</mat-icon
                         >
                       </span>
                     }
                   </div>
+                }
 
-                  <!-- Date -->
-                  @if (project.created_at) {
-                    <p class="text-xs text-(--color-text-muted) uppercase tracking-wider mb-3">
-                      {{ project.created_at | date: 'mediumDate' }}
-                    </p>
-                  }
-
-                  <!-- Description -->
-                  @if (data.getEntityTranslation(project, 'description')) {
-                    <p
-                      class="text-sm text-(--color-text-muted) line-clamp-3 mb-4 leading-relaxed font-light"
-                    >
-                      {{ data.getEntityTranslation(project, 'description') }}
-                    </p>
-                  }
-
-                  <!-- Skills -->
-                  @if (data.getSkillUsages('project', project.id).length > 0) {
-                    <div class="flex flex-wrap gap-1.5 mb-4">
-                      @for (
-                        usage of data.getSkillUsages('project', project.id).slice(0, 6);
-                        track usage.id
-                      ) {
-                        <span
-                          class="px-2 py-0.5 text-xs rounded-full bg-(--color-bg-tertiary) text-(--color-text-secondary) border border-(--color-border-primary) inline-flex items-center gap-1"
-                        >
-                          @if (data.getSkillIconUrl(usage)) {
-                            <img
-                              [src]="data.getSkillIconUrl(usage)"
-                              class="w-3.5 h-3.5 object-contain"
-                            />
-                          }
-                          {{ data.getSkillName(usage) }}
-                        </span>
-                      }
-                      @if (data.getSkillUsages('project', project.id).length > 6) {
-                        <span
-                          class="px-2 py-0.5 text-xs rounded-full bg-(--color-bg-tertiary) text-(--color-text-muted)"
-                        >
-                          +{{ data.getSkillUsages('project', project.id).length - 6 }}
+                <div class="flex flex-col flex-1 p-4 sm:p-6">
+                  <div class="flex-1">
+                    <!-- Title + Pin (no image case) -->
+                    <div class="flex items-start justify-between mb-2">
+                      <h3
+                        class="text-lg font-medium text-(--color-text-primary) group-hover:text-(--color-accent) transition-colors tracking-tight"
+                      >
+                        {{ data.getEntityTranslation(project, 'title') }}
+                      </h3>
+                      @if (project.is_pinned && !data.getFirstImageUrl('project', project.id)) {
+                        <span class="text-(--color-pin) opacity-70">
+                          <mat-icon class="text-[16px]" style="font-variation-settings: 'FILL' 1"
+                            >star</mat-icon
+                          >
                         </span>
                       }
                     </div>
-                  }
-                </div>
 
-                <!-- Sub-projects indicator -->
-                @if (data.getSubProjects(project.id).length > 0) {
-                  <div
-                    class="flex items-center gap-2 mb-4 px-2.5 py-1.5 rounded-lg bg-(--color-bg-tertiary) border border-(--color-border-primary) w-fit"
-                  >
-                    <mat-icon class="text-[14px] text-(--color-text-muted)">grid_view</mat-icon>
-                    <span class="text-xs text-(--color-text-muted)">
-                      {{ data.getSubProjects(project.id).length }}
-                      {{ 'portfolio.subProjects' | translate }}
-                    </span>
+                    <!-- Date -->
+                    @if (project.created_at) {
+                      <p class="text-xs text-(--color-text-muted) uppercase tracking-wider mb-3">
+                        {{ project.created_at | date: 'mediumDate' }}
+                      </p>
+                    }
+
+                    <!-- Description -->
+                    @if (data.getEntityTranslation(project, 'description')) {
+                      <p
+                        class="text-sm text-(--color-text-muted) line-clamp-3 mb-4 leading-relaxed font-light"
+                      >
+                        {{ data.getEntityTranslation(project, 'description') }}
+                      </p>
+                    }
+
+                    <!-- Skills -->
+                    @if (data.getSkillUsages('project', project.id).length > 0) {
+                      <div class="flex flex-wrap gap-1.5 mb-4">
+                        @for (
+                          usage of data.getSkillUsages('project', project.id).slice(0, 6);
+                          track usage.id
+                        ) {
+                          <span
+                            class="px-2 py-0.5 text-xs rounded-full bg-(--color-bg-tertiary) text-(--color-text-secondary) border border-(--color-border-primary) inline-flex items-center gap-1"
+                          >
+                            @if (data.getSkillIconUrl(usage)) {
+                              <img
+                                [src]="data.getSkillIconUrl(usage)"
+                                class="w-3.5 h-3.5 object-contain"
+                              />
+                            }
+                            {{ data.getSkillName(usage) }}
+                          </span>
+                        }
+                        @if (data.getSkillUsages('project', project.id).length > 6) {
+                          <span
+                            class="px-2 py-0.5 text-xs rounded-full bg-(--color-bg-tertiary) text-(--color-text-muted)"
+                          >
+                            +{{ data.getSkillUsages('project', project.id).length - 6 }}
+                          </span>
+                        }
+                      </div>
+                    }
                   </div>
-                }
 
-                <!-- Footer links -->
-                <div class="flex items-center gap-3 mt-auto pt-4 border-t border-(--color-divider)">
-                  @if (project.url) {
-                    <a
-                      [href]="project.url"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      class="btn-view-project"
+                  <!-- Sub-projects indicator -->
+                  @if (data.getSubProjects(project.id).length > 0) {
+                    <div
+                      class="flex items-center gap-2 mb-4 px-2.5 py-1.5 rounded-lg bg-(--color-bg-tertiary) border border-(--color-border-primary) w-fit"
                     >
-                      <mat-icon class="text-[20px]">open_in_new</mat-icon>
-                      {{ 'portfolio.viewProject' | translate }}
-                    </a>
+                      <mat-icon class="text-[14px] text-(--color-text-muted)">grid_view</mat-icon>
+                      <span class="text-xs text-(--color-text-muted)">
+                        {{ data.getSubProjects(project.id).length }}
+                        {{ 'portfolio.subProjects' | translate }}
+                      </span>
+                    </div>
                   }
-                  @if (project.demo_url) {
-                    <a
-                      [href]="project.demo_url"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      class="btn-view-project"
-                    >
-                      <mat-icon class="text-[20px]">play_circle</mat-icon>
-                      {{ 'portfolio.viewDemo' | translate }}
-                    </a>
-                  }
-                  <a
-                    [routerLink]="[project.id]"
-                    class="text-xs uppercase tracking-widest text-(--color-text-muted) hover:text-(--color-accent) flex items-center gap-1.5 transition-colors ml-auto"
+
+                  <!-- Footer links -->
+                  <div
+                    class="flex items-center gap-3 mt-auto pt-4 border-t border-(--color-divider)"
                   >
-                    {{ 'portfolio.viewDetails' | translate }}
-                    <mat-icon class="text-[14px]">chevron_right</mat-icon>
-                  </a>
+                    @if (project.url) {
+                      <a
+                        [href]="project.url"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="btn-view-project"
+                      >
+                        <mat-icon class="text-[20px]">open_in_new</mat-icon>
+                        {{ 'portfolio.viewProject' | translate }}
+                      </a>
+                    }
+                    @if (project.demo_url) {
+                      <a
+                        [href]="project.demo_url"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="btn-view-project"
+                      >
+                        <mat-icon class="text-[20px]">play_circle</mat-icon>
+                        {{ 'portfolio.viewDemo' | translate }}
+                      </a>
+                    }
+                    <a
+                      [routerLink]="[project.id]"
+                      class="text-xs uppercase tracking-widest text-(--color-text-muted) hover:text-(--color-accent) flex items-center gap-1.5 transition-colors ml-auto"
+                    >
+                      {{ 'portfolio.viewDetails' | translate }}
+                      <mat-icon class="text-[14px]">chevron_right</mat-icon>
+                    </a>
+                  </div>
                 </div>
               </div>
-            </div>
-          }
-        </div>
+            }
+          </div>
+        }
       }
-    }
-  </div>
-</section>
+    </div>
+  </section>
+}

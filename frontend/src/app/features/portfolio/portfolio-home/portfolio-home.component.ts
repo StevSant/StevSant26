@@ -1,4 +1,14 @@
-import { Component, inject, OnInit, OnDestroy, computed, signal, HostListener, ElementRef, PLATFORM_ID } from '@angular/core';
+import {
+  Component,
+  inject,
+  OnInit,
+  OnDestroy,
+  computed,
+  signal,
+  HostListener,
+  ElementRef,
+  PLATFORM_ID,
+} from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { PortfolioDataService } from '../services/portfolio-data.service';
@@ -12,11 +22,22 @@ import { PortfolioMapCardComponent } from '../components/portfolio-map-card/port
 import { MatIcon } from '@angular/material/icon';
 import { getSkillFallbackIcon } from '@shared/utils/skill-icons';
 import { ProgressiveImageComponent } from '@shared/components/progressive-image/progressive-image.component';
+import { PortfolioHomeSkeletonComponent } from '@shared/components/portfolio-home-skeleton/portfolio-home-skeleton.component';
 
 @Component({
   selector: 'app-portfolio-home',
   standalone: true,
-  imports: [CommonModule, RouterModule, TranslatePipe, SafeHtmlPipe, ScrollRevealDirective, PortfolioMapCardComponent, MatIcon, ProgressiveImageComponent],
+  imports: [
+    CommonModule,
+    RouterModule,
+    TranslatePipe,
+    SafeHtmlPipe,
+    ScrollRevealDirective,
+    PortfolioMapCardComponent,
+    MatIcon,
+    ProgressiveImageComponent,
+    PortfolioHomeSkeletonComponent,
+  ],
   templateUrl: './portfolio-home.component.html',
 })
 export class PortfolioHomeComponent implements OnInit, OnDestroy {
@@ -41,17 +62,16 @@ export class PortfolioHomeComponent implements OnInit, OnDestroy {
   cvMenuOpen = signal(false);
 
   pinnedProjects = computed(() =>
-    this.data.projects().filter(p => p.is_pinned && !p.is_archived).slice(0, 3)
+    this.data
+      .projects()
+      .filter((p) => p.is_pinned && !p.is_archived)
+      .slice(0, 3),
   );
 
-  topSkillCategories = computed(() =>
-    this.data.skillCategories().slice(0, 4)
-  );
+  topSkillCategories = computed(() => this.data.skillCategories().slice(0, 4));
 
   /** All skills flattened for the scrolling ticker */
-  allSkills = computed(() =>
-    this.data.skillCategories().flatMap(c => c.skills)
-  );
+  allSkills = computed(() => this.data.skillCategories().flatMap((c) => c.skills));
 
   /** Stats for the animated counter section */
   totalProjects = computed(() => this.data.projects().length);
@@ -142,7 +162,7 @@ export class PortfolioHomeComponent implements OnInit, OnDestroy {
     this.seoService.setJsonLd(
       this.seoService.buildBreadcrumbSchema([
         { name: this.translate.instant('seo.home.title'), url: siteUrl },
-      ])
+      ]),
     );
   }
 
@@ -164,7 +184,7 @@ export class PortfolioHomeComponent implements OnInit, OnDestroy {
   }
 
   toggleCvMenu(): void {
-    this.cvMenuOpen.update(v => !v);
+    this.cvMenuOpen.update((v) => !v);
   }
 
   closeCvMenu(): void {
@@ -173,7 +193,10 @@ export class PortfolioHomeComponent implements OnInit, OnDestroy {
 
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent): void {
-    if (this.cvMenuOpen() && !this.elRef.nativeElement.querySelector('.relative')?.contains(event.target)) {
+    if (
+      this.cvMenuOpen() &&
+      !this.elRef.nativeElement.querySelector('.relative')?.contains(event.target)
+    ) {
       this.closeCvMenu();
     }
   }

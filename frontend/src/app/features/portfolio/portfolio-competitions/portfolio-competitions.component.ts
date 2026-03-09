@@ -5,14 +5,28 @@ import { PortfolioDataService } from '../services/portfolio-data.service';
 import { SeoService } from '@core/services/seo.service';
 import { TranslateService } from '@core/services/translate.service';
 import { TranslatePipe } from '@shared/pipes/translate.pipe';
-import { PortfolioFilterComponent, FilterOption, FilterOptionGroup } from '@shared/components/portfolio-filter/portfolio-filter.component';
+import {
+  PortfolioFilterComponent,
+  FilterOption,
+  FilterOptionGroup,
+} from '@shared/components/portfolio-filter/portfolio-filter.component';
 import { ScrollRevealDirective } from '@shared/directives/scroll-reveal.directive';
 import { ProgressiveImageComponent } from '@shared/components/progressive-image/progressive-image.component';
+import { PortfolioGridSkeletonComponent } from '@shared/components/portfolio-grid-skeleton/portfolio-grid-skeleton.component';
 
 @Component({
   selector: 'app-portfolio-competitions',
   standalone: true,
-  imports: [CommonModule, DatePipe, RouterModule, TranslatePipe, PortfolioFilterComponent, ScrollRevealDirective, ProgressiveImageComponent],
+  imports: [
+    CommonModule,
+    DatePipe,
+    RouterModule,
+    TranslatePipe,
+    PortfolioFilterComponent,
+    ScrollRevealDirective,
+    ProgressiveImageComponent,
+    PortfolioGridSkeletonComponent,
+  ],
   templateUrl: './portfolio-competitions.component.html',
 })
 export class PortfolioCompetitionsComponent implements OnInit {
@@ -24,13 +38,13 @@ export class PortfolioCompetitionsComponent implements OnInit {
   selectedSkill = signal('');
 
   skillFilterOptions = computed<FilterOption[]>(() => {
-    return this.data.getAllSkillNames().map(name => ({ label: name, value: name }));
+    return this.data.getAllSkillNames().map((name) => ({ label: name, value: name }));
   });
 
   skillFilterGroups = computed<FilterOptionGroup[]>(() => {
-    return this.data.getGroupedSkillNamesBySourceType('competition').map(g => ({
+    return this.data.getGroupedSkillNamesBySourceType('competition').map((g) => ({
       label: g.category,
-      options: g.names.map(n => ({ label: n, value: n })),
+      options: g.names.map((n) => ({ label: n, value: n })),
     }));
   });
 
@@ -40,7 +54,7 @@ export class PortfolioCompetitionsComponent implements OnInit {
     const skill = this.selectedSkill();
 
     if (search) {
-      competitions = competitions.filter(c => {
+      competitions = competitions.filter((c) => {
         const name = this.data.getEntityTranslation(c, 'name').toLowerCase();
         const desc = this.data.getEntityTranslation(c, 'description').toLowerCase();
         const organizer = (c.organizer || '').toLowerCase();
@@ -49,9 +63,9 @@ export class PortfolioCompetitionsComponent implements OnInit {
     }
 
     if (skill) {
-      competitions = competitions.filter(c => {
+      competitions = competitions.filter((c) => {
         const usages = this.data.getSkillUsages('competition', c.id);
-        return usages.some(u => this.data.getSkillName(u) === skill);
+        return usages.some((u) => this.data.getSkillName(u) === skill);
       });
     }
 
@@ -80,8 +94,11 @@ export class PortfolioCompetitionsComponent implements OnInit {
     this.seoService.setJsonLd(
       this.seoService.buildBreadcrumbSchema([
         { name: this.translateService.instant('seo.home.title'), url: siteUrl },
-        { name: this.translateService.instant('seo.competitions.title'), url: `${siteUrl}/competitions` },
-      ])
+        {
+          name: this.translateService.instant('seo.competitions.title'),
+          url: `${siteUrl}/competitions`,
+        },
+      ]),
     );
   }
 }

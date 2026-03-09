@@ -5,15 +5,30 @@ import { PortfolioDataService } from '../services/portfolio-data.service';
 import { SeoService } from '@core/services/seo.service';
 import { TranslateService } from '@core/services/translate.service';
 import { TranslatePipe } from '@shared/pipes/translate.pipe';
-import { PortfolioFilterComponent, FilterOption, FilterOptionGroup } from '@shared/components/portfolio-filter/portfolio-filter.component';
+import {
+  PortfolioFilterComponent,
+  FilterOption,
+  FilterOptionGroup,
+} from '@shared/components/portfolio-filter/portfolio-filter.component';
 import { ScrollRevealDirective } from '@shared/directives/scroll-reveal.directive';
 import { MatIcon } from '@angular/material/icon';
 import { ProgressiveImageComponent } from '@shared/components/progressive-image/progressive-image.component';
+import { PortfolioGridSkeletonComponent } from '@shared/components/portfolio-grid-skeleton/portfolio-grid-skeleton.component';
 
 @Component({
   selector: 'app-portfolio-projects',
   standalone: true,
-  imports: [CommonModule, DatePipe, RouterModule, TranslatePipe, PortfolioFilterComponent, ScrollRevealDirective, MatIcon, ProgressiveImageComponent],
+  imports: [
+    CommonModule,
+    DatePipe,
+    RouterModule,
+    TranslatePipe,
+    PortfolioFilterComponent,
+    ScrollRevealDirective,
+    MatIcon,
+    ProgressiveImageComponent,
+    PortfolioGridSkeletonComponent,
+  ],
   templateUrl: './portfolio-projects.component.html',
 })
 export class PortfolioProjectsComponent implements OnInit {
@@ -25,13 +40,13 @@ export class PortfolioProjectsComponent implements OnInit {
   selectedSkill = signal('');
 
   skillFilterOptions = computed<FilterOption[]>(() => {
-    return this.data.getAllSkillNames().map(name => ({ label: name, value: name }));
+    return this.data.getAllSkillNames().map((name) => ({ label: name, value: name }));
   });
 
   skillFilterGroups = computed<FilterOptionGroup[]>(() => {
-    return this.data.getGroupedSkillNamesBySourceType('project').map(g => ({
+    return this.data.getGroupedSkillNamesBySourceType('project').map((g) => ({
       label: g.category,
-      options: g.names.map(n => ({ label: n, value: n })),
+      options: g.names.map((n) => ({ label: n, value: n })),
     }));
   });
 
@@ -41,7 +56,7 @@ export class PortfolioProjectsComponent implements OnInit {
     const skill = this.selectedSkill();
 
     if (search) {
-      projects = projects.filter(p => {
+      projects = projects.filter((p) => {
         const title = this.data.getEntityTranslation(p, 'title').toLowerCase();
         const desc = this.data.getEntityTranslation(p, 'description').toLowerCase();
         return title.includes(search) || desc.includes(search);
@@ -49,15 +64,15 @@ export class PortfolioProjectsComponent implements OnInit {
     }
 
     if (skill) {
-      projects = projects.filter(p => {
+      projects = projects.filter((p) => {
         // Check skill usages on the parent project itself
         const parentUsages = this.data.getSkillUsages('project', p.id);
-        if (parentUsages.some(u => this.data.getSkillName(u) === skill)) return true;
+        if (parentUsages.some((u) => this.data.getSkillName(u) === skill)) return true;
         // Also check skill usages on any child/sub-projects
         const children = this.data.getSubProjects(p.id);
-        return children.some(child => {
+        return children.some((child) => {
           const childUsages = this.data.getSkillUsages('project', child.id);
-          return childUsages.some(u => this.data.getSkillName(u) === skill);
+          return childUsages.some((u) => this.data.getSkillName(u) === skill);
         });
       });
     }
@@ -88,7 +103,7 @@ export class PortfolioProjectsComponent implements OnInit {
       this.seoService.buildBreadcrumbSchema([
         { name: this.translateService.instant('seo.home.title'), url: siteUrl },
         { name: this.translateService.instant('seo.projects.title'), url: `${siteUrl}/projects` },
-      ])
+      ]),
     );
   }
 }

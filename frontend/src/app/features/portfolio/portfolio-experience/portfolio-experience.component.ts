@@ -5,15 +5,27 @@ import { PortfolioDataService } from '../services/portfolio-data.service';
 import { SeoService } from '@core/services/seo.service';
 import { TranslateService } from '@core/services/translate.service';
 import { TranslatePipe } from '@shared/pipes/translate.pipe';
-import { PortfolioFilterComponent, FilterOption } from '@shared/components/portfolio-filter/portfolio-filter.component';
+import {
+  PortfolioFilterComponent,
+  FilterOption,
+} from '@shared/components/portfolio-filter/portfolio-filter.component';
 import { ScrollRevealDirective } from '@shared/directives/scroll-reveal.directive';
 import { Experience } from '@core/models';
 import { MatIcon } from '@angular/material/icon';
+import { PortfolioTimelineSkeletonComponent } from '@shared/components/portfolio-timeline-skeleton/portfolio-timeline-skeleton.component';
 
 @Component({
   selector: 'app-portfolio-experience',
   standalone: true,
-  imports: [CommonModule, RouterModule, TranslatePipe, PortfolioFilterComponent, ScrollRevealDirective, MatIcon],
+  imports: [
+    CommonModule,
+    RouterModule,
+    TranslatePipe,
+    PortfolioFilterComponent,
+    ScrollRevealDirective,
+    MatIcon,
+    PortfolioTimelineSkeletonComponent,
+  ],
   templateUrl: './portfolio-experience.component.html',
 })
 export class PortfolioExperienceComponent implements OnInit {
@@ -25,7 +37,7 @@ export class PortfolioExperienceComponent implements OnInit {
   selectedCompany = signal('');
 
   companyFilterOptions = computed<FilterOption[]>(() => {
-    return this.data.getAllCompanies().map(c => ({ label: c, value: c }));
+    return this.data.getAllCompanies().map((c) => ({ label: c, value: c }));
   });
 
   filteredExperiences = computed(() => {
@@ -34,7 +46,7 @@ export class PortfolioExperienceComponent implements OnInit {
     const company = this.selectedCompany();
 
     if (search) {
-      experiences = experiences.filter(e => {
+      experiences = experiences.filter((e) => {
         const role = this.data.getEntityTranslation(e, 'role').toLowerCase();
         const desc = this.data.getEntityTranslation(e, 'description').toLowerCase();
         const comp = e.company.toLowerCase();
@@ -43,7 +55,7 @@ export class PortfolioExperienceComponent implements OnInit {
     }
 
     if (company) {
-      experiences = experiences.filter(e => e.company === company);
+      experiences = experiences.filter((e) => e.company === company);
     }
 
     // Sort by start_date ascending (oldest first), ongoing experiences at the end
@@ -71,15 +83,14 @@ export class PortfolioExperienceComponent implements OnInit {
     if (!exp.start_date) return '';
     const start = new Date(exp.start_date);
     const end = exp.end_date ? new Date(exp.end_date) : new Date();
-    let months = (end.getFullYear() - start.getFullYear()) * 12 + (end.getMonth() - start.getMonth());
+    let months =
+      (end.getFullYear() - start.getFullYear()) * 12 + (end.getMonth() - start.getMonth());
     if (months < 1) months = 1;
     const years = Math.floor(months / 12);
     const remainingMonths = months % 12;
     const lang = this.data.currentLang();
     if (years > 0 && remainingMonths > 0) {
-      return lang === 'es'
-        ? `${years}a ${remainingMonths}m`
-        : `${years}y ${remainingMonths}m`;
+      return lang === 'es' ? `${years}a ${remainingMonths}m` : `${years}y ${remainingMonths}m`;
     }
     if (years > 0) {
       return lang === 'es'
@@ -97,7 +108,9 @@ export class PortfolioExperienceComponent implements OnInit {
     const duration = this.getDuration(exp);
     const start = this.formatMonth(exp.start_date);
     const end = this.isOngoing(exp)
-      ? (this.data.currentLang() === 'es' ? 'Presente' : 'Present')
+      ? this.data.currentLang() === 'es'
+        ? 'Presente'
+        : 'Present'
       : this.formatMonth(exp.end_date);
     return `${role} — ${company}\n${start} → ${end}${duration ? ' (' + duration + ')' : ''}`;
   }
@@ -124,8 +137,11 @@ export class PortfolioExperienceComponent implements OnInit {
     this.seoService.setJsonLd(
       this.seoService.buildBreadcrumbSchema([
         { name: this.translateService.instant('seo.home.title'), url: siteUrl },
-        { name: this.translateService.instant('seo.experience.title'), url: `${siteUrl}/experience` },
-      ])
+        {
+          name: this.translateService.instant('seo.experience.title'),
+          url: `${siteUrl}/experience`,
+        },
+      ]),
     );
   }
 }
