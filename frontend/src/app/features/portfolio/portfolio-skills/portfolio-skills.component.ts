@@ -1,18 +1,43 @@
-import { Component, inject, OnInit, OnDestroy, signal, computed, ElementRef, PLATFORM_ID, AfterViewInit } from '@angular/core';
+import {
+  Component,
+  inject,
+  OnInit,
+  OnDestroy,
+  signal,
+  computed,
+  ElementRef,
+  PLATFORM_ID,
+  AfterViewInit,
+} from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
-import { PortfolioDataService, SkillCategoryWithSkills, SkillWithLevel } from '../services/portfolio-data.service';
+import {
+  PortfolioDataService,
+  SkillCategoryWithSkills,
+  SkillWithLevel,
+} from '../services/portfolio-data.service';
 import { SeoService } from '@core/services/seo.service';
 import { TranslatePipe } from '@shared/pipes/translate.pipe';
 import { TranslateService } from '@core/services/translate.service';
-import { PortfolioFilterComponent, FilterOption } from '@shared/components/portfolio-filter/portfolio-filter.component';
+import {
+  PortfolioFilterComponent,
+  FilterOption,
+} from '@shared/components/portfolio-filter/portfolio-filter.component';
 import { ScrollRevealDirective } from '@shared/directives/scroll-reveal.directive';
 import { MatIcon } from '@angular/material/icon';
 import { getSkillFallbackIcon } from '@shared/utils/skill-icons';
+import { PortfolioSkillsSkeletonComponent } from '@shared/components/portfolio-skills-skeleton/portfolio-skills-skeleton.component';
 
 @Component({
   selector: 'app-portfolio-skills',
   standalone: true,
-  imports: [CommonModule, TranslatePipe, PortfolioFilterComponent, ScrollRevealDirective, MatIcon],
+  imports: [
+    CommonModule,
+    TranslatePipe,
+    PortfolioFilterComponent,
+    ScrollRevealDirective,
+    MatIcon,
+    PortfolioSkillsSkeletonComponent,
+  ],
   templateUrl: './portfolio-skills.component.html',
 })
 export class PortfolioSkillsComponent implements OnInit, OnDestroy, AfterViewInit {
@@ -30,7 +55,7 @@ export class PortfolioSkillsComponent implements OnInit, OnDestroy, AfterViewIni
   isSingleCategoryView = computed(() => !!this.selectedCategory());
 
   categoryFilterOptions = computed<FilterOption[]>(() => {
-    return this.data.skillCategories().map(c => ({
+    return this.data.skillCategories().map((c) => ({
       label: this.data.getCategoryName(c),
       value: String(c.id),
     }));
@@ -42,20 +67,20 @@ export class PortfolioSkillsComponent implements OnInit, OnDestroy, AfterViewIni
     const categoryId = this.selectedCategory();
 
     if (categoryId) {
-      categories = categories.filter(c => String(c.id) === categoryId);
+      categories = categories.filter((c) => String(c.id) === categoryId);
     }
 
     if (search) {
       categories = categories
-        .map(c => ({
+        .map((c) => ({
           ...c,
-          skills: c.skills.filter(s => {
+          skills: c.skills.filter((s) => {
             const name = this.data.getEntityTranslation(s, 'name').toLowerCase();
             const desc = this.data.getSkillDescription(s).toLowerCase();
             return name.includes(search) || desc.includes(search);
           }),
         }))
-        .filter(c => c.skills.length > 0);
+        .filter((c) => c.skills.length > 0);
     }
 
     return categories;
@@ -63,11 +88,18 @@ export class PortfolioSkillsComponent implements OnInit, OnDestroy, AfterViewIni
 
   /** Flattened list of all skills in filtered categories (for detailed view) */
   flatSkills = computed<SkillWithLevel[]>(() => {
-    return this.filteredCategories().flatMap(c => c.skills);
+    return this.filteredCategories().flatMap((c) => c.skills);
   });
 
   getLevelLabel(level: number): string {
-    const keys = ['', 'portfolio.skillLevel.beginner', 'portfolio.skillLevel.basic', 'portfolio.skillLevel.intermediate', 'portfolio.skillLevel.advanced', 'portfolio.skillLevel.expert'];
+    const keys = [
+      '',
+      'portfolio.skillLevel.beginner',
+      'portfolio.skillLevel.basic',
+      'portfolio.skillLevel.intermediate',
+      'portfolio.skillLevel.advanced',
+      'portfolio.skillLevel.expert',
+    ];
     const key = keys[level];
     return key ? this.translate.instant(key) : '';
   }
@@ -103,7 +135,7 @@ export class PortfolioSkillsComponent implements OnInit, OnDestroy, AfterViewIni
           }
         });
       },
-      { threshold: 0.1 }
+      { threshold: 0.1 },
     );
     // Observe the section element to trigger bar animation
     const section = this.elRef.nativeElement.querySelector('section');
@@ -129,7 +161,7 @@ export class PortfolioSkillsComponent implements OnInit, OnDestroy, AfterViewIni
       this.seoService.buildBreadcrumbSchema([
         { name: this.translate.instant('seo.home.title'), url: siteUrl },
         { name: this.translate.instant('seo.skills.title'), url: `${siteUrl}/skills` },
-      ])
+      ]),
     );
   }
 }

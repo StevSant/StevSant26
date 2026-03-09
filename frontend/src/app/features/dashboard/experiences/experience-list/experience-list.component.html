@@ -1,4 +1,4 @@
-<div class="space-y-6">
+<div class="space-y-8">
   <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
     <div>
       <h1 class="text-2xl font-bold text-[var(--color-text-primary)]">
@@ -30,26 +30,11 @@
   />
 
   @if (loading()) {
-    <div class="flex items-center justify-center py-12">
-      <svg class="spinner-lg" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-        <circle
-          class="opacity-25"
-          cx="12"
-          cy="12"
-          r="10"
-          stroke="currentColor"
-          stroke-width="4"
-        ></circle>
-        <path
-          class="opacity-75"
-          fill="currentColor"
-          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-        ></path>
-      </svg>
-    </div>
+    <app-dashboard-list-skeleton />
   } @else if (filteredItems().length === 0) {
-    <div class="bg-[var(--color-bg-secondary)] rounded-xl p-12 text-center">
-      <mat-icon class="text-[64px] mx-auto text-[var(--color-text-disabled)]" >work</mat-icon
+    <div class="bg-[var(--color-bg-secondary)] rounded-xl p-16 text-center border-dashed">
+      <mat-icon class="text-[56px] opacity-40 mx-auto text-[var(--color-text-disabled)]"
+        >work</mat-icon
       >
       <h3 class="mt-4 text-lg font-medium text-[var(--color-text-primary)]">
         {{ 'experiences.empty' | translate }}
@@ -63,7 +48,7 @@
       </a>
     </div>
   } @else {
-    <div cdkDropList (cdkDropListDropped)="drop($event)" class="space-y-2">
+    <div cdkDropList (cdkDropListDropped)="drop($event)" class="space-y-3">
       @for (item of paginatedItems(); track item.id) {
         <app-experience-item
           cdkDrag

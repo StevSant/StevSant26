@@ -1,0 +1,92 @@
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+  <!-- Total Views -->
+  <div class="bg-(--color-bg-secondary) rounded-xl p-5 border border-(--color-border-primary)">
+    <div class="flex items-center justify-between">
+      <p class="text-sm font-medium text-(--color-text-muted)">
+        {{ 'analytics.totalViews' | translate }}
+      </p>
+      <div class="p-2 bg-(--color-accent)/10 rounded-lg">
+        <mat-icon class="text-[20px] text-(--color-accent)">visibility</mat-icon>
+      </div>
+    </div>
+    <p class="text-3xl font-bold text-(--color-text-primary) mt-2">
+      {{ summary().total_views }}
+    </p>
+    <p class="text-xs text-(--color-text-muted) mt-1">
+      {{ 'analytics.todayCount' | translate }}: {{ summary().views_today }}
+    </p>
+  </div>
+
+  <!-- Unique Visitors -->
+  <div class="bg-(--color-bg-secondary) rounded-xl p-5 border border-(--color-border-primary)">
+    <div class="flex items-center justify-between">
+      <p class="text-sm font-medium text-(--color-text-muted)">
+        {{ 'analytics.uniqueVisitors' | translate }}
+      </p>
+      <div class="p-2 bg-emerald-500/10 rounded-lg">
+        <mat-icon class="text-[20px] text-emerald-500">group</mat-icon>
+      </div>
+    </div>
+    <p class="text-3xl font-bold text-(--color-text-primary) mt-2">
+      {{ summary().unique_visitors }}
+    </p>
+    <p class="text-xs text-(--color-text-muted) mt-1">
+      {{ 'analytics.todayVisitors' | translate }}: {{ summary().visitors_today }}
+    </p>
+  </div>
+
+  <!-- Avg Session Duration -->
+  <div class="bg-(--color-bg-secondary) rounded-xl p-5 border border-(--color-border-primary)">
+    <div class="flex items-center justify-between">
+      <p class="text-sm font-medium text-(--color-text-muted)">
+        {{ 'analytics.avgDuration' | translate }}
+      </p>
+      <div class="p-2 bg-blue-500/10 rounded-lg">
+        <mat-icon class="text-[20px] text-blue-500">schedule</mat-icon>
+      </div>
+    </div>
+    <p class="text-3xl font-bold text-(--color-text-primary) mt-2">
+      {{ avgSessionDuration() }}
+    </p>
+    <p class="text-xs text-(--color-text-muted) mt-1">
+      {{ 'analytics.avgPerVisit' | translate }}: {{ avgViewsPerVisitor() }}
+      {{ 'analytics.pages' | translate }}
+    </p>
+  </div>
+
+  <!-- Potential Recruiters -->
+  <div class="bg-(--color-bg-secondary) rounded-xl p-5 border border-(--color-border-primary)">
+    <div class="flex items-center justify-between">
+      <p class="text-sm font-medium text-(--color-text-muted)">
+        {{ 'analytics.potentialRecruiters' | translate }}
+      </p>
+      <div class="p-2 bg-purple-500/10 rounded-lg">
+        <mat-icon class="text-[20px] text-purple-500">work</mat-icon>
+      </div>
+    </div>
+    <p class="text-3xl font-bold text-(--color-text-primary) mt-2">
+      {{ summary().potential_recruiters }}
+    </p>
+    <p class="text-xs text-(--color-text-muted) mt-1">
+      {{ 'analytics.recruiterHint' | translate }}
+    </p>
+  </div>
+
+  <!-- CV Downloads -->
+  <div class="bg-(--color-bg-secondary) rounded-xl p-5 border border-(--color-border-primary)">
+    <div class="flex items-center justify-between">
+      <p class="text-sm font-medium text-(--color-text-muted)">
+        {{ 'analytics.cvDownloads' | translate }}
+      </p>
+      <div class="p-2 bg-amber-500/10 rounded-lg">
+        <mat-icon class="text-[20px] text-amber-500">download</mat-icon>
+      </div>
+    </div>
+    <p class="text-3xl font-bold text-(--color-text-primary) mt-2">
+      {{ summary().cv_downloads_total }}
+    </p>
+    <p class="text-xs text-(--color-text-muted) mt-1">
+      {{ 'analytics.todayCount' | translate }}: {{ summary().cv_downloads_today }}
+    </p>
+  </div>
+</div>

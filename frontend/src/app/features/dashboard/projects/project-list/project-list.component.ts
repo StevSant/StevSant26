@@ -6,22 +6,37 @@ import { TranslateService } from '@core/services/translate.service';
 import { Project, ProjectTranslation, Image } from '@core/models';
 import { ConfirmDialogComponent } from '@shared/components/confirm-dialog/confirm-dialog.component';
 import { TranslatePipe } from '@shared/pipes/translate.pipe';
-import { DashboardFilterComponent, DashboardFilterOption } from '@shared/components/dashboard-filter/dashboard-filter.component';
+import {
+  DashboardFilterComponent,
+  DashboardFilterOption,
+} from '@shared/components/dashboard-filter/dashboard-filter.component';
 import { ProjectItemComponent } from './project-item/project-item.component';
 import { PaginationComponent } from '@shared/components/pagination/pagination.component';
 import { LoggerService } from '@core/services/logger.service';
 import { CrudService, TranslationDataService } from '@core/services';
 import { MatIcon } from '@angular/material/icon';
+import { DashboardListSkeletonComponent } from '@shared/components/dashboard-list-skeleton/dashboard-list-skeleton.component';
 
 @Component({
   selector: 'app-project-list',
   standalone: true,
-  imports: [CommonModule, RouterModule, DragDropModule, ConfirmDialogComponent, TranslatePipe, DashboardFilterComponent, ProjectItemComponent, MatIcon, PaginationComponent],
+  imports: [
+    CommonModule,
+    RouterModule,
+    DragDropModule,
+    ConfirmDialogComponent,
+    TranslatePipe,
+    DashboardFilterComponent,
+    ProjectItemComponent,
+    MatIcon,
+    PaginationComponent,
+    DashboardListSkeletonComponent,
+  ],
   templateUrl: './project-list.component.html',
 })
 export class ProjectListComponent implements OnInit {
-    private crudService = inject(CrudService);
-    private translationDataService = inject(TranslationDataService);
+  private crudService = inject(CrudService);
+  private translationDataService = inject(TranslationDataService);
   private translateService = inject(TranslateService);
   private logger = inject(LoggerService);
 
@@ -47,8 +62,14 @@ export class ProjectListComponent implements OnInit {
 
   async ngOnInit(): Promise<void> {
     this.sourceTypeFilterOptions = [
-      { label: this.translateService.instant('projects.sourceTypes.experience'), value: 'experience' },
-      { label: this.translateService.instant('projects.sourceTypes.competition'), value: 'competition' },
+      {
+        label: this.translateService.instant('projects.sourceTypes.experience'),
+        value: 'experience',
+      },
+      {
+        label: this.translateService.instant('projects.sourceTypes.competition'),
+        value: 'competition',
+      },
       { label: this.translateService.instant('projects.sourceTypes.event'), value: 'event' },
       { label: this.translateService.instant('projects.noSource'), value: 'none' },
     ];
@@ -62,7 +83,7 @@ export class ProjectListComponent implements OnInit {
         'project',
         'project_translation',
         'position',
-        true
+        true,
       );
       if (error) throw error;
       this.items.set(data || []);
@@ -79,7 +100,7 @@ export class ProjectListComponent implements OnInit {
    */
   private async loadImages(items: Project[]): Promise<void> {
     if (items.length === 0) return;
-    const ids = items.map(i => i.id);
+    const ids = items.map((i) => i.id);
     const { data } = await this.crudService
       .from('image')
       .select('*')
@@ -99,7 +120,7 @@ export class ProjectListComponent implements OnInit {
 
   getItemTitle(item: Project): string {
     const lang = this.translateService.currentLang();
-    const translation = item.translations?.find(t => t.language?.code === lang);
+    const translation = item.translations?.find((t) => t.language?.code === lang);
     return translation?.title || item.translations?.[0]?.title || `Project #${item.id}`;
   }
 
@@ -108,18 +129,18 @@ export class ProjectListComponent implements OnInit {
    */
   getItemDescription(item: Project): string | null {
     const lang = this.translateService.currentLang();
-    const translation = item.translations?.find(t => t.language?.code === lang);
+    const translation = item.translations?.find((t) => t.language?.code === lang);
     return translation?.description || item.translations?.[0]?.description || null;
   }
 
   getParentTitle(item: Project): string | null {
     if (!item.parent_project_id) return null;
-    const parent = this.items().find(p => p.id === item.parent_project_id);
+    const parent = this.items().find((p) => p.id === item.parent_project_id);
     return parent ? this.getItemTitle(parent) : null;
   }
 
   getSubProjectCount(item: Project): number {
-    return this.items().filter(p => p.parent_project_id === item.id).length;
+    return this.items().filter((p) => p.parent_project_id === item.id).length;
   }
 
   filteredItems(): Project[] {
@@ -128,25 +149,27 @@ export class ProjectListComponent implements OnInit {
     let filtered = all.filter((i) => !i.parent_project_id);
 
     // Apply archived filter
-    filtered = this.showArchived() ? filtered.filter((i) => i.is_archived) : filtered.filter((i) => !i.is_archived);
+    filtered = this.showArchived()
+      ? filtered.filter((i) => i.is_archived)
+      : filtered.filter((i) => !i.is_archived);
 
     // Filter by source type
     const sourceType = this.selectedSourceType();
     if (sourceType === 'none') {
-      filtered = filtered.filter(i => !i.source_type);
+      filtered = filtered.filter((i) => !i.source_type);
     } else if (sourceType) {
-      filtered = filtered.filter(i => i.source_type === sourceType);
+      filtered = filtered.filter((i) => i.source_type === sourceType);
     }
 
     // Filter by search text
     const search = this.searchText().toLowerCase().trim();
     if (search) {
-      filtered = filtered.filter(i => {
+      filtered = filtered.filter((i) => {
         const title = this.getItemTitle(i).toLowerCase();
         const desc = (this.getItemDescription(i) || '').toLowerCase();
         // Also check if any child matches
         const children = this.getChildProjects(i.id);
-        const childMatch = children.some(c => {
+        const childMatch = children.some((c) => {
           const cTitle = this.getItemTitle(c).toLowerCase();
           const cDesc = (this.getItemDescription(c) || '').toLowerCase();
           return cTitle.includes(search) || cDesc.includes(search);
@@ -162,15 +185,14 @@ export class ProjectListComponent implements OnInit {
   getChildProjects(parentId: number): Project[] {
     const all = this.items();
     const archived = this.showArchived();
-    return all.filter(p =>
-      p.parent_project_id === parentId &&
-      (archived ? p.is_archived : !p.is_archived)
+    return all.filter(
+      (p) => p.parent_project_id === parentId && (archived ? p.is_archived : !p.is_archived),
     );
   }
 
   /** Toggle expand/collapse of a parent project */
   toggleExpand(projectId: number): void {
-    this.expandedParents.update(set => {
+    this.expandedParents.update((set) => {
       const newSet = new Set(set);
       if (newSet.has(projectId)) {
         newSet.delete(projectId);
@@ -190,10 +212,18 @@ export class ProjectListComponent implements OnInit {
     return this.filteredItems().slice(start, start + this.pageSize);
   }
 
-  onPageChange(page: number): void { this.currentPage.set(page); }
+  onPageChange(page: number): void {
+    this.currentPage.set(page);
+  }
 
-  onSearchChange(text: string): void { this.searchText.set(text); this.currentPage.set(1); }
-  onSourceTypeFilterChange(value: string): void { this.selectedSourceType.set(value); this.currentPage.set(1); }
+  onSearchChange(text: string): void {
+    this.searchText.set(text);
+    this.currentPage.set(1);
+  }
+  onSourceTypeFilterChange(value: string): void {
+    this.selectedSourceType.set(value);
+    this.currentPage.set(1);
+  }
 
   toggleShowArchived(): void {
     this.showArchived.update((v) => !v);
@@ -209,7 +239,7 @@ export class ProjectListComponent implements OnInit {
     const toIndex = allItems.indexOf(targetItem);
     if (fromIndex < 0 || toIndex < 0) return;
     moveItemInArray(allItems, fromIndex, toIndex);
-    allItems.forEach((item, i) => (item as any).position = i);
+    allItems.forEach((item, i) => ((item as any).position = i));
     this.items.set(allItems);
     const updates = allItems.map((item, i) => ({ id: item.id, position: i }));
     try {

@@ -11,11 +11,22 @@ import { PaginationComponent } from '@shared/components/pagination/pagination.co
 import { LoggerService } from '@core/services/logger.service';
 import { CrudService, TranslationDataService } from '@core/services';
 import { MatIcon } from '@angular/material/icon';
+import { DashboardListSkeletonComponent } from '@shared/components/dashboard-list-skeleton/dashboard-list-skeleton.component';
 
 @Component({
   selector: 'app-skill-category-list',
   standalone: true,
-  imports: [CommonModule, RouterModule, DragDropModule, ConfirmDialogComponent, TranslatePipe, SkillCategoryItemComponent, MatIcon, PaginationComponent],
+  imports: [
+    CommonModule,
+    RouterModule,
+    DragDropModule,
+    ConfirmDialogComponent,
+    TranslatePipe,
+    SkillCategoryItemComponent,
+    MatIcon,
+    PaginationComponent,
+    DashboardListSkeletonComponent,
+  ],
   templateUrl: './skill-category-list.component.html',
 })
 export class SkillCategoryListComponent implements OnInit {
@@ -41,12 +52,13 @@ export class SkillCategoryListComponent implements OnInit {
   async loadItems(): Promise<void> {
     this.loading.set(true);
     try {
-      const { data, error } = await this.translationDataService.getAllWithTranslations<SkillCategory>(
-        'skill_category',
-        'skill_category_translation',
-        'position',
-        true
-      );
+      const { data, error } =
+        await this.translationDataService.getAllWithTranslations<SkillCategory>(
+          'skill_category',
+          'skill_category_translation',
+          'position',
+          true,
+        );
       if (error) throw error;
       this.items.set(data || []);
     } catch (err) {
@@ -61,7 +73,7 @@ export class SkillCategoryListComponent implements OnInit {
    */
   getItemName(item: SkillCategory): string {
     const lang = this.translateService.currentLang();
-    const translation = item.translations?.find(t => t.language?.code === lang);
+    const translation = item.translations?.find((t) => t.language?.code === lang);
     return translation?.name || item.translations?.[0]?.name || `Category #${item.id}`;
   }
 
@@ -70,13 +82,15 @@ export class SkillCategoryListComponent implements OnInit {
    */
   getItemApproach(item: SkillCategory): string | null {
     const lang = this.translateService.currentLang();
-    const translation = item.translations?.find(t => t.language?.code === lang);
+    const translation = item.translations?.find((t) => t.language?.code === lang);
     return translation?.approach || item.translations?.[0]?.approach || null;
   }
 
   filteredItems(): SkillCategory[] {
     const all = this.items();
-    return this.showArchived() ? all.filter((i) => i.is_archived) : all.filter((i) => !i.is_archived);
+    return this.showArchived()
+      ? all.filter((i) => i.is_archived)
+      : all.filter((i) => !i.is_archived);
   }
 
   paginatedItems(): SkillCategory[] {
@@ -84,7 +98,9 @@ export class SkillCategoryListComponent implements OnInit {
     return this.filteredItems().slice(start, start + this.pageSize);
   }
 
-  onPageChange(page: number): void { this.currentPage.set(page); }
+  onPageChange(page: number): void {
+    this.currentPage.set(page);
+  }
 
   toggleShowArchived(): void {
     this.showArchived.update((v) => !v);
@@ -100,7 +116,7 @@ export class SkillCategoryListComponent implements OnInit {
     const toIndex = allItems.indexOf(targetItem);
     if (fromIndex < 0 || toIndex < 0) return;
     moveItemInArray(allItems, fromIndex, toIndex);
-    allItems.forEach((item, i) => (item as any).position = i);
+    allItems.forEach((item, i) => ((item as any).position = i));
     this.items.set(allItems);
     const updates = allItems.map((item, i) => ({ id: item.id, position: i }));
     try {

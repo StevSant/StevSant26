@@ -5,14 +5,28 @@ import { PortfolioDataService } from '../services/portfolio-data.service';
 import { SeoService } from '@core/services/seo.service';
 import { TranslateService } from '@core/services/translate.service';
 import { TranslatePipe } from '@shared/pipes/translate.pipe';
-import { PortfolioFilterComponent, FilterOption, FilterOptionGroup } from '@shared/components/portfolio-filter/portfolio-filter.component';
+import {
+  PortfolioFilterComponent,
+  FilterOption,
+  FilterOptionGroup,
+} from '@shared/components/portfolio-filter/portfolio-filter.component';
 import { ScrollRevealDirective } from '@shared/directives/scroll-reveal.directive';
 import { ProgressiveImageComponent } from '@shared/components/progressive-image/progressive-image.component';
+import { PortfolioGridSkeletonComponent } from '@shared/components/portfolio-grid-skeleton/portfolio-grid-skeleton.component';
 
 @Component({
   selector: 'app-portfolio-events',
   standalone: true,
-  imports: [CommonModule, DatePipe, RouterModule, TranslatePipe, PortfolioFilterComponent, ScrollRevealDirective, ProgressiveImageComponent],
+  imports: [
+    CommonModule,
+    DatePipe,
+    RouterModule,
+    TranslatePipe,
+    PortfolioFilterComponent,
+    ScrollRevealDirective,
+    ProgressiveImageComponent,
+    PortfolioGridSkeletonComponent,
+  ],
   templateUrl: './portfolio-events.component.html',
 })
 export class PortfolioEventsComponent implements OnInit {
@@ -24,13 +38,13 @@ export class PortfolioEventsComponent implements OnInit {
   selectedSkill = signal('');
 
   skillFilterOptions = computed<FilterOption[]>(() => {
-    return this.data.getAllSkillNames().map(name => ({ label: name, value: name }));
+    return this.data.getAllSkillNames().map((name) => ({ label: name, value: name }));
   });
 
   skillFilterGroups = computed<FilterOptionGroup[]>(() => {
-    return this.data.getGroupedSkillNamesBySourceType('event').map(g => ({
+    return this.data.getGroupedSkillNamesBySourceType('event').map((g) => ({
       label: g.category,
-      options: g.names.map(n => ({ label: n, value: n })),
+      options: g.names.map((n) => ({ label: n, value: n })),
     }));
   });
 
@@ -40,7 +54,7 @@ export class PortfolioEventsComponent implements OnInit {
     const skill = this.selectedSkill();
 
     if (search) {
-      events = events.filter(e => {
+      events = events.filter((e) => {
         const name = this.data.getEntityTranslation(e, 'name').toLowerCase();
         const desc = this.data.getEntityTranslation(e, 'description').toLowerCase();
         return name.includes(search) || desc.includes(search);
@@ -48,9 +62,9 @@ export class PortfolioEventsComponent implements OnInit {
     }
 
     if (skill) {
-      events = events.filter(e => {
+      events = events.filter((e) => {
         const usages = this.data.getSkillUsages('event', e.id);
-        return usages.some(u => this.data.getSkillName(u) === skill);
+        return usages.some((u) => this.data.getSkillName(u) === skill);
       });
     }
 
@@ -80,7 +94,7 @@ export class PortfolioEventsComponent implements OnInit {
       this.seoService.buildBreadcrumbSchema([
         { name: this.translateService.instant('seo.home.title'), url: siteUrl },
         { name: this.translateService.instant('seo.events.title'), url: `${siteUrl}/events` },
-      ])
+      ]),
     );
   }
 }

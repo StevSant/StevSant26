@@ -6,17 +6,32 @@ import { TranslateService } from '@core/services/translate.service';
 import { Competition, CompetitionTranslation, Image } from '@core/models';
 import { ConfirmDialogComponent } from '@shared/components/confirm-dialog/confirm-dialog.component';
 import { TranslatePipe } from '@shared/pipes/translate.pipe';
-import { DashboardFilterComponent, DashboardFilterOption } from '@shared/components/dashboard-filter/dashboard-filter.component';
+import {
+  DashboardFilterComponent,
+  DashboardFilterOption,
+} from '@shared/components/dashboard-filter/dashboard-filter.component';
 import { CompetitionItemComponent } from './competition-item/competition-item.component';
 import { PaginationComponent } from '@shared/components/pagination/pagination.component';
 import { LoggerService } from '@core/services/logger.service';
 import { CrudService, TranslationDataService } from '@core/services';
 import { MatIcon } from '@angular/material/icon';
+import { DashboardListSkeletonComponent } from '@shared/components/dashboard-list-skeleton/dashboard-list-skeleton.component';
 
 @Component({
   selector: 'app-competition-list',
   standalone: true,
-  imports: [CommonModule, RouterModule, DragDropModule, ConfirmDialogComponent, TranslatePipe, DashboardFilterComponent, CompetitionItemComponent, MatIcon, PaginationComponent],
+  imports: [
+    CommonModule,
+    RouterModule,
+    DragDropModule,
+    ConfirmDialogComponent,
+    TranslatePipe,
+    DashboardFilterComponent,
+    CompetitionItemComponent,
+    MatIcon,
+    PaginationComponent,
+    DashboardListSkeletonComponent,
+  ],
   templateUrl: './competition-list.component.html',
 })
 export class CompetitionListComponent implements OnInit {
@@ -41,7 +56,9 @@ export class CompetitionListComponent implements OnInit {
   selectedOrganizer = signal('');
   organizerFilterOptions = signal<DashboardFilterOption[]>([]);
 
-  async ngOnInit(): Promise<void> { await this.loadItems(); }
+  async ngOnInit(): Promise<void> {
+    await this.loadItems();
+  }
 
   async loadItems(): Promise<void> {
     this.loading.set(true);
@@ -50,14 +67,17 @@ export class CompetitionListComponent implements OnInit {
         'competitions',
         'competitions_translation',
         'position',
-        true
+        true,
       );
       if (error) throw error;
       this.items.set(data || []);
       this.buildOrganizerOptions(data || []);
       await this.loadImages(data || []);
-    } catch (err) { this.logger.error('Error loading competitions:', err); }
-    finally { this.loading.set(false); }
+    } catch (err) {
+      this.logger.error('Error loading competitions:', err);
+    } finally {
+      this.loading.set(false);
+    }
   }
 
   /**
@@ -65,7 +85,7 @@ export class CompetitionListComponent implements OnInit {
    */
   private async loadImages(items: Competition[]): Promise<void> {
     if (items.length === 0) return;
-    const ids = items.map(i => i.id);
+    const ids = items.map((i) => i.id);
     const { data } = await this.crudService
       .from('image')
       .select('*')
@@ -85,7 +105,7 @@ export class CompetitionListComponent implements OnInit {
 
   getItemName(item: Competition): string {
     const lang = this.translateService.currentLang();
-    const translation = item.translations?.find(t => t.language?.code === lang);
+    const translation = item.translations?.find((t) => t.language?.code === lang);
     return translation?.name || item.translations?.[0]?.name || `Competition #${item.id}`;
   }
 
@@ -98,7 +118,9 @@ export class CompetitionListComponent implements OnInit {
       if (comp.organizer) organizers.add(comp.organizer);
     }
     this.organizerFilterOptions.set(
-      Array.from(organizers).sort().map(o => ({ label: o, value: o }))
+      Array.from(organizers)
+        .sort()
+        .map((o) => ({ label: o, value: o })),
     );
   }
 
@@ -107,35 +129,42 @@ export class CompetitionListComponent implements OnInit {
    */
   getItemResult(item: Competition): string | null {
     const lang = this.translateService.currentLang();
-    const translation = item.translations?.find(t => t.language?.code === lang);
+    const translation = item.translations?.find((t) => t.language?.code === lang);
     return translation?.result || item.translations?.[0]?.result || null;
   }
 
   getItemDescription(item: Competition): string | null {
     const lang = this.translateService.currentLang();
-    const translation = item.translations?.find(t => t.language?.code === lang);
+    const translation = item.translations?.find((t) => t.language?.code === lang);
     return translation?.description || item.translations?.[0]?.description || null;
   }
 
   filteredItems(): Competition[] {
     const all = this.items();
-    let filtered = this.showArchived() ? all.filter((i) => i.is_archived) : all.filter((i) => !i.is_archived);
+    let filtered = this.showArchived()
+      ? all.filter((i) => i.is_archived)
+      : all.filter((i) => !i.is_archived);
 
     // Filter by organizer
     const organizer = this.selectedOrganizer();
     if (organizer) {
-      filtered = filtered.filter(i => i.organizer === organizer);
+      filtered = filtered.filter((i) => i.organizer === organizer);
     }
 
     // Filter by search text
     const search = this.searchText().toLowerCase().trim();
     if (search) {
-      filtered = filtered.filter(i => {
+      filtered = filtered.filter((i) => {
         const name = this.getItemName(i).toLowerCase();
         const desc = (this.getItemDescription(i) || '').toLowerCase();
         const org = (i.organizer || '').toLowerCase();
         const result = (this.getItemResult(i) || '').toLowerCase();
-        return name.includes(search) || desc.includes(search) || org.includes(search) || result.includes(search);
+        return (
+          name.includes(search) ||
+          desc.includes(search) ||
+          org.includes(search) ||
+          result.includes(search)
+        );
       });
     }
 
@@ -147,40 +176,72 @@ export class CompetitionListComponent implements OnInit {
     return this.filteredItems().slice(start, start + this.pageSize);
   }
 
-  onPageChange(page: number): void { this.currentPage.set(page); }
+  onPageChange(page: number): void {
+    this.currentPage.set(page);
+  }
 
-  onSearchChange(text: string): void { this.searchText.set(text); this.currentPage.set(1); }
-  onOrganizerFilterChange(value: string): void { this.selectedOrganizer.set(value); this.currentPage.set(1); }
+  onSearchChange(text: string): void {
+    this.searchText.set(text);
+    this.currentPage.set(1);
+  }
+  onOrganizerFilterChange(value: string): void {
+    this.selectedOrganizer.set(value);
+    this.currentPage.set(1);
+  }
 
-  toggleShowArchived(): void { this.showArchived.update((v) => !v); this.currentPage.set(1); }
+  toggleShowArchived(): void {
+    this.showArchived.update((v) => !v);
+    this.currentPage.set(1);
+  }
 
   async drop(event: CdkDragDrop<Competition[]>): Promise<void> {
     const filtered = this.filteredItems();
     moveItemInArray(filtered, event.previousIndex, event.currentIndex);
     const updates = filtered.map((item, index) => ({ id: item.id, position: index }));
-    try { await this.crudService.updatePositions('competitions', updates); await this.loadItems(); }
-    catch (err) { this.logger.error('Error updating positions:', err); }
+    try {
+      await this.crudService.updatePositions('competitions', updates);
+      await this.loadItems();
+    } catch (err) {
+      this.logger.error('Error updating positions:', err);
+    }
   }
 
   async togglePin(item: Competition): Promise<void> {
-    try { await this.crudService.togglePin('competitions', item.id, !item.is_pinned); await this.loadItems(); }
-    catch (err) { this.logger.error('Error toggling pin:', err); }
+    try {
+      await this.crudService.togglePin('competitions', item.id, !item.is_pinned);
+      await this.loadItems();
+    } catch (err) {
+      this.logger.error('Error toggling pin:', err);
+    }
   }
 
   async toggleArchive(item: Competition): Promise<void> {
     try {
-      if (item.is_archived) { await this.crudService.unarchive('competitions', item.id); }
-      else { await this.crudService.archive('competitions', item.id); }
+      if (item.is_archived) {
+        await this.crudService.unarchive('competitions', item.id);
+      } else {
+        await this.crudService.archive('competitions', item.id);
+      }
       await this.loadItems();
-    } catch (err) { this.logger.error('Error toggling archive:', err); }
+    } catch (err) {
+      this.logger.error('Error toggling archive:', err);
+    }
   }
 
-  confirmDelete(item: Competition): void { this.itemToDelete = item; this.confirmDialog().open(); }
+  confirmDelete(item: Competition): void {
+    this.itemToDelete = item;
+    this.confirmDialog().open();
+  }
 
   async deleteItem(): Promise<void> {
     if (!this.itemToDelete) return;
-    try { await this.crudService.delete('competitions', this.itemToDelete.id); await this.loadItems(); }
-    catch (err) { this.logger.error('Error deleting item:', err); }
-    finally { this.itemToDelete = null; }
+    try {
+      await this.crudService.delete('competitions', this.itemToDelete.id);
+      await this.loadItems();
+    } catch (err) {
+      this.logger.error('Error deleting item:', err);
+    } finally {
+      this.itemToDelete = null;
+    }
   }
 }

@@ -1,45 +1,57 @@
-<div class="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center">
-  <!-- Search input -->
-  <div class="relative flex-1 min-w-0">
-    <mat-icon class="absolute left-3 top-1/2 -translate-y-1/2 text-[16px] text-[var(--color-text-muted)]" >search</mat-icon
-    >
-    <input
-      type="text"
-      [ngModel]="searchText()"
-      (ngModelChange)="onSearchInput($event)"
-      [placeholder]="searchPlaceholder() | translate"
-      class="w-full pl-10 pr-8 py-2 text-sm bg-[var(--color-bg-secondary)] border border-[var(--color-border-primary)] rounded-lg text-[var(--color-text-primary)] placeholder:text-[var(--color-text-muted)] focus:outline-none focus:border-[var(--color-accent)]/50 transition-colors"
-    />
-    @if (searchText()) {
-      <button
-        type="button"
-        (click)="clearSearch()"
-        class="absolute right-2.5 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)] transition-colors"
+<div
+  class="bg-[var(--color-bg-secondary)] border border-[var(--color-border-primary)] rounded-xl p-4"
+>
+  <div class="flex flex-col sm:flex-row gap-4 items-stretch sm:items-center">
+    <!-- Search input -->
+    <div class="relative flex-1 min-w-0">
+      <mat-icon
+        class="absolute left-3 top-1/2 -translate-y-1/2 text-[16px] text-[var(--color-text-muted)]"
+        >search</mat-icon
       >
-        <mat-icon class="text-[16px]">close</mat-icon>
-      </button>
+      <input
+        type="text"
+        [ngModel]="searchText()"
+        (ngModelChange)="onSearchInput($event)"
+        [placeholder]="searchPlaceholder() | translate"
+        class="w-full pl-10 pr-8 py-2.5 text-sm bg-[var(--color-bg-primary)] border border-[var(--color-border-primary)] rounded-lg text-[var(--color-text-primary)] placeholder:text-[var(--color-text-muted)] focus:outline-none focus:border-[var(--color-accent)]/50 transition-colors"
+      />
+      @if (searchText()) {
+        <button
+          type="button"
+          (click)="clearSearch()"
+          class="absolute right-2.5 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)] transition-colors"
+        >
+          <mat-icon class="text-[16px]">close</mat-icon>
+        </button>
+      }
+    </div>
+
+    <!-- Dropdown filter -->
+    @if (filterOptions().length > 0) {
+      <div class="relative sm:w-56">
+        <mat-icon
+          class="absolute left-3 top-1/2 -translate-y-1/2 text-[16px] text-[var(--color-text-muted)] pointer-events-none"
+          >filter_list</mat-icon
+        >
+        <select
+          [ngModel]="selectedFilter()"
+          (ngModelChange)="onFilterSelect($event)"
+          class="w-full pl-10 pr-8 py-2.5 text-sm bg-[var(--color-bg-primary)] border border-[var(--color-border-primary)] rounded-lg text-[var(--color-text-primary)] focus:outline-none focus:border-[var(--color-accent)]/50 transition-colors appearance-none cursor-pointer"
+        >
+          @if (showAllOption()) {
+            <option value="">
+              {{ filterLabel() | translate }} — {{ 'dashboardFilter.all' | translate }}
+            </option>
+          }
+          @for (option of filterOptions(); track option.value) {
+            <option [value]="option.value">{{ option.label }}</option>
+          }
+        </select>
+        <mat-icon
+          class="absolute right-3 top-1/2 -translate-y-1/2 text-[16px] text-[var(--color-text-muted)] pointer-events-none"
+          >expand_more</mat-icon
+        >
+      </div>
     }
   </div>
-
-  <!-- Dropdown filter -->
-  @if (filterOptions().length > 0) {
-    <div class="relative sm:w-56">
-      <mat-icon class="absolute left-3 top-1/2 -translate-y-1/2 text-[16px] text-[var(--color-text-muted)] pointer-events-none" >filter_list</mat-icon>
-      <select
-        [ngModel]="selectedFilter()"
-        (ngModelChange)="onFilterSelect($event)"
-        class="w-full pl-10 pr-8 py-2 text-sm bg-[var(--color-bg-secondary)] border border-[var(--color-border-primary)] rounded-lg text-[var(--color-text-primary)] focus:outline-none focus:border-[var(--color-accent)]/50 transition-colors appearance-none cursor-pointer"
-      >
-        @if (showAllOption()) {
-          <option value="">
-            {{ filterLabel() | translate }} — {{ 'dashboardFilter.all' | translate }}
-          </option>
-        }
-        @for (option of filterOptions(); track option.value) {
-          <option [value]="option.value">{{ option.label }}</option>
-        }
-      </select>
-      <mat-icon class="absolute right-3 top-1/2 -translate-y-1/2 text-[16px] text-[var(--color-text-muted)] pointer-events-none" >expand_more</mat-icon>
-    </div>
-  }
 </div>

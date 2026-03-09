@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { TranslatePipe } from '@shared/pipes/translate.pipe';
 import { PortfolioDataService } from '../../services/portfolio-data.service';
-import { AnalyticsService } from '@core/services/analytics.service';
+import { AnalyticsTrackingService } from '@core/services/analytics-tracking.service';
 import { Document } from '@core/models';
 
 @Component({
@@ -14,7 +14,7 @@ import { Document } from '@core/models';
 })
 export class PortfolioMobileMenuComponent {
   protected data = inject(PortfolioDataService);
-  private analytics = inject(AnalyticsService);
+  private analytics = inject(AnalyticsTrackingService);
 
   closeMobileMenu = output<void>();
 

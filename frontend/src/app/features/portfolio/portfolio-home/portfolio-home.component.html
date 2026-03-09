@@ -1,454 +1,65 @@
-<!-- Hero Section -->
-<section class="relative pt-8 pb-12 sm:pt-10 sm:pb-16 lg:pt-12 lg:pb-24 px-4 sm:px-6 lg:px-8">
-  <!-- Banner Background with parallax -->
-  @if (data.bannerUrl()) {
+@if (data.loading()) {
+  <app-portfolio-home-skeleton />
+} @else {
+  <app-portfolio-hero
+    [firstName]="data.profile()?.first_name || ''"
+    [lastName]="data.profile()?.last_name || ''"
+    [nickname]="data.profile()?.nickname || null"
+    [isAvailable]="data.profile()?.is_available"
+    [avatarUrl]="data.avatarUrl()"
+    [bannerUrl]="data.bannerUrl()"
+    [profileJobTitle]="profileJobTitle()"
+    [yearsOfExperience]="yearsOfExperience()"
+    [cvDocuments]="data.cvDocuments()"
+    (imageModalOpen)="openImageModal($event)"
+  />
+
+  <app-portfolio-about
+    [bio]="data.getProfileBio()"
+    [hasLocationData]="hasLocationData()"
+    [city]="data.profile()?.city || ''"
+    [countryCode]="data.profile()?.country_code || ''"
+    [timezone]="data.profile()?.timezone || ''"
+    [jobTitle]="profileJobTitle()"
+    [latitude]="data.profile()?.latitude || 0"
+    [longitude]="data.profile()?.longitude || 0"
+  />
+
+  <app-portfolio-featured-projects [pinnedProjects]="pinnedProjects()" />
+
+  <app-portfolio-skills-ticker
+    [topSkillCategories]="topSkillCategories()"
+    [allSkills]="allSkills()"
+  />
+
+  <!-- Image Modal -->
+  @if (showImageModal()) {
     <div
-      appScrollReveal [revealParallax]="true" [revealParallaxSpeed]="0.03"
-      class="absolute inset-0 z-0 cursor-pointer overflow-hidden"
-      (dblclick)="openImageModal(data.bannerUrl()!, 'Banner')"
-      title="Doble clic para ver en grande"
+      role="dialog"
+      aria-modal="true"
+      class="modal-backdrop fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm"
+      (click)="onModalBackdropClick($event)"
+      (keydown.escape)="closeImageModal()"
     >
-      <img [src]="data.bannerUrl()" alt="Banner" class="w-full h-full object-cover" fetchpriority="high" />
-      <div
-        class="absolute inset-0 opacity-70"
-        style="
-          background: linear-gradient(
-            to bottom,
-            var(--color-hero-gradient-start),
-            var(--color-hero-gradient-end)
-          );
-        "
-      ></div>
+      <div class="relative max-w-[90vw] max-h-[90vh]">
+        <!-- Close button -->
+        <button
+          type="button"
+          (click)="closeImageModal()"
+          class="absolute -top-12 right-0 p-2 text-white hover:text-(--color-accent) transition-colors"
+          [attr.aria-label]="'portfolio.a11y.closeModal' | translate"
+        >
+          <mat-icon class="text-[32px] text-white hover:text-(--color-accent) transition-colors"
+            >close</mat-icon
+          >
+        </button>
+        <!-- Image -->
+        <img
+          [src]="modalImageUrl()"
+          [alt]="modalImageAlt()"
+          class="max-w-full max-h-[85vh] object-contain rounded-lg shadow-2xl"
+        />
+      </div>
     </div>
   }
-
-  <div class="relative z-10 max-w-6xl mx-auto">
-    <div class="flex flex-col md:flex-row items-center gap-6 sm:gap-10 md:gap-16">
-      <!-- Avatar -->
-      @if (data.avatarUrl()) {
-        <div
-          class="shrink-0 cursor-pointer"
-          (dblclick)="openImageModal(data.avatarUrl()!, 'Avatar')"
-          title="Doble clic para ver en grande"
-        >
-          <img
-            [src]="data.avatarUrl()"
-            alt="Avatar"
-            fetchpriority="high"
-            class="w-32 h-32 sm:w-44 sm:h-44 md:w-56 md:h-56 rounded-full object-cover shadow-2xl ring-2 ring-(--color-accent)/20 ring-offset-4 ring-offset-(--color-bg-primary) hover:ring-4 hover:ring-(--color-accent)/40 transition-all"
-          />
-        </div>
-      }
-
-      <!-- Hero Content -->
-      <div class="text-center md:text-left flex-1">
-        <h1
-          class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 tracking-tight leading-tight gradient-text-animated"
-        >
-          {{ data.profile()?.first_name }} {{ data.profile()?.last_name }}
-        </h1>
-        @if (profileJobTitle()) {
-          <p class="text-(--color-text-secondary) text-lg sm:text-xl mb-2 font-light min-h-[1.75rem]">
-            {{ typingText() }}@if (showTypingCursor()) {<span class="typing-cursor"></span>}
-          </p>
-        }
-        @if (data.profile()?.nickname) {
-          <p class="text-(--color-text-muted) text-base mb-4 font-light">
-            &#64;{{ data.profile()?.nickname }}
-          </p>
-        }
-
-        <!-- Badges -->
-        <div class="flex flex-wrap justify-center md:justify-start gap-2 mb-5">
-          @if (data.profile()?.is_available !== undefined) {
-            <div
-              class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider border"
-              [class]="
-                data.profile()?.is_available
-                  ? 'bg-(--color-success-bg) text-(--color-success) border-(--color-success-border)'
-                  : 'bg-(--color-bg-tertiary) text-(--color-text-muted) border-(--color-border-primary)'
-              "
-            >
-              <span class="relative flex h-2 w-2">
-                @if (data.profile()?.is_available) {
-                  <span
-                    class="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 bg-(--color-success)"
-                  ></span>
-                }
-                <span
-                  class="relative inline-flex rounded-full h-2 w-2"
-                  [class]="
-                    data.profile()?.is_available
-                      ? 'bg-(--color-success)'
-                      : 'bg-(--color-text-disabled)'
-                  "
-                ></span>
-              </span>
-              {{
-                (data.profile()?.is_available
-                  ? 'portfolio.home.map.available'
-                  : 'portfolio.home.map.unavailable'
-                ) | translate
-              }}
-            </div>
-          }
-          @if (yearsOfExperience() > 0) {
-            <div
-              class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider border bg-(--color-bg-tertiary) text-(--color-text-secondary) border-(--color-border-primary)"
-            >
-              {{ yearsOfExperience() }}+ {{ 'portfolio.home.stats.yearsExperience' | translate }}
-            </div>
-          }
-        </div>
-
-        <!-- CTA Buttons -->
-        <div class="flex flex-wrap gap-3 justify-center md:justify-start mt-6">
-          <a
-            routerLink="projects"
-            class="inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-(--color-accent) text-(--btn-primary-text) text-sm font-medium tracking-wide hover:opacity-90 transition-opacity"
-          >
-            {{ 'portfolio.home.viewProjects' | translate }}
-            <mat-icon class="text-[16px]">chevron_right</mat-icon>
-          </a>
-          <a
-            routerLink="contact"
-            class="inline-flex items-center gap-2 px-6 py-2.5 rounded-full border border-(--color-divider) text-(--color-text-secondary) text-sm font-medium tracking-wide hover:border-(--color-accent) hover:text-(--color-accent) transition-all"
-          >
-            {{ 'portfolio.home.getInTouch' | translate }}
-          </a>
-          @if (data.cvDocuments().length > 0) {
-            <div class="relative">
-              <button
-                type="button"
-                (click)="toggleCvMenu()"
-                class="inline-flex items-center gap-2 px-6 py-2.5 rounded-full border border-(--color-divider) text-(--color-text-secondary) text-sm font-medium tracking-wide hover:border-(--color-accent) hover:text-(--color-accent) transition-all"
-              >
-                <mat-icon class="text-[16px]">download</mat-icon>
-                {{ 'portfolio.downloadCV' | translate }}
-                <mat-icon class="text-[14px] transition-transform" [class.rotate-180]="cvMenuOpen()" >expand_more</mat-icon
-                >
-              </button>
-              @if (cvMenuOpen()) {
-                <div
-                  class="absolute left-0 mt-2 w-64 bg-(--color-bg-secondary) border border-(--color-border-primary) rounded-lg shadow-xl z-50 py-1 max-h-72 overflow-y-auto"
-                >
-                  <div class="px-4 py-2 border-b border-(--color-divider)">
-                    <p
-                      class="text-xs font-medium uppercase tracking-wider text-(--color-text-muted)"
-                    >
-                      {{ 'portfolio.nav.cvDocuments' | translate }}
-                    </p>
-                  </div>
-                  @for (cv of data.cvDocuments(); track cv.id) {
-                    <div class="px-4 py-3 hover:bg-(--color-bg-tertiary) transition-colors">
-                      <div class="flex items-center justify-between">
-                        <div class="min-w-0 flex-1">
-                          <p class="text-sm font-medium text-(--color-text-primary) truncate">
-                            {{ cv.label || cv.file_name || 'CV' }}
-                          </p>
-                          @if (cv.language) {
-                            <p class="text-xs text-(--color-text-muted)">
-                              {{ cv.language.name }}
-                            </p>
-                          }
-                        </div>
-                        <div class="flex items-center gap-1 shrink-0 ml-3">
-                          <!-- View -->
-                          <a
-                            [href]="cv.url"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            (click)="closeCvMenu()"
-                            class="p-1.5 rounded-md text-(--color-text-muted) hover:text-(--color-accent) hover:bg-(--color-bg-primary) transition-colors"
-                            [title]="'portfolio.nav.viewCV' | translate"
-                          >
-                            <mat-icon class="text-[16px]">visibility</mat-icon>
-                          </a>
-                          <!-- Download -->
-                          <a
-                            [href]="cv.url"
-                            download
-                            (click)="closeCvMenu()"
-                            class="p-1.5 rounded-md text-(--color-text-muted) hover:text-(--color-accent) hover:bg-(--color-bg-primary) transition-colors"
-                            [title]="'portfolio.downloadCV' | translate"
-                          >
-                            <mat-icon class="text-[16px]">download</mat-icon>
-                          </a>
-                        </div>
-                      </div>
-                    </div>
-                  }
-                </div>
-              }
-            </div>
-          }
-        </div>
-
-        <div class="hidden md:block w-24 h-px bg-(--color-accent) mt-8 opacity-50"></div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- About & Map Section -->
-<section appScrollReveal class="py-12 sm:py-16 lg:py-24 px-4 sm:px-6 lg:px-8">
-  <div class="max-w-6xl mx-auto">
-    <h2
-      class="text-sm uppercase tracking-[0.3em] text-(--color-text-muted) mb-3 text-center font-medium"
-    >
-      {{ 'portfolio.sections.about' | translate }}
-    </h2>
-    <div class="w-12 h-px bg-(--color-accent) mx-auto mb-8 sm:mb-10 lg:mb-14 opacity-60"></div>
-
-    <div
-      class="flex flex-col items-center gap-8 lg:gap-14"
-      [class]="hasLocationData() ? 'lg:flex-row lg:items-start' : ''"
-    >
-      <!-- About text -->
-      <div
-        class="flex-1 w-full"
-        [class]="hasLocationData() ? 'lg:max-w-none' : 'max-w-3xl mx-auto'"
-      >
-        @if (data.getProfileBio()) {
-          <div
-            class="text-(--color-text-secondary) text-base sm:text-lg leading-relaxed"
-            [class]="hasLocationData() ? 'text-center lg:text-left' : 'text-center'"
-            [innerHTML]="data.getProfileBio() | safeHtml"
-          ></div>
-        } @else {
-          <p class="text-(--color-text-muted) text-center italic font-light">
-            {{ 'portfolio.empty.about' | translate }}
-          </p>
-        }
-      </div>
-
-      <!-- Map card -->
-      @if (hasLocationData()) {
-        <div class="w-full max-w-sm shrink-0">
-          <app-portfolio-map-card
-            [city]="data.profile()?.city || ''"
-            [countryCode]="data.profile()?.country_code || ''"
-            [timezone]="data.profile()?.timezone || ''"
-            [jobTitle]="profileJobTitle()"
-            [latitude]="data.profile()?.latitude || 0"
-            [longitude]="data.profile()?.longitude || 0"
-          />
-        </div>
-      }
-    </div>
-  </div>
-</section>
-
-<!-- Featured Projects Section -->
-@if (pinnedProjects().length > 0) {
-  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="h-px bg-(--color-divider)"></div>
-  </div>
-  <section appScrollReveal revealVariant="scale" class="py-12 sm:py-16 lg:py-24 px-4 sm:px-6 lg:px-8">
-    <div class="max-w-6xl mx-auto">
-      <h2
-        class="text-sm uppercase tracking-[0.3em] text-(--color-text-muted) mb-3 text-center font-medium"
-      >
-        {{ 'portfolio.home.featuredProjects' | translate }}
-      </h2>
-      <div class="w-12 h-px bg-(--color-accent) mx-auto mb-8 sm:mb-10 lg:mb-14 opacity-60"></div>
-
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
-        @for (project of pinnedProjects(); track project.id) {
-          <a
-            [routerLink]="['projects', project.id]"
-            class="group bg-(--color-bg-secondary) rounded-xl overflow-hidden border border-(--color-card-border) hover:border-(--color-accent)/30 transition-all duration-300 flex flex-col shadow-sm hover:shadow-xl hover:-translate-y-1"
-          >
-            @if (data.getFirstImageUrl('project', project.id)) {
-              <app-progressive-image
-                [src]="data.getFirstImageUrl('project', project.id)!"
-                [alt]="data.getEntityTranslation(project, 'title')"
-                containerClass="h-32 sm:h-40"
-                imgClass="object-cover group-hover:scale-105 transition-transform duration-500"
-              />
-            }
-            <div class="p-4 sm:p-6 flex flex-col flex-1">
-              <h3 class="text-lg font-medium text-(--color-text-primary) mb-2 tracking-tight">
-                {{ data.getEntityTranslation(project, 'title') }}
-              </h3>
-              @if (data.getEntityTranslation(project, 'description')) {
-                <p
-                  class="text-sm text-(--color-text-muted) line-clamp-2 leading-relaxed font-light"
-                >
-                  {{ data.getEntityTranslation(project, 'description') }}
-                </p>
-              }
-              <!-- Skills -->
-              @if (data.getSkillUsages('project', project.id).length > 0) {
-                <div class="flex flex-wrap gap-1.5 mt-auto pt-3 border-t border-(--color-divider)">
-                  @for (
-                    usage of data.getSkillUsages('project', project.id).slice(0, 4);
-                    track usage.id
-                  ) {
-                    <span
-                      class="skill-chip px-2 py-0.5 text-xs rounded-full bg-(--color-bg-tertiary) text-(--color-text-secondary) border border-(--color-border-primary) inline-flex items-center gap-1"
-                    >
-                      @if (data.getSkillIconUrl(usage)) {
-                        <img
-                          [src]="data.getSkillIconUrl(usage)"
-                          class="w-3.5 h-3.5 object-contain"
-                        />
-                      }
-                      {{ data.getSkillName(usage) }}
-                    </span>
-                  }
-                </div>
-              }
-            </div>
-          </a>
-        }
-      </div>
-
-      <div class="text-center mt-10">
-        <a
-          routerLink="projects"
-          class="text-xs uppercase tracking-widest text-(--color-text-muted) hover:text-(--color-accent) transition-colors inline-flex items-center gap-1.5"
-        >
-          {{ 'portfolio.home.viewAllProjects' | translate }}
-          <mat-icon class="text-[14px]">chevron_right</mat-icon>
-        </a>
-      </div>
-    </div>
-  </section>
-}
-
-<!-- Skills Overview Section -->
-@if (topSkillCategories().length > 0) {
-  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="h-px bg-(--color-divider)"></div>
-  </div>
-  <section appScrollReveal class="py-12 sm:py-16 lg:py-24 px-4 sm:px-6 lg:px-8">
-    <div class="max-w-6xl mx-auto">
-      <h2
-        class="text-sm uppercase tracking-[0.3em] text-(--color-text-muted) mb-3 text-center font-medium"
-      >
-        {{ 'portfolio.sections.skills' | translate }}
-      </h2>
-      <div class="w-12 h-px bg-(--color-accent) mx-auto mb-8 sm:mb-10 lg:mb-14 opacity-60"></div>
-
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-        @for (category of topSkillCategories(); track category.id) {
-          <div
-            class="bg-(--color-bg-secondary) rounded-xl p-4 sm:p-6 border border-(--color-card-border) shadow-sm hover:shadow-lg hover:border-(--color-accent)/30 transition-all duration-300"
-          >
-            <h3
-              class="text-sm font-medium text-(--color-text-primary) mb-4 tracking-wide uppercase"
-            >
-              {{ data.getCategoryName(category) }}
-            </h3>
-            <div class="flex flex-wrap gap-1.5">
-              @for (skill of category.skills.slice(0, 6); track skill.id) {
-                <span
-                  class="skill-chip px-2 py-0.5 text-xs rounded-full bg-(--color-bg-tertiary) text-(--color-text-secondary) border border-(--color-border-primary) inline-flex items-center gap-1"
-                >
-                  @if (skill.icon_url) {
-                    <img [src]="skill.icon_url" class="w-3.5 h-3.5 object-contain" />
-                  } @else if (getSkillFallback(data.getEntityTranslation(skill, 'name')); as fb) {
-                    @if (fb.type === 'url') {
-                      <img [src]="fb.value" class="w-3.5 h-3.5 object-contain" />
-                    } @else {
-                      <span class="text-xs leading-none">{{ fb.value }}</span>
-                    }
-                  }
-                  {{ data.getEntityTranslation(skill, 'name') }}
-                </span>
-              }
-              @if (category.skills.length > 6) {
-                <span
-                  class="px-2 py-0.5 text-xs rounded-full bg-(--color-bg-tertiary) text-(--color-text-muted)"
-                >
-                  +{{ category.skills.length - 6 }}
-                </span>
-              }
-            </div>
-          </div>
-        }
-      </div>
-
-      <!-- Animated scrolling skill ticker -->
-      @if (allSkills().length > 0) {
-        <div class="mt-10 overflow-hidden skills-ticker-container">
-          <div class="skills-ticker">
-            @for (skill of allSkills(); track skill.id) {
-              <span
-                class="inline-flex items-center gap-2 px-4 py-2 text-sm rounded-full bg-(--color-bg-secondary) text-(--color-text-secondary) border border-(--color-card-border) whitespace-nowrap"
-              >
-                @if (skill.icon_url) {
-                  <img [src]="skill.icon_url" class="w-6 h-6 object-contain" />
-                } @else if (getSkillFallback(data.getEntityTranslation(skill, 'name')); as fb) {
-                  @if (fb.type === 'url') {
-                    <img [src]="fb.value" class="w-6 h-6 object-contain" />
-                  } @else {
-                    <span class="text-base leading-none">{{ fb.value }}</span>
-                  }
-                }
-                {{ data.getEntityTranslation(skill, 'name') }}
-              </span>
-            }
-            <!-- Duplicate for seamless loop -->
-            @for (skill of allSkills(); track $index) {
-              <span
-                class="inline-flex items-center gap-2 px-4 py-2 text-sm rounded-full bg-(--color-bg-secondary) text-(--color-text-secondary) border border-(--color-card-border) whitespace-nowrap"
-              >
-                @if (skill.icon_url) {
-                  <img [src]="skill.icon_url" class="w-6 h-6 object-contain" />
-                } @else if (getSkillFallback(data.getEntityTranslation(skill, 'name')); as fb) {
-                  @if (fb.type === 'url') {
-                    <img [src]="fb.value" class="w-6 h-6 object-contain" />
-                  } @else {
-                    <span class="text-base leading-none">{{ fb.value }}</span>
-                  }
-                }
-                {{ data.getEntityTranslation(skill, 'name') }}
-              </span>
-            }
-          </div>
-        </div>
-      }
-
-      <div class="text-center mt-10">
-        <a
-          routerLink="skills"
-          class="text-xs uppercase tracking-widest text-(--color-text-muted) hover:text-(--color-accent) transition-colors inline-flex items-center gap-1.5"
-        >
-          {{ 'portfolio.home.viewAllSkills' | translate }}
-          <mat-icon class="text-[14px]">chevron_right</mat-icon>
-        </a>
-      </div>
-    </div>
-  </section>
-}
-
-<!-- Image Modal -->
-@if (showImageModal()) {
-  <div
-    role="dialog"
-    aria-modal="true"
-    class="modal-backdrop fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm"
-    (click)="onModalBackdropClick($event)"
-    (keydown.escape)="closeImageModal()"
-  >
-    <div class="relative max-w-[90vw] max-h-[90vh]">
-      <!-- Close button -->
-      <button
-        type="button"
-        (click)="closeImageModal()"
-        class="absolute -top-12 right-0 p-2 text-white hover:text-(--color-accent) transition-colors"
-        [attr.aria-label]="'portfolio.a11y.closeModal' | translate"
-      >
-        <mat-icon class="text-[32px] text-white hover:text-(--color-accent) transition-colors" >close</mat-icon>
-      </button>
-      <!-- Image -->
-      <img
-        [src]="modalImageUrl()"
-        [alt]="modalImageAlt()"
-        class="max-w-full max-h-[85vh] object-contain rounded-lg shadow-2xl"
-      />
-    </div>
-  </div>
 }

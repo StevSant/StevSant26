@@ -1,186 +1,197 @@
-<!-- Education Page -->
-<section class="py-12 sm:py-16 lg:py-24 px-4 sm:px-6 lg:px-8">
-  <div class="max-w-4xl mx-auto">
-    <h2
-      class="text-sm uppercase tracking-[0.3em] text-(--color-text-muted) mb-3 text-center font-medium"
-    >
-      {{ 'portfolio.sections.education' | translate }}
-    </h2>
-    <div class="w-12 h-px bg-(--color-accent) mx-auto mb-8 sm:mb-10 lg:mb-14 opacity-60"></div>
+@if (data.loading()) {
+  <app-portfolio-timeline-skeleton />
+} @else {
+  <!-- Education Page -->
+  <section class="py-12 sm:py-16 lg:py-24 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-4xl mx-auto">
+      <h2
+        class="text-sm uppercase tracking-[0.3em] text-(--color-text-muted) mb-3 text-center font-medium"
+      >
+        {{ 'portfolio.sections.education' | translate }}
+      </h2>
+      <div class="w-12 h-px bg-(--color-accent) mx-auto mb-8 sm:mb-10 lg:mb-14 opacity-60"></div>
 
-    @if (totalCount() === 0) {
-      <p class="text-(--color-text-muted) text-center italic font-light">
-        {{ 'portfolio.empty.education' | translate }}
-      </p>
-    } @else {
-      <div class="space-y-12 sm:space-y-16">
-        @for (group of educationGroups(); track group.type) {
-          <!-- Group header -->
-          <div>
-            <div appScrollReveal class="flex items-center gap-3 mb-6 sm:mb-8">
-              <div
-                class="w-10 h-10 rounded-lg flex items-center justify-center bg-(--color-accent)/10 text-(--color-accent)"
-              >
-                <mat-icon class="text-[20px]">{{ getTypeIcon(group.type) }}</mat-icon>
+      @if (totalCount() === 0) {
+        <p class="text-(--color-text-muted) text-center italic font-light">
+          {{ 'portfolio.empty.education' | translate }}
+        </p>
+      } @else {
+        <div class="space-y-12 sm:space-y-16">
+          @for (group of educationGroups(); track group.type) {
+            <!-- Group header -->
+            <div>
+              <div appScrollReveal class="flex items-center gap-3 mb-6 sm:mb-8">
+                <div
+                  class="w-10 h-10 rounded-lg flex items-center justify-center bg-(--color-accent)/10 text-(--color-accent)"
+                >
+                  <mat-icon class="text-[20px]">{{ getTypeIcon(group.type) }}</mat-icon>
+                </div>
+                <div>
+                  <h3 class="text-lg font-medium text-(--color-text-primary) tracking-tight">
+                    {{ 'educations.types.' + group.type | translate }}
+                  </h3>
+                  <p class="text-xs text-(--color-text-muted)">
+                    {{ group.items.length }}
+                    {{
+                      group.items.length === 1
+                        ? ('educations.itemSingular' | translate)
+                        : ('educations.itemPlural' | translate)
+                    }}
+                  </p>
+                </div>
               </div>
-              <div>
-                <h3 class="text-lg font-medium text-(--color-text-primary) tracking-tight">
-                  {{ 'educations.types.' + group.type | translate }}
-                </h3>
-                <p class="text-xs text-(--color-text-muted)">
-                  {{ group.items.length }}
-                  {{
-                    group.items.length === 1
-                      ? ('educations.itemSingular' | translate)
-                      : ('educations.itemPlural' | translate)
-                  }}
-                </p>
-              </div>
-            </div>
 
-            <!-- Timeline -->
-            <div class="relative">
-              <!-- Center line -->
-              <div class="absolute left-6 sm:left-8 top-0 bottom-0 w-px bg-(--color-divider)"></div>
+              <!-- Timeline -->
+              <div class="relative">
+                <!-- Center line -->
+                <div
+                  class="absolute left-6 sm:left-8 top-0 bottom-0 w-px bg-(--color-divider)"
+                ></div>
 
-              <div class="space-y-8">
-                @for (edu of group.items; track edu.id; let j = $index) {
-                  <div appScrollReveal [revealDelay]="j * 100" class="relative flex gap-6 sm:gap-8">
-                    <!-- Timeline dot -->
-                    <div class="relative z-10 shrink-0 mt-1">
-                      <div
-                        class="w-12 h-12 sm:w-16 sm:h-16 rounded-full flex items-center justify-center border-2 transition-colors"
-                        [class]="
-                          isOngoing(edu)
-                            ? 'bg-(--color-accent)/10 border-(--color-accent)'
-                            : 'bg-(--color-bg-secondary) border-(--color-divider)'
-                        "
-                      >
-                        @if (edu.institution_image_url) {
-                          <img
-                            [src]="edu.institution_image_url"
-                            [alt]="edu.institution"
-                            class="w-8 h-8 sm:w-10 sm:h-10 rounded-full object-cover"
-                          />
-                        } @else {
-                          <mat-icon class="text-[20px] sm:text-[24px] text-(--color-text-muted)">{{
-                            getTypeIcon(group.type)
-                          }}</mat-icon>
-                        }
-                      </div>
-                      <!-- Pulse for ongoing -->
-                      @if (isOngoing(edu)) {
-                        <span
-                          class="absolute -top-0.5 -right-0.5 w-3 h-3 bg-(--color-accent) rounded-full animate-pulse"
-                        ></span>
-                      }
-                    </div>
-
-                    <!-- Content card -->
+                <div class="space-y-8">
+                  @for (edu of group.items; track edu.id; let j = $index) {
                     <div
-                      class="flex-1 bg-(--color-bg-secondary) rounded-xl border border-(--color-card-border) p-4 sm:p-6 hover:border-(--color-accent)/30 transition-all duration-300 shadow-sm hover:shadow-lg"
+                      appScrollReveal
+                      [revealDelay]="j * 100"
+                      class="relative flex gap-6 sm:gap-8"
                     >
-                      <!-- Header -->
-                      <div
-                        class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2 mb-2"
-                      >
-                        <div>
-                          <h3
-                            class="text-lg font-medium text-(--color-text-primary) tracking-tight"
-                          >
-                            {{ getDegree(edu) }}
-                          </h3>
-                          @if (getFieldOfStudy(edu)) {
-                            <p class="text-sm text-(--color-accent) font-medium">
-                              {{ getFieldOfStudy(edu) }}
-                            </p>
+                      <!-- Timeline dot -->
+                      <div class="relative z-10 shrink-0 mt-1">
+                        <div
+                          class="w-12 h-12 sm:w-16 sm:h-16 rounded-full flex items-center justify-center border-2 transition-colors"
+                          [class]="
+                            isOngoing(edu)
+                              ? 'bg-(--color-accent)/10 border-(--color-accent)'
+                              : 'bg-(--color-bg-secondary) border-(--color-divider)'
+                          "
+                        >
+                          @if (edu.institution_image_url) {
+                            <img
+                              [src]="edu.institution_image_url"
+                              [alt]="edu.institution"
+                              class="w-8 h-8 sm:w-10 sm:h-10 rounded-full object-cover"
+                            />
+                          } @else {
+                            <mat-icon
+                              class="text-[20px] sm:text-[24px] text-(--color-text-muted)"
+                              >{{ getTypeIcon(group.type) }}</mat-icon
+                            >
                           }
                         </div>
-                        <!-- Duration badge -->
-                        @if (edu.start_date) {
+                        <!-- Pulse for ongoing -->
+                        @if (isOngoing(edu)) {
                           <span
-                            class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium shrink-0"
-                            [class]="
-                              isOngoing(edu)
-                                ? 'bg-(--color-accent)/10 text-(--color-accent)'
-                                : 'bg-(--color-bg-tertiary) text-(--color-text-muted)'
-                            "
-                          >
-                            @if (isOngoing(edu)) {
-                              <span
-                                class="w-1.5 h-1.5 rounded-full bg-(--color-accent) animate-pulse"
-                              ></span>
-                            }
-                            {{ formatYear(edu.start_date) }} -
-                            {{
-                              edu.end_date
-                                ? formatYear(edu.end_date)
-                                : ('educations.present' | translate)
-                            }}
-                            <span class="text-(--color-text-disabled)">&middot;</span>
-                            {{ getDuration(edu) }}
-                          </span>
+                            class="absolute -top-0.5 -right-0.5 w-3 h-3 bg-(--color-accent) rounded-full animate-pulse"
+                          ></span>
                         }
                       </div>
 
-                      <!-- Institution -->
-                      <p class="text-sm text-(--color-text-muted) mb-3 flex items-center gap-2">
-                        <mat-icon class="text-[16px] shrink-0">apartment</mat-icon>
-                        {{ edu.institution }}
-                      </p>
-
-                      <!-- Description -->
-                      @if (getDescription(edu)) {
-                        <p class="text-sm text-(--color-text-secondary) leading-relaxed">
-                          {{ getDescription(edu) }}
-                        </p>
-                      }
-
-                      <!-- Credential link (for courses & certifications) -->
-                      @if (edu.credential_url || edu.credential_id) {
-                        <div class="mt-3 flex items-center gap-3 flex-wrap">
-                          @if (edu.credential_id) {
-                            <span
-                              class="inline-flex items-center gap-1 text-xs text-(--color-text-disabled)"
+                      <!-- Content card -->
+                      <div
+                        class="flex-1 bg-(--color-bg-secondary) rounded-xl border border-(--color-card-border) p-4 sm:p-6 hover:border-(--color-accent)/30 transition-all duration-300 shadow-sm hover:shadow-lg"
+                      >
+                        <!-- Header -->
+                        <div
+                          class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2 mb-2"
+                        >
+                          <div>
+                            <h3
+                              class="text-lg font-medium text-(--color-text-primary) tracking-tight"
                             >
-                              <mat-icon class="text-[14px]">tag</mat-icon>
-                              {{ edu.credential_id }}
+                              {{ getDegree(edu) }}
+                            </h3>
+                            @if (getFieldOfStudy(edu)) {
+                              <p class="text-sm text-(--color-accent) font-medium">
+                                {{ getFieldOfStudy(edu) }}
+                              </p>
+                            }
+                          </div>
+                          <!-- Duration badge -->
+                          @if (edu.start_date) {
+                            <span
+                              class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium shrink-0"
+                              [class]="
+                                isOngoing(edu)
+                                  ? 'bg-(--color-accent)/10 text-(--color-accent)'
+                                  : 'bg-(--color-bg-tertiary) text-(--color-text-muted)'
+                              "
+                            >
+                              @if (isOngoing(edu)) {
+                                <span
+                                  class="w-1.5 h-1.5 rounded-full bg-(--color-accent) animate-pulse"
+                                ></span>
+                              }
+                              {{ formatYear(edu.start_date) }} -
+                              {{
+                                edu.end_date
+                                  ? formatYear(edu.end_date)
+                                  : ('educations.present' | translate)
+                              }}
+                              <span class="text-(--color-text-disabled)">&middot;</span>
+                              {{ getDuration(edu) }}
                             </span>
                           }
-                          @if (edu.credential_url) {
-                            <a
-                              [href]="edu.credential_url"
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              class="inline-flex items-center gap-1 text-xs text-(--color-accent) hover:underline"
-                            >
-                              <mat-icon class="text-[14px]">open_in_new</mat-icon>
-                              {{ 'educations.viewCredential' | translate }}
-                            </a>
-                          }
                         </div>
-                      }
 
-                      <!-- Images -->
-                      @if (data.getFirstImageUrl('education', edu.id)) {
-                        <div
-                          class="mt-4 rounded-lg overflow-hidden border border-(--color-border-primary)"
-                        >
-                          <img
-                            [src]="data.getFirstImageUrl('education', edu.id)"
-                            [alt]="getDegree(edu)"
-                            class="w-full h-32 sm:h-40 object-cover"
-                          />
-                        </div>
-                      }
+                        <!-- Institution -->
+                        <p class="text-sm text-(--color-text-muted) mb-3 flex items-center gap-2">
+                          <mat-icon class="text-[16px] shrink-0">apartment</mat-icon>
+                          {{ edu.institution }}
+                        </p>
+
+                        <!-- Description -->
+                        @if (getDescription(edu)) {
+                          <p class="text-sm text-(--color-text-secondary) leading-relaxed">
+                            {{ getDescription(edu) }}
+                          </p>
+                        }
+
+                        <!-- Credential link (for courses & certifications) -->
+                        @if (edu.credential_url || edu.credential_id) {
+                          <div class="mt-3 flex items-center gap-3 flex-wrap">
+                            @if (edu.credential_id) {
+                              <span
+                                class="inline-flex items-center gap-1 text-xs text-(--color-text-disabled)"
+                              >
+                                <mat-icon class="text-[14px]">tag</mat-icon>
+                                {{ edu.credential_id }}
+                              </span>
+                            }
+                            @if (edu.credential_url) {
+                              <a
+                                [href]="edu.credential_url"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                class="inline-flex items-center gap-1 text-xs text-(--color-accent) hover:underline"
+                              >
+                                <mat-icon class="text-[14px]">open_in_new</mat-icon>
+                                {{ 'educations.viewCredential' | translate }}
+                              </a>
+                            }
+                          </div>
+                        }
+
+                        <!-- Images -->
+                        @if (data.getFirstImageUrl('education', edu.id)) {
+                          <div
+                            class="mt-4 rounded-lg overflow-hidden border border-(--color-border-primary)"
+                          >
+                            <img
+                              [src]="data.getFirstImageUrl('education', edu.id)"
+                              [alt]="getDegree(edu)"
+                              class="w-full h-32 sm:h-40 object-cover"
+                            />
+                          </div>
+                        }
+                      </div>
                     </div>
-                  </div>
-                }
+                  }
+                </div>
               </div>
             </div>
-          </div>
-        }
-      </div>
-    }
-  </div>
-</section>
+          }
+        </div>
+      }
+    </div>
+  </section>
+}

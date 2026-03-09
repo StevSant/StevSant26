@@ -8,6 +8,7 @@ import { TranslatePipe } from '@shared/pipes/translate.pipe';
 import { ScrollRevealDirective } from '@shared/directives/scroll-reveal.directive';
 import { Education, EducationType } from '@core/models';
 import { MatIcon } from '@angular/material/icon';
+import { PortfolioTimelineSkeletonComponent } from '@shared/components/portfolio-timeline-skeleton/portfolio-timeline-skeleton.component';
 
 interface EducationGroup {
   type: EducationType;
@@ -17,7 +18,14 @@ interface EducationGroup {
 @Component({
   selector: 'app-portfolio-education',
   standalone: true,
-  imports: [CommonModule, RouterModule, TranslatePipe, ScrollRevealDirective, MatIcon],
+  imports: [
+    CommonModule,
+    RouterModule,
+    TranslatePipe,
+    ScrollRevealDirective,
+    MatIcon,
+    PortfolioTimelineSkeletonComponent,
+  ],
   templateUrl: './portfolio-education.component.html',
 })
 export class PortfolioEducationComponent implements OnInit {
@@ -41,7 +49,7 @@ export class PortfolioEducationComponent implements OnInit {
     const groups: EducationGroup[] = [];
 
     for (const type of typeOrder) {
-      const items = all.filter(e => (e.education_type || 'formal') === type);
+      const items = all.filter((e) => (e.education_type || 'formal') === type);
       if (items.length > 0) {
         groups.push({ type, items });
       }
@@ -67,7 +75,7 @@ export class PortfolioEducationComponent implements OnInit {
       this.seoService.buildBreadcrumbSchema([
         { name: this.translate.instant('seo.home.title'), url: siteUrl },
         { name: this.translate.instant('seo.education.title'), url: `${siteUrl}/education` },
-      ])
+      ]),
     );
   }
 
@@ -96,7 +104,8 @@ export class PortfolioEducationComponent implements OnInit {
     if (!edu.start_date) return '';
     const start = new Date(edu.start_date);
     const end = edu.end_date ? new Date(edu.end_date) : new Date();
-    const months = (end.getFullYear() - start.getFullYear()) * 12 + (end.getMonth() - start.getMonth());
+    const months =
+      (end.getFullYear() - start.getFullYear()) * 12 + (end.getMonth() - start.getMonth());
     const years = Math.floor(months / 12);
     const remainingMonths = months % 12;
     if (years > 0 && remainingMonths > 0) return `${years}a ${remainingMonths}m`;
@@ -106,9 +115,12 @@ export class PortfolioEducationComponent implements OnInit {
 
   getTypeIcon(type: EducationType): string {
     switch (type) {
-      case 'formal': return 'school';
-      case 'course': return 'menu_book';
-      case 'certification': return 'verified';
+      case 'formal':
+        return 'school';
+      case 'course':
+        return 'menu_book';
+      case 'certification':
+        return 'verified';
     }
   }
 }
