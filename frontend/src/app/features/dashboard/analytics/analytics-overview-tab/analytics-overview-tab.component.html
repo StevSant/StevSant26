@@ -1,0 +1,179 @@
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+  <div class="bg-(--color-bg-secondary) rounded-xl p-5 border border-(--color-border-primary)">
+    <h3 class="text-lg font-semibold text-(--color-text-primary) mb-4">
+      {{ 'analytics.dailyViews' | translate }}
+    </h3>
+    @if (filledDailyViews().length) {
+      <div class="flex h-40">
+        <!-- Y-axis labels -->
+        <div
+          class="flex flex-col justify-between items-end pr-2 text-[10px] text-(--color-text-muted) shrink-0 py-0.5"
+        >
+          <span>{{ maxDailyViews() }}</span>
+          <span>{{ midDailyViews() }}</span>
+          <span>0</span>
+        </div>
+        <!-- Bars -->
+        <div class="flex gap-0.5 flex-1 min-w-0">
+          @for (day of filledDailyViews(); track day.date) {
+            <div class="flex-1 flex flex-col items-center justify-end group relative min-w-0.75">
+              <div
+                class="w-full rounded-t-sm transition-colors cursor-pointer"
+                [class]="
+                  day.views > 0
+                    ? 'bg-(--color-accent)/80 hover:bg-(--color-accent)'
+                    : 'bg-(--color-text-muted)/15'
+                "
+                [style.height.%]="getBarHeight(day.views)"
+                [style.min-height]="day.views === 0 ? '2px' : '4px'"
+              ></div>
+              <!-- Tooltip -->
+              <div
+                class="absolute bottom-full mb-2 hidden group-hover:block bg-(--color-bg-primary) border border-(--color-border-primary) rounded-lg px-2 py-1 text-xs shadow-lg whitespace-nowrap z-10"
+              >
+                <p class="font-medium text-(--color-text-primary)">
+                  {{ day.views }} {{ 'analytics.views' | translate }}
+                </p>
+                <p class="text-(--color-text-muted)">{{ day.date | date: 'shortDate' }}</p>
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+      <div class="flex justify-between mt-2 text-xs text-(--color-text-muted)">
+        <span>{{ filledDailyViews()[0].date | date: 'mediumDate' }}</span>
+        <span>{{
+          filledDailyViews()[filledDailyViews().length - 1].date | date: 'mediumDate'
+        }}</span>
+      </div>
+    } @else {
+      <div class="flex items-center justify-center h-40 text-(--color-text-muted) text-sm">
+        {{ 'analytics.noData' | translate }}
+      </div>
+    }
+  </div>
+
+  <!-- Device & Browser Breakdown -->
+  <div class="bg-(--color-bg-secondary) rounded-xl p-5 border border-(--color-border-primary)">
+    <h3 class="text-lg font-semibold text-(--color-text-primary) mb-4">
+      {{ 'analytics.devices' | translate }}
+    </h3>
+    <div class="space-y-3">
+      @if (summary().device_breakdown?.length) {
+        @for (device of summary().device_breakdown; track device.device_type) {
+          <div class="flex items-center gap-3">
+            <mat-icon class="text-[20px] text-(--color-text-muted)">{{
+              getDeviceIcon(device.device_type)
+            }}</mat-icon>
+            <span class="text-sm text-(--color-text-primary) capitalize flex-1">{{
+              device.device_type
+            }}</span>
+            <span class="text-sm font-medium text-(--color-text-primary)">{{ device.count }}</span>
+          </div>
+        }
+      } @else {
+        <p class="text-sm text-(--color-text-muted)">
+          {{ 'analytics.noData' | translate }}
+        </p>
+      }
+    </div>
+
+    <h3 class="text-lg font-semibold text-(--color-text-primary) mb-4 mt-6">
+      {{ 'analytics.browsers' | translate }}
+    </h3>
+    <div class="space-y-3">
+      @if (summary().browser_breakdown?.length) {
+        @for (browser of summary().browser_breakdown; track browser.browser) {
+          <div class="flex items-center gap-3">
+            <span class="text-sm text-(--color-text-primary) flex-1">{{ browser.browser }}</span>
+            <span class="text-sm font-medium text-(--color-text-primary)">{{ browser.count }}</span>
+          </div>
+        }
+      } @else {
+        <p class="text-sm text-(--color-text-muted)">
+          {{ 'analytics.noData' | translate }}
+        </p>
+      }
+    </div>
+  </div>
+
+  <!-- Visitor Languages -->
+  <div class="bg-(--color-bg-secondary) rounded-xl p-5 border border-(--color-border-primary)">
+    <h3 class="text-lg font-semibold text-(--color-text-primary) mb-4">
+      {{ 'analytics.languages' | translate }}
+    </h3>
+    <div class="space-y-3">
+      @if (normalizedLanguages().length) {
+        @for (lang of normalizedLanguages(); track lang.browser_language) {
+          <div class="flex items-center gap-3">
+            @if (getLanguageFlagEmoji(lang.browser_language)) {
+              <span class="text-[20px] leading-none">{{
+                getLanguageFlagEmoji(lang.browser_language)
+              }}</span>
+            } @else {
+              <mat-icon class="text-[20px] text-(--color-text-muted)">language</mat-icon>
+            }
+            <span class="text-sm text-(--color-text-primary) flex-1">{{
+              formatLanguageTag(lang.browser_language)
+            }}</span>
+            <span class="text-xs text-(--color-text-muted) mr-2">{{ lang.browser_language }}</span>
+            <span class="text-sm font-medium text-(--color-text-primary)">{{ lang.count }}</span>
+          </div>
+        }
+      } @else {
+        <p class="text-sm text-(--color-text-muted)">
+          {{ 'analytics.noData' | translate }}
+        </p>
+      }
+    </div>
+  </div>
+
+  <!-- Country Breakdown -->
+  <div class="bg-(--color-bg-secondary) rounded-xl p-5 border border-(--color-border-primary)">
+    <h3 class="text-lg font-semibold text-(--color-text-primary) mb-4">
+      {{ 'analytics.countries' | translate }}
+    </h3>
+    <div class="space-y-3">
+      @if (summary().country_breakdown?.length) {
+        @for (c of summary().country_breakdown; track c.country) {
+          <div class="flex items-center gap-3">
+            @if (getCountryFlagEmoji(c.country)) {
+              <span class="text-[20px] leading-none">{{ getCountryFlagEmoji(c.country) }}</span>
+            } @else {
+              <mat-icon class="text-[20px] text-(--color-text-muted)">public</mat-icon>
+            }
+            <span class="text-sm text-(--color-text-primary) flex-1">{{ c.country }}</span>
+            <span class="text-sm font-medium text-(--color-text-primary)">{{ c.count }}</span>
+          </div>
+        }
+      } @else {
+        <p class="text-sm text-(--color-text-muted)">
+          {{ 'analytics.noData' | translate }}
+        </p>
+      }
+    </div>
+  </div>
+
+  <!-- CV Downloads Breakdown -->
+  @if (summary().cv_downloads_breakdown?.length) {
+    <div class="bg-(--color-bg-secondary) rounded-xl p-5 border border-(--color-border-primary)">
+      <h3 class="text-lg font-semibold text-(--color-text-primary) mb-4">
+        {{ 'analytics.cvDownloadsBreakdown' | translate }}
+      </h3>
+      <div class="space-y-3">
+        @for (dl of summary().cv_downloads_breakdown; track dl.file_name) {
+          <div class="flex items-center gap-3">
+            <mat-icon class="text-[20px] text-amber-500">description</mat-icon>
+            <div class="flex-1 min-w-0">
+              <span class="text-sm text-(--color-text-primary) block truncate">{{
+                dl.file_name
+              }}</span>
+              <span class="text-xs text-(--color-text-muted)">{{ dl.language }}</span>
+            </div>
+            <span class="text-sm font-medium text-(--color-text-primary)">{{ dl.downloads }}</span>
+          </div>
+        }
+      </div>
+    </div>
+  }
+</div>

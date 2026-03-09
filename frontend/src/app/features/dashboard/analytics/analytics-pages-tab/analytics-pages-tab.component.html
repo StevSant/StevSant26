@@ -1,0 +1,69 @@
+<div
+  class="bg-(--color-bg-secondary) rounded-xl border border-(--color-border-primary) overflow-hidden"
+>
+  <div class="p-5">
+    <h3 class="text-lg font-semibold text-(--color-text-primary)">
+      {{ 'analytics.topPages' | translate }}
+    </h3>
+  </div>
+  @if (summary().top_pages?.length) {
+    <table class="w-full">
+      <thead>
+        <tr class="border-t border-(--color-border-primary) bg-(--color-bg-primary)/50">
+          <th
+            class="text-left px-5 py-3 text-xs font-medium text-(--color-text-muted) uppercase tracking-wider"
+          >
+            {{ 'analytics.page' | translate }}
+          </th>
+          <th
+            class="text-right px-5 py-3 text-xs font-medium text-(--color-text-muted) uppercase tracking-wider"
+          >
+            {{ 'analytics.views' | translate }}
+          </th>
+          <th
+            class="text-right px-5 py-3 text-xs font-medium text-(--color-text-muted) uppercase tracking-wider"
+          >
+            {{ 'analytics.avgTime' | translate }}
+          </th>
+          <th
+            class="text-right px-5 py-3 text-xs font-medium text-(--color-text-muted) uppercase tracking-wider w-48"
+          >
+            {{ 'analytics.percentage' | translate }}
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (page of summary().top_pages; track page.page_path) {
+          <tr class="border-t border-(--color-border-primary) hover:bg-(--color-bg-primary)/30">
+            <td class="px-5 py-3 text-sm text-(--color-text-primary)">
+              {{ formatPagePath(page.page_path) }}
+            </td>
+            <td class="px-5 py-3 text-sm text-(--color-text-primary) text-right font-medium">
+              {{ page.views }}
+            </td>
+            <td class="px-5 py-3 text-sm text-(--color-text-muted) text-right">
+              {{ formatDuration(page.avg_duration) }}
+            </td>
+            <td class="px-5 py-3 text-right">
+              <div class="flex items-center justify-end gap-2">
+                <div class="w-24 h-2 bg-(--color-bg-primary) rounded-full overflow-hidden">
+                  <div
+                    class="h-full bg-(--color-accent) rounded-full"
+                    [style.width.%]="(page.views / summary().total_views) * 100"
+                  ></div>
+                </div>
+                <span class="text-xs text-(--color-text-muted) w-10 text-right">
+                  {{ (page.views / summary().total_views) * 100 | number: '1.0-1' }}%
+                </span>
+              </div>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  } @else {
+    <div class="p-10 text-center text-(--color-text-muted) text-sm">
+      {{ 'analytics.noData' | translate }}
+    </div>
+  }
+</div>

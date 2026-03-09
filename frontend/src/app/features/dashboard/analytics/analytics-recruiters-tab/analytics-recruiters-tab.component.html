@@ -1,0 +1,113 @@
+<div class="space-y-4">
+  <div class="bg-(--color-bg-secondary) rounded-xl p-5 border border-(--color-border-primary)">
+    <h3 class="text-lg font-semibold text-(--color-text-primary)">
+      {{ 'analytics.recruiterSessions' | translate }}
+    </h3>
+    <p class="text-sm text-(--color-text-muted) mt-1">
+      {{ 'analytics.recruiterDescription' | translate }}
+    </p>
+  </div>
+
+  @if (summary().recruiter_sessions?.length) {
+    @for (session of summary().recruiter_sessions; track session.id) {
+      <div
+        class="bg-(--color-bg-secondary) rounded-xl border border-(--color-border-primary) overflow-hidden"
+      >
+        <div class="p-5">
+          <div class="flex flex-col sm:flex-row justify-between items-start gap-3">
+            <div class="flex items-center gap-3">
+              <!-- Confidence Badge -->
+              @switch (getRecruiterConfidence(session)) {
+                @case ('high') {
+                  <span
+                    class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300"
+                  >
+                    {{ 'analytics.highConfidence' | translate }}
+                  </span>
+                }
+                @case ('medium') {
+                  <span
+                    class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300"
+                  >
+                    {{ 'analytics.mediumConfidence' | translate }}
+                  </span>
+                }
+                @case ('low') {
+                  <span
+                    class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-300"
+                  >
+                    {{ 'analytics.lowConfidence' | translate }}
+                  </span>
+                }
+              }
+              <div>
+                <p class="text-sm font-medium text-(--color-text-primary) flex items-center gap-2">
+                  @if (
+                    session.referrer_source && getReferrerBadge(session.referrer_source);
+                    as badge
+                  ) {
+                    <span
+                      class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium"
+                      [ngClass]="badge.classes"
+                      >{{ badge.label }}</span
+                    >
+                  }
+                  {{ session.referrer_source || ('analytics.directVisit' | translate) }}
+                </p>
+                <p class="text-xs text-(--color-text-muted)">
+                  {{ session.started_at | date: 'medium' }}
+                </p>
+              </div>
+            </div>
+            <div class="flex items-center gap-4 text-xs text-(--color-text-muted)">
+              @if (session.device_type) {
+                <span class="flex items-center gap-1">
+                  <mat-icon class="text-[14px]">{{ getDeviceIcon(session.device_type) }}</mat-icon>
+                  {{ session.device_type }}
+                </span>
+              }
+              @if (session.browser) {
+                <span>{{ session.browser }}</span>
+              }
+              @if (session.os) {
+                <span>{{ session.os }}</span>
+              }
+              @if (session.country) {
+                <span>{{ session.city ? session.city + ', ' : '' }}{{ session.country }}</span>
+              }
+            </div>
+          </div>
+
+          <!-- Pages visited timeline -->
+          @if (session.pages_visited?.length) {
+            <div class="mt-4 pl-4 border-l-2 border-(--color-border-primary) space-y-2">
+              @for (page of session.pages_visited; track page.created_at) {
+                <div class="flex items-center gap-2 text-sm">
+                  <div class="w-2 h-2 rounded-full bg-(--color-accent) -ml-2.25"></div>
+                  <span class="text-(--color-text-primary)">{{
+                    formatPagePath(page.page_path)
+                  }}</span>
+                  @if (page.duration_seconds > 0) {
+                    <span class="text-xs font-medium text-(--color-accent)">{{
+                      formatDuration(page.duration_seconds)
+                    }}</span>
+                  }
+                  <span class="text-xs text-(--color-text-muted)">{{
+                    page.created_at | date: 'shortTime'
+                  }}</span>
+                </div>
+              }
+            </div>
+          }
+        </div>
+      </div>
+    }
+  } @else {
+    <div
+      class="bg-(--color-bg-secondary) rounded-xl p-10 border border-(--color-border-primary) text-center"
+    >
+      <mat-icon class="text-[48px] mx-auto text-(--color-text-muted) mb-3">work</mat-icon>
+      <p class="text-(--color-text-muted)">{{ 'analytics.noRecruiters' | translate }}</p>
+    </div>
+  }
+</div>
