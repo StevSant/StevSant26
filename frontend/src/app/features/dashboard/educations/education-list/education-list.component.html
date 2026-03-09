@@ -29,14 +29,14 @@
   />
 
   <!-- Type filter pills -->
-  <div class="flex flex-wrap gap-2 -mt-4">
+  <div class="flex flex-wrap items-center gap-1.5 -mt-2">
     <button
       (click)="onTypeFilterChange('')"
-      class="px-3 py-1.5 rounded-full text-xs font-medium transition-all border"
+      class="px-3 py-1 rounded-md text-xs font-medium transition-all"
       [class]="
         selectedType() === ''
-          ? 'bg-[var(--color-accent)] text-[var(--btn-primary-text)] border-[var(--color-accent)] shadow-sm'
-          : 'bg-transparent text-[var(--color-text-muted)] border-[var(--color-card-border)] hover:border-[var(--color-accent-muted)] hover:text-[var(--color-text-secondary)]'
+          ? 'bg-[var(--color-accent)] text-[var(--btn-primary-text)]'
+          : 'text-[var(--color-text-muted)] hover:bg-[var(--color-bg-tertiary)] hover:text-[var(--color-text-secondary)]'
       "
     >
       {{ 'dashboardFilter.all' | translate }}
@@ -44,11 +44,11 @@
     @for (typeOpt of typeFilterOptions(); track typeOpt.value) {
       <button
         (click)="onTypeFilterChange(typeOpt.value)"
-        class="px-3 py-1.5 rounded-full text-xs font-medium transition-all border"
+        class="px-3 py-1 rounded-md text-xs font-medium transition-all"
         [class]="
           selectedType() === typeOpt.value
-            ? 'bg-[var(--color-accent)] text-[var(--btn-primary-text)] border-[var(--color-accent)] shadow-sm'
-            : 'bg-transparent text-[var(--color-text-muted)] border-[var(--color-card-border)] hover:border-[var(--color-accent-muted)] hover:text-[var(--color-text-secondary)]'
+            ? 'bg-[var(--color-accent)] text-[var(--btn-primary-text)]'
+            : 'text-[var(--color-text-muted)] hover:bg-[var(--color-bg-tertiary)] hover:text-[var(--color-text-secondary)]'
         "
       >
         {{ typeOpt.label | translate }}
