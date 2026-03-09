@@ -1,0 +1,106 @@
+<!-- Skills Overview Section -->
+@if (topSkillCategories().length > 0) {
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="h-px bg-(--color-divider)"></div>
+  </div>
+  <section appScrollReveal class="py-12 sm:py-16 lg:py-24 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-6xl mx-auto">
+      <h2
+        class="text-sm uppercase tracking-[0.3em] text-(--color-text-muted) mb-3 text-center font-medium"
+      >
+        {{ 'portfolio.sections.skills' | translate }}
+      </h2>
+      <div class="w-12 h-px bg-(--color-accent) mx-auto mb-8 sm:mb-10 lg:mb-14 opacity-60"></div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+        @for (category of topSkillCategories(); track category.id) {
+          <div
+            class="bg-(--color-bg-secondary) rounded-xl p-4 sm:p-6 border border-(--color-card-border) shadow-sm hover:shadow-lg hover:border-(--color-accent)/30 transition-all duration-300"
+          >
+            <h3
+              class="text-sm font-medium text-(--color-text-primary) mb-4 tracking-wide uppercase"
+            >
+              {{ data.getCategoryName(category) }}
+            </h3>
+            <div class="flex flex-wrap gap-1.5">
+              @for (skill of category.skills.slice(0, 6); track skill.id) {
+                <span
+                  class="skill-chip px-2 py-0.5 text-xs rounded-full bg-(--color-bg-tertiary) text-(--color-text-secondary) border border-(--color-border-primary) inline-flex items-center gap-1"
+                >
+                  @if (skill.icon_url) {
+                    <img [src]="skill.icon_url" class="w-3.5 h-3.5 object-contain" />
+                  } @else if (getSkillFallback(data.getEntityTranslation(skill, 'name')); as fb) {
+                    @if (fb.type === 'url') {
+                      <img [src]="fb.value" class="w-3.5 h-3.5 object-contain" />
+                    } @else {
+                      <span class="text-xs leading-none">{{ fb.value }}</span>
+                    }
+                  }
+                  {{ data.getEntityTranslation(skill, 'name') }}
+                </span>
+              }
+              @if (category.skills.length > 6) {
+                <span
+                  class="px-2 py-0.5 text-xs rounded-full bg-(--color-bg-tertiary) text-(--color-text-muted)"
+                >
+                  +{{ category.skills.length - 6 }}
+                </span>
+              }
+            </div>
+          </div>
+        }
+      </div>
+
+      <!-- Animated scrolling skill ticker -->
+      @if (allSkills().length > 0) {
+        <div class="mt-10 overflow-hidden skills-ticker-container">
+          <div class="skills-ticker">
+            @for (skill of allSkills(); track skill.id) {
+              <span
+                class="inline-flex items-center gap-2 px-4 py-2 text-sm rounded-full bg-(--color-bg-secondary) text-(--color-text-secondary) border border-(--color-card-border) whitespace-nowrap"
+              >
+                @if (skill.icon_url) {
+                  <img [src]="skill.icon_url" class="w-6 h-6 object-contain" />
+                } @else if (getSkillFallback(data.getEntityTranslation(skill, 'name')); as fb) {
+                  @if (fb.type === 'url') {
+                    <img [src]="fb.value" class="w-6 h-6 object-contain" />
+                  } @else {
+                    <span class="text-base leading-none">{{ fb.value }}</span>
+                  }
+                }
+                {{ data.getEntityTranslation(skill, 'name') }}
+              </span>
+            }
+            <!-- Duplicate for seamless loop -->
+            @for (skill of allSkills(); track $index) {
+              <span
+                class="inline-flex items-center gap-2 px-4 py-2 text-sm rounded-full bg-(--color-bg-secondary) text-(--color-text-secondary) border border-(--color-card-border) whitespace-nowrap"
+              >
+                @if (skill.icon_url) {
+                  <img [src]="skill.icon_url" class="w-6 h-6 object-contain" />
+                } @else if (getSkillFallback(data.getEntityTranslation(skill, 'name')); as fb) {
+                  @if (fb.type === 'url') {
+                    <img [src]="fb.value" class="w-6 h-6 object-contain" />
+                  } @else {
+                    <span class="text-base leading-none">{{ fb.value }}</span>
+                  }
+                }
+                {{ data.getEntityTranslation(skill, 'name') }}
+              </span>
+            }
+          </div>
+        </div>
+      }
+
+      <div class="text-center mt-10">
+        <a
+          routerLink="skills"
+          class="text-xs uppercase tracking-widest text-(--color-text-muted) hover:text-(--color-accent) transition-colors inline-flex items-center gap-1.5"
+        >
+          {{ 'portfolio.home.viewAllSkills' | translate }}
+          <mat-icon class="text-[14px]">chevron_right</mat-icon>
+        </a>
+      </div>
+    </div>
+  </section>
+}

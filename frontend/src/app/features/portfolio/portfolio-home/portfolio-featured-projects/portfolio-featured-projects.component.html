@@ -1,0 +1,81 @@
+<!-- Featured Projects Section -->
+@if (pinnedProjects().length > 0) {
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="h-px bg-(--color-divider)"></div>
+  </div>
+  <section
+    appScrollReveal
+    revealVariant="scale"
+    class="py-12 sm:py-16 lg:py-24 px-4 sm:px-6 lg:px-8"
+  >
+    <div class="max-w-6xl mx-auto">
+      <h2
+        class="text-sm uppercase tracking-[0.3em] text-(--color-text-muted) mb-3 text-center font-medium"
+      >
+        {{ 'portfolio.home.featuredProjects' | translate }}
+      </h2>
+      <div class="w-12 h-px bg-(--color-accent) mx-auto mb-8 sm:mb-10 lg:mb-14 opacity-60"></div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
+        @for (project of pinnedProjects(); track project.id) {
+          <a
+            [routerLink]="['projects', project.id]"
+            class="group bg-(--color-bg-secondary) rounded-xl overflow-hidden border border-(--color-card-border) hover:border-(--color-accent)/30 transition-all duration-300 flex flex-col shadow-sm hover:shadow-xl hover:-translate-y-1"
+          >
+            @if (data.getFirstImageUrl('project', project.id)) {
+              <app-progressive-image
+                [src]="data.getFirstImageUrl('project', project.id)!"
+                [alt]="data.getEntityTranslation(project, 'title')"
+                containerClass="h-32 sm:h-40"
+                imgClass="object-cover group-hover:scale-105 transition-transform duration-500"
+              />
+            }
+            <div class="p-4 sm:p-6 flex flex-col flex-1">
+              <h3 class="text-lg font-medium text-(--color-text-primary) mb-2 tracking-tight">
+                {{ data.getEntityTranslation(project, 'title') }}
+              </h3>
+              @if (data.getEntityTranslation(project, 'description')) {
+                <p
+                  class="text-sm text-(--color-text-muted) line-clamp-2 leading-relaxed font-light"
+                >
+                  {{ data.getEntityTranslation(project, 'description') }}
+                </p>
+              }
+              <!-- Skills -->
+              @if (data.getSkillUsages('project', project.id).length > 0) {
+                <div class="flex flex-wrap gap-1.5 mt-auto pt-3 border-t border-(--color-divider)">
+                  @for (
+                    usage of data.getSkillUsages('project', project.id).slice(0, 4);
+                    track usage.id
+                  ) {
+                    <span
+                      class="skill-chip px-2 py-0.5 text-xs rounded-full bg-(--color-bg-tertiary) text-(--color-text-secondary) border border-(--color-border-primary) inline-flex items-center gap-1"
+                    >
+                      @if (data.getSkillIconUrl(usage)) {
+                        <img
+                          [src]="data.getSkillIconUrl(usage)"
+                          class="w-3.5 h-3.5 object-contain"
+                        />
+                      }
+                      {{ data.getSkillName(usage) }}
+                    </span>
+                  }
+                </div>
+              }
+            </div>
+          </a>
+        }
+      </div>
+
+      <div class="text-center mt-10">
+        <a
+          routerLink="projects"
+          class="text-xs uppercase tracking-widest text-(--color-text-muted) hover:text-(--color-accent) transition-colors inline-flex items-center gap-1.5"
+        >
+          {{ 'portfolio.home.viewAllProjects' | translate }}
+          <mat-icon class="text-[14px]">chevron_right</mat-icon>
+        </a>
+      </div>
+    </div>
+  </section>
+}
