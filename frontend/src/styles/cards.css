@@ -1,0 +1,76 @@
+/* ============================================
+   Utility Classes for Common Patterns
+   ============================================ */
+
+/* Cards — Elegant with subtle border and glow */
+.card {
+  background-color: var(--color-bg-secondary);
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  border: 1px solid var(--color-card-border);
+  box-shadow: 0 0 0 1px var(--color-card-glow);
+}
+
+.card-hover {
+  background-color: var(--color-bg-secondary);
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  border: 1px solid var(--color-card-border);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform;
+}
+
+.card-hover:hover {
+  background-color: var(--color-bg-tertiary);
+  border-color: var(--color-accent-muted);
+  box-shadow: 0 12px 40px -8px var(--color-card-glow);
+  transform: translateY(-4px);
+}
+
+/* Skill chip hover effect */
+.skill-chip {
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.skill-chip:hover {
+  transform: scale(1.05);
+  box-shadow: 0 2px 8px -2px var(--color-card-glow);
+}
+
+/* Alerts/Messages */
+.alert-error {
+  border-radius: 0.5rem;
+  padding: 1rem;
+  font-size: 0.875rem;
+  background-color: var(--color-error-bg);
+  border: 1px solid var(--color-error-border);
+  color: var(--color-error-text);
+}
+
+.alert-success {
+  border-radius: 0.5rem;
+  padding: 1rem;
+  font-size: 0.875rem;
+  background-color: var(--color-success-bg);
+  border: 1px solid var(--color-success-border);
+  color: var(--color-success);
+}
+
+/* Badges */
+.badge-default {
+  padding: 0.125rem 0.5rem;
+  font-size: 0.75rem;
+  border-radius: 9999px;
+  background-color: var(--color-bg-tertiary);
+  color: var(--color-text-secondary);
+}
+
+.badge-purple {
+  padding: 0.125rem 0.5rem;
+  font-size: 0.75rem;
+  border-radius: 9999px;
+  background-color: var(--color-purple-bg);
+  color: var(--color-purple);
+}

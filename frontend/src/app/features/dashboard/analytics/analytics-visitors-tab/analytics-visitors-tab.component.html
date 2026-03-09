@@ -1,0 +1,485 @@
+<div class="space-y-4">
+  <!-- Filters Bar -->
+  <div class="bg-(--color-bg-secondary) rounded-xl p-4 border border-(--color-border-primary)">
+    <div class="flex flex-col lg:flex-row gap-3">
+      <!-- Search -->
+      <div class="flex-1 relative">
+        <mat-icon
+          class="text-[16px] absolute left-3 top-1/2 -translate-y-1/2 text-(--color-text-muted)"
+          >search</mat-icon
+        >
+        <input
+          type="text"
+          [ngModel]="visitorSearch()"
+          (ngModelChange)="onVisitorSearch($event)"
+          [placeholder]="'analytics.searchVisitors' | translate"
+          class="w-full pl-10 pr-4 py-2 text-sm bg-(--color-bg-primary) border border-(--color-border-primary) rounded-lg text-(--color-text-primary) placeholder:text-(--color-text-muted) focus:outline-none focus:ring-2 focus:ring-(--color-accent)/50"
+        />
+      </div>
+      <!-- Device Filter -->
+      <select
+        [ngModel]="visitorFilterDevice()"
+        (ngModelChange)="visitorFilterDevice.set($event || null); onVisitorFilterChange()"
+        class="px-3 py-2 text-sm bg-(--color-bg-primary) border border-(--color-border-primary) rounded-lg text-(--color-text-primary) focus:outline-none focus:ring-2 focus:ring-(--color-accent)/50"
+      >
+        <option [ngValue]="null">{{ 'analytics.allDevices' | translate }}</option>
+        <option value="desktop">Desktop</option>
+        <option value="mobile">Mobile</option>
+        <option value="tablet">Tablet</option>
+      </select>
+      <!-- Recruiter Filter -->
+      <select
+        [ngModel]="visitorFilterRecruiter()"
+        (ngModelChange)="visitorFilterRecruiter.set($event); onVisitorFilterChange()"
+        class="px-3 py-2 text-sm bg-(--color-bg-primary) border border-(--color-border-primary) rounded-lg text-(--color-text-primary) focus:outline-none focus:ring-2 focus:ring-(--color-accent)/50"
+      >
+        <option [ngValue]="null">{{ 'analytics.allVisitors' | translate }}</option>
+        <option [ngValue]="true">{{ 'analytics.onlyRecruiters' | translate }}</option>
+        <option [ngValue]="false">{{ 'analytics.nonRecruiters' | translate }}</option>
+      </select>
+      <!-- Country Filter -->
+      @if (availableCountries().length > 1) {
+        <select
+          [ngModel]="visitorFilterCountry()"
+          (ngModelChange)="visitorFilterCountry.set($event || null); onVisitorFilterChange()"
+          class="px-3 py-2 text-sm bg-(--color-bg-primary) border border-(--color-border-primary) rounded-lg text-(--color-text-primary) focus:outline-none focus:ring-2 focus:ring-(--color-accent)/50"
+        >
+          <option [ngValue]="null">{{ 'analytics.allCountries' | translate }}</option>
+          @for (country of availableCountries(); track country) {
+            <option [value]="country">{{ getCountryFlagEmoji(country) }} {{ country }}</option>
+          }
+        </select>
+      }
+      <!-- Sort -->
+      <select
+        [ngModel]="visitorSort()"
+        (ngModelChange)="onVisitorSortChange($event)"
+        class="px-3 py-2 text-sm bg-(--color-bg-primary) border border-(--color-border-primary) rounded-lg text-(--color-text-primary) focus:outline-none focus:ring-2 focus:ring-(--color-accent)/50"
+      >
+        <option value="recent">{{ 'analytics.sortRecent' | translate }}</option>
+        <option value="sessions">{{ 'analytics.sortSessions' | translate }}</option>
+        <option value="views">{{ 'analytics.sortViews' | translate }}</option>
+        <option value="duration">{{ 'analytics.sortDuration' | translate }}</option>
+        <option value="country">{{ 'analytics.sortCountry' | translate }}</option>
+      </select>
+      <!-- Active referrer filter badge -->
+      @if (visitorFilterReferrer()) {
+        <div
+          class="flex items-center gap-1 px-3 py-2 text-sm bg-(--color-accent)/10 border border-(--color-accent)/30 rounded-lg text-(--color-accent) font-medium"
+        >
+          <mat-icon class="text-[14px]">filter_alt</mat-icon>
+          {{ visitorFilterReferrer() }}
+          <button
+            (click)="visitorFilterReferrer.set(null); onVisitorFilterChange()"
+            class="ml-1 hover:text-(--color-accent)/60"
+          >
+            <mat-icon class="text-[14px]">close</mat-icon>
+          </button>
+        </div>
+      }
+      <!-- Clear Filters -->
+      @if (hasActiveVisitorFilters()) {
+        <button
+          (click)="clearVisitorFilters()"
+          class="px-3 py-2 text-sm font-medium text-(--color-accent) hover:text-(--color-accent)/80 transition-colors"
+        >
+          {{ 'analytics.clearFilters' | translate }}
+        </button>
+      }
+    </div>
+  </div>
+
+  <!-- Loading -->
+  @if (visitorsLoading()) {
+    <div class="flex items-center justify-center py-10">
+      <div class="animate-spin rounded-full h-6 w-6 border-b-2 border-(--color-accent)"></div>
+    </div>
+  } @else if (visitors().length) {
+    <!-- Results count -->
+    <p class="text-sm text-(--color-text-muted)">
+      {{ visitors().length }} {{ 'analytics.visitorsFound' | translate }}
+    </p>
+
+    <!-- Visitor Cards -->
+    @for (visitor of paginatedVisitors(); track visitor.visitor_hash) {
+      <div
+        class="bg-(--color-bg-secondary) rounded-xl border border-(--color-border-primary) overflow-hidden transition-all"
+      >
+        <!-- Visitor Header (clickable) -->
+        <button
+          (click)="toggleVisitorExpand(visitor.visitor_hash)"
+          class="w-full p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 hover:bg-(--color-bg-primary)/30 transition-colors text-left"
+        >
+          <div class="flex items-center gap-3">
+            <!-- Avatar-like icon -->
+            <div
+              class="w-10 h-10 rounded-full flex items-center justify-center shrink-0"
+              [class]="
+                visitor.is_potential_recruiter ? 'bg-purple-500/10' : 'bg-(--color-accent)/10'
+              "
+            >
+              <mat-icon
+                class="text-[20px]"
+                [class]="
+                  visitor.is_potential_recruiter ? 'text-purple-500' : 'text-(--color-accent)'
+                "
+                >{{ visitor.is_potential_recruiter ? 'work' : 'person' }}</mat-icon
+              >
+            </div>
+            <div>
+              <div class="flex items-center gap-2 flex-wrap">
+                <span class="text-sm font-medium text-(--color-text-primary)">
+                  {{ visitor.city ? visitor.city + ', ' : ''
+                  }}{{ visitor.country || ('analytics.unknownLocation' | translate) }}
+                </span>
+                @if (visitor.is_potential_recruiter) {
+                  <span
+                    class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300"
+                  >
+                    {{ 'analytics.recruiter' | translate }}
+                  </span>
+                }
+                @for (ref of visitor.referrer_sources; track ref) {
+                  @if (getReferrerBadge(ref); as badge) {
+                    <span
+                      class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium"
+                      [ngClass]="badge.classes"
+                    >
+                      {{ badge.label }}
+                    </span>
+                  }
+                }
+              </div>
+              <p class="text-xs text-(--color-text-muted) mt-0.5">
+                {{ visitor.browser }} · {{ visitor.os }} · {{ visitor.device_type }}
+                @if (visitor.referrer_sources.length) {
+                  ·
+                  <span class="text-(--color-accent)">{{
+                    visitor.referrer_sources.join(', ')
+                  }}</span>
+                }
+              </p>
+            </div>
+          </div>
+
+          <!-- Right side: metrics -->
+          <div class="flex items-center gap-4 text-xs text-(--color-text-muted) shrink-0">
+            <div class="text-center">
+              <p class="text-base font-bold text-(--color-text-primary)">
+                {{ visitor.total_sessions }}
+              </p>
+              <p>{{ 'analytics.sessions' | translate }}</p>
+            </div>
+            <div class="text-center">
+              <p class="text-base font-bold text-(--color-text-primary)">
+                {{ visitor.total_page_views }}
+              </p>
+              <p>{{ 'analytics.views' | translate }}</p>
+            </div>
+            <div class="text-center">
+              <p class="text-base font-bold text-(--color-text-primary)">
+                {{ formatDuration(visitor.avg_session_duration) }}
+              </p>
+              <p>{{ 'analytics.avgTime' | translate }}</p>
+            </div>
+            <!-- Expand arrow -->
+            <mat-icon
+              class="text-[16px] text-(--color-text-muted) transition-transform"
+              [class.rotate-180]="expandedVisitor() === visitor.visitor_hash"
+              >expand_more</mat-icon
+            >
+            <!-- Delete button -->
+            <button
+              (click)="showDeleteConfirm(visitor.visitor_hash, $event)"
+              class="p-1 rounded-md text-(--color-text-muted) hover:text-red-500 hover:bg-red-500/10 transition-colors"
+              [title]="'analytics.deleteVisitor' | translate"
+            >
+              <mat-icon class="text-[16px]">delete_outline</mat-icon>
+            </button>
+          </div>
+        </button>
+
+        <!-- Delete Confirmation Banner -->
+        @if (confirmDeleteVisitor() === visitor.visitor_hash) {
+          <div
+            class="px-4 py-3 bg-red-50 dark:bg-red-900/20 border-t border-red-200 dark:border-red-800/50 flex items-center justify-between gap-3"
+          >
+            <div class="flex items-center gap-2 text-sm text-red-700 dark:text-red-300">
+              <mat-icon class="text-[18px]">warning</mat-icon>
+              <span>{{ 'analytics.deleteConfirm' | translate }}</span>
+            </div>
+            <div class="flex items-center gap-2 shrink-0">
+              <button
+                (click)="cancelDelete($event)"
+                class="px-3 py-1 text-xs font-medium rounded-md bg-(--color-bg-secondary) text-(--color-text-primary) border border-(--color-border-primary) hover:bg-(--color-bg-primary) transition-colors"
+              >
+                {{ 'analytics.cancel' | translate }}
+              </button>
+              <button
+                (click)="deleteVisitor(visitor.visitor_hash, $event)"
+                [disabled]="deletingVisitor() === visitor.visitor_hash"
+                class="px-3 py-1 text-xs font-medium rounded-md bg-red-600 text-white hover:bg-red-700 disabled:opacity-50 transition-colors flex items-center gap-1"
+              >
+                @if (deletingVisitor() === visitor.visitor_hash) {
+                  <div class="animate-spin rounded-full h-3 w-3 border-b-2 border-white"></div>
+                }
+                {{ 'analytics.confirmDelete' | translate }}
+              </button>
+            </div>
+          </div>
+        }
+
+        <!-- Expanded Details -->
+        @if (expandedVisitor() === visitor.visitor_hash) {
+          <div
+            class="border-t border-(--color-border-primary) p-4 space-y-4 bg-(--color-bg-primary)/20"
+          >
+            <!-- Summary row: first visit, last visit, source, unique pages -->
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-sm">
+              <div>
+                <p class="text-xs text-(--color-text-muted)">
+                  {{ 'analytics.firstVisit' | translate }}
+                </p>
+                <p class="text-(--color-text-primary) font-medium">
+                  {{ visitor.first_visit | date: 'medium' }}
+                </p>
+              </div>
+              <div>
+                <p class="text-xs text-(--color-text-muted)">
+                  {{ 'analytics.lastVisit' | translate }}
+                </p>
+                <p class="text-(--color-text-primary) font-medium">
+                  {{ visitor.last_visit | date: 'medium' }}
+                </p>
+              </div>
+              <div>
+                <p class="text-xs text-(--color-text-muted)">
+                  {{ 'analytics.source' | translate }}
+                </p>
+                <p class="text-(--color-text-primary) font-medium">
+                  @if (visitor.referrer_sources.length) {
+                    {{ visitor.referrer_sources.join(', ') }}
+                  } @else {
+                    {{ 'analytics.directVisit' | translate }}
+                  }
+                </p>
+              </div>
+              <div>
+                <p class="text-xs text-(--color-text-muted)">
+                  {{ 'analytics.uniquePagesCount' | translate }}
+                </p>
+                <p class="text-(--color-text-primary) font-medium">
+                  {{ visitor.unique_pages_visited.length }}
+                </p>
+              </div>
+            </div>
+
+            <!-- Sub-tabs: History / Time per Page -->
+            <div class="border-b border-(--color-border-primary)">
+              <nav class="flex gap-3 -mb-px">
+                <button
+                  (click)="setVisitorDetailTab('history')"
+                  [class]="
+                    expandedVisitorTab() === 'history'
+                      ? 'px-1 py-2 text-xs font-medium border-b-2 border-(--color-accent) text-(--color-accent)'
+                      : 'px-1 py-2 text-xs font-medium text-(--color-text-muted) hover:text-(--color-text-primary) border-b-2 border-transparent'
+                  "
+                >
+                  {{ 'analytics.visitHistory' | translate }}
+                  <span class="ml-1 text-xs opacity-60"
+                    >({{ visitor.session_history?.length || 0 }})</span
+                  >
+                </button>
+                <button
+                  (click)="setVisitorDetailTab('pages')"
+                  [class]="
+                    expandedVisitorTab() === 'pages'
+                      ? 'px-1 py-2 text-xs font-medium border-b-2 border-(--color-accent) text-(--color-accent)'
+                      : 'px-1 py-2 text-xs font-medium text-(--color-text-muted) hover:text-(--color-text-primary) border-b-2 border-transparent'
+                  "
+                >
+                  {{ 'analytics.timePerPage' | translate }}
+                </button>
+              </nav>
+            </div>
+
+            <!-- HISTORY SUB-TAB: All sessions with page views -->
+            @if (expandedVisitorTab() === 'history') {
+              @if (visitor.session_history?.length) {
+                <div class="space-y-3 max-h-96 overflow-y-auto pr-1">
+                  @for (session of visitor.session_history; track session.id) {
+                    <div
+                      class="rounded-lg border border-(--color-border-primary) bg-(--color-bg-secondary) overflow-hidden"
+                    >
+                      <!-- Session header -->
+                      <div
+                        class="px-3 py-2 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 bg-(--color-bg-primary)/30"
+                      >
+                        <div class="flex items-center gap-2 flex-wrap">
+                          <mat-icon class="text-[16px] text-(--color-accent) shrink-0"
+                            >schedule</mat-icon
+                          >
+                          <span class="text-xs font-medium text-(--color-text-primary)">
+                            {{ session.started_at | date: 'medium' }}
+                          </span>
+                          <mat-icon class="text-[12px] text-(--color-text-muted) shrink-0"
+                            >arrow_forward</mat-icon
+                          >
+                          @if (isSessionActive(session)) {
+                            <span
+                              class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full text-[10px] font-medium bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300"
+                            >
+                              <span
+                                class="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"
+                              ></span>
+                              {{ 'analytics.activeNow' | translate }}
+                            </span>
+                          } @else {
+                            <span class="text-xs text-(--color-text-muted)">
+                              {{ session.last_seen_at | date: 'medium' }}
+                            </span>
+                          }
+                          @if (session.referrer_source) {
+                            @if (getReferrerBadge(session.referrer_source); as badge) {
+                              <span
+                                class="inline-flex items-center px-1.5 py-0.5 rounded-full text-[10px] font-medium"
+                                [ngClass]="badge.classes"
+                                >{{ badge.label }}</span
+                              >
+                            } @else {
+                              <span class="text-[10px] text-(--color-text-muted)">{{
+                                session.referrer_source
+                              }}</span>
+                            }
+                          }
+                        </div>
+                        <div class="flex items-center gap-3 text-[10px] text-(--color-text-muted)">
+                          <span
+                            >{{ session.session_page_views }}
+                            {{ 'analytics.views' | translate }}</span
+                          >
+                          <span class="font-medium text-(--color-accent)">{{
+                            formatDuration(getSessionTotalDuration(session))
+                          }}</span>
+                        </div>
+                      </div>
+                      <!-- Session page views timeline -->
+                      @if (session.pages?.length) {
+                        <div class="px-3 py-2">
+                          <div class="pl-3 border-l-2 border-(--color-border-primary) space-y-1.5">
+                            @for (page of session.pages; track page.created_at) {
+                              <div class="flex items-center gap-2 text-xs">
+                                <div
+                                  class="w-1.5 h-1.5 rounded-full bg-(--color-accent) -ml-2"
+                                ></div>
+                                <span class="text-(--color-text-primary) font-medium">{{
+                                  formatPagePath(page.page_path)
+                                }}</span>
+                                @if (page.duration_seconds > 0) {
+                                  <span class="text-[10px] font-semibold text-(--color-accent)">{{
+                                    formatDuration(page.duration_seconds)
+                                  }}</span>
+                                }
+                                <span class="text-[10px] text-(--color-text-muted) ml-auto">{{
+                                  page.created_at | date: 'shortTime'
+                                }}</span>
+                              </div>
+                            }
+                          </div>
+                        </div>
+                      }
+                    </div>
+                  }
+                </div>
+              } @else {
+                <p class="text-sm text-(--color-text-muted) text-center py-4">
+                  {{ 'analytics.noData' | translate }}
+                </p>
+              }
+            }
+
+            <!-- PAGES SUB-TAB: Time per page breakdown -->
+            @if (expandedVisitorTab() === 'pages') {
+              @if (visitor.page_time_breakdown?.length) {
+                <div class="overflow-x-auto">
+                  <table class="w-full text-sm">
+                    <thead>
+                      <tr class="border-b border-(--color-border-primary)">
+                        <th
+                          class="text-left px-3 py-2 text-xs font-medium text-(--color-text-muted) uppercase tracking-wider"
+                        >
+                          {{ 'analytics.page' | translate }}
+                        </th>
+                        <th
+                          class="text-right px-3 py-2 text-xs font-medium text-(--color-text-muted) uppercase tracking-wider"
+                        >
+                          {{ 'analytics.visits' | translate }}
+                        </th>
+                        <th
+                          class="text-right px-3 py-2 text-xs font-medium text-(--color-text-muted) uppercase tracking-wider"
+                        >
+                          {{ 'analytics.totalTime' | translate }}
+                        </th>
+                        <th
+                          class="text-right px-3 py-2 text-xs font-medium text-(--color-text-muted) uppercase tracking-wider"
+                        >
+                          {{ 'analytics.avgTime' | translate }}
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      @for (ptb of visitor.page_time_breakdown; track ptb.page_path) {
+                        <tr
+                          class="border-b border-(--color-border-primary)/50 hover:bg-(--color-bg-primary)/30"
+                        >
+                          <td class="px-3 py-2 text-(--color-text-primary) font-medium">
+                            {{ formatPagePath(ptb.page_path) }}
+                          </td>
+                          <td class="px-3 py-2 text-(--color-text-primary) text-right">
+                            {{ ptb.visit_count }}
+                          </td>
+                          <td class="px-3 py-2 text-(--color-accent) text-right font-medium">
+                            {{ formatDuration(ptb.total_time) }}
+                          </td>
+                          <td class="px-3 py-2 text-(--color-text-muted) text-right">
+                            {{ formatDuration(ptb.avg_time) }}
+                          </td>
+                        </tr>
+                      }
+                    </tbody>
+                  </table>
+                </div>
+              } @else {
+                <p class="text-sm text-(--color-text-muted) text-center py-4">
+                  {{ 'analytics.noData' | translate }}
+                </p>
+              }
+            }
+          </div>
+        }
+      </div>
+    }
+
+    <!-- Visitor Pagination -->
+    <app-pagination
+      [totalItems]="sortedVisitors().length"
+      [currentPage]="visitorPage()"
+      [pageSize]="visitorPageSize"
+      (pageChange)="onVisitorPageChange($event)"
+    />
+  } @else {
+    <!-- Empty state -->
+    <div
+      class="bg-(--color-bg-secondary) rounded-xl p-10 border border-(--color-border-primary) text-center"
+    >
+      <mat-icon class="text-[48px] mx-auto text-(--color-text-muted) mb-3">group</mat-icon>
+      <p class="text-(--color-text-muted)">
+        @if (hasActiveVisitorFilters()) {
+          {{ 'analytics.noVisitorsFiltered' | translate }}
+        } @else {
+          {{ 'analytics.noVisitors' | translate }}
+        }
+      </p>
+    </div>
+  }
+</div>

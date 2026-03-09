@@ -1,7 +1,6 @@
 import { Injectable, inject, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { SupabaseClientService } from './supabase-client.service';
-import { AnalyticsSummary, VisitorSession, PageView, UniqueVisitor } from '../models';
 import { environment } from '../../../environments/environment';
 
 /** Recruiter-indicative referrer domains or sources */
@@ -89,19 +88,24 @@ const RETRY_BASE_DELAY_MS = 500;
 
 /** User interaction events that reset the idle timer */
 const ACTIVITY_EVENTS: (keyof DocumentEventMap)[] = [
-  'mousemove', 'mousedown', 'keydown', 'scroll', 'touchstart', 'pointerdown',
+  'mousemove',
+  'mousedown',
+  'keydown',
+  'scroll',
+  'touchstart',
+  'pointerdown',
 ];
 
 /**
- * Analytics service for tracking portfolio visitors and retrieving dashboard metrics.
+ * Analytics tracking service for portfolio visitors.
  *
  * Responsibilities:
  * - Track page views from anonymous visitors (portfolio)
  * - Detect potential recruiter sessions based on referrer and browsing patterns
- * - Retrieve aggregated analytics for the dashboard (authenticated only)
+ * - Manage session lifecycle (init, heartbeat, idle detection, finalize)
  */
 @Injectable({ providedIn: 'root' })
-export class AnalyticsService {
+export class AnalyticsTrackingService {
   private client = inject(SupabaseClientService);
   private platformId = inject(PLATFORM_ID);
 
@@ -136,10 +140,17 @@ export class AnalyticsService {
         const pathMatch = window.location.pathname.match(/^\/from\/([^/]+)/);
         if (pathMatch) {
           const sourceMap: Record<string, string> = {
-            linkedin: 'linkedin.com', github: 'github.com', indeed: 'indeed.com',
-            glassdoor: 'glassdoor.com', twitter: 'x.com', x: 'x.com',
-            instagram: 'instagram.com', facebook: 'facebook.com',
-            cv: 'cv', resume: 'resume', curriculum: 'curriculum',
+            linkedin: 'linkedin.com',
+            github: 'github.com',
+            indeed: 'indeed.com',
+            glassdoor: 'glassdoor.com',
+            twitter: 'x.com',
+            x: 'x.com',
+            instagram: 'instagram.com',
+            facebook: 'facebook.com',
+            cv: 'cv',
+            resume: 'resume',
+            curriculum: 'curriculum',
           };
           const raw = decodeURIComponent(pathMatch[1]).toLowerCase();
           this.capturedRef = sourceMap[raw] || pathMatch[1];
@@ -176,8 +187,12 @@ export class AnalyticsService {
 
     // Priority: direct ref param (from ActivatedRoute) > cookie (set by inline script, survives 302) > URL params > document.referrer
     const refFromCookie = this.getCookie('analytics_ref');
-    const queryRef = referrer || refFromCookie || this.capturedRef || this.getQueryParam('ref') || this.getQueryParam('utm_source');
-
+    const queryRef =
+      referrer ||
+      refFromCookie ||
+      this.capturedRef ||
+      this.getQueryParam('ref') ||
+      this.getQueryParam('utm_source');
 
     const rawReferrer = queryRef || document.referrer;
     const referrerSource = queryRef || this.extractReferrerSource(rawReferrer);
@@ -229,21 +244,19 @@ export class AnalyticsService {
     const isRecruiter = this.isRecruiterReferrer(referrerSource);
     const sessionId = crypto.randomUUID();
 
-    const { error } = await this.client.client
-      .from('visitor_session')
-      .insert({
-        id: sessionId,
-        visitor_hash: visitorHash,
-        referrer_source: referrerSource,
-        is_potential_recruiter: isRecruiter,
-        user_agent: navigator.userAgent,
-        device_type: deviceInfo.deviceType,
-        browser: deviceInfo.browser,
-        os: deviceInfo.os,
-        country: geo?.country || null,
-        city: geo?.city || null,
-        browser_language: navigator.language || null,
-      });
+    const { error } = await this.client.client.from('visitor_session').insert({
+      id: sessionId,
+      visitor_hash: visitorHash,
+      referrer_source: referrerSource,
+      is_potential_recruiter: isRecruiter,
+      user_agent: navigator.userAgent,
+      device_type: deviceInfo.deviceType,
+      browser: deviceInfo.browser,
+      os: deviceInfo.os,
+      country: geo?.country || null,
+      city: geo?.city || null,
+      browser_language: navigator.language || null,
+    });
 
     if (error) throw error; // Let retry handle it
 
@@ -254,7 +267,9 @@ export class AnalyticsService {
     try {
       sessionStorage.removeItem('analytics_ref');
       document.cookie = 'analytics_ref=;path=/;max-age=0';
-    } catch { /* sessionStorage may be unavailable */ }
+    } catch {
+      /* sessionStorage may be unavailable */
+    }
   }
 
   /**
@@ -273,23 +288,29 @@ export class AnalyticsService {
     this.pagesVisitedInSession.push(cleanPath);
 
     await this.withRetry(async () => {
-      const { data: insertedRows, error } = await this.client.client.from('page_view').insert({
-        session_id: this.sessionId,
-        page_path: cleanPath,
-        page_title: pageTitle || null,
-        referrer: document.referrer || null,
-      }).select('id');
+      const { data: insertedRows, error } = await this.client.client
+        .from('page_view')
+        .insert({
+          session_id: this.sessionId,
+          page_path: cleanPath,
+          page_title: pageTitle || null,
+          referrer: document.referrer || null,
+        })
+        .select('id');
 
       // FK violation (409/23503) = session no longer exists → recover
       if (error && this.isForeignKeyError(error)) {
         await this.recoverSession();
         // Retry the insert with the new session
-        const { data: retryRows } = await this.client.client.from('page_view').insert({
-          session_id: this.sessionId,
-          page_path: cleanPath,
-          page_title: pageTitle || null,
-          referrer: document.referrer || null,
-        }).select('id');
+        const { data: retryRows } = await this.client.client
+          .from('page_view')
+          .insert({
+            session_id: this.sessionId,
+            page_path: cleanPath,
+            page_title: pageTitle || null,
+            referrer: document.referrer || null,
+          })
+          .select('id');
         this.applyPageViewState(cleanPath, retryRows?.[0]?.id ?? null);
         return;
       }
@@ -397,9 +418,9 @@ export class AnalyticsService {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
-          'apikey': environment.supabaseKey,
-          'Authorization': `Bearer ${environment.supabaseKey}`,
-          'Prefer': 'return=minimal',
+          apikey: environment.supabaseKey,
+          Authorization: `Bearer ${environment.supabaseKey}`,
+          Prefer: 'return=minimal',
         },
         body,
         keepalive: true,
@@ -411,9 +432,9 @@ export class AnalyticsService {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
-          'apikey': environment.supabaseKey,
-          'Authorization': `Bearer ${environment.supabaseKey}`,
-          'Prefer': 'return=minimal',
+          apikey: environment.supabaseKey,
+          Authorization: `Bearer ${environment.supabaseKey}`,
+          Prefer: 'return=minimal',
         },
         body: JSON.stringify({ last_seen_at: now }),
         keepalive: true,
@@ -452,6 +473,31 @@ export class AnalyticsService {
   }
 
   /**
+   * Track a CV download event. Called when a visitor clicks the download button.
+   * Captures which document was downloaded, its language, and the session context.
+   */
+  async trackCvDownload(params: {
+    documentId?: number;
+    fileName?: string;
+    language?: string;
+  }): Promise<void> {
+    if (!isPlatformBrowser(this.platformId)) return;
+
+    try {
+      await this.client.client.from('cv_download').insert({
+        session_id: this.sessionId || null,
+        document_id: params.documentId || null,
+        file_name: params.fileName || null,
+        language: params.language || null,
+      });
+    } catch {
+      // Silently fail — analytics should never break the portfolio
+    }
+  }
+
+  // ==================== PRIVATE HELPERS ====================
+
+  /**
    * Flush the current page duration to the DB using fetch+keepalive.
    * Called from visibility/lifecycle events — must be fast and non-blocking.
    * Also updates session last_seen_at to track exit time.
@@ -475,9 +521,9 @@ export class AnalyticsService {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
-          'apikey': environment.supabaseKey,
-          'Authorization': `Bearer ${environment.supabaseKey}`,
-          'Prefer': 'return=minimal',
+          apikey: environment.supabaseKey,
+          Authorization: `Bearer ${environment.supabaseKey}`,
+          Prefer: 'return=minimal',
         },
         body,
         keepalive: true,
@@ -489,9 +535,9 @@ export class AnalyticsService {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
-          'apikey': environment.supabaseKey,
-          'Authorization': `Bearer ${environment.supabaseKey}`,
-          'Prefer': 'return=minimal',
+          apikey: environment.supabaseKey,
+          Authorization: `Bearer ${environment.supabaseKey}`,
+          Prefer: 'return=minimal',
         },
         body: JSON.stringify({ last_seen_at: now }),
         keepalive: true,
@@ -553,20 +599,24 @@ export class AnalyticsService {
     const durationSeconds = this.getActiveDurationSeconds();
     if (durationSeconds <= 0 || durationSeconds === this.lastHeartbeatDuration) return;
 
-    await this.withRetry(async () => {
-      const { error } = await this.client.client
-        .from('page_view')
-        .update({ duration_seconds: durationSeconds })
-        .eq('id', this.currentPageViewId!);
-      if (error) throw error;
-      this.lastHeartbeatDuration = durationSeconds;
+    await this.withRetry(
+      async () => {
+        const { error } = await this.client.client
+          .from('page_view')
+          .update({ duration_seconds: durationSeconds })
+          .eq('id', this.currentPageViewId!);
+        if (error) throw error;
+        this.lastHeartbeatDuration = durationSeconds;
 
-      // Also update last_seen_at on the session
-      await this.client.client
-        .from('visitor_session')
-        .update({ last_seen_at: new Date().toISOString() })
-        .eq('id', this.sessionId!);
-    }, 'heartbeatTick', 1); // Only 1 retry for heartbeat — next tick will cover it
+        // Also update last_seen_at on the session
+        await this.client.client
+          .from('visitor_session')
+          .update({ last_seen_at: new Date().toISOString() })
+          .eq('id', this.sessionId!);
+      },
+      'heartbeatTick',
+      1,
+    ); // Only 1 retry for heartbeat — next tick will cover it
   }
 
   private stopHeartbeat(): void {
@@ -589,7 +639,7 @@ export class AnalyticsService {
   private getActiveDurationSeconds(): number {
     if (!this.currentPageStartTime) return 0;
     const elapsed = Date.now() - this.currentPageStartTime;
-    const currentIdleMs = this.isIdle ? (Date.now() - this.idleSince) : 0;
+    const currentIdleMs = this.isIdle ? Date.now() - this.idleSince : 0;
     const activeMs = elapsed - this.accumulatedIdleMs - currentIdleMs;
     return Math.max(0, Math.round(activeMs / 1000));
   }
@@ -656,136 +706,7 @@ export class AnalyticsService {
     }, IDLE_TIMEOUT_MS);
   }
 
-  // ==================== DASHBOARD (Authenticated) ====================
-
-  /**
-   * Get aggregated analytics summary.
-   * Calls the Supabase function get_analytics_summary.
-   * Includes retry with exponential backoff for transient 520 errors.
-   */
-  async getAnalyticsSummary(days: number = 30): Promise<AnalyticsSummary | null> {
-    return this.withRetry(async () => {
-      const { data, error } = await this.client.client.rpc('get_analytics_summary', {
-        p_days: days,
-      });
-
-      if (error) {
-        console.error('Error fetching analytics summary:', error.message, error.details, error.hint, error.code);
-        throw error; // Let retry handle it
-      }
-
-      return data as AnalyticsSummary;
-    }, 'getAnalyticsSummary') as Promise<AnalyticsSummary | null>;
-  }
-
-  /**
-   * Get recent page views with pagination.
-   */
-  async getRecentPageViews(limit: number = 50, offset: number = 0): Promise<PageView[]> {
-    const { data, error } = await this.client.client
-      .from('page_view')
-      .select('*')
-      .order('created_at', { ascending: false })
-      .range(offset, offset + limit - 1);
-
-    if (error) return [];
-    return data as PageView[];
-  }
-
-  /**
-   * Get unique visitors with filters.
-   * Calls the Supabase function get_unique_visitors.
-   */
-  async getUniqueVisitors(params: {
-    days?: number;
-    deviceType?: string | null;
-    referrer?: string | null;
-    isRecruiter?: boolean | null;
-    country?: string | null;
-    search?: string | null;
-  } = {}): Promise<UniqueVisitor[]> {
-    try {
-      const rpcParams: Record<string, unknown> = {
-        p_days: params.days ?? 30,
-      };
-      if (params.deviceType) rpcParams['p_device_type'] = params.deviceType;
-      if (params.referrer) rpcParams['p_referrer'] = params.referrer;
-      if (params.isRecruiter !== undefined && params.isRecruiter !== null) rpcParams['p_is_recruiter'] = params.isRecruiter;
-      if (params.country) rpcParams['p_country'] = params.country;
-      if (params.search) rpcParams['p_search'] = params.search;
-
-      const { data, error } = await this.client.client.rpc('get_unique_visitors', rpcParams);
-
-      if (error) {
-        console.error('Error fetching unique visitors:', error.message);
-        return [];
-      }
-
-      return (data as UniqueVisitor[]) || [];
-    } catch {
-      return [];
-    }
-  }
-
-  /**
-   * Get recent visitor sessions with pagination.
-   */
-  async getRecentSessions(limit: number = 50, offset: number = 0): Promise<VisitorSession[]> {
-    const { data, error } = await this.client.client
-      .from('visitor_session')
-      .select('*')
-      .order('started_at', { ascending: false })
-      .range(offset, offset + limit - 1);
-
-    if (error) return [];
-    return data as VisitorSession[];
-  }
-
-  /**
-   * Delete all data for a specific visitor (all sessions + page views).
-   * Page views are auto-deleted via ON DELETE CASCADE on the session FK.
-   */
-  async deleteVisitor(visitorHash: string): Promise<boolean> {
-    try {
-      const { error } = await this.client.client
-        .from('visitor_session')
-        .delete()
-        .eq('visitor_hash', visitorHash);
-
-      if (error) {
-        console.error('Error deleting visitor:', error.message);
-        return false;
-      }
-      return true;
-    } catch {
-      return false;
-    }
-  }
-
-  /**
-   * Track a CV download event. Called when a visitor clicks the download button.
-   * Captures which document was downloaded, its language, and the session context.
-   */
-  async trackCvDownload(params: {
-    documentId?: number;
-    fileName?: string;
-    language?: string;
-  }): Promise<void> {
-    if (!isPlatformBrowser(this.platformId)) return;
-
-    try {
-      await this.client.client.from('cv_download').insert({
-        session_id: this.sessionId || null,
-        document_id: params.documentId || null,
-        file_name: params.fileName || null,
-        language: params.language || null,
-      });
-    } catch {
-      // Silently fail — analytics should never break the portfolio
-    }
-  }
-
-  // ==================== PRIVATE HELPERS ====================
+  // ==================== PRIVATE HELPERS (continued) ====================
 
   /**
    * Generate a simple visitor hash based on available browser information.
@@ -875,8 +796,8 @@ export class AnalyticsService {
 
     const interestPages = new Set(
       this.pagesVisitedInSession.filter((p) =>
-        RECRUITER_INTEREST_PAGES.some((rp) => p.startsWith(rp))
-      )
+        RECRUITER_INTEREST_PAGES.some((rp) => p.startsWith(rp)),
+      ),
     );
     return interestPages.size >= 3;
   }
@@ -1019,7 +940,7 @@ export class AnalyticsService {
         }
         // Exponential backoff: 500ms, 1000ms, 2000ms …
         const delay = RETRY_BASE_DELAY_MS * Math.pow(2, attempt);
-        await new Promise(resolve => setTimeout(resolve, delay));
+        await new Promise((resolve) => setTimeout(resolve, delay));
       }
     }
     return null;
@@ -1067,6 +988,8 @@ export class AnalyticsService {
     try {
       sessionStorage.removeItem('analytics_session_id');
       sessionStorage.removeItem('analytics_page_count');
-    } catch { /* sessionStorage may be unavailable */ }
+    } catch {
+      /* sessionStorage may be unavailable */
+    }
   }
 }

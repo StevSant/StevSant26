@@ -1,0 +1,196 @@
+<!-- Hero Section -->
+<section class="relative pt-8 pb-12 sm:pt-10 sm:pb-16 lg:pt-12 lg:pb-24 px-4 sm:px-6 lg:px-8">
+  <!-- Banner Background with parallax -->
+  @if (bannerUrl()) {
+    <div
+      appScrollReveal
+      [revealParallax]="true"
+      [revealParallaxSpeed]="0.03"
+      class="absolute inset-0 z-0 cursor-pointer overflow-hidden"
+      (dblclick)="openImageModal(bannerUrl()!, 'Banner')"
+      title="Doble clic para ver en grande"
+    >
+      <img
+        [src]="bannerUrl()"
+        alt="Banner"
+        class="w-full h-full object-cover"
+        fetchpriority="high"
+      />
+      <div
+        class="absolute inset-0 opacity-70"
+        style="
+          background: linear-gradient(
+            to bottom,
+            var(--color-hero-gradient-start),
+            var(--color-hero-gradient-end)
+          );
+        "
+      ></div>
+    </div>
+  }
+
+  <div class="relative z-10 max-w-6xl mx-auto">
+    <div class="flex flex-col md:flex-row items-center gap-6 sm:gap-10 md:gap-16">
+      <!-- Avatar -->
+      @if (avatarUrl()) {
+        <div
+          class="shrink-0 cursor-pointer"
+          (dblclick)="openImageModal(avatarUrl()!, 'Avatar')"
+          title="Doble clic para ver en grande"
+        >
+          <img
+            [src]="avatarUrl()"
+            alt="Avatar"
+            fetchpriority="high"
+            class="w-32 h-32 sm:w-44 sm:h-44 md:w-56 md:h-56 rounded-full object-cover shadow-2xl ring-2 ring-(--color-accent)/20 ring-offset-4 ring-offset-(--color-bg-primary) hover:ring-4 hover:ring-(--color-accent)/40 transition-all"
+          />
+        </div>
+      }
+
+      <!-- Hero Content -->
+      <div class="text-center md:text-left flex-1">
+        <h1
+          class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 tracking-tight leading-tight gradient-text-animated"
+        >
+          {{ firstName() }} {{ lastName() }}
+        </h1>
+        @if (profileJobTitle()) {
+          <p
+            class="text-(--color-text-secondary) text-lg sm:text-xl mb-2 font-light min-h-[1.75rem]"
+          >
+            {{ typingText() }}
+            @if (showTypingCursor()) {
+              <span class="typing-cursor"></span>
+            }
+          </p>
+        }
+        @if (nickname()) {
+          <p class="text-(--color-text-muted) text-base mb-4 font-light">&#64;{{ nickname() }}</p>
+        }
+
+        <!-- Badges -->
+        <div class="flex flex-wrap justify-center md:justify-start gap-2 mb-5">
+          @if (isAvailable() !== undefined) {
+            <div
+              class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider border"
+              [class]="
+                isAvailable()
+                  ? 'bg-(--color-success-bg) text-(--color-success) border-(--color-success-border)'
+                  : 'bg-(--color-bg-tertiary) text-(--color-text-muted) border-(--color-border-primary)'
+              "
+            >
+              <span class="relative flex h-2 w-2">
+                @if (isAvailable()) {
+                  <span
+                    class="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 bg-(--color-success)"
+                  ></span>
+                }
+                <span
+                  class="relative inline-flex rounded-full h-2 w-2"
+                  [class]="isAvailable() ? 'bg-(--color-success)' : 'bg-(--color-text-disabled)'"
+                ></span>
+              </span>
+              {{
+                (isAvailable() ? 'portfolio.home.map.available' : 'portfolio.home.map.unavailable')
+                  | translate
+              }}
+            </div>
+          }
+          @if (yearsOfExperience() > 0) {
+            <div
+              class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider border bg-(--color-bg-tertiary) text-(--color-text-secondary) border-(--color-border-primary)"
+            >
+              {{ yearsOfExperience() }}+ {{ 'portfolio.home.stats.yearsExperience' | translate }}
+            </div>
+          }
+        </div>
+
+        <!-- CTA Buttons -->
+        <div class="flex flex-wrap gap-3 justify-center md:justify-start mt-6">
+          <a
+            routerLink="projects"
+            class="inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-(--color-accent) text-(--btn-primary-text) text-sm font-medium tracking-wide hover:opacity-90 transition-opacity"
+          >
+            {{ 'portfolio.home.viewProjects' | translate }}
+            <mat-icon class="text-[16px]">chevron_right</mat-icon>
+          </a>
+          <a
+            routerLink="contact"
+            class="inline-flex items-center gap-2 px-6 py-2.5 rounded-full border border-(--color-divider) text-(--color-text-secondary) text-sm font-medium tracking-wide hover:border-(--color-accent) hover:text-(--color-accent) transition-all"
+          >
+            {{ 'portfolio.home.getInTouch' | translate }}
+          </a>
+          @if (cvDocuments().length > 0) {
+            <div class="relative">
+              <button
+                type="button"
+                (click)="toggleCvMenu()"
+                class="inline-flex items-center gap-2 px-6 py-2.5 rounded-full border border-(--color-divider) text-(--color-text-secondary) text-sm font-medium tracking-wide hover:border-(--color-accent) hover:text-(--color-accent) transition-all"
+              >
+                <mat-icon class="text-[16px]">download</mat-icon>
+                {{ 'portfolio.downloadCV' | translate }}
+                <mat-icon class="text-[14px] transition-transform" [class.rotate-180]="cvMenuOpen()"
+                  >expand_more</mat-icon
+                >
+              </button>
+              @if (cvMenuOpen()) {
+                <div
+                  class="absolute left-0 mt-2 w-64 bg-(--color-bg-secondary) border border-(--color-border-primary) rounded-lg shadow-xl z-50 py-1 max-h-72 overflow-y-auto"
+                >
+                  <div class="px-4 py-2 border-b border-(--color-divider)">
+                    <p
+                      class="text-xs font-medium uppercase tracking-wider text-(--color-text-muted)"
+                    >
+                      {{ 'portfolio.nav.cvDocuments' | translate }}
+                    </p>
+                  </div>
+                  @for (cv of cvDocuments(); track cv.id) {
+                    <div class="px-4 py-3 hover:bg-(--color-bg-tertiary) transition-colors">
+                      <div class="flex items-center justify-between">
+                        <div class="min-w-0 flex-1">
+                          <p class="text-sm font-medium text-(--color-text-primary) truncate">
+                            {{ cv.label || cv.file_name || 'CV' }}
+                          </p>
+                          @if (cv.language) {
+                            <p class="text-xs text-(--color-text-muted)">
+                              {{ cv.language.name }}
+                            </p>
+                          }
+                        </div>
+                        <div class="flex items-center gap-1 shrink-0 ml-3">
+                          <!-- View -->
+                          <a
+                            [href]="cv.url"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            (click)="closeCvMenu()"
+                            class="p-1.5 rounded-md text-(--color-text-muted) hover:text-(--color-accent) hover:bg-(--color-bg-primary) transition-colors"
+                            [title]="'portfolio.nav.viewCV' | translate"
+                          >
+                            <mat-icon class="text-[16px]">visibility</mat-icon>
+                          </a>
+                          <!-- Download -->
+                          <a
+                            [href]="cv.url"
+                            download
+                            (click)="closeCvMenu()"
+                            class="p-1.5 rounded-md text-(--color-text-muted) hover:text-(--color-accent) hover:bg-(--color-bg-primary) transition-colors"
+                            [title]="'portfolio.downloadCV' | translate"
+                          >
+                            <mat-icon class="text-[16px]">download</mat-icon>
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                  }
+                </div>
+              }
+            </div>
+          }
+        </div>
+
+        <div class="hidden md:block w-24 h-px bg-(--color-accent) mt-8 opacity-50"></div>
+      </div>
+    </div>
+  </div>
+</section>

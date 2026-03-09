@@ -1,0 +1,232 @@
+/* ============================================
+   Scroll Reveal Animations
+   ============================================ */
+.scroll-reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition:
+    opacity 0.6s ease-out,
+    transform 0.6s ease-out;
+}
+
+.scroll-reveal--visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Scroll reveal variants */
+.scroll-reveal--slide-left {
+  opacity: 0;
+  transform: translateX(-32px);
+  transition:
+    opacity 0.6s ease-out,
+    transform 0.6s ease-out;
+}
+
+.scroll-reveal--slide-right {
+  opacity: 0;
+  transform: translateX(32px);
+  transition:
+    opacity 0.6s ease-out,
+    transform 0.6s ease-out;
+}
+
+.scroll-reveal--scale {
+  opacity: 0;
+  transform: scale(0.95);
+  transition:
+    opacity 0.6s ease-out,
+    transform 0.6s ease-out;
+}
+
+.scroll-reveal--slide-left.scroll-reveal--visible,
+.scroll-reveal--slide-right.scroll-reveal--visible,
+.scroll-reveal--scale.scroll-reveal--visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* Blur-to-sharp reveal */
+.scroll-reveal--blur {
+  opacity: 0;
+  filter: blur(8px);
+  transform: translateY(16px);
+  transition:
+    opacity 0.7s ease-out,
+    filter 0.7s ease-out,
+    transform 0.7s ease-out;
+}
+
+.scroll-reveal--blur.scroll-reveal--visible {
+  opacity: 1;
+  filter: blur(0);
+  transform: none;
+}
+
+/* Fade-only (no transform) */
+.scroll-reveal--fade {
+  opacity: 0;
+  transition: opacity 0.6s ease-out;
+}
+
+.scroll-reveal--fade.scroll-reveal--visible {
+  opacity: 1;
+}
+
+/* Reduced motion: disable all scroll animations */
+@media (prefers-reduced-motion: reduce) {
+  .scroll-reveal,
+  .scroll-reveal--slide-left,
+  .scroll-reveal--slide-right,
+  .scroll-reveal--scale,
+  .scroll-reveal--blur,
+  .scroll-reveal--fade {
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+    transition: none !important;
+  }
+
+  .skills-ticker {
+    animation: none !important;
+  }
+}
+
+/* ============================================
+   Skills Ticker Animation
+   ============================================ */
+.skills-ticker-container {
+  mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);
+  -webkit-mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);
+}
+
+.skills-ticker {
+  display: flex;
+  gap: 1.5rem;
+  width: max-content;
+  animation: skills-scroll 60s linear infinite;
+}
+
+.skills-ticker:hover {
+  animation-play-state: paused;
+}
+
+@keyframes skills-scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+/* Parallax subtle effect for sections */
+.parallax-section {
+  will-change: transform;
+  transition: transform 0.1s linear;
+}
+
+/* ============================================
+   View Transitions for route changes
+   ============================================ */
+::view-transition-old(root) {
+  animation: vt-fade-out 0.2s ease-in;
+}
+
+::view-transition-new(root) {
+  animation: vt-fade-in 0.3s ease-out;
+}
+
+@keyframes vt-fade-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes vt-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* ============================================
+   Animated skill proficiency bars
+   ============================================ */
+.skill-bar-track {
+  height: 6px;
+  border-radius: 3px;
+  background-color: var(--color-bg-tertiary);
+  overflow: hidden;
+}
+
+.skill-bar-fill {
+  height: 100%;
+  border-radius: 3px;
+  background-color: var(--color-accent);
+  transform-origin: left;
+  transform: scaleX(0);
+  transition: transform 1s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.skill-bar-fill.animate {
+  transform: scaleX(var(--bar-width));
+}
+
+/* ============================================
+   Skeleton loader shimmer
+   ============================================ */
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.skeleton-shimmer {
+  background: linear-gradient(
+    90deg,
+    var(--color-bg-tertiary) 25%,
+    var(--color-bg-secondary) 50%,
+    var(--color-bg-tertiary) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+  border-radius: 0.5rem;
+}
+
+/* ============================================
+   IMAGE LIGHTBOX
+   ============================================ */
+@keyframes lightbox-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+.animate-lightbox-in {
+  animation: lightbox-in 0.2s ease-out;
+}
+
+/* Section image gallery thumbnails */
+.section-gallery-thumb {
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.section-gallery-thumb:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+}

@@ -1,4 +1,12 @@
-import { Component, OnInit, OnDestroy, HostListener, signal, inject, PLATFORM_ID } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  OnDestroy,
+  HostListener,
+  signal,
+  inject,
+  PLATFORM_ID,
+} from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { RouterModule, Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
@@ -6,7 +14,7 @@ import { filter } from 'rxjs/operators';
 import { ThemeService } from '@core/services/theme.service';
 import { SeoService } from '@core/services/seo.service';
 import { TranslateService } from '@core/services/translate.service';
-import { AnalyticsService } from '@core/services/analytics.service';
+import { AnalyticsTrackingService } from '@core/services/analytics-tracking.service';
 import { TranslatePipe } from '@shared/pipes/translate.pipe';
 import { LanguageSelectorComponent } from '@shared/components/language-selector/language-selector.component';
 import { ThemeToggleComponent } from '@shared/components/theme-toggle/theme-toggle.component';
@@ -42,7 +50,7 @@ export class PortfolioLayoutComponent implements OnInit, OnDestroy {
   protected themeService = inject(ThemeService);
   private seoService = inject(SeoService);
   private translate = inject(TranslateService);
-  private analytics = inject(AnalyticsService);
+  private analytics = inject(AnalyticsTrackingService);
   private router = inject(Router);
   private route = inject(ActivatedRoute);
   private platformId = inject(PLATFORM_ID);

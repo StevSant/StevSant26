@@ -1,0 +1,61 @@
+<div
+  class="bg-(--color-bg-secondary) rounded-xl border border-(--color-border-primary) overflow-hidden"
+>
+  <div class="p-5">
+    <h3 class="text-lg font-semibold text-(--color-text-primary)">
+      {{ 'analytics.topReferrers' | translate }}
+    </h3>
+    <p class="text-sm text-(--color-text-muted) mt-1">
+      {{ 'analytics.referrerHint' | translate }}
+    </p>
+  </div>
+  @if (summary().top_referrers?.length) {
+    <table class="w-full">
+      <thead>
+        <tr class="border-t border-(--color-border-primary) bg-(--color-bg-primary)/50">
+          <th
+            class="text-left px-5 py-3 text-xs font-medium text-(--color-text-muted) uppercase tracking-wider"
+          >
+            {{ 'analytics.source' | translate }}
+          </th>
+          <th
+            class="text-right px-5 py-3 text-xs font-medium text-(--color-text-muted) uppercase tracking-wider"
+          >
+            {{ 'analytics.visits' | translate }}
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (ref of summary().top_referrers; track ref.referrer_source) {
+          <tr
+            class="border-t border-(--color-border-primary) hover:bg-(--color-bg-primary)/30 cursor-pointer"
+            (click)="onReferrerClick(ref.referrer_source)"
+          >
+            <td class="px-5 py-3 text-sm text-(--color-text-primary)">
+              <div class="flex items-center gap-2">
+                @if (getReferrerBadge(ref.referrer_source); as badge) {
+                  <span
+                    class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium"
+                    [ngClass]="badge.classes"
+                    >{{ badge.label }}</span
+                  >
+                }
+                {{ ref.referrer_source }}
+              </div>
+            </td>
+            <td class="px-5 py-3 text-sm text-(--color-text-primary) text-right font-medium">
+              <div class="flex items-center justify-end gap-2">
+                {{ ref.visits }}
+                <mat-icon class="text-[14px] text-(--color-text-muted)">open_in_new</mat-icon>
+              </div>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  } @else {
+    <div class="p-10 text-center text-(--color-text-muted) text-sm">
+      {{ 'analytics.noReferrers' | translate }}
+    </div>
+  }
+</div>
