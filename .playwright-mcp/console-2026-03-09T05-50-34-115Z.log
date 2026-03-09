@@ -1,0 +1,44 @@
+[      27ms] [WARNING] NG0955: The provided track expression resulted in duplicated keys for a given collection. Adjust the tracking expression such that it uniquely identifies all the items in the collection. Duplicated keys were: 
+key "18" at index "0" and "3". Find more at https://v21.angular.dev/errors/NG0955 @ http://localhost:4200/@fs/C:/Users/Bryan/OneDrive/Desktop/Bryan/Dev/Personal%20projects/StevSant26/frontend/.angular/cache/21.1.2/stevsant26/vite/deps/chunk-XAEIM2RH.js?v=956ab420:17315
+[      28ms] [WARNING] NG0955: The provided track expression resulted in duplicated keys for a given collection. Adjust the tracking expression such that it uniquely identifies all the items in the collection. Duplicated keys were: 
+key "18" at index "0" and "3". Find more at https://v21.angular.dev/errors/NG0955 @ http://localhost:4200/@fs/C:/Users/Bryan/OneDrive/Desktop/Bryan/Dev/Personal%20projects/StevSant26/frontend/.angular/cache/21.1.2/stevsant26/vite/deps/chunk-XAEIM2RH.js?v=956ab420:17315
+[    1283ms] [WARNING] NG0955: The provided track expression resulted in duplicated keys for a given collection. Adjust the tracking expression such that it uniquely identifies all the items in the collection. Duplicated keys were: 
+key "33" at index "0" and "5". Find more at https://v21.angular.dev/errors/NG0955 @ http://localhost:4200/@fs/C:/Users/Bryan/OneDrive/Desktop/Bryan/Dev/Personal%20projects/StevSant26/frontend/.angular/cache/21.1.2/stevsant26/vite/deps/chunk-XAEIM2RH.js?v=956ab420:17315
+[    1284ms] [WARNING] NG0955: The provided track expression resulted in duplicated keys for a given collection. Adjust the tracking expression such that it uniquely identifies all the items in the collection. Duplicated keys were: 
+key "18" at index "0" and "3", 
+key "19" at index "1" and "4", 
+key "20" at index "2" and "5". Find more at https://v21.angular.dev/errors/NG0955 @ http://localhost:4200/@fs/C:/Users/Bryan/OneDrive/Desktop/Bryan/Dev/Personal%20projects/StevSant26/frontend/.angular/cache/21.1.2/stevsant26/vite/deps/chunk-XAEIM2RH.js?v=956ab420:17315
+[    1286ms] [WARNING] NG0955: The provided track expression resulted in duplicated keys for a given collection. Adjust the tracking expression such that it uniquely identifies all the items in the collection. Duplicated keys were: 
+key "33" at index "0" and "5". Find more at https://v21.angular.dev/errors/NG0955 @ http://localhost:4200/@fs/C:/Users/Bryan/OneDrive/Desktop/Bryan/Dev/Personal%20projects/StevSant26/frontend/.angular/cache/21.1.2/stevsant26/vite/deps/chunk-XAEIM2RH.js?v=956ab420:17315
+[    1287ms] [WARNING] NG0955: The provided track expression resulted in duplicated keys for a given collection. Adjust the tracking expression such that it uniquely identifies all the items in the collection. Duplicated keys were: 
+key "18" at index "0" and "3", 
+key "19" at index "1" and "4", 
+key "20" at index "2" and "5". Find more at https://v21.angular.dev/errors/NG0955 @ http://localhost:4200/@fs/C:/Users/Bryan/OneDrive/Desktop/Bryan/Dev/Personal%20projects/StevSant26/frontend/.angular/cache/21.1.2/stevsant26/vite/deps/chunk-XAEIM2RH.js?v=956ab420:17315
+[    1288ms] [WARNING] NG0955: The provided track expression resulted in duplicated keys for a given collection. Adjust the tracking expression such that it uniquely identifies all the items in the collection. Duplicated keys were: 
+key "33" at index "0" and "5". Find more at https://v21.angular.dev/errors/NG0955 @ http://localhost:4200/@fs/C:/Users/Bryan/OneDrive/Desktop/Bryan/Dev/Personal%20projects/StevSant26/frontend/.angular/cache/21.1.2/stevsant26/vite/deps/chunk-XAEIM2RH.js?v=956ab420:17315
+[    1288ms] [WARNING] NG0955: The provided track expression resulted in duplicated keys for a given collection. Adjust the tracking expression such that it uniquely identifies all the items in the collection. Duplicated keys were: 
+key "18" at index "0" and "3", 
+key "19" at index "1" and "4", 
+key "20" at index "2" and "5". Find more at https://v21.angular.dev/errors/NG0955 @ http://localhost:4200/@fs/C:/Users/Bryan/OneDrive/Desktop/Bryan/Dev/Personal%20projects/StevSant26/frontend/.angular/cache/21.1.2/stevsant26/vite/deps/chunk-XAEIM2RH.js?v=956ab420:17315
+[    1309ms] [ERROR] Failed to load resource: the server responded with a status of 404 () @ https://cdn.simpleicons.org/sonarqube:0
+[    1310ms] [ERROR] Failed to load resource: the server responded with a status of 404 () @ https://cdn.simpleicons.org/playwright:0
+[    1319ms] [ERROR] Access to fetch at 'https://ipapi.co/json/' from origin 'http://localhost:4200' has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource. @ http://localhost:4200/projects:0
+[    1319ms] [ERROR] Failed to load resource: net::ERR_FAILED @ https://ipapi.co/json/:0
+[    1330ms] [WARNING] NG0955: The provided track expression resulted in duplicated keys for a given collection. Adjust the tracking expression such that it uniquely identifies all the items in the collection. Duplicated keys were: 
+key "33" at index "0" and "5". Find more at https://v21.angular.dev/errors/NG0955 @ http://localhost:4200/@fs/C:/Users/Bryan/OneDrive/Desktop/Bryan/Dev/Personal%20projects/StevSant26/frontend/.angular/cache/21.1.2/stevsant26/vite/deps/chunk-XAEIM2RH.js?v=956ab420:17315
+[    1331ms] [WARNING] NG0955: The provided track expression resulted in duplicated keys for a given collection. Adjust the tracking expression such that it uniquely identifies all the items in the collection. Duplicated keys were: 
+key "18" at index "0" and "3", 
+key "19" at index "1" and "4", 
+key "20" at index "2" and "5". Find more at https://v21.angular.dev/errors/NG0955 @ http://localhost:4200/@fs/C:/Users/Bryan/OneDrive/Desktop/Bryan/Dev/Personal%20projects/StevSant26/frontend/.angular/cache/21.1.2/stevsant26/vite/deps/chunk-XAEIM2RH.js?v=956ab420:17315
+[    1333ms] [WARNING] NG0955: The provided track expression resulted in duplicated keys for a given collection. Adjust the tracking expression such that it uniquely identifies all the items in the collection. Duplicated keys were: 
+key "33" at index "0" and "5". Find more at https://v21.angular.dev/errors/NG0955 @ http://localhost:4200/@fs/C:/Users/Bryan/OneDrive/Desktop/Bryan/Dev/Personal%20projects/StevSant26/frontend/.angular/cache/21.1.2/stevsant26/vite/deps/chunk-XAEIM2RH.js?v=956ab420:17315
+[    1333ms] [WARNING] NG0955: The provided track expression resulted in duplicated keys for a given collection. Adjust the tracking expression such that it uniquely identifies all the items in the collection. Duplicated keys were: 
+key "18" at index "0" and "3", 
+key "19" at index "1" and "4", 
+key "20" at index "2" and "5". Find more at https://v21.angular.dev/errors/NG0955 @ http://localhost:4200/@fs/C:/Users/Bryan/OneDrive/Desktop/Bryan/Dev/Personal%20projects/StevSant26/frontend/.angular/cache/21.1.2/stevsant26/vite/deps/chunk-XAEIM2RH.js?v=956ab420:17315
+[    1546ms] [WARNING] NG0955: The provided track expression resulted in duplicated keys for a given collection. Adjust the tracking expression such that it uniquely identifies all the items in the collection. Duplicated keys were: 
+key "33" at index "0" and "5". Find more at https://v21.angular.dev/errors/NG0955 @ http://localhost:4200/@fs/C:/Users/Bryan/OneDrive/Desktop/Bryan/Dev/Personal%20projects/StevSant26/frontend/.angular/cache/21.1.2/stevsant26/vite/deps/chunk-XAEIM2RH.js?v=956ab420:17315
+[    1546ms] [WARNING] NG0955: The provided track expression resulted in duplicated keys for a given collection. Adjust the tracking expression such that it uniquely identifies all the items in the collection. Duplicated keys were: 
+key "18" at index "0" and "3", 
+key "19" at index "1" and "4", 
+key "20" at index "2" and "5". Find more at https://v21.angular.dev/errors/NG0955 @ http://localhost:4200/@fs/C:/Users/Bryan/OneDrive/Desktop/Bryan/Dev/Personal%20projects/StevSant26/frontend/.angular/cache/21.1.2/stevsant26/vite/deps/chunk-XAEIM2RH.js?v=956ab420:17315
