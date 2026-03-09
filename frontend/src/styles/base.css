@@ -1,0 +1,325 @@
+@import 'tailwindcss';
+
+/* ============================================
+   MATERIAL SYMBOLS — local class definition
+   Ensures it is NOT overridden by Tailwind CSS layers.
+   The @font-face is still loaded via the <link> in index.html.
+   ============================================ */
+.material-symbols-outlined {
+  font-family: 'Material Symbols Outlined' !important;
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  font-feature-settings: 'liga';
+  -webkit-font-feature-settings: 'liga';
+  font-variation-settings:
+    'FILL' 0,
+    'wght' 400,
+    'GRAD' 0,
+    'opsz' 24;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Mat-icon: allow Tailwind text-[Xpx] to control size */
+mat-icon.mat-icon {
+  width: 1em;
+  height: 1em;
+  line-height: 1;
+  font-size: inherit;
+}
+
+/* ============================================
+   THEME: Dark Elegant (Default) — Black & White
+   ============================================ */
+:root,
+.theme-dark-elegant {
+  --color-bg-primary: #0a0a0a;
+  --color-bg-secondary: #181818;
+  --color-bg-tertiary: #252525;
+  --color-bg-input: #1c1c1c;
+
+  --color-border-primary: #333333;
+  --color-border-secondary: #444444;
+  --color-border-focus: #ffffff;
+
+  --color-text-primary: #ffffff;
+  --color-text-secondary: #e0e0e0;
+  --color-text-muted: #999999;
+  --color-text-disabled: #606060;
+
+  --color-accent: #ffffff;
+  --color-text-on-accent: #0a0a0a;
+  --color-accent-hover: #e0e0e0;
+  --color-accent-active: #c0c0c0;
+  --color-accent-muted: rgba(255, 255, 255, 0.4);
+  --color-accent-light: #f0f0f0;
+
+  --color-success: #22c55e;
+  --color-success-hover: #16a34a;
+  --color-success-bg: rgba(34, 197, 94, 0.1);
+  --color-success-border: rgba(34, 197, 94, 0.5);
+
+  --color-error: #ef4444;
+  --color-error-hover: #dc2626;
+  --color-error-bg: rgba(239, 68, 68, 0.1);
+  --color-error-border: rgba(239, 68, 68, 0.5);
+  --color-error-text: #f87171;
+
+  --color-warning: #eab308;
+  --color-warning-hover: #ca8a04;
+  --color-warning-bg: rgba(234, 179, 8, 0.2);
+
+  --color-info: #a0a0a0;
+  --color-info-bg: rgba(160, 160, 160, 0.15);
+
+  --color-pin: #e0e0e0;
+  --color-archive: #8a8a8a;
+  --color-purple: #a0a0a0;
+  --color-purple-bg: rgba(160, 160, 160, 0.15);
+
+  --color-overlay: rgba(0, 0, 0, 0.6);
+  --color-overlay-heavy: rgba(0, 0, 0, 0.75);
+
+  /* Elegant extras */
+  --color-card-border: rgba(255, 255, 255, 0.1);
+  --color-card-glow: rgba(255, 255, 255, 0.04);
+  --color-divider: rgba(255, 255, 255, 0.12);
+  --color-hero-gradient-start: rgba(10, 10, 10, 0.85);
+  --color-hero-gradient-end: rgba(10, 10, 10, 0.95);
+  --btn-primary-text: #0a0a0a;
+  --font-display: 'Inter', system-ui, -apple-system, sans-serif;
+
+  color-scheme: dark;
+}
+
+/* ============================================
+   THEME: Light Elegant — White & Black
+   ============================================ */
+.theme-light-elegant {
+  --color-bg-primary: #fafafa;
+  --color-bg-secondary: #ffffff;
+  --color-bg-tertiary: #f0f0f0;
+  --color-bg-input: #f5f5f5;
+
+  --color-border-primary: #e5e5e5;
+  --color-border-secondary: #d4d4d4;
+  --color-border-focus: #0a0a0a;
+
+  --color-text-primary: #0a0a0a;
+  --color-text-secondary: #404040;
+  --color-text-muted: #737373;
+  --color-text-disabled: #a3a3a3;
+
+  --color-accent: #0a0a0a;
+  --color-text-on-accent: #ffffff;
+  --color-accent-hover: #262626;
+  --color-accent-active: #404040;
+  --color-accent-muted: rgba(10, 10, 10, 0.4);
+  --color-accent-light: #525252;
+
+  --color-success: #16a34a;
+  --color-success-hover: #15803d;
+  --color-success-bg: rgba(22, 163, 74, 0.08);
+  --color-success-border: rgba(22, 163, 74, 0.3);
+
+  --color-error: #dc2626;
+  --color-error-hover: #b91c1c;
+  --color-error-bg: rgba(220, 38, 38, 0.06);
+  --color-error-border: rgba(220, 38, 38, 0.3);
+  --color-error-text: #dc2626;
+
+  --color-warning: #ca8a04;
+  --color-warning-hover: #a16207;
+  --color-warning-bg: rgba(202, 138, 4, 0.1);
+
+  --color-info: #525252;
+  --color-info-bg: rgba(82, 82, 82, 0.08);
+
+  --color-pin: #404040;
+  --color-archive: #737373;
+  --color-purple: #6b21a8;
+  --color-purple-bg: rgba(107, 33, 168, 0.08);
+
+  --color-overlay: rgba(0, 0, 0, 0.3);
+  --color-overlay-heavy: rgba(0, 0, 0, 0.5);
+
+  --color-card-border: rgba(0, 0, 0, 0.06);
+  --color-card-glow: rgba(0, 0, 0, 0.02);
+  --color-divider: rgba(0, 0, 0, 0.08);
+  --color-hero-gradient-start: rgba(250, 250, 250, 0.85);
+  --color-hero-gradient-end: rgba(250, 250, 250, 0.95);
+  --btn-primary-text: #ffffff;
+  --font-display: 'Inter', system-ui, -apple-system, sans-serif;
+
+  color-scheme: light;
+}
+
+/* ============================================
+   THEME: Midnight Blue
+   ============================================ */
+.theme-midnight-blue {
+  --color-bg-primary: #0c1222;
+  --color-bg-secondary: #111a2e;
+  --color-bg-tertiary: #1a2542;
+  --color-bg-input: #162038;
+
+  --color-border-primary: #1e2d4a;
+  --color-border-secondary: #2a3f5f;
+  --color-border-focus: #60a5fa;
+
+  --color-text-primary: #f0f4ff;
+  --color-text-secondary: #c2d0e8;
+  --color-text-muted: #7d8fad;
+  --color-text-disabled: #4a5a75;
+
+  --color-accent: #60a5fa;
+  --color-text-on-accent: #0a0a0a;
+  --color-accent-hover: #3b82f6;
+  --color-accent-active: #2563eb;
+  --color-accent-muted: rgba(96, 165, 250, 0.4);
+  --color-accent-light: #93bbfc;
+
+  --color-success: #34d399;
+  --color-success-hover: #10b981;
+  --color-success-bg: rgba(52, 211, 153, 0.1);
+  --color-success-border: rgba(52, 211, 153, 0.4);
+
+  --color-error: #f87171;
+  --color-error-hover: #ef4444;
+  --color-error-bg: rgba(248, 113, 113, 0.1);
+  --color-error-border: rgba(248, 113, 113, 0.4);
+  --color-error-text: #fca5a5;
+
+  --color-warning: #fbbf24;
+  --color-warning-hover: #f59e0b;
+  --color-warning-bg: rgba(251, 191, 36, 0.15);
+
+  --color-info: #60a5fa;
+  --color-info-bg: rgba(96, 165, 250, 0.15);
+
+  --color-pin: #fbbf24;
+  --color-archive: #f97316;
+  --color-purple: #a78bfa;
+  --color-purple-bg: rgba(167, 139, 250, 0.15);
+
+  --color-overlay: rgba(0, 0, 0, 0.5);
+  --color-overlay-heavy: rgba(0, 0, 0, 0.7);
+
+  --color-card-border: rgba(96, 165, 250, 0.08);
+  --color-card-glow: rgba(96, 165, 250, 0.03);
+  --color-divider: rgba(96, 165, 250, 0.1);
+  --color-hero-gradient-start: rgba(12, 18, 34, 0.85);
+  --color-hero-gradient-end: rgba(12, 18, 34, 0.95);
+  --btn-primary-text: #0c1222;
+  --font-display: 'Inter', system-ui, -apple-system, sans-serif;
+
+  color-scheme: dark;
+}
+
+/* ============================================
+   THEME: Warm Sepia
+   ============================================ */
+.theme-warm-sepia {
+  --color-bg-primary: #1a1510;
+  --color-bg-secondary: #221c14;
+  --color-bg-tertiary: #2e261c;
+  --color-bg-input: #261f16;
+
+  --color-border-primary: #3a3025;
+  --color-border-secondary: #4a3d30;
+  --color-border-focus: #d4a76a;
+
+  --color-text-primary: #f5ebe0;
+  --color-text-secondary: #d5c8b6;
+  --color-text-muted: #9a8b78;
+  --color-text-disabled: #6b5e50;
+
+  --color-accent: #d4a76a;
+  --color-text-on-accent: #0a0a0a;
+  --color-accent-hover: #c49558;
+  --color-accent-active: #b48448;
+  --color-accent-muted: rgba(212, 167, 106, 0.4);
+  --color-accent-light: #e0bb85;
+
+  --color-success: #7ec77e;
+  --color-success-hover: #5fb85f;
+  --color-success-bg: rgba(126, 199, 126, 0.1);
+  --color-success-border: rgba(126, 199, 126, 0.4);
+
+  --color-error: #d97070;
+  --color-error-hover: #c75050;
+  --color-error-bg: rgba(217, 112, 112, 0.1);
+  --color-error-border: rgba(217, 112, 112, 0.4);
+  --color-error-text: #e89090;
+
+  --color-warning: #d4a76a;
+  --color-warning-hover: #c49558;
+  --color-warning-bg: rgba(212, 167, 106, 0.2);
+
+  --color-info: #8fafcf;
+  --color-info-bg: rgba(143, 175, 207, 0.15);
+
+  --color-pin: #d4a76a;
+  --color-archive: #9a8b78;
+  --color-purple: #b09ac5;
+  --color-purple-bg: rgba(176, 154, 197, 0.15);
+
+  --color-overlay: rgba(0, 0, 0, 0.5);
+  --color-overlay-heavy: rgba(0, 0, 0, 0.7);
+
+  --color-card-border: rgba(212, 167, 106, 0.08);
+  --color-card-glow: rgba(212, 167, 106, 0.03);
+  --color-divider: rgba(212, 167, 106, 0.1);
+  --color-hero-gradient-start: rgba(26, 21, 16, 0.85);
+  --color-hero-gradient-end: rgba(26, 21, 16, 0.95);
+  --btn-primary-text: #1a1510;
+  --font-display: 'Georgia', 'Palatino', serif;
+
+  color-scheme: dark;
+}
+
+/* ============================================
+   Tailwind Theme Extension (Layout & Spacing)
+   ============================================ */
+@theme {
+  /* Spacing */
+  --spacing-card: 1.5rem;
+  --spacing-section: 1rem;
+
+  /* Border Radius */
+  --radius-sm: 0.5rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1rem;
+
+  /* Transitions */
+  --transition-fast: 150ms;
+  --transition-normal: 200ms;
+  --transition-slow: 300ms;
+
+  /* Shadows */
+  --shadow-card: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+}
+
+/* ============================================
+   Global Transitions for Theme Switching
+   ============================================ */
+html {
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
+}
+
+html * {
+  transition:
+    background-color 0.3s ease,
+    border-color 0.3s ease,
+    color 0.15s ease,
+    box-shadow 0.3s ease;
+}
