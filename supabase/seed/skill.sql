@@ -46,12 +46,12 @@ VALUES
 ('gcloud_run', (SELECT id FROM skill_category WHERE code = 'cloud'), 3, NULL, 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/googlecloud/googlecloud-original.svg'),
 
 -- Metodologías
-('scrum', (SELECT id FROM skill_category WHERE code = 'methodologies'), 1, NULL, NULL),
-('agile', (SELECT id FROM skill_category WHERE code = 'methodologies'), 2, NULL, NULL),
-('ci_cd', (SELECT id FROM skill_category WHERE code = 'methodologies'), 3, NULL, NULL),
-('clean_architecture', (SELECT id FROM skill_category WHERE code = 'methodologies'), 4, NULL, NULL),
-('rest_api', (SELECT id FROM skill_category WHERE code = 'methodologies'), 5, NULL, NULL),
-('ddd', (SELECT id FROM skill_category WHERE code = 'methodologies'), 6, NULL, NULL),
+('scrum', (SELECT id FROM skill_category WHERE code = 'methodologies'), 1, NULL, 'https://api.iconify.design/mdi/view-dashboard-outline.svg?color=%23a78bfa'),
+('agile', (SELECT id FROM skill_category WHERE code = 'methodologies'), 2, NULL, 'https://api.iconify.design/mdi/sync.svg?color=%23a78bfa'),
+('ci_cd', (SELECT id FROM skill_category WHERE code = 'methodologies'), 3, NULL, 'https://api.iconify.design/mdi/infinity.svg?color=%23a78bfa'),
+('clean_architecture', (SELECT id FROM skill_category WHERE code = 'methodologies'), 4, NULL, 'https://api.iconify.design/mdi/layers-triple-outline.svg?color=%23a78bfa'),
+('rest_api', (SELECT id FROM skill_category WHERE code = 'methodologies'), 5, NULL, 'https://api.iconify.design/mdi/api.svg?color=%23a78bfa'),
+('ddd', (SELECT id FROM skill_category WHERE code = 'methodologies'), 6, NULL, 'https://api.iconify.design/mdi/hexagon-multiple-outline.svg?color=%23a78bfa'),
 
 -- Backend (nuevos)
 ('langchain', (SELECT id FROM skill_category WHERE code = 'backend'), 6, NULL, 'https://cdn.simpleicons.org/langchain'),
@@ -80,7 +80,7 @@ VALUES
 ('kafka', (SELECT id FROM skill_category WHERE code = 'tools'), 9, NULL, 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/apachekafka/apachekafka-original.svg'),
 ('sonarqube', (SELECT id FROM skill_category WHERE code = 'tools'), 10, NULL, 'https://cdn.simpleicons.org/sonarqube'),
 ('swagger_openapi', (SELECT id FROM skill_category WHERE code = 'tools'), 11, NULL, 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/swagger/swagger-original.svg'),
-('web_scraping', (SELECT id FROM skill_category WHERE code = 'tools'), 12, NULL, NULL),
+('web_scraping', (SELECT id FROM skill_category WHERE code = 'tools'), 12, NULL, 'https://api.iconify.design/mdi/web.svg?color=%23a78bfa'),
 ('github_actions', (SELECT id FROM skill_category WHERE code = 'tools'), 13, NULL, 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/githubactions/githubactions-original.svg'),
 ('n8n', (SELECT id FROM skill_category WHERE code = 'tools'), 14, NULL, 'https://cdn.simpleicons.org/n8n'),
 

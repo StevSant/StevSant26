@@ -24,3 +24,12 @@ UPDATE skill SET icon_url = 'https://cdn.simpleicons.org/ngrx' WHERE code = 'ngr
 UPDATE skill SET icon_url = 'https://cdn.simpleicons.org/typeorm' WHERE code = 'typeorm';
 UPDATE skill SET icon_url = 'https://cdn.simpleicons.org/webSocket/white' WHERE code = 'websocket';
 UPDATE skill SET icon_url = 'https://cdn.simpleicons.org/groq' WHERE code = 'groq';
+
+-- Conceptual/methodology skills (using Iconify MDI icons)
+UPDATE skill SET icon_url = 'https://api.iconify.design/mdi/view-dashboard-outline.svg?color=%23a78bfa' WHERE code = 'scrum';
+UPDATE skill SET icon_url = 'https://api.iconify.design/mdi/sync.svg?color=%23a78bfa' WHERE code = 'agile';
+UPDATE skill SET icon_url = 'https://api.iconify.design/mdi/infinity.svg?color=%23a78bfa' WHERE code = 'ci_cd';
+UPDATE skill SET icon_url = 'https://api.iconify.design/mdi/layers-triple-outline.svg?color=%23a78bfa' WHERE code = 'clean_architecture';
+UPDATE skill SET icon_url = 'https://api.iconify.design/mdi/api.svg?color=%23a78bfa' WHERE code = 'rest_api';
+UPDATE skill SET icon_url = 'https://api.iconify.design/mdi/hexagon-multiple-outline.svg?color=%23a78bfa' WHERE code = 'ddd';
+UPDATE skill SET icon_url = 'https://api.iconify.design/mdi/web.svg?color=%23a78bfa' WHERE code = 'web_scraping';

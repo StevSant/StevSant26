@@ -7,74 +7,102 @@ const portfolioChildren: Routes = [
   {
     path: '',
     loadComponent: () =>
-      import('./features/portfolio/portfolio-home/portfolio-home.component').then((m) => m.PortfolioHomeComponent),
+      import('./features/portfolio/portfolio-home/portfolio-home.component').then(
+        (m) => m.PortfolioHomeComponent,
+      ),
   },
   {
     path: 'projects',
     loadComponent: () =>
-      import('./features/portfolio/portfolio-projects/portfolio-projects.component').then((m) => m.PortfolioProjectsComponent),
+      import('./features/portfolio/portfolio-projects/portfolio-projects.component').then(
+        (m) => m.PortfolioProjectsComponent,
+      ),
   },
   {
     path: 'projects/:id',
     loadComponent: () =>
-      import('./features/portfolio/portfolio-project-detail/portfolio-project-detail.component').then((m) => m.PortfolioProjectDetailComponent),
+      import('./features/portfolio/portfolio-project-detail/portfolio-project-detail.component').then(
+        (m) => m.PortfolioProjectDetailComponent,
+      ),
   },
   {
     path: 'experience',
     loadComponent: () =>
-      import('./features/portfolio/portfolio-experience/portfolio-experience.component').then((m) => m.PortfolioExperienceComponent),
+      import('./features/portfolio/portfolio-experience/portfolio-experience.component').then(
+        (m) => m.PortfolioExperienceComponent,
+      ),
   },
   {
     path: 'experience/:id',
     loadComponent: () =>
-      import('./features/portfolio/portfolio-experience-detail/portfolio-experience-detail.component').then((m) => m.PortfolioExperienceDetailComponent),
+      import('./features/portfolio/portfolio-experience-detail/portfolio-experience-detail.component').then(
+        (m) => m.PortfolioExperienceDetailComponent,
+      ),
   },
   {
     path: 'skills',
     loadComponent: () =>
-      import('./features/portfolio/portfolio-skills/portfolio-skills.component').then((m) => m.PortfolioSkillsComponent),
+      import('./features/portfolio/portfolio-skills/portfolio-skills.component').then(
+        (m) => m.PortfolioSkillsComponent,
+      ),
   },
   {
     path: 'education',
     loadComponent: () =>
-      import('./features/portfolio/portfolio-education/portfolio-education.component').then((m) => m.PortfolioEducationComponent),
+      import('./features/portfolio/portfolio-education/portfolio-education.component').then(
+        (m) => m.PortfolioEducationComponent,
+      ),
   },
   {
     path: 'competitions',
     loadComponent: () =>
-      import('./features/portfolio/portfolio-competitions/portfolio-competitions.component').then((m) => m.PortfolioCompetitionsComponent),
+      import('./features/portfolio/portfolio-competitions/portfolio-competitions.component').then(
+        (m) => m.PortfolioCompetitionsComponent,
+      ),
   },
   {
     path: 'competitions/:id',
     loadComponent: () =>
-      import('./features/portfolio/portfolio-competition-detail/portfolio-competition-detail.component').then((m) => m.PortfolioCompetitionDetailComponent),
+      import('./features/portfolio/portfolio-competition-detail/portfolio-competition-detail.component').then(
+        (m) => m.PortfolioCompetitionDetailComponent,
+      ),
   },
   {
     path: 'events',
     loadComponent: () =>
-      import('./features/portfolio/portfolio-events/portfolio-events.component').then((m) => m.PortfolioEventsComponent),
+      import('./features/portfolio/portfolio-events/portfolio-events.component').then(
+        (m) => m.PortfolioEventsComponent,
+      ),
   },
   {
     path: 'events/:id',
     loadComponent: () =>
-      import('./features/portfolio/portfolio-event-detail/portfolio-event-detail.component').then((m) => m.PortfolioEventDetailComponent),
+      import('./features/portfolio/portfolio-event-detail/portfolio-event-detail.component').then(
+        (m) => m.PortfolioEventDetailComponent,
+      ),
   },
   {
     path: 'contact',
     loadComponent: () =>
-      import('./features/portfolio/portfolio-contact/portfolio-contact.component').then((m) => m.PortfolioContactComponent),
+      import('./features/portfolio/portfolio-contact/portfolio-contact.component').then(
+        (m) => m.PortfolioContactComponent,
+      ),
   },
   {
     path: '**',
     loadComponent: () =>
-      import('./features/portfolio/portfolio-not-found/portfolio-not-found.component').then((m) => m.PortfolioNotFoundComponent),
+      import('./features/portfolio/portfolio-not-found/portfolio-not-found.component').then(
+        (m) => m.PortfolioNotFoundComponent,
+      ),
   },
 ];
 
 const portfolioRoute = {
   path: '',
   loadComponent: () =>
-    import('./features/portfolio/portfolio-layout/portfolio-layout.component').then((m) => m.PortfolioLayoutComponent),
+    import('./features/portfolio/portfolio-layout/portfolio-layout.component').then(
+      (m) => m.PortfolioLayoutComponent,
+    ),
   children: portfolioChildren,
 };
 
@@ -87,82 +115,114 @@ const dashboardChildren: Routes = [
   {
     path: 'profile',
     loadComponent: () =>
-      import('./features/dashboard/profile/profile-editor/profile-editor.component').then((m) => m.ProfileEditorComponent),
+      import('./features/dashboard/profile/profile-editor/profile-editor.component').then(
+        (m) => m.ProfileEditorComponent,
+      ),
   },
   {
     path: 'projects',
     loadComponent: () =>
-      import('./features/dashboard/projects/project-list/project-list.component').then((m) => m.ProjectListComponent),
+      import('./features/dashboard/projects/project-list/project-list.component').then(
+        (m) => m.ProjectListComponent,
+      ),
   },
   {
     path: 'projects/:id',
     loadComponent: () =>
-      import('./features/dashboard/projects/project-form/project-form.component').then((m) => m.ProjectFormComponent),
+      import('./features/dashboard/projects/project-form/project-form.component').then(
+        (m) => m.ProjectFormComponent,
+      ),
   },
   {
     path: 'events',
     loadComponent: () =>
-      import('./features/dashboard/events/event-list/event-list.component').then((m) => m.EventListComponent),
+      import('./features/dashboard/events/event-list/event-list.component').then(
+        (m) => m.EventListComponent,
+      ),
   },
   {
     path: 'events/:id',
     loadComponent: () =>
-      import('./features/dashboard/events/event-form/event-form.component').then((m) => m.EventFormComponent),
+      import('./features/dashboard/events/event-form/event-form.component').then(
+        (m) => m.EventFormComponent,
+      ),
   },
   {
     path: 'experiences',
     loadComponent: () =>
-      import('./features/dashboard/experiences/experience-list/experience-list.component').then((m) => m.ExperienceListComponent),
+      import('./features/dashboard/experiences/experience-list/experience-list.component').then(
+        (m) => m.ExperienceListComponent,
+      ),
   },
   {
     path: 'experiences/:id',
     loadComponent: () =>
-      import('./features/dashboard/experiences/experience-form/experience-form.component').then((m) => m.ExperienceFormComponent),
+      import('./features/dashboard/experiences/experience-form/experience-form.component').then(
+        (m) => m.ExperienceFormComponent,
+      ),
   },
   {
     path: 'educations',
     loadComponent: () =>
-      import('./features/dashboard/educations/education-list/education-list.component').then((m) => m.EducationListComponent),
+      import('./features/dashboard/educations/education-list/education-list.component').then(
+        (m) => m.EducationListComponent,
+      ),
   },
   {
     path: 'educations/:id',
     loadComponent: () =>
-      import('./features/dashboard/educations/education-form/education-form.component').then((m) => m.EducationFormComponent),
+      import('./features/dashboard/educations/education-form/education-form.component').then(
+        (m) => m.EducationFormComponent,
+      ),
   },
   {
     path: 'competitions',
     loadComponent: () =>
-      import('./features/dashboard/competitions/competition-list/competition-list.component').then((m) => m.CompetitionListComponent),
+      import('./features/dashboard/competitions/competition-list/competition-list.component').then(
+        (m) => m.CompetitionListComponent,
+      ),
   },
   {
     path: 'competitions/:id',
     loadComponent: () =>
-      import('./features/dashboard/competitions/competition-form/competition-form.component').then((m) => m.CompetitionFormComponent),
+      import('./features/dashboard/competitions/competition-form/competition-form.component').then(
+        (m) => m.CompetitionFormComponent,
+      ),
   },
   {
     path: 'skills',
     loadComponent: () =>
-      import('./features/dashboard/skills/skill-list/skill-list.component').then((m) => m.SkillListComponent),
+      import('./features/dashboard/skills/skill-list/skill-list.component').then(
+        (m) => m.SkillListComponent,
+      ),
   },
   {
     path: 'skills/:id',
     loadComponent: () =>
-      import('./features/dashboard/skills/skill-form/skill-form.component').then((m) => m.SkillFormComponent),
+      import('./features/dashboard/skills/skill-form/skill-form.component').then(
+        (m) => m.SkillFormComponent,
+      ),
   },
   {
     path: 'skill-categories',
     loadComponent: () =>
-      import('./features/dashboard/skill-categories/skill-category-list/skill-category-list.component').then((m) => m.SkillCategoryListComponent),
+      import('./features/dashboard/skill-categories/skill-category-list/skill-category-list.component').then(
+        (m) => m.SkillCategoryListComponent,
+      ),
   },
   {
     path: 'skill-categories/:id',
     loadComponent: () =>
-      import('./features/dashboard/skill-categories/skill-category-form/skill-category-form.component').then((m) => m.SkillCategoryFormComponent),
+      import('./features/dashboard/skill-categories/skill-category-form/skill-category-form.component').then(
+        (m) => m.SkillCategoryFormComponent,
+      ),
   },
   {
     path: 'analytics',
     loadComponent: () =>
-      import('./features/dashboard/analytics/analytics.component').then((m) => m.AnalyticsComponent),
+      import('./features/dashboard/analytics/analytics.component').then(
+        (m) => m.AnalyticsComponent,
+      ),
   },
 ];
 
@@ -175,12 +235,16 @@ const devRoutes: Routes = [
   {
     path: 'from/:source',
     loadComponent: () =>
-      import('./features/portfolio/referrer-redirect/referrer-redirect.component').then((m) => m.ReferrerRedirectComponent),
+      import('./features/portfolio/referrer-redirect/referrer-redirect.component').then(
+        (m) => m.ReferrerRedirectComponent,
+      ),
   },
   {
     path: 'portfolio',
     loadComponent: () =>
-      import('./features/portfolio/portfolio-layout/portfolio-layout.component').then((m) => m.PortfolioLayoutComponent),
+      import('./features/portfolio/portfolio-layout/portfolio-layout.component').then(
+        (m) => m.PortfolioLayoutComponent,
+      ),
     children: portfolioChildren,
   },
   {
@@ -193,7 +257,9 @@ const devRoutes: Routes = [
     path: 'dashboard',
     canActivate: [authGuard],
     loadComponent: () =>
-      import('./features/dashboard/layout/dashboard-layout.component').then((m) => m.DashboardLayoutComponent),
+      import('./features/dashboard/layout/dashboard-layout.component').then(
+        (m) => m.DashboardLayoutComponent,
+      ),
     children: dashboardChildren,
   },
   {
@@ -206,9 +272,10 @@ const prodRoutes: Routes = [
   {
     path: 'from/:source',
     loadComponent: () =>
-      import('./features/portfolio/referrer-redirect/referrer-redirect.component').then((m) => m.ReferrerRedirectComponent),
+      import('./features/portfolio/referrer-redirect/referrer-redirect.component').then(
+        (m) => m.ReferrerRedirectComponent,
+      ),
   },
-  portfolioRoute,
   {
     path: 'login',
     canActivate: [noAuthGuard],
@@ -219,9 +286,12 @@ const prodRoutes: Routes = [
     path: 'dashboard',
     canActivate: [authGuard],
     loadComponent: () =>
-      import('./features/dashboard/layout/dashboard-layout.component').then((m) => m.DashboardLayoutComponent),
+      import('./features/dashboard/layout/dashboard-layout.component').then(
+        (m) => m.DashboardLayoutComponent,
+      ),
     children: dashboardChildren,
   },
+  portfolioRoute,
   {
     path: '**',
     redirectTo: '',
