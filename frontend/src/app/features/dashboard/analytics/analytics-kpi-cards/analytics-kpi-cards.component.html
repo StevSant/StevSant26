@@ -9,8 +9,14 @@
         <mat-icon class="text-[20px] text-(--color-accent)">visibility</mat-icon>
       </div>
     </div>
-    <p class="text-3xl font-bold text-(--color-text-primary) mt-2">
+    <p class="text-3xl font-bold text-(--color-text-primary) mt-2 flex items-center">
       {{ summary().total_views }}
+      @if (comparison(); as comp) {
+        @let delta = getDelta(comp.current.total_views, comp.previous.total_views);
+        <span class="text-xs font-medium ml-2" [class]="getDeltaClasses(delta.direction)">
+          {{ getDeltaIcon(delta.direction) }} {{ delta.percent }}%
+        </span>
+      }
     </p>
     <p class="text-xs text-(--color-text-muted) mt-1">
       {{ 'analytics.todayCount' | translate }}: {{ summary().views_today }}
@@ -27,8 +33,14 @@
         <mat-icon class="text-[20px] text-emerald-500">group</mat-icon>
       </div>
     </div>
-    <p class="text-3xl font-bold text-(--color-text-primary) mt-2">
+    <p class="text-3xl font-bold text-(--color-text-primary) mt-2 flex items-center">
       {{ summary().unique_visitors }}
+      @if (comparison(); as comp) {
+        @let delta = getDelta(comp.current.unique_visitors, comp.previous.unique_visitors);
+        <span class="text-xs font-medium ml-2" [class]="getDeltaClasses(delta.direction)">
+          {{ getDeltaIcon(delta.direction) }} {{ delta.percent }}%
+        </span>
+      }
     </p>
     <p class="text-xs text-(--color-text-muted) mt-1">
       {{ 'analytics.todayVisitors' | translate }}: {{ summary().visitors_today }}
@@ -45,8 +57,15 @@
         <mat-icon class="text-[20px] text-blue-500">schedule</mat-icon>
       </div>
     </div>
-    <p class="text-3xl font-bold text-(--color-text-primary) mt-2">
+    <p class="text-3xl font-bold text-(--color-text-primary) mt-2 flex items-center">
       {{ avgSessionDuration() }}
+      @if (comparison(); as comp) {
+        @let delta =
+          getDelta(comp.current.avg_session_duration, comp.previous.avg_session_duration);
+        <span class="text-xs font-medium ml-2" [class]="getDeltaClasses(delta.direction)">
+          {{ getDeltaIcon(delta.direction) }} {{ delta.percent }}%
+        </span>
+      }
     </p>
     <p class="text-xs text-(--color-text-muted) mt-1">
       {{ 'analytics.avgPerVisit' | translate }}: {{ avgViewsPerVisitor() }}
@@ -64,8 +83,15 @@
         <mat-icon class="text-[20px] text-purple-500">work</mat-icon>
       </div>
     </div>
-    <p class="text-3xl font-bold text-(--color-text-primary) mt-2">
+    <p class="text-3xl font-bold text-(--color-text-primary) mt-2 flex items-center">
       {{ summary().potential_recruiters }}
+      @if (comparison(); as comp) {
+        @let delta =
+          getDelta(comp.current.potential_recruiters, comp.previous.potential_recruiters);
+        <span class="text-xs font-medium ml-2" [class]="getDeltaClasses(delta.direction)">
+          {{ getDeltaIcon(delta.direction) }} {{ delta.percent }}%
+        </span>
+      }
     </p>
     <p class="text-xs text-(--color-text-muted) mt-1">
       {{ 'analytics.recruiterHint' | translate }}
@@ -82,8 +108,14 @@
         <mat-icon class="text-[20px] text-amber-500">download</mat-icon>
       </div>
     </div>
-    <p class="text-3xl font-bold text-(--color-text-primary) mt-2">
+    <p class="text-3xl font-bold text-(--color-text-primary) mt-2 flex items-center">
       {{ summary().cv_downloads_total }}
+      @if (comparison(); as comp) {
+        @let delta = getDelta(comp.current.cv_downloads, comp.previous.cv_downloads);
+        <span class="text-xs font-medium ml-2" [class]="getDeltaClasses(delta.direction)">
+          {{ getDeltaIcon(delta.direction) }} {{ delta.percent }}%
+        </span>
+      }
     </p>
     <p class="text-xs text-(--color-text-muted) mt-1">
       {{ 'analytics.todayCount' | translate }}: {{ summary().cv_downloads_today }}
