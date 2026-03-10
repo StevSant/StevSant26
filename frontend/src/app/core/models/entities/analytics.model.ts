@@ -167,3 +167,16 @@ export interface PageTimeBreakdown {
   total_time: number;
   avg_time: number;
 }
+
+export interface AnalyticsPeriodKpis {
+  total_views: number;
+  unique_visitors: number;
+  potential_recruiters: number;
+  cv_downloads: number;
+  avg_session_duration: number;
+}
+
+export interface AnalyticsComparison {
+  current: AnalyticsPeriodKpis;
+  previous: AnalyticsPeriodKpis;
+}

@@ -12,3 +12,4 @@ export * from './image.model';
 export * from './document.model';
 export * from './content-section.model';
 export * from './analytics.model';
+export * from './admin-dashboard-visit.model';
