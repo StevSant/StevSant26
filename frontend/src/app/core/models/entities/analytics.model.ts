@@ -277,3 +277,74 @@ export interface ContentRankingItem {
   recruiter_views: number;
   cv_downloads_after: number;
 }
+
+export interface PeriodComparisonData {
+  period_a: PeriodMetrics;
+  period_b: PeriodMetrics;
+  daily_a: DayViews[];
+  daily_b: DayViews[];
+}
+
+export interface PeriodMetrics {
+  total_views: number;
+  unique_visitors: number;
+  recruiters: number;
+  cv_downloads: number;
+  avg_duration: number | null;
+  bounce_rate: number | null;
+}
+
+export interface DayViews {
+  day: string;
+  views: number;
+}
+
+export interface AnomalyDetectionData {
+  baseline: {
+    avg_views: number;
+    stddev_views: number;
+    avg_visitors: number;
+    stddev_visitors: number;
+  };
+  daily_anomalies: DailyAnomaly[];
+  referrer_bursts: ReferrerBurst[];
+  geo_bursts: GeoBurst[];
+}
+
+export interface DailyAnomaly {
+  day: string;
+  views: number;
+  visitors: number;
+  recruiters: number;
+  views_anomaly: 'spike' | 'drop' | null;
+  visitors_anomaly: 'spike' | 'drop' | null;
+}
+
+export interface ReferrerBurst {
+  referrer_source: string;
+  day: string;
+  session_count: number;
+}
+
+export interface GeoBurst {
+  country: string;
+  day: string;
+  visitor_count: number;
+}
+
+export interface AnalyticsExportData {
+  period: { start: string; end: string; days: number };
+  kpis: {
+    total_views: number;
+    unique_visitors: number;
+    potential_recruiters: number;
+    cv_downloads: number;
+    avg_session_duration: number;
+    bounce_rate: number;
+  };
+  daily_views: DayViews[];
+  top_pages: { page_path: string; views: number; unique_visitors: number; avg_duration: number }[];
+  top_referrers: { source: string; visits: number }[];
+  countries: { country: string; visitors: number }[];
+  devices: { device: string; count: number }[];
+}

@@ -1,0 +1,42 @@
+<div class="bg-(--color-bg-secondary) rounded-xl p-5 border border-(--color-border-primary)">
+  <div class="flex items-center justify-between mb-4">
+    <h3 class="text-lg font-semibold text-(--color-text-primary)">
+      {{ 'analytics.export.title' | translate }}
+    </h3>
+    <div class="p-2 bg-teal-500/10 rounded-lg">
+      <mat-icon class="text-[20px] text-teal-500">file_download</mat-icon>
+    </div>
+  </div>
+
+  <p class="text-sm text-(--color-text-muted) mb-4">
+    {{ 'analytics.export.description' | translate }}
+  </p>
+
+  <div class="flex gap-3">
+    <button
+      (click)="exportCsv()"
+      [disabled]="exportingCsv"
+      class="flex items-center gap-2 px-4 py-2.5 text-sm font-medium rounded-lg border border-(--color-border-primary) bg-(--color-bg-primary) text-(--color-text-primary) hover:bg-(--color-bg-secondary) transition-colors disabled:opacity-50"
+    >
+      <mat-icon class="text-[18px]">table_chart</mat-icon>
+      @if (exportingCsv) {
+        {{ 'analytics.export.exporting' | translate }}
+      } @else {
+        {{ 'analytics.export.csv' | translate }}
+      }
+    </button>
+
+    <button
+      (click)="exportPdf()"
+      [disabled]="exportingPdf"
+      class="flex items-center gap-2 px-4 py-2.5 text-sm font-medium rounded-lg bg-(--color-accent) text-(--btn-primary-text) hover:opacity-90 transition-opacity disabled:opacity-50"
+    >
+      <mat-icon class="text-[18px]">picture_as_pdf</mat-icon>
+      @if (exportingPdf) {
+        {{ 'analytics.export.exporting' | translate }}
+      } @else {
+        {{ 'analytics.export.report' | translate }}
+      }
+    </button>
+  </div>
+</div>

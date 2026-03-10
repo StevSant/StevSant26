@@ -925,6 +925,35 @@
     },
     "contentRanking": {
       "title": "Mejor Contenido"
+    },
+    "periodComparison": {
+      "title": "Comparación de Periodos",
+      "periodA": "Periodo A",
+      "periodB": "Periodo B",
+      "compare": "Comparar",
+      "loading": "Comparando...",
+      "dailyOverlay": "Vistas diarias superpuestas"
+    },
+    "anomalies": {
+      "title": "Detección de Anomalías",
+      "baseline": "Línea base",
+      "viewsDay": "vistas/día",
+      "visitorsDay": "visitantes/día",
+      "noAnomalies": "No se detectaron anomalías en este periodo",
+      "trafficAnomalies": "Anomalías de tráfico",
+      "visitors": "visitantes",
+      "recruitersLabel": "reclutadores",
+      "spike": "Pico en",
+      "drop": "Caída en",
+      "referrerBursts": "Ráfagas de referencia",
+      "geoBursts": "Ráfagas geográficas"
+    },
+    "export": {
+      "title": "Exportar Reporte",
+      "description": "Descarga un reporte completo de analíticas del periodo seleccionado.",
+      "csv": "Exportar CSV",
+      "report": "Reporte HTML",
+      "exporting": "Exportando..."
     }
   },
   "pagination": {

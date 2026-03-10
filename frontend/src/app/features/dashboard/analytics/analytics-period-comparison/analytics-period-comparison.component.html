@@ -1,0 +1,161 @@
+<div class="bg-(--color-bg-secondary) rounded-xl p-5 border border-(--color-border-primary)">
+  <div class="flex items-center justify-between mb-4">
+    <h3 class="text-lg font-semibold text-(--color-text-primary)">
+      {{ 'analytics.periodComparison.title' | translate }}
+    </h3>
+    <div class="p-2 bg-indigo-500/10 rounded-lg">
+      <mat-icon class="text-[20px] text-indigo-500">compare_arrows</mat-icon>
+    </div>
+  </div>
+
+  <!-- Date pickers -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+    <div class="space-y-2">
+      <p class="text-xs font-medium text-(--color-accent)">
+        {{ 'analytics.periodComparison.periodA' | translate }}
+      </p>
+      <div class="flex gap-2">
+        <input
+          type="date"
+          [ngModel]="startA()"
+          (ngModelChange)="startA.set($event)"
+          class="flex-1 px-2 py-1.5 text-sm rounded-md border border-(--color-border-primary) bg-(--color-bg-primary) text-(--color-text-primary)"
+        />
+        <input
+          type="date"
+          [ngModel]="endA()"
+          (ngModelChange)="endA.set($event)"
+          class="flex-1 px-2 py-1.5 text-sm rounded-md border border-(--color-border-primary) bg-(--color-bg-primary) text-(--color-text-primary)"
+        />
+      </div>
+    </div>
+    <div class="space-y-2">
+      <p class="text-xs font-medium text-purple-500">
+        {{ 'analytics.periodComparison.periodB' | translate }}
+      </p>
+      <div class="flex gap-2">
+        <input
+          type="date"
+          [ngModel]="startB()"
+          (ngModelChange)="startB.set($event)"
+          class="flex-1 px-2 py-1.5 text-sm rounded-md border border-(--color-border-primary) bg-(--color-bg-primary) text-(--color-text-primary)"
+        />
+        <input
+          type="date"
+          [ngModel]="endB()"
+          (ngModelChange)="endB.set($event)"
+          class="flex-1 px-2 py-1.5 text-sm rounded-md border border-(--color-border-primary) bg-(--color-bg-primary) text-(--color-text-primary)"
+        />
+      </div>
+    </div>
+  </div>
+
+  <button
+    (click)="compare()"
+    [disabled]="loading()"
+    class="px-4 py-2 text-sm font-medium rounded-lg bg-(--color-accent) text-(--btn-primary-text) hover:opacity-90 transition-opacity disabled:opacity-50 mb-4"
+  >
+    @if (loading()) {
+      {{ 'analytics.periodComparison.loading' | translate }}
+    } @else {
+      {{ 'analytics.periodComparison.compare' | translate }}
+    }
+  </button>
+
+  @if (data(); as d) {
+    <!-- Metrics comparison -->
+    <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-5">
+      @for (m of metrics(); track m.label) {
+        <div class="p-3 rounded-lg bg-(--color-bg-primary) border border-(--color-border-primary)">
+          <p class="text-xs text-(--color-text-muted) mb-1">{{ m.label | translate }}</p>
+          <div class="flex items-center gap-3">
+            <div class="text-center">
+              <p class="text-lg font-bold text-(--color-accent)">
+                @if (m.isDuration) {
+                  {{ formatDuration(m.a) }}
+                } @else if (m.isPercent) {
+                  {{ m.a }}%
+                } @else {
+                  {{ m.a }}
+                }
+              </p>
+              <p class="text-[10px] text-(--color-text-muted)">A</p>
+            </div>
+            <div class="text-center">
+              @let delta = getDelta(m.a, m.b);
+              <span class="text-xs font-medium" [class]="getDeltaColor(delta.dir)">
+                @if (delta.dir === 'up') {
+                  ↑
+                } @else if (delta.dir === 'down') {
+                  ↓
+                } @else {
+                  —
+                }
+                {{ delta.pct }}%
+              </span>
+            </div>
+            <div class="text-center">
+              <p class="text-lg font-bold text-purple-500">
+                @if (m.isDuration) {
+                  {{ formatDuration(m.b) }}
+                } @else if (m.isPercent) {
+                  {{ m.b }}%
+                } @else {
+                  {{ m.b }}
+                }
+              </p>
+              <p class="text-[10px] text-(--color-text-muted)">B</p>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+
+    <!-- Overlay daily chart -->
+    @if (d.daily_a?.length || d.daily_b?.length) {
+      <p class="text-xs text-(--color-text-muted) mb-2">
+        {{ 'analytics.periodComparison.dailyOverlay' | translate }}
+      </p>
+      <div class="flex gap-1 h-24 items-end mb-2">
+        @for (day of d.daily_a; track day.day) {
+          <div class="flex-1 flex flex-col items-center justify-end group relative min-w-1">
+            <div
+              class="w-full rounded-t-sm bg-(--color-accent)/60"
+              [style.height.%]="getBarHeight(day.views)"
+            ></div>
+            <div
+              class="absolute bottom-full mb-1 hidden group-hover:block bg-(--color-bg-primary) border border-(--color-border-primary) rounded px-1.5 py-0.5 text-[10px] shadow-lg whitespace-nowrap z-10"
+            >
+              A: {{ day.views }} · {{ day.day | date: 'shortDate' }}
+            </div>
+          </div>
+        }
+      </div>
+      <div class="flex gap-1 h-24 items-end">
+        @for (day of d.daily_b; track day.day) {
+          <div class="flex-1 flex flex-col items-center justify-end group relative min-w-1">
+            <div
+              class="w-full rounded-t-sm bg-purple-500/60"
+              [style.height.%]="getBarHeight(day.views)"
+            ></div>
+            <div
+              class="absolute bottom-full mb-1 hidden group-hover:block bg-(--color-bg-primary) border border-(--color-border-primary) rounded px-1.5 py-0.5 text-[10px] shadow-lg whitespace-nowrap z-10"
+            >
+              B: {{ day.views }} · {{ day.day | date: 'shortDate' }}
+            </div>
+          </div>
+        }
+      </div>
+      <div class="flex items-center gap-4 mt-2 text-xs text-(--color-text-muted)">
+        <span class="flex items-center gap-1"
+          ><span class="size-2.5 rounded-sm bg-(--color-accent)/60"></span>
+          {{ 'analytics.periodComparison.periodA' | translate }}</span
+        >
+        <span class="flex items-center gap-1"
+          ><span class="size-2.5 rounded-sm bg-purple-500/60"></span>
+          {{ 'analytics.periodComparison.periodB' | translate }}</span
+        >
+      </div>
+    }
+  }
+</div>

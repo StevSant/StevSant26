@@ -152,6 +152,17 @@
           }
           <app-analytics-content-ranking [items]="contentRanking()" />
         </div>
+
+        <!-- Future: Period Comparison, Anomalies, Export -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
+          <div class="lg:col-span-2">
+            <app-analytics-period-comparison />
+          </div>
+          @if (anomalies(); as anom) {
+            <app-analytics-anomalies [data]="anom" />
+          }
+          <app-analytics-export [selectedDays]="selectedDays()" />
+        </div>
       }
     }
   } @else {

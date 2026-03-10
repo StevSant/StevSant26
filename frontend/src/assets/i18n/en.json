@@ -927,6 +927,35 @@
     },
     "contentRanking": {
       "title": "Best Content"
+    },
+    "periodComparison": {
+      "title": "Period Comparison",
+      "periodA": "Period A",
+      "periodB": "Period B",
+      "compare": "Compare",
+      "loading": "Comparing...",
+      "dailyOverlay": "Overlaid daily views"
+    },
+    "anomalies": {
+      "title": "Anomaly Detection",
+      "baseline": "Baseline",
+      "viewsDay": "views/day",
+      "visitorsDay": "visitors/day",
+      "noAnomalies": "No anomalies detected in this period",
+      "trafficAnomalies": "Traffic anomalies",
+      "visitors": "visitors",
+      "recruitersLabel": "recruiters",
+      "spike": "Spike in",
+      "drop": "Drop in",
+      "referrerBursts": "Referrer bursts",
+      "geoBursts": "Geographic bursts"
+    },
+    "export": {
+      "title": "Export Report",
+      "description": "Download a full analytics report for the selected period.",
+      "csv": "Export CSV",
+      "report": "HTML Report",
+      "exporting": "Exporting..."
     }
   },
   "pagination": {

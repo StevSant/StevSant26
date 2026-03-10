@@ -11,6 +11,7 @@ import {
   HeatmapCell,
   EngagementScoresData,
   ContentRankingItem,
+  AnomalyDetectionData,
 } from '@core/models/entities/analytics.model';
 import {
   AdminDashboardVisit,
@@ -37,6 +38,9 @@ import { AnalyticsInsightsTabComponent } from './analytics-insights-tab/analytic
 import { AnalyticsHeatmapComponent } from './analytics-heatmap/analytics-heatmap.component';
 import { AnalyticsEngagementComponent } from './analytics-engagement/analytics-engagement.component';
 import { AnalyticsContentRankingComponent } from './analytics-content-ranking/analytics-content-ranking.component';
+import { AnalyticsPeriodComparisonComponent } from './analytics-period-comparison/analytics-period-comparison.component';
+import { AnalyticsAnomaliesComponent } from './analytics-anomalies/analytics-anomalies.component';
+import { AnalyticsExportComponent } from './analytics-export/analytics-export.component';
 
 @Component({
   selector: 'app-analytics',
@@ -58,6 +62,9 @@ import { AnalyticsContentRankingComponent } from './analytics-content-ranking/an
     AnalyticsHeatmapComponent,
     AnalyticsEngagementComponent,
     AnalyticsContentRankingComponent,
+    AnalyticsPeriodComparisonComponent,
+    AnalyticsAnomaliesComponent,
+    AnalyticsExportComponent,
   ],
   templateUrl: './analytics.component.html',
 })
@@ -87,6 +94,7 @@ export class AnalyticsComponent implements OnInit, OnDestroy {
   heatmap = signal<HeatmapCell[]>([]);
   engagement = signal<EngagementScoresData | null>(null);
   contentRanking = signal<ContentRankingItem[]>([]);
+  anomalies = signal<AnomalyDetectionData | null>(null);
 
   private realtimeChannel: any = null;
   private snapshotInterval: ReturnType<typeof setInterval> | null = null;
@@ -153,21 +161,30 @@ export class AnalyticsComponent implements OnInit, OnDestroy {
 
   private async loadInsightsData(): Promise<void> {
     const days = this.selectedDays();
-    const [bounceData, retentionData, funnelData, heatmapData, engagementData, contentData] =
-      await Promise.all([
-        this.analyticsService.getBounceRate(days),
-        this.analyticsService.getVisitorRetention(days),
-        this.analyticsService.getConversionFunnel(days),
-        this.analyticsService.getActivityHeatmap(days),
-        this.analyticsService.getEngagementScores(days),
-        this.analyticsService.getContentRanking(days),
-      ]);
+    const [
+      bounceData,
+      retentionData,
+      funnelData,
+      heatmapData,
+      engagementData,
+      contentData,
+      anomalyData,
+    ] = await Promise.all([
+      this.analyticsService.getBounceRate(days),
+      this.analyticsService.getVisitorRetention(days),
+      this.analyticsService.getConversionFunnel(days),
+      this.analyticsService.getActivityHeatmap(days),
+      this.analyticsService.getEngagementScores(days),
+      this.analyticsService.getContentRanking(days),
+      this.analyticsService.getAnomalyDetection(days),
+    ]);
     this.bounceRate.set(bounceData);
     this.retention.set(retentionData);
     this.funnel.set(funnelData);
     this.heatmap.set(heatmapData);
     this.engagement.set(engagementData);
     this.contentRanking.set(contentData);
+    this.anomalies.set(anomalyData);
   }
 
   /**

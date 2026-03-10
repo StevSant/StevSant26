@@ -15,6 +15,9 @@ import {
   HeatmapCell,
   EngagementScoresData,
   ContentRankingItem,
+  PeriodComparisonData,
+  AnomalyDetectionData,
+  AnalyticsExportData,
 } from '@core/models/entities/analytics.model';
 import { ACTIVE_VISITOR_THRESHOLD_MS } from '@shared/config/analytics.config';
 
@@ -295,6 +298,43 @@ export class AnalyticsDashboardService {
       return [];
     }
     return (data as ContentRankingItem[]) ?? [];
+  }
+
+  async getPeriodComparison(
+    startA: string,
+    endA: string,
+    startB: string,
+    endB: string,
+  ): Promise<PeriodComparisonData | null> {
+    const { data, error } = await this.client.client.rpc('get_period_comparison', {
+      p_start_a: startA,
+      p_end_a: endA,
+      p_start_b: startB,
+      p_end_b: endB,
+    });
+    if (error) {
+      console.error('Error fetching period comparison:', error);
+      return null;
+    }
+    return data as PeriodComparisonData;
+  }
+
+  async getAnomalyDetection(days: number = 30): Promise<AnomalyDetectionData | null> {
+    const { data, error } = await this.client.client.rpc('get_anomaly_detection', { p_days: days });
+    if (error) {
+      console.error('Error fetching anomaly detection:', error);
+      return null;
+    }
+    return data as AnomalyDetectionData;
+  }
+
+  async getAnalyticsExport(days: number = 30): Promise<AnalyticsExportData | null> {
+    const { data, error } = await this.client.client.rpc('get_analytics_export', { p_days: days });
+    if (error) {
+      console.error('Error fetching analytics export:', error);
+      return null;
+    }
+    return data as AnalyticsExportData;
   }
 
   /**

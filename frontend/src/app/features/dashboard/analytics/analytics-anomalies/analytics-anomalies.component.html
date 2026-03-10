@@ -1,0 +1,148 @@
+<div class="bg-(--color-bg-secondary) rounded-xl p-5 border border-(--color-border-primary)">
+  <div class="flex items-center justify-between mb-4">
+    <h3 class="text-lg font-semibold text-(--color-text-primary) flex items-center gap-2">
+      {{ 'analytics.anomalies.title' | translate }}
+      @if (totalAnomalies() > 0) {
+        <span
+          class="inline-flex items-center rounded-full bg-red-100 dark:bg-red-900/30 px-2 py-0.5 text-xs font-medium text-red-700 dark:text-red-400"
+        >
+          {{ totalAnomalies() }}
+        </span>
+      }
+    </h3>
+    <div class="p-2 bg-red-500/10 rounded-lg">
+      <mat-icon class="text-[20px] text-red-500">warning</mat-icon>
+    </div>
+  </div>
+
+  <!-- Baseline -->
+  <div class="flex items-center gap-4 mb-4 text-xs text-(--color-text-muted)">
+    <span>{{ 'analytics.anomalies.baseline' | translate }}:</span>
+    <span
+      >~{{ data().baseline.avg_views | number: '1.0-0' }}
+      {{ 'analytics.anomalies.viewsDay' | translate }}</span
+    >
+    <span
+      >~{{ data().baseline.avg_visitors | number: '1.0-0' }}
+      {{ 'analytics.anomalies.visitorsDay' | translate }}</span
+    >
+  </div>
+
+  @if (totalAnomalies() === 0) {
+    <div class="text-center py-8">
+      <mat-icon class="text-[48px] text-emerald-400 mb-2">check_circle</mat-icon>
+      <p class="text-sm text-(--color-text-muted)">
+        {{ 'analytics.anomalies.noAnomalies' | translate }}
+      </p>
+    </div>
+  } @else {
+    <div class="space-y-4">
+      <!-- Daily anomalies -->
+      @if (data().daily_anomalies.length) {
+        <div>
+          <p class="text-xs font-medium text-(--color-text-muted) mb-2">
+            {{ 'analytics.anomalies.trafficAnomalies' | translate }}
+          </p>
+          <div class="space-y-2">
+            @for (a of data().daily_anomalies; track a.day) {
+              <div
+                class="flex items-center gap-3 p-3 rounded-lg border"
+                [class]="getAnomalyBg(a.views_anomaly || a.visitors_anomaly)"
+              >
+                <mat-icon
+                  [class]="getAnomalyColor(a.views_anomaly || a.visitors_anomaly) + ' text-[20px]'"
+                >
+                  {{ getAnomalyIcon(a.views_anomaly || a.visitors_anomaly) }}
+                </mat-icon>
+                <div class="flex-1">
+                  <p class="text-sm font-medium text-(--color-text-primary)">
+                    {{ a.day | date: 'mediumDate' }}
+                  </p>
+                  <div class="flex gap-3 text-xs text-(--color-text-muted)">
+                    <span>{{ a.views }} {{ 'analytics.views' | translate }}</span>
+                    <span>{{ a.visitors }} {{ 'analytics.anomalies.visitors' | translate }}</span>
+                    @if (a.recruiters > 0) {
+                      <span class="text-purple-500"
+                        >{{ a.recruiters }}
+                        {{ 'analytics.anomalies.recruitersLabel' | translate }}</span
+                      >
+                    }
+                  </div>
+                </div>
+                <div class="text-right">
+                  @if (a.views_anomaly) {
+                    <span class="text-xs font-medium" [class]="getAnomalyColor(a.views_anomaly)">
+                      {{ 'analytics.anomalies.' + a.views_anomaly | translate }}
+                      {{ 'analytics.views' | translate }}
+                    </span>
+                  }
+                  @if (a.visitors_anomaly) {
+                    <span
+                      class="text-xs font-medium block"
+                      [class]="getAnomalyColor(a.visitors_anomaly)"
+                    >
+                      {{ 'analytics.anomalies.' + a.visitors_anomaly | translate }}
+                      {{ 'analytics.anomalies.visitors' | translate }}
+                    </span>
+                  }
+                </div>
+              </div>
+            }
+          </div>
+        </div>
+      }
+
+      <!-- Referrer bursts -->
+      @if (data().referrer_bursts.length) {
+        <div>
+          <p class="text-xs font-medium text-(--color-text-muted) mb-2">
+            {{ 'analytics.anomalies.referrerBursts' | translate }}
+          </p>
+          <div class="space-y-1.5">
+            @for (rb of data().referrer_bursts; track rb.referrer_source + rb.day) {
+              <div class="flex items-center gap-3 text-sm">
+                <mat-icon class="text-[16px] text-amber-500">link</mat-icon>
+                <span class="font-medium text-(--color-text-primary)">{{
+                  rb.referrer_source
+                }}</span>
+                <span class="text-xs text-(--color-text-muted)">{{
+                  rb.day | date: 'shortDate'
+                }}</span>
+                <span class="text-xs font-medium text-amber-600 dark:text-amber-400"
+                  >{{ rb.session_count }} {{ 'analytics.sessions' | translate }}</span
+                >
+              </div>
+            }
+          </div>
+        </div>
+      }
+
+      <!-- Geo bursts -->
+      @if (data().geo_bursts.length) {
+        <div>
+          <p class="text-xs font-medium text-(--color-text-muted) mb-2">
+            {{ 'analytics.anomalies.geoBursts' | translate }}
+          </p>
+          <div class="space-y-1.5">
+            @for (gb of data().geo_bursts; track gb.country + gb.day) {
+              <div class="flex items-center gap-3 text-sm">
+                @if (getCountryFlagEmoji(gb.country)) {
+                  <span class="text-sm">{{ getCountryFlagEmoji(gb.country) }}</span>
+                } @else {
+                  <mat-icon class="text-[16px] text-(--color-text-muted)">public</mat-icon>
+                }
+                <span class="font-medium text-(--color-text-primary)">{{ gb.country }}</span>
+                <span class="text-xs text-(--color-text-muted)">{{
+                  gb.day | date: 'shortDate'
+                }}</span>
+                <span class="text-xs font-medium text-indigo-600 dark:text-indigo-400"
+                  >{{ gb.visitor_count }} {{ 'analytics.anomalies.visitors' | translate }}</span
+                >
+              </div>
+            }
+          </div>
+        </div>
+      }
+    </div>
+  }
+</div>
