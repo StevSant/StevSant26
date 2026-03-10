@@ -1,0 +1,145 @@
+@if (visible()) {
+  <div class="banner-container">
+    <!-- Compact banner -->
+    <div class="flex items-center justify-between rounded-lg border px-4 py-3"
+         [class]="hasChanges() ? 'bg-emerald-50 border-emerald-200 dark:bg-emerald-950/30 dark:border-emerald-800' : 'bg-gray-50 border-gray-200 dark:bg-gray-800 dark:border-gray-700'">
+      <div class="flex items-center gap-3 flex-1 min-w-0">
+        <mat-icon class="text-emerald-600 dark:text-emerald-400 shrink-0">
+          {{ hasChanges() ? 'notifications_active' : 'check_circle' }}
+        </mat-icon>
+
+        @if (hasChanges()) {
+          <div class="flex items-center gap-2 flex-wrap text-sm">
+            <span class="font-medium text-gray-700 dark:text-gray-200">
+              {{ 'analytics.banner.sinceLastVisit' | translate }}
+              <span class="text-gray-500 dark:text-gray-400">({{ timeAgo() }})</span>:
+            </span>
+
+            @if (changes().total_new_views > 0) {
+              <span class="text-emerald-600 dark:text-emerald-400 font-semibold">
+                +{{ changes().total_new_views }} {{ 'analytics.totalViews' | translate }}
+              </span>
+            }
+            @if (changes().total_new_visitors > 0) {
+              <span class="text-emerald-600 dark:text-emerald-400 font-semibold">
+                +{{ changes().total_new_visitors }} {{ 'analytics.uniqueVisitors' | translate }}
+              </span>
+            }
+            @if (changes().total_new_recruiters > 0) {
+              <span class="text-blue-600 dark:text-blue-400 font-semibold">
+                +{{ changes().total_new_recruiters }} {{ 'analytics.potentialRecruiters' | translate }}
+              </span>
+            }
+            @if (changes().total_new_cv_downloads > 0) {
+              <span class="text-amber-600 dark:text-amber-400 font-semibold">
+                +{{ changes().total_new_cv_downloads }} {{ 'analytics.cvDownloads' | translate }}
+              </span>
+            }
+          </div>
+        } @else {
+          <span class="text-sm text-gray-500 dark:text-gray-400">
+            {{ 'analytics.banner.noChanges' | translate }}
+          </span>
+        }
+      </div>
+
+      <div class="flex items-center gap-1 shrink-0">
+        @if (hasChanges()) {
+          <button mat-icon-button (click)="toggleExpanded()" class="!size-8">
+            <mat-icon class="!text-lg">{{ expanded() ? 'expand_less' : 'expand_more' }}</mat-icon>
+          </button>
+        }
+        <button mat-icon-button (click)="dismiss()" class="!size-8">
+          <mat-icon class="!text-lg">close</mat-icon>
+        </button>
+      </div>
+    </div>
+
+    <!-- Expandable detail panel -->
+    @if (expanded() && hasChanges()) {
+      <div class="expand-panel mt-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 p-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+
+          @if (changes().new_referrers.length > 0) {
+            <div>
+              <h4 class="text-xs font-semibold uppercase text-gray-500 dark:text-gray-400 mb-2">
+                {{ 'analytics.banner.newReferrers' | translate }}
+              </h4>
+              <div class="flex flex-wrap gap-1">
+                @for (ref of changes().new_referrers; track ref) {
+                  <span class="inline-flex items-center rounded-full bg-blue-100 dark:bg-blue-900/30 px-2.5 py-0.5 text-xs font-medium text-blue-700 dark:text-blue-300">
+                    {{ ref }}
+                  </span>
+                }
+              </div>
+            </div>
+          }
+
+          @if (changes().new_countries.length > 0) {
+            <div>
+              <h4 class="text-xs font-semibold uppercase text-gray-500 dark:text-gray-400 mb-2">
+                {{ 'analytics.banner.newCountries' | translate }}
+              </h4>
+              <div class="flex flex-wrap gap-1">
+                @for (country of changes().new_countries; track country) {
+                  <span class="inline-flex items-center rounded-full bg-purple-100 dark:bg-purple-900/30 px-2.5 py-0.5 text-xs font-medium text-purple-700 dark:text-purple-300">
+                    {{ country }}
+                  </span>
+                }
+              </div>
+            </div>
+          }
+
+          @if (changes().top_growing_pages.length > 0) {
+            <div>
+              <h4 class="text-xs font-semibold uppercase text-gray-500 dark:text-gray-400 mb-2">
+                {{ 'analytics.banner.topGrowingPages' | translate }}
+              </h4>
+              <ul class="space-y-1">
+                @for (page of changes().top_growing_pages; track page.page_path) {
+                  <li class="flex items-center justify-between text-sm">
+                    <span class="text-gray-700 dark:text-gray-300">{{ formatPagePath(page.page_path) }}</span>
+                    <span class="text-emerald-600 dark:text-emerald-400 font-medium">+{{ page.new_views }}</span>
+                  </li>
+                }
+              </ul>
+            </div>
+          }
+
+          @if (changes().recruiter_sessions.length > 0) {
+            <div>
+              <h4 class="text-xs font-semibold uppercase text-gray-500 dark:text-gray-400 mb-2">
+                {{ 'analytics.banner.recentRecruiters' | translate }}
+              </h4>
+              <ul class="space-y-1">
+                @for (rec of changes().recruiter_sessions; track rec.id) {
+                  <li class="text-sm text-gray-700 dark:text-gray-300">
+                    <mat-icon class="!text-sm align-middle text-blue-500">work</mat-icon>
+                    {{ rec.referrer_source || 'Direct' }} · {{ rec.country || '?' }} · {{ rec.total_page_views }} pages
+                  </li>
+                }
+              </ul>
+            </div>
+          }
+
+          @if (changes().cv_downloads.length > 0) {
+            <div>
+              <h4 class="text-xs font-semibold uppercase text-gray-500 dark:text-gray-400 mb-2">
+                {{ 'analytics.banner.recentCvDownloads' | translate }}
+              </h4>
+              <ul class="space-y-1">
+                @for (dl of changes().cv_downloads; track dl.created_at) {
+                  <li class="text-sm text-gray-700 dark:text-gray-300">
+                    <mat-icon class="!text-sm align-middle text-amber-500">download</mat-icon>
+                    {{ dl.file_name }} ({{ dl.language }})
+                  </li>
+                }
+              </ul>
+            </div>
+          }
+
+        </div>
+      </div>
+    }
+  </div>
+}

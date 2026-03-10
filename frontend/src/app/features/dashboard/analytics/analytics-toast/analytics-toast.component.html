@@ -1,0 +1,19 @@
+<div class="fixed bottom-4 right-4 z-50 flex flex-col-reverse gap-2 max-w-sm">
+  @for (alert of alertsService.visibleAlerts(); track alert.id) {
+    <div class="toast-item flex items-start gap-3 rounded-lg border p-3 shadow-lg backdrop-blur-sm"
+         [class]="getColorClasses(alert.color)">
+      <mat-icon [class]="getIconColor(alert.color) + ' shrink-0 mt-0.5'">
+        {{ alert.icon }}
+      </mat-icon>
+      <div class="flex-1 min-w-0">
+        <p class="text-sm font-medium leading-snug">{{ alert.message }}</p>
+        <p class="text-xs opacity-60 mt-1">
+          {{ alert.timestamp | date:'HH:mm' }}
+        </p>
+      </div>
+      <button mat-icon-button (click)="alertsService.dismissAlert(alert.id)" class="!size-6 shrink-0">
+        <mat-icon class="!text-sm">close</mat-icon>
+      </button>
+    </div>
+  }
+</div>
