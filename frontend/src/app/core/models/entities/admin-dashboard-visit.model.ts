@@ -34,6 +34,7 @@ export interface ChangeRecruiterSession {
   referrer_source: string;
   device_type: string;
   country: string;
+  organization: string | null;
   started_at: string;
   total_page_views: number;
 }

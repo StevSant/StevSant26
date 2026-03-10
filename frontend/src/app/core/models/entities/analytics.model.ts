@@ -16,6 +16,7 @@ export interface VisitorSession {
   os: string | null;
   country: string | null;
   city: string | null;
+  organization: string | null;
 }
 
 /**
@@ -90,6 +91,7 @@ export interface RecruiterSession {
   os: string | null;
   country: string | null;
   city: string | null;
+  organization: string | null;
   started_at: string;
   total_page_views: number;
   pages_visited: { page_path: string; created_at: string; duration_seconds: number }[] | null;
@@ -127,6 +129,7 @@ export interface UniqueVisitor {
   os: string | null;
   country: string | null;
   city: string | null;
+  organization: string | null;
   is_potential_recruiter: boolean;
   referrer_sources: string[];
   unique_pages_visited: string[];
@@ -230,6 +233,7 @@ export interface ActiveVisitor {
   referrer_source: string | null;
   country: string | null;
   city: string | null;
+  organization: string | null;
   device_type: string;
   browser: string | null;
   is_potential_recruiter: boolean;
@@ -263,6 +267,7 @@ export interface EngagedVisitor {
   downloaded_cv: boolean;
   country: string | null;
   city: string | null;
+  organization: string | null;
   device_type: string;
   referrer_source: string | null;
   last_seen_at: string;

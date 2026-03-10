@@ -19,6 +19,7 @@ CREATE TABLE visitor_session (
   os TEXT,
   country TEXT,
   city TEXT,
+  organization TEXT,
   browser_language TEXT
 );
 

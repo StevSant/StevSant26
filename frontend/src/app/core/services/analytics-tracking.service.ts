@@ -239,7 +239,7 @@ export class AnalyticsTrackingService {
     visitorHash: string,
     referrerSource: string | null,
     deviceInfo: { deviceType: string; browser: string; os: string },
-    geo: { country: string; city: string } | null,
+    geo: { country: string; city: string; organization: string | null } | null,
   ): Promise<void> {
     const isRecruiter = this.isRecruiterReferrer(referrerSource);
     const sessionId = crypto.randomUUID();
@@ -255,6 +255,7 @@ export class AnalyticsTrackingService {
       os: deviceInfo.os,
       country: geo?.country || null,
       city: geo?.city || null,
+      organization: geo?.organization || null,
       browser_language: navigator.language || null,
     });
 
@@ -882,7 +883,11 @@ export class AnalyticsTrackingService {
    * Fetch approximate geolocation from a free IP API.
    * Fails silently — returns null if the API is unreachable.
    */
-  private async fetchGeolocation(): Promise<{ country: string; city: string } | null> {
+  private async fetchGeolocation(): Promise<{
+    country: string;
+    city: string;
+    organization: string | null;
+  } | null> {
     try {
       const res = await fetch('https://ipapi.co/json/', {
         signal: AbortSignal.timeout(3000),
@@ -892,6 +897,7 @@ export class AnalyticsTrackingService {
       return {
         country: data.country_name || data.country || null,
         city: data.city || null,
+        organization: data.org || null,
       };
     } catch {
       return null;

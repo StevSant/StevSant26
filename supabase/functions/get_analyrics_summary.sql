@@ -97,6 +97,7 @@ BEGIN
           vs.os,
           vs.country,
           vs.city,
+          vs.organization,
           vs.started_at,
           vs.total_page_views,
           (

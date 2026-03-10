@@ -58,11 +58,18 @@ export class AnalyticsAlertsService {
     ) {
       this.alertedVisitorHashes.add(record.visitor_hash);
       const source = record.referrer_source || 'unknown';
+      const org = record.organization;
+      let message = this.translate
+        .instant('analytics.toast.recruiter')
+        .replace('{{source}}', source);
+      if (org) {
+        message += ` (${org})`;
+      }
       this.addAlert({
         type: 'recruiter',
         icon: 'work',
         color: 'blue',
-        message: this.translate.instant('analytics.toast.recruiter').replace('{{source}}', source),
+        message,
       });
     }
   }

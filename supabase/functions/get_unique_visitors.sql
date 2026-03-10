@@ -49,6 +49,7 @@ BEGIN
       (array_agg(vs.os ORDER BY vs.started_at DESC))[1] as os,
       (array_agg(vs.country ORDER BY vs.started_at DESC))[1] as country,
       (array_agg(vs.city ORDER BY vs.started_at DESC))[1] as city,
+      (array_agg(vs.organization ORDER BY vs.started_at DESC))[1] as organization,
       bool_or(vs.is_potential_recruiter) as is_potential_recruiter,
       -- All distinct referrer sources
       (
@@ -127,6 +128,7 @@ BEGIN
         OR vs.browser ILIKE ('%' || p_search || '%')
         OR vs.os ILIKE ('%' || p_search || '%')
         OR vs.device_type ILIKE ('%' || p_search || '%')
+        OR vs.organization ILIKE ('%' || p_search || '%')
       )
     GROUP BY vs.visitor_hash
   ) t

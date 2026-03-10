@@ -12,6 +12,7 @@ AS $$
     'referrer_source', referrer_source,
     'country', country,
     'city', city,
+    'organization', organization,
     'device_type', device_type,
     'browser', browser,
     'is_potential_recruiter', is_potential_recruiter,

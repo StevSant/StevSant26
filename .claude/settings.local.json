@@ -23,7 +23,14 @@
       "mcp__supabase__*",
       "mcp__plugin_context7_context7__*",
       "mcp__playwright__*",
-      "Bash(curl:*)"
+      "Bash(curl:*)",
+      "Bash(find \"/c/Users/Bryan/OneDrive/Desktop/Bryan/Dev/Personal projects/StevSant26\" -name \"*analytics.model.ts\" -o -name \"*visitor*.model.ts\" 2>/dev/null | head -20)",
+      "Bash(find \"/c/Users/Bryan/OneDrive/Desktop/Bryan/Dev/Personal projects/StevSant26\" -name \"*admin_dashboard*\" 2>/dev/null | head -20)",
+      "Bash(find \"/c/Users/Bryan/OneDrive/Desktop/Bryan/Dev/Personal projects/StevSant26/frontend\" -type f -name \"*.ts\" -exec grep -l \"admin_dashboard_visit\\\\|AdminDashboardVisit\" {} \\\\; 2>/dev/null | head -10)",
+      "Bash(grep -l \"admin_dashboard_visit\" \"/c/Users/Bryan/OneDrive/Desktop/Bryan/Dev/Personal projects/StevSant26/supabase/tables\"/*.sql 2>/dev/null)",
+      "Bash(grep -n \"admin_dashboard_visit\" \"/c/Users/Bryan/OneDrive/Desktop/Bryan/Dev/Personal projects/StevSant26/supabase/tables/\"*.sql)",
+      "Bash(grep -l \"admin_dashboard_visit\" \"/c/Users/Bryan/OneDrive/Desktop/Bryan/Dev/Personal projects/StevSant26/supabase/migrations/\"*.sql 2>/dev/null)",
+      "Bash(find \"/c/Users/Bryan/OneDrive/Desktop/Bryan/Dev/Personal projects/StevSant26/frontend\" -name \"*portfolio*layout*\" 2>/dev/null | head -5)"
     ]
   },
   "enableAllProjectMcpServers": true,

@@ -53,6 +53,13 @@
                   <span class="text-(--color-text-muted)">, {{ v.city }}</span>
                 }
               </span>
+              @if (v.organization) {
+                <span
+                  class="inline-flex items-center rounded-full bg-blue-100 dark:bg-blue-900/30 px-1.5 py-0.5 text-[10px] font-medium text-blue-700 dark:text-blue-400"
+                >
+                  {{ v.organization }}
+                </span>
+              }
               @if (v.is_potential_recruiter) {
                 <span
                   class="inline-flex items-center rounded-full bg-purple-100 dark:bg-purple-900/30 px-1.5 py-0.5 text-[10px] font-medium text-purple-700 dark:text-purple-400"

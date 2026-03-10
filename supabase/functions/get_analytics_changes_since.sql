@@ -58,6 +58,7 @@ BEGIN
       vs.referrer_source,
       vs.device_type,
       vs.country,
+      vs.organization,
       vs.started_at,
       vs.total_page_views
     FROM visitor_session vs

@@ -18,6 +18,7 @@ BEGIN
       BOOL_OR(EXISTS (SELECT 1 FROM public.cv_download cd WHERE cd.session_id = vs.id)) AS downloaded_cv,
       MAX(vs.country) AS country,
       MAX(vs.city) AS city,
+      MAX(vs.organization) AS organization,
       MAX(vs.device_type) AS device_type,
       MAX(vs.referrer_source) AS referrer_source,
       MAX(vs.last_seen_at) AS last_seen_at
@@ -51,6 +52,7 @@ BEGIN
         'downloaded_cv', s.downloaded_cv,
         'country', s.country,
         'city', s.city,
+        'organization', s.organization,
         'device_type', s.device_type,
         'referrer_source', s.referrer_source,
         'last_seen_at', s.last_seen_at
