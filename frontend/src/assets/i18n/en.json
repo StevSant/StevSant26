@@ -851,7 +851,39 @@
     "sortDuration": "Longest avg. duration",
     "sortRecent": "Most recent",
     "sortCountry": "Country (A-Z)",
-    "allCountries": "All countries"
+    "allCountries": "All countries",
+    "banner": {
+      "sinceLastVisit": "Since your last visit",
+      "timeAgo": "{{time}} ago",
+      "newViews": "+{{count}} views",
+      "newVisitors": "+{{count}} visitors",
+      "newRecruiters": "+{{count}} recruiters",
+      "newCvDownloads": "+{{count}} CV downloads",
+      "noChanges": "No changes since your last visit",
+      "viewDetails": "View details",
+      "hideDetails": "Hide details",
+      "newReferrers": "New traffic sources",
+      "newCountries": "New countries",
+      "topGrowingPages": "Top growing pages",
+      "recentRecruiters": "Recent recruiters",
+      "recentCvDownloads": "Recent CV downloads",
+      "views": "views"
+    },
+    "toast": {
+      "recruiter": "Potential recruiter from {{source}} is visiting your portfolio",
+      "cvDownload": "Someone downloaded your CV: {{fileName}}",
+      "newCountry": "First visit from {{country}}",
+      "trafficSpike": "Unusual activity: {{count}} views in the last 10 minutes"
+    },
+    "live": {
+      "active": "live",
+      "unavailable": "live unavailable"
+    },
+    "comparison": {
+      "vs": "vs {{count}} in previous period",
+      "new": "NEW",
+      "noChange": "no change"
+    }
   },
   "pagination": {
     "showing": "Showing",

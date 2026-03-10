@@ -849,7 +849,39 @@
     "sortDuration": "Mayor duración prom.",
     "sortRecent": "Más reciente",
     "sortCountry": "País (A-Z)",
-    "allCountries": "Todos los países"
+    "allCountries": "Todos los países",
+    "banner": {
+      "sinceLastVisit": "Desde tu última visita",
+      "timeAgo": "hace {{time}}",
+      "newViews": "+{{count}} vistas",
+      "newVisitors": "+{{count}} visitantes",
+      "newRecruiters": "+{{count}} reclutadores",
+      "newCvDownloads": "+{{count}} descargas CV",
+      "noChanges": "Sin novedades desde tu última visita",
+      "viewDetails": "Ver detalles",
+      "hideDetails": "Ocultar detalles",
+      "newReferrers": "Nuevas fuentes de tráfico",
+      "newCountries": "Nuevos países",
+      "topGrowingPages": "Páginas con más crecimiento",
+      "recentRecruiters": "Reclutadores recientes",
+      "recentCvDownloads": "Descargas de CV recientes",
+      "views": "vistas"
+    },
+    "toast": {
+      "recruiter": "Posible reclutador desde {{source}} está visitando tu portfolio",
+      "cvDownload": "Alguien descargó tu CV: {{fileName}}",
+      "newCountry": "Primera visita desde {{country}}",
+      "trafficSpike": "Actividad inusual: {{count}} vistas en los últimos 10 minutos"
+    },
+    "live": {
+      "active": "en vivo",
+      "unavailable": "en vivo no disponible"
+    },
+    "comparison": {
+      "vs": "vs {{count}} en periodo anterior",
+      "new": "NUEVO",
+      "noChange": "sin cambios"
+    }
   },
   "pagination": {
     "showing": "Mostrando",
