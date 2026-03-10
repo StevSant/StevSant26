@@ -1,6 +1,13 @@
 import { Injectable, inject } from '@angular/core';
 import { SupabaseClientService } from './supabase-client.service';
 import { AnalyticsSummary, VisitorSession, PageView, UniqueVisitor } from '../models';
+import {
+  AdminDashboardVisit,
+  DashboardVisitSnapshot,
+  AnalyticsChangesSince,
+} from '@core/models/entities/admin-dashboard-visit.model';
+import { AnalyticsComparison } from '@core/models/entities/analytics.model';
+import { ACTIVE_VISITOR_THRESHOLD_MS } from '@shared/config/analytics.config';
 
 /**
  * Analytics dashboard service for retrieving aggregated metrics.
@@ -105,6 +112,112 @@ export class AnalyticsDashboardService {
 
     if (error) return [];
     return data as VisitorSession[];
+  }
+
+  async getAnalyticsComparison(days: number = 30): Promise<AnalyticsComparison | null> {
+    const { data, error } = await this.client.client.rpc('get_analytics_comparison', {
+      p_days: days,
+    });
+
+    if (error) {
+      console.error('Error fetching analytics comparison:', error);
+      return null;
+    }
+
+    return data as AnalyticsComparison;
+  }
+
+  async getChangesSinceLastVisit(lastVisitAt: string): Promise<AnalyticsChangesSince | null> {
+    const { data, error } = await this.client.client.rpc('get_analytics_changes_since', {
+      p_since: lastVisitAt,
+    });
+
+    if (error) {
+      console.error('Error fetching changes since last visit:', error);
+      return null;
+    }
+
+    return data as AnalyticsChangesSince;
+  }
+
+  async getActiveVisitorCount(): Promise<number> {
+    const thresholdDate = new Date(Date.now() - ACTIVE_VISITOR_THRESHOLD_MS).toISOString();
+
+    const { data, error } = await this.client.client.rpc('get_active_visitor_count', {
+      p_threshold: thresholdDate,
+    });
+
+    if (error) {
+      console.error('Error fetching active visitor count:', error);
+      return 0;
+    }
+
+    return (data as number) ?? 0;
+  }
+
+  async loadDashboardVisit(): Promise<AdminDashboardVisit | null> {
+    const { data, error } = await this.client.client
+      .from('admin_dashboard_visit')
+      .select('*')
+      .single();
+
+    if (error) {
+      console.error('Error loading dashboard visit:', error);
+      return null;
+    }
+
+    return data as AdminDashboardVisit;
+  }
+
+  async saveDashboardVisit(snapshot: DashboardVisitSnapshot): Promise<void> {
+    const userId = (await this.client.client.auth.getUser()).data.user?.id;
+    if (!userId) return;
+
+    const { error } = await this.client.client.from('admin_dashboard_visit').upsert(
+      {
+        user_id: userId,
+        last_visit_at: new Date().toISOString(),
+        snapshot,
+      },
+      { onConflict: 'user_id' },
+    );
+
+    if (error) {
+      console.error('Error saving dashboard visit:', error);
+    }
+  }
+
+  subscribeToRealtimeChanges(handlers: {
+    onVisitorInsert?: (payload: any) => void;
+    onVisitorUpdate?: (payload: any) => void;
+    onCvDownload?: (payload: any) => void;
+    onPageView?: (payload: any) => void;
+  }) {
+    const channel = this.client.client
+      .channel('admin-analytics-realtime')
+      .on(
+        'postgres_changes',
+        { event: 'INSERT', schema: 'public', table: 'visitor_session' },
+        (payload) => handlers.onVisitorInsert?.(payload),
+      )
+      .on(
+        'postgres_changes',
+        { event: 'UPDATE', schema: 'public', table: 'visitor_session' },
+        (payload) => handlers.onVisitorUpdate?.(payload),
+      )
+      .on(
+        'postgres_changes',
+        { event: 'INSERT', schema: 'public', table: 'cv_download' },
+        (payload) => handlers.onCvDownload?.(payload),
+      )
+      .on(
+        'postgres_changes',
+        { event: 'INSERT', schema: 'public', table: 'page_view' },
+        (payload) => handlers.onPageView?.(payload),
+      )
+      .subscribe();
+
+    return channel;
   }
 
   /**
