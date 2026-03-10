@@ -10,7 +10,8 @@
     "serve:ssr:stevsant26": "node dist/stevsant26/server/server.mjs",
     "analyze": "ng build --source-map && source-map-explorer dist/stevsant26/browser/*.js",
     "generate:sitemap": "node scripts/generate-sitemap.js",
-    "lint": "ng lint"
+    "lint": "ng lint",
+    "e2e": "npx playwright test --config=e2e/playwright.config.ts"
   },
   "prettier": {
     "printWidth": 100,
@@ -54,6 +55,7 @@
     "@angular/cli": "^21.0.4",
     "@angular/compiler-cli": "^21.0.0",
     "@eslint/js": "^10.0.1",
+    "@playwright/test": "^1.58.2",
     "@tailwindcss/postcss": "^4.1.12",
     "@types/express": "^5.0.1",
     "@types/node": "^20.17.19",
