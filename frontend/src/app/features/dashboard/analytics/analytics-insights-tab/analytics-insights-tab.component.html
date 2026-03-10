@@ -1,0 +1,193 @@
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+  <!-- Bounce Rate Card -->
+  <div class="bg-(--color-bg-secondary) rounded-xl p-5 border border-(--color-border-primary)">
+    <div class="flex items-center justify-between mb-4">
+      <h3 class="text-lg font-semibold text-(--color-text-primary)">
+        {{ 'analytics.insights.bounceRate' | translate }}
+      </h3>
+      <div class="p-2 bg-orange-500/10 rounded-lg">
+        <mat-icon class="text-[20px] text-orange-500">exit_to_app</mat-icon>
+      </div>
+    </div>
+
+    @if (bounceRate(); as br) {
+      <div class="flex items-end gap-4 mb-4">
+        <p class="text-4xl font-bold" [class]="bounceRateColor()">{{ br.bounce_rate }}%</p>
+        <div class="text-xs text-(--color-text-muted) pb-1">
+          <p>
+            {{ br.bounced_sessions }} / {{ br.total_sessions }}
+            {{ 'analytics.sessions' | translate }}
+          </p>
+        </div>
+      </div>
+
+      <!-- Bounce rate bar -->
+      <div class="w-full bg-(--color-bg-primary) rounded-full h-2 mb-4">
+        <div
+          class="h-2 rounded-full transition-all"
+          [class]="bounceRateBgColor()"
+          [style.width.%]="br.bounce_rate"
+        ></div>
+      </div>
+
+      <!-- Daily bounce chart -->
+      @if (br.daily?.length) {
+        <p class="text-xs text-(--color-text-muted) mb-2">
+          {{ 'analytics.insights.dailyBounce' | translate }}
+        </p>
+        <div class="flex gap-0.5 h-16 items-end">
+          @for (day of br.daily; track day.day) {
+            <div class="flex-1 flex flex-col items-center justify-end group relative min-w-0.75">
+              <div
+                class="w-full rounded-t-sm bg-orange-400/70 hover:bg-orange-500 transition-colors cursor-pointer"
+                [style.height.%]="day.rate"
+                [style.min-height]="'2px'"
+              ></div>
+              <div
+                class="absolute bottom-full mb-1 hidden group-hover:block bg-(--color-bg-primary) border border-(--color-border-primary) rounded px-1.5 py-0.5 text-[10px] shadow-lg whitespace-nowrap z-10"
+              >
+                {{ day.rate }}% · {{ day.day | date: 'shortDate' }}
+              </div>
+            </div>
+          }
+        </div>
+      }
+    } @else {
+      <p class="text-sm text-(--color-text-muted)">{{ 'analytics.noData' | translate }}</p>
+    }
+  </div>
+
+  <!-- Returning vs New Visitors -->
+  <div class="bg-(--color-bg-secondary) rounded-xl p-5 border border-(--color-border-primary)">
+    <div class="flex items-center justify-between mb-4">
+      <h3 class="text-lg font-semibold text-(--color-text-primary)">
+        {{ 'analytics.insights.retention' | translate }}
+      </h3>
+      <div class="p-2 bg-blue-500/10 rounded-lg">
+        <mat-icon class="text-[20px] text-blue-500">people_outline</mat-icon>
+      </div>
+    </div>
+
+    @if (retention(); as ret) {
+      <div class="flex items-center gap-6 mb-4">
+        <!-- Visual split bar -->
+        <div class="flex-1">
+          <div class="flex h-3 rounded-full overflow-hidden bg-(--color-bg-primary)">
+            <div
+              class="bg-blue-500 transition-all"
+              [style.width.%]="retentionPieData().newPct"
+            ></div>
+            <div
+              class="bg-emerald-500 transition-all"
+              [style.width.%]="retentionPieData().returningPct"
+            ></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-2 gap-4">
+        <div class="flex items-center gap-2">
+          <span class="size-3 rounded-full bg-blue-500 shrink-0"></span>
+          <div>
+            <p class="text-2xl font-bold text-(--color-text-primary)">{{ ret.new_visitors }}</p>
+            <p class="text-xs text-(--color-text-muted)">
+              {{ 'analytics.insights.newVisitors' | translate }} ({{ retentionPieData().newPct }}%)
+            </p>
+          </div>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="size-3 rounded-full bg-emerald-500 shrink-0"></span>
+          <div>
+            <p class="text-2xl font-bold text-(--color-text-primary)">
+              {{ ret.returning_visitors }}
+            </p>
+            <p class="text-xs text-(--color-text-muted)">
+              {{ 'analytics.insights.returningVisitors' | translate }} ({{
+                retentionPieData().returningPct
+              }}%)
+            </p>
+          </div>
+        </div>
+      </div>
+
+      @if (ret.avg_sessions_returning) {
+        <p class="text-xs text-(--color-text-muted) mt-3">
+          {{ 'analytics.insights.avgSessionsReturning' | translate }}:
+          {{ ret.avg_sessions_returning }}
+        </p>
+      }
+
+      <!-- Daily new vs returning chart -->
+      @if (ret.daily?.length) {
+        <p class="text-xs text-(--color-text-muted) mt-4 mb-2">
+          {{ 'analytics.insights.dailyRetention' | translate }}
+        </p>
+        <div class="flex gap-0.5 h-16 items-end">
+          @for (day of ret.daily; track day.day) {
+            <div class="flex-1 flex flex-col items-center justify-end group relative min-w-0.75">
+              <div
+                class="w-full flex flex-col-reverse rounded-t-sm overflow-hidden cursor-pointer"
+                [style.height]="day.total > 0 ? '100%' : '2px'"
+              >
+                <div class="bg-blue-400/70" [style.flex-grow]="day.new_count"></div>
+                <div class="bg-emerald-400/70" [style.flex-grow]="day.returning_count"></div>
+              </div>
+              <div
+                class="absolute bottom-full mb-1 hidden group-hover:block bg-(--color-bg-primary) border border-(--color-border-primary) rounded px-1.5 py-0.5 text-[10px] shadow-lg whitespace-nowrap z-10"
+              >
+                {{ day.new_count }} {{ 'analytics.insights.new' | translate }} ·
+                {{ day.returning_count }} {{ 'analytics.insights.returning' | translate }} ·
+                {{ day.day | date: 'shortDate' }}
+              </div>
+            </div>
+          }
+        </div>
+      }
+    } @else {
+      <p class="text-sm text-(--color-text-muted)">{{ 'analytics.noData' | translate }}</p>
+    }
+  </div>
+
+  <!-- Conversion Funnel -->
+  <div
+    class="bg-(--color-bg-secondary) rounded-xl p-5 border border-(--color-border-primary) lg:col-span-2"
+  >
+    <div class="flex items-center justify-between mb-4">
+      <h3 class="text-lg font-semibold text-(--color-text-primary)">
+        {{ 'analytics.insights.conversionFunnel' | translate }}
+      </h3>
+      <div class="p-2 bg-purple-500/10 rounded-lg">
+        <mat-icon class="text-[20px] text-purple-500">filter_alt</mat-icon>
+      </div>
+    </div>
+
+    @if (funnel(); as f) {
+      <div class="space-y-3">
+        @for (stage of f.stages; track stage.name; let i = $index) {
+          <div class="flex items-center gap-3">
+            <div class="w-32 sm:w-40 shrink-0 text-right">
+              <p class="text-sm font-medium text-(--color-text-primary)">{{ stage.label }}</p>
+            </div>
+            <div class="flex-1 relative">
+              <div
+                class="h-8 rounded-md transition-all flex items-center px-3"
+                [class]="getFunnelStageColor(i)"
+                [style.width.%]="getFunnelBarWidth(stage.count)"
+                [style.min-width]="'40px'"
+              >
+                <span class="text-xs font-bold text-white">{{ stage.count }}</span>
+              </div>
+            </div>
+            @if (i > 0) {
+              <span class="text-xs text-(--color-text-muted) w-12 shrink-0 text-right">
+                {{ getFunnelConversion(i) }}
+              </span>
+            }
+          </div>
+        }
+      </div>
+    } @else {
+      <p class="text-sm text-(--color-text-muted)">{{ 'analytics.noData' | translate }}</p>
+    }
+  </div>
+</div>

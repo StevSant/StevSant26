@@ -27,6 +27,18 @@
           {{ activeVisitors() }} {{ 'analytics.live.active' | translate }}
         </span>
       </h2>
+      @if (activeVisitors() > 0) {
+        <button
+          (click)="toggleActivePanel()"
+          class="text-xs text-emerald-600 dark:text-emerald-400 hover:underline cursor-pointer"
+        >
+          {{
+            showActivePanel()
+              ? ('analytics.activeVisitors.hide' | translate)
+              : ('analytics.activeVisitors.show' | translate)
+          }}
+        </button>
+      }
       <p class="text-sm text-(--color-text-muted) mt-1">
         {{ 'analytics.subtitle' | translate }}
       </p>
@@ -60,6 +72,14 @@
       />
     }
 
+    <!-- Active Visitors Panel -->
+    @if (showActivePanel()) {
+      <app-analytics-active-visitors
+        [visitors]="activeVisitorsList()"
+        (closed)="showActivePanel.set(false)"
+      />
+    }
+
     <!-- KPI Cards -->
     <app-analytics-kpi-cards [summary]="summary()!" [comparison]="comparison()" />
 
@@ -73,6 +93,7 @@
             { id: 'referrers', label: 'analytics.tabReferrers' },
             { id: 'recruiters', label: 'analytics.tabRecruiters' },
             { id: 'visitors', label: 'analytics.tabVisitors' },
+            { id: 'insights', label: 'analytics.tabInsights' },
           ];
           track tab.id
         ) {
@@ -113,6 +134,24 @@
           [selectedDays]="selectedDays()"
           (reloadSummary)="onReloadSummary()"
         />
+      }
+      @case ('insights') {
+        <app-analytics-insights-tab
+          [bounceRate]="bounceRate()"
+          [retention]="retention()"
+          [funnel]="funnel()"
+        />
+
+        <!-- Phase 3: Heatmap, Engagement, Content Ranking -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
+          <div class="lg:col-span-2">
+            <app-analytics-heatmap [cells]="heatmap()" />
+          </div>
+          @if (engagement(); as eng) {
+            <app-analytics-engagement [data]="eng" />
+          }
+          <app-analytics-content-ranking [items]="contentRanking()" />
+        </div>
       }
     }
   } @else {

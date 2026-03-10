@@ -1,0 +1,86 @@
+<!-- Active Visitors Panel -->
+<div class="bg-(--color-bg-secondary) rounded-xl border border-emerald-500/30 overflow-hidden">
+  <div
+    class="flex items-center justify-between px-5 py-3 bg-emerald-500/10 border-b border-emerald-500/20"
+  >
+    <div class="flex items-center gap-2">
+      <span class="relative flex size-2.5">
+        <span
+          class="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75"
+        ></span>
+        <span class="relative inline-flex size-2.5 rounded-full bg-emerald-500"></span>
+      </span>
+      <h3 class="text-sm font-semibold text-emerald-700 dark:text-emerald-400">
+        {{ 'analytics.activeVisitors.title' | translate }} ({{ visitors().length }})
+      </h3>
+    </div>
+    <button
+      (click)="closed.emit()"
+      class="text-(--color-text-muted) hover:text-(--color-text-primary) transition-colors"
+    >
+      <mat-icon class="text-[18px]">close</mat-icon>
+    </button>
+  </div>
+
+  @if (visitors().length === 0) {
+    <div class="px-5 py-8 text-center">
+      <p class="text-sm text-(--color-text-muted)">
+        {{ 'analytics.activeVisitors.none' | translate }}
+      </p>
+    </div>
+  } @else {
+    <div class="divide-y divide-(--color-border-primary) max-h-80 overflow-y-auto">
+      @for (v of visitors(); track v.visitor_hash) {
+        <div
+          class="px-5 py-3 flex items-center gap-3 hover:bg-(--color-bg-primary)/50 transition-colors"
+        >
+          <!-- Device icon -->
+          <div class="p-1.5 rounded-lg bg-(--color-accent)/10 shrink-0">
+            <mat-icon class="text-[18px] text-(--color-accent)">{{
+              getDeviceIcon(v.device_type)
+            }}</mat-icon>
+          </div>
+
+          <!-- Info -->
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center gap-2">
+              @if (v.country && getCountryFlagEmoji(v.country)) {
+                <span class="text-sm">{{ getCountryFlagEmoji(v.country) }}</span>
+              }
+              <span class="text-sm font-medium text-(--color-text-primary) truncate">
+                {{ v.country || ('analytics.unknownLocation' | translate) }}
+                @if (v.city) {
+                  <span class="text-(--color-text-muted)">, {{ v.city }}</span>
+                }
+              </span>
+              @if (v.is_potential_recruiter) {
+                <span
+                  class="inline-flex items-center rounded-full bg-purple-100 dark:bg-purple-900/30 px-1.5 py-0.5 text-[10px] font-medium text-purple-700 dark:text-purple-400"
+                >
+                  {{ 'analytics.recruiter' | translate }}
+                </span>
+              }
+            </div>
+            <div class="flex items-center gap-3 mt-0.5 text-xs text-(--color-text-muted)">
+              <span>{{ v.browser }}</span>
+              @if (v.referrer_source) {
+                <span>{{ 'analytics.source' | translate }}: {{ v.referrer_source }}</span>
+              }
+              <span>{{ v.total_page_views }} {{ 'analytics.pages' | translate }}</span>
+            </div>
+          </div>
+
+          <!-- Current page & time -->
+          <div class="text-right shrink-0">
+            <p class="text-xs font-medium text-(--color-text-primary) truncate max-w-32">
+              {{ formatPage(v.current_page) }}
+            </p>
+            <p class="text-[10px] text-(--color-text-muted) mt-0.5">
+              {{ timeAgo(v.last_seen_at) }} {{ 'analytics.activeVisitors.ago' | translate }}
+            </p>
+          </div>
+        </div>
+      }
+    </div>
+  }
+</div>

@@ -2,7 +2,16 @@ import { Component, OnInit, OnDestroy, signal, inject, viewChild } from '@angula
 import { CommonModule } from '@angular/common';
 import { AnalyticsDashboardService } from '@core/services/analytics-dashboard.service';
 import { AnalyticsSummary } from '@core/models';
-import { AnalyticsComparison } from '@core/models/entities/analytics.model';
+import {
+  AnalyticsComparison,
+  BounceRateData,
+  VisitorRetentionData,
+  ConversionFunnelData,
+  ActiveVisitor,
+  HeatmapCell,
+  EngagementScoresData,
+  ContentRankingItem,
+} from '@core/models/entities/analytics.model';
 import {
   AdminDashboardVisit,
   DashboardVisitSnapshot,
@@ -23,6 +32,11 @@ import { AnalyticsPagesTabComponent } from './analytics-pages-tab/analytics-page
 import { AnalyticsReferrersTabComponent } from './analytics-referrers-tab/analytics-referrers-tab.component';
 import { AnalyticsRecruitersTabComponent } from './analytics-recruiters-tab/analytics-recruiters-tab.component';
 import { AnalyticsVisitorsTabComponent } from './analytics-visitors-tab/analytics-visitors-tab.component';
+import { AnalyticsActiveVisitorsComponent } from './analytics-active-visitors/analytics-active-visitors.component';
+import { AnalyticsInsightsTabComponent } from './analytics-insights-tab/analytics-insights-tab.component';
+import { AnalyticsHeatmapComponent } from './analytics-heatmap/analytics-heatmap.component';
+import { AnalyticsEngagementComponent } from './analytics-engagement/analytics-engagement.component';
+import { AnalyticsContentRankingComponent } from './analytics-content-ranking/analytics-content-ranking.component';
 
 @Component({
   selector: 'app-analytics',
@@ -39,6 +53,11 @@ import { AnalyticsVisitorsTabComponent } from './analytics-visitors-tab/analytic
     AnalyticsReferrersTabComponent,
     AnalyticsRecruitersTabComponent,
     AnalyticsVisitorsTabComponent,
+    AnalyticsActiveVisitorsComponent,
+    AnalyticsInsightsTabComponent,
+    AnalyticsHeatmapComponent,
+    AnalyticsEngagementComponent,
+    AnalyticsContentRankingComponent,
   ],
   templateUrl: './analytics.component.html',
 })
@@ -49,14 +68,25 @@ export class AnalyticsComponent implements OnInit, OnDestroy {
   summary = signal<AnalyticsSummary | null>(null);
   loading = signal(true);
   selectedDays = signal(30);
-  activeTab = signal<'overview' | 'pages' | 'referrers' | 'recruiters' | 'visitors'>('overview');
+  activeTab = signal<'overview' | 'pages' | 'referrers' | 'recruiters' | 'visitors' | 'insights'>(
+    'overview',
+  );
 
   comparison = signal<AnalyticsComparison | null>(null);
   changesSinceLastVisit = signal<AnalyticsChangesSince | null>(null);
   lastVisitAt = signal<string | null>(null);
   activeVisitors = signal(0);
+  activeVisitorsList = signal<ActiveVisitor[]>([]);
+  showActivePanel = signal(false);
   realtimeAvailable = signal(true);
   showBanner = signal(false);
+
+  bounceRate = signal<BounceRateData | null>(null);
+  retention = signal<VisitorRetentionData | null>(null);
+  funnel = signal<ConversionFunnelData | null>(null);
+  heatmap = signal<HeatmapCell[]>([]);
+  engagement = signal<EngagementScoresData | null>(null);
+  contentRanking = signal<ContentRankingItem[]>([]);
 
   private realtimeChannel: any = null;
   private snapshotInterval: ReturnType<typeof setInterval> | null = null;
@@ -96,10 +126,9 @@ export class AnalyticsComponent implements OnInit, OnDestroy {
     }
   }
 
-  setTab(tab: 'overview' | 'pages' | 'referrers' | 'recruiters' | 'visitors'): void {
+  setTab(tab: 'overview' | 'pages' | 'referrers' | 'recruiters' | 'visitors' | 'insights'): void {
     this.activeTab.set(tab);
     if (tab === 'visitors') {
-      // Delay slightly so the viewChild is available after @switch renders
       setTimeout(() => {
         const vt = this.visitorsTab();
         if (vt && vt.visitors().length === 0) {
@@ -107,6 +136,38 @@ export class AnalyticsComponent implements OnInit, OnDestroy {
         }
       });
     }
+    if (tab === 'insights') {
+      this.loadInsightsData();
+    }
+  }
+
+  async toggleActivePanel(): Promise<void> {
+    if (this.showActivePanel()) {
+      this.showActivePanel.set(false);
+    } else {
+      const visitors = await this.analyticsService.getActiveVisitors();
+      this.activeVisitorsList.set(visitors);
+      this.showActivePanel.set(true);
+    }
+  }
+
+  private async loadInsightsData(): Promise<void> {
+    const days = this.selectedDays();
+    const [bounceData, retentionData, funnelData, heatmapData, engagementData, contentData] =
+      await Promise.all([
+        this.analyticsService.getBounceRate(days),
+        this.analyticsService.getVisitorRetention(days),
+        this.analyticsService.getConversionFunnel(days),
+        this.analyticsService.getActivityHeatmap(days),
+        this.analyticsService.getEngagementScores(days),
+        this.analyticsService.getContentRanking(days),
+      ]);
+    this.bounceRate.set(bounceData);
+    this.retention.set(retentionData);
+    this.funnel.set(funnelData);
+    this.heatmap.set(heatmapData);
+    this.engagement.set(engagementData);
+    this.contentRanking.set(contentData);
   }
 
   /**

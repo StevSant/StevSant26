@@ -180,3 +180,100 @@ export interface AnalyticsComparison {
   current: AnalyticsPeriodKpis;
   previous: AnalyticsPeriodKpis;
 }
+
+export interface BounceRateData {
+  total_sessions: number;
+  bounced_sessions: number;
+  bounce_rate: number;
+  daily: BounceRateDaily[] | null;
+}
+
+export interface BounceRateDaily {
+  day: string;
+  total: number;
+  bounced: number;
+  rate: number;
+}
+
+export interface VisitorRetentionData {
+  total_visitors: number;
+  new_visitors: number;
+  returning_visitors: number;
+  return_rate: number;
+  avg_sessions_returning: number | null;
+  daily: RetentionDaily[] | null;
+}
+
+export interface RetentionDaily {
+  day: string;
+  total: number;
+  new_count: number;
+  returning_count: number;
+}
+
+export interface ConversionFunnelData {
+  stages: FunnelStage[];
+  total_visitors: number;
+}
+
+export interface FunnelStage {
+  name: string;
+  count: number;
+  label: string;
+}
+
+export interface ActiveVisitor {
+  visitor_hash: string;
+  last_seen_at: string;
+  started_at: string;
+  total_page_views: number;
+  referrer_source: string | null;
+  country: string | null;
+  city: string | null;
+  device_type: string;
+  browser: string | null;
+  is_potential_recruiter: boolean;
+  current_page: string | null;
+}
+
+export interface HeatmapCell {
+  day_of_week: number;
+  hour_of_day: number;
+  count: number;
+}
+
+export interface EngagementScoresData {
+  visitors: EngagedVisitor[];
+  distribution: {
+    high: number;
+    medium: number;
+    low: number;
+  };
+  avg_score: number;
+}
+
+export interface EngagedVisitor {
+  visitor_hash: string;
+  engagement_score: number;
+  session_count: number;
+  total_views: number;
+  max_unique_pages: number;
+  avg_duration_secs: number;
+  is_recruiter: boolean;
+  downloaded_cv: boolean;
+  country: string | null;
+  city: string | null;
+  device_type: string;
+  referrer_source: string | null;
+  last_seen_at: string;
+}
+
+export interface ContentRankingItem {
+  page_path: string;
+  content_score: number;
+  view_count: number;
+  unique_visitors: number;
+  avg_duration: number;
+  recruiter_views: number;
+  cv_downloads_after: number;
+}

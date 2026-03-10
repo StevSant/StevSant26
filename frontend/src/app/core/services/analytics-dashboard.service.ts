@@ -6,7 +6,16 @@ import {
   DashboardVisitSnapshot,
   AnalyticsChangesSince,
 } from '@core/models/entities/admin-dashboard-visit.model';
-import { AnalyticsComparison } from '@core/models/entities/analytics.model';
+import {
+  AnalyticsComparison,
+  BounceRateData,
+  VisitorRetentionData,
+  ConversionFunnelData,
+  ActiveVisitor,
+  HeatmapCell,
+  EngagementScoresData,
+  ContentRankingItem,
+} from '@core/models/entities/analytics.model';
 import { ACTIVE_VISITOR_THRESHOLD_MS } from '@shared/config/analytics.config';
 
 /**
@@ -218,6 +227,74 @@ export class AnalyticsDashboardService {
       .subscribe();
 
     return channel;
+  }
+
+  async getBounceRate(days: number = 30): Promise<BounceRateData | null> {
+    const { data, error } = await this.client.client.rpc('get_bounce_rate', { p_days: days });
+    if (error) {
+      console.error('Error fetching bounce rate:', error);
+      return null;
+    }
+    return data as BounceRateData;
+  }
+
+  async getVisitorRetention(days: number = 30): Promise<VisitorRetentionData | null> {
+    const { data, error } = await this.client.client.rpc('get_visitor_retention', { p_days: days });
+    if (error) {
+      console.error('Error fetching visitor retention:', error);
+      return null;
+    }
+    return data as VisitorRetentionData;
+  }
+
+  async getConversionFunnel(days: number = 30): Promise<ConversionFunnelData | null> {
+    const { data, error } = await this.client.client.rpc('get_conversion_funnel', { p_days: days });
+    if (error) {
+      console.error('Error fetching conversion funnel:', error);
+      return null;
+    }
+    return data as ConversionFunnelData;
+  }
+
+  async getActiveVisitors(): Promise<ActiveVisitor[]> {
+    const thresholdDate = new Date(Date.now() - ACTIVE_VISITOR_THRESHOLD_MS).toISOString();
+    const { data, error } = await this.client.client.rpc('get_active_visitors', {
+      p_threshold: thresholdDate,
+    });
+    if (error) {
+      console.error('Error fetching active visitors:', error);
+      return [];
+    }
+    return (data as ActiveVisitor[]) ?? [];
+  }
+
+  async getActivityHeatmap(days: number = 30): Promise<HeatmapCell[]> {
+    const { data, error } = await this.client.client.rpc('get_activity_heatmap', { p_days: days });
+    if (error) {
+      console.error('Error fetching activity heatmap:', error);
+      return [];
+    }
+    return (data as HeatmapCell[]) ?? [];
+  }
+
+  async getEngagementScores(days: number = 30): Promise<EngagementScoresData | null> {
+    const { data, error } = await this.client.client.rpc('get_visitor_engagement_scores', {
+      p_days: days,
+    });
+    if (error) {
+      console.error('Error fetching engagement scores:', error);
+      return null;
+    }
+    return data as EngagementScoresData;
+  }
+
+  async getContentRanking(days: number = 30): Promise<ContentRankingItem[]> {
+    const { data, error } = await this.client.client.rpc('get_content_ranking', { p_days: days });
+    if (error) {
+      console.error('Error fetching content ranking:', error);
+      return [];
+    }
+    return (data as ContentRankingItem[]) ?? [];
   }
 
   /**

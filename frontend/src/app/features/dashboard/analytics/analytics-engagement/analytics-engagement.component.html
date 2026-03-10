@@ -1,0 +1,105 @@
+<div class="bg-(--color-bg-secondary) rounded-xl p-5 border border-(--color-border-primary)">
+  <div class="flex items-center justify-between mb-4">
+    <h3 class="text-lg font-semibold text-(--color-text-primary)">
+      {{ 'analytics.engagement.title' | translate }}
+    </h3>
+    <div class="p-2 bg-indigo-500/10 rounded-lg">
+      <mat-icon class="text-[20px] text-indigo-500">trending_up</mat-icon>
+    </div>
+  </div>
+
+  <!-- Avg score -->
+  <div class="flex items-center gap-4 mb-5">
+    <div>
+      <p class="text-sm text-(--color-text-muted)">
+        {{ 'analytics.engagement.avgScore' | translate }}
+      </p>
+      <p class="text-3xl font-bold" [class]="getScoreColor(data().avg_score)">
+        {{ data().avg_score }}
+        <span class="text-sm font-normal text-(--color-text-muted)">/ 100</span>
+      </p>
+    </div>
+  </div>
+
+  <!-- Distribution bar -->
+  <div class="mb-5">
+    <p class="text-xs text-(--color-text-muted) mb-2">
+      {{ 'analytics.engagement.distribution' | translate }}
+    </p>
+    <div class="flex h-4 rounded-full overflow-hidden bg-(--color-bg-primary)">
+      @for (bar of distributionBars(); track bar.label) {
+        @if (bar.pct > 0) {
+          <div [class]="bar.color + ' transition-all'" [style.width.%]="bar.pct"></div>
+        }
+      }
+    </div>
+    <div class="flex justify-between mt-2">
+      @for (bar of distributionBars(); track bar.label) {
+        <div class="flex items-center gap-1.5">
+          <span class="size-2.5 rounded-full" [class]="bar.color"></span>
+          <span class="text-xs text-(--color-text-muted)">
+            {{ 'analytics.engagement.' + bar.label | translate }} ({{ bar.count }})
+          </span>
+        </div>
+      }
+    </div>
+  </div>
+
+  <!-- Top engaged visitors -->
+  <p class="text-xs text-(--color-text-muted) mb-2">
+    {{ 'analytics.engagement.topVisitors' | translate }}
+  </p>
+  <div class="space-y-2 max-h-72 overflow-y-auto">
+    @for (v of data().visitors.slice(0, 10); track v.visitor_hash) {
+      <div
+        class="flex items-center gap-3 p-2 rounded-lg hover:bg-(--color-bg-primary)/50 transition-colors"
+      >
+        <!-- Score badge -->
+        <div
+          class="w-10 h-10 rounded-lg flex items-center justify-center text-white text-sm font-bold shrink-0"
+          [class]="getScoreBg(v.engagement_score)"
+        >
+          {{ v.engagement_score }}
+        </div>
+
+        <!-- Info -->
+        <div class="flex-1 min-w-0">
+          <div class="flex items-center gap-1.5">
+            @if (v.country && getCountryFlagEmoji(v.country)) {
+              <span class="text-sm">{{ getCountryFlagEmoji(v.country) }}</span>
+            }
+            <span class="text-sm font-medium text-(--color-text-primary) truncate">
+              {{ v.country || 'Unknown' }}
+              @if (v.city) {
+                <span class="text-(--color-text-muted)">, {{ v.city }}</span>
+              }
+            </span>
+            @if (v.is_recruiter) {
+              <span
+                class="inline-flex items-center rounded-full bg-purple-100 dark:bg-purple-900/30 px-1.5 py-0.5 text-[10px] font-medium text-purple-700 dark:text-purple-400"
+              >
+                {{ 'analytics.recruiter' | translate }}
+              </span>
+            }
+            @if (v.downloaded_cv) {
+              <span
+                class="inline-flex items-center rounded-full bg-amber-100 dark:bg-amber-900/30 px-1.5 py-0.5 text-[10px] font-medium text-amber-700 dark:text-amber-400"
+              >
+                CV
+              </span>
+            }
+          </div>
+          <div class="flex items-center gap-3 text-xs text-(--color-text-muted) mt-0.5">
+            <span>{{ v.session_count }} {{ 'analytics.sessions' | translate }}</span>
+            <span>{{ v.total_views }} {{ 'analytics.views' | translate }}</span>
+            <span>{{ formatDuration(v.avg_duration_secs) }}</span>
+          </div>
+        </div>
+
+        <mat-icon class="text-[18px] text-(--color-text-muted)">{{
+          getDeviceIcon(v.device_type)
+        }}</mat-icon>
+      </div>
+    }
+  </div>
+</div>

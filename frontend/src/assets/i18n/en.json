@@ -883,6 +883,50 @@
       "vs": "vs {{count}} in previous period",
       "new": "NEW",
       "noChange": "no change"
+    },
+    "tabInsights": "Insights",
+    "activeVisitors": {
+      "title": "Active Visitors",
+      "show": "See who",
+      "hide": "Hide",
+      "none": "No active visitors right now",
+      "ago": "ago"
+    },
+    "insights": {
+      "bounceRate": "Bounce Rate",
+      "dailyBounce": "Daily bounce",
+      "retention": "New vs Returning",
+      "newVisitors": "New",
+      "returningVisitors": "Returning",
+      "avgSessionsReturning": "Avg. sessions of returning visitors",
+      "dailyRetention": "Daily distribution",
+      "new": "new",
+      "returning": "returning",
+      "conversionFunnel": "Conversion Funnel"
+    },
+    "heatmap": {
+      "title": "Activity Heatmap (Hour/Day)",
+      "sun": "Sun",
+      "mon": "Mon",
+      "tue": "Tue",
+      "wed": "Wed",
+      "thu": "Thu",
+      "fri": "Fri",
+      "sat": "Sat",
+      "less": "Less",
+      "more": "More"
+    },
+    "engagement": {
+      "title": "Visitor Engagement",
+      "avgScore": "Average Score",
+      "distribution": "Distribution",
+      "high": "High (50+)",
+      "medium": "Medium (20-49)",
+      "low": "Low (<20)",
+      "topVisitors": "Most engaged visitors"
+    },
+    "contentRanking": {
+      "title": "Best Content"
     }
   },
   "pagination": {

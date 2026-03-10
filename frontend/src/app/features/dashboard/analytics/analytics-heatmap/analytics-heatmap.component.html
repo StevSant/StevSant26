@@ -1,0 +1,59 @@
+<div class="bg-(--color-bg-secondary) rounded-xl p-5 border border-(--color-border-primary)">
+  <h3 class="text-lg font-semibold text-(--color-text-primary) mb-4">
+    {{ 'analytics.heatmap.title' | translate }}
+  </h3>
+
+  @if (cells().length) {
+    <div class="overflow-x-auto">
+      <div class="min-w-[600px]">
+        <!-- Hour labels -->
+        <div class="flex ml-10 mb-1">
+          @for (h of hours; track h) {
+            <div class="flex-1 text-center text-[9px] text-(--color-text-muted)">
+              @if (h % 3 === 0) {
+                {{ formatHour(h) }}
+              }
+            </div>
+          }
+        </div>
+
+        <!-- Rows (days) -->
+        @for (day of [0, 1, 2, 3, 4, 5, 6]; track day) {
+          <div class="flex items-center gap-1 mb-0.5">
+            <span class="w-9 text-xs text-(--color-text-muted) text-right shrink-0">
+              {{ dayLabels()[day] }}
+            </span>
+            <div class="flex flex-1 gap-0.5">
+              @for (hour of hours; track hour) {
+                <div
+                  class="flex-1 aspect-square rounded-sm bg-(--color-accent) cursor-pointer relative group"
+                  [style.opacity]="getCellOpacity(grid()[day][hour])"
+                  [style.min-height]="'12px'"
+                >
+                  <!-- Tooltip -->
+                  <div
+                    class="absolute bottom-full left-1/2 -translate-x-1/2 mb-1 hidden group-hover:block bg-(--color-bg-primary) border border-(--color-border-primary) rounded px-1.5 py-0.5 text-[10px] shadow-lg whitespace-nowrap z-20"
+                  >
+                    {{ grid()[day][hour] }} {{ 'analytics.views' | translate }} ·
+                    {{ dayLabels()[day] }} {{ formatHour(hour) }}
+                  </div>
+                </div>
+              }
+            </div>
+          </div>
+        }
+
+        <!-- Legend -->
+        <div class="flex items-center justify-end gap-2 mt-3 text-[10px] text-(--color-text-muted)">
+          <span>{{ 'analytics.heatmap.less' | translate }}</span>
+          @for (opacity of [0.05, 0.25, 0.5, 0.75, 1]; track opacity) {
+            <div class="size-3 rounded-sm bg-(--color-accent)" [style.opacity]="opacity"></div>
+          }
+          <span>{{ 'analytics.heatmap.more' | translate }}</span>
+        </div>
+      </div>
+    </div>
+  } @else {
+    <p class="text-sm text-(--color-text-muted)">{{ 'analytics.noData' | translate }}</p>
+  }
+</div>

@@ -1,0 +1,77 @@
+<div class="bg-(--color-bg-secondary) rounded-xl p-5 border border-(--color-border-primary)">
+  <div class="flex items-center justify-between mb-4">
+    <h3 class="text-lg font-semibold text-(--color-text-primary)">
+      {{ 'analytics.contentRanking.title' | translate }}
+    </h3>
+    <div class="p-2 bg-amber-500/10 rounded-lg">
+      <mat-icon class="text-[20px] text-amber-500">star</mat-icon>
+    </div>
+  </div>
+
+  @if (items().length) {
+    <div class="space-y-3">
+      @for (item of items(); track item.page_path; let i = $index) {
+        <div class="group">
+          <div class="flex items-center gap-3">
+            <!-- Rank -->
+            <div class="w-8 text-center shrink-0">
+              @if (getMedalIcon(i); as medal) {
+                <span class="text-lg">{{ medal }}</span>
+              } @else {
+                <span class="text-sm font-medium text-(--color-text-muted)">#{{ i + 1 }}</span>
+              }
+            </div>
+
+            <!-- Page info + score bar -->
+            <div class="flex-1 min-w-0">
+              <div class="flex items-center justify-between mb-1">
+                <span class="text-sm font-medium text-(--color-text-primary) truncate">
+                  {{ formatPagePath(item.page_path) }}
+                </span>
+                <span class="text-sm font-bold text-(--color-accent) shrink-0 ml-2">
+                  {{ item.content_score }}
+                </span>
+              </div>
+              <!-- Score bar -->
+              <div class="w-full bg-(--color-bg-primary) rounded-full h-1.5">
+                <div
+                  class="h-1.5 rounded-full bg-(--color-accent) transition-all"
+                  [style.width.%]="getScoreWidth(item.content_score)"
+                ></div>
+              </div>
+              <!-- Metrics row -->
+              <div class="flex items-center gap-3 mt-1.5 text-[11px] text-(--color-text-muted)">
+                <span class="flex items-center gap-0.5">
+                  <mat-icon class="text-[12px]">visibility</mat-icon>
+                  {{ item.view_count }}
+                </span>
+                <span class="flex items-center gap-0.5">
+                  <mat-icon class="text-[12px]">group</mat-icon>
+                  {{ item.unique_visitors }}
+                </span>
+                <span class="flex items-center gap-0.5">
+                  <mat-icon class="text-[12px]">schedule</mat-icon>
+                  {{ formatDuration(item.avg_duration) }}
+                </span>
+                @if (item.recruiter_views > 0) {
+                  <span class="flex items-center gap-0.5 text-purple-500">
+                    <mat-icon class="text-[12px]">work</mat-icon>
+                    {{ item.recruiter_views }}
+                  </span>
+                }
+                @if (item.cv_downloads_after > 0) {
+                  <span class="flex items-center gap-0.5 text-amber-500">
+                    <mat-icon class="text-[12px]">download</mat-icon>
+                    {{ item.cv_downloads_after }}
+                  </span>
+                }
+              </div>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+  } @else {
+    <p class="text-sm text-(--color-text-muted)">{{ 'analytics.noData' | translate }}</p>
+  }
+</div>

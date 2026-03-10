@@ -881,6 +881,50 @@
       "vs": "vs {{count}} en periodo anterior",
       "new": "NUEVO",
       "noChange": "sin cambios"
+    },
+    "tabInsights": "Insights",
+    "activeVisitors": {
+      "title": "Visitantes Activos",
+      "show": "Ver quiénes",
+      "hide": "Ocultar",
+      "none": "No hay visitantes activos en este momento",
+      "ago": "atrás"
+    },
+    "insights": {
+      "bounceRate": "Tasa de Rebote",
+      "dailyBounce": "Rebote diario",
+      "retention": "Nuevos vs Recurrentes",
+      "newVisitors": "Nuevos",
+      "returningVisitors": "Recurrentes",
+      "avgSessionsReturning": "Prom. sesiones de recurrentes",
+      "dailyRetention": "Distribución diaria",
+      "new": "nuevos",
+      "returning": "recurrentes",
+      "conversionFunnel": "Embudo de Conversión"
+    },
+    "heatmap": {
+      "title": "Mapa de Actividad (Hora/Día)",
+      "sun": "Dom",
+      "mon": "Lun",
+      "tue": "Mar",
+      "wed": "Mié",
+      "thu": "Jue",
+      "fri": "Vie",
+      "sat": "Sáb",
+      "less": "Menos",
+      "more": "Más"
+    },
+    "engagement": {
+      "title": "Engagement por Visitante",
+      "avgScore": "Puntuación Promedio",
+      "distribution": "Distribución",
+      "high": "Alto (50+)",
+      "medium": "Medio (20-49)",
+      "low": "Bajo (<20)",
+      "topVisitors": "Visitantes más comprometidos"
+    },
+    "contentRanking": {
+      "title": "Mejor Contenido"
     }
   },
   "pagination": {
