@@ -28,7 +28,11 @@
             routerLink="./"
             class="text-lg font-semibold tracking-tight text-(--color-text-primary) cursor-pointer hover:text-(--color-accent) transition-colors"
           >
-            {{ data.profile()?.first_name }} {{ data.profile()?.last_name }}
+            @if (data.profile()?.nickname) {
+              <span class="opacity-60">&lt;/&gt;</span> {{ data.profile()?.nickname }}
+            } @else {
+              {{ data.profile()?.first_name }} {{ data.profile()?.last_name }}
+            }
           </a>
 
           <app-portfolio-navbar
@@ -95,7 +99,7 @@
   <!-- Footer -->
   @if (!data.loading()) {
     <app-portfolio-footer
-      [profileName]="(data.profile()?.first_name || '') + ' ' + (data.profile()?.last_name || '')"
+      [profileName]="data.profile()?.nickname ? '</> ' + data.profile()?.nickname : (data.profile()?.first_name || '') + ' ' + (data.profile()?.last_name || '')"
       [currentYear]="currentYear"
     />
   }
