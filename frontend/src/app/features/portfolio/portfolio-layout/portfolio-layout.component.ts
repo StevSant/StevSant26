@@ -66,7 +66,7 @@ export class PortfolioLayoutComponent implements OnInit, OnDestroy {
   protected footerDisplayName = computed(() => {
     const profile = this.data.profile();
     if (profile?.nickname) {
-      return '</> ' + profile.nickname;
+      return profile.nickname + '@dev:~$';
     }
     return ((profile?.first_name || '') + ' ' + (profile?.last_name || '')).trim();
   });
