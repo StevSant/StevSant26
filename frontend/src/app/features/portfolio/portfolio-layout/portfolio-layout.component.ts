@@ -4,6 +4,7 @@ import {
   OnDestroy,
   HostListener,
   signal,
+  computed,
   inject,
   PLATFORM_ID,
 } from '@angular/core';
@@ -61,6 +62,14 @@ export class PortfolioLayoutComponent implements OnInit, OnDestroy {
   cvMenuOpen = signal(false);
 
   currentYear = new Date().getFullYear();
+
+  protected footerDisplayName = computed(() => {
+    const profile = this.data.profile();
+    if (profile?.nickname) {
+      return '</> ' + profile.nickname;
+    }
+    return ((profile?.first_name || '') + ' ' + (profile?.last_name || '')).trim();
+  });
 
   async ngOnInit(): Promise<void> {
     await this.data.initialize();
