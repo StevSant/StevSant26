@@ -54,11 +54,6 @@
         >
           {{ firstName() }} {{ lastName() }}
         </h1>
-        @if (nickname()) {
-          <p class="text-sm sm:text-base text-(--color-text-muted) mb-2 font-mono tracking-wider">
-            <span class="text-(--color-accent)">&lt;/&gt;</span> {{ nickname() }}
-          </p>
-        }
         @if (profileJobTitle()) {
           <p
             class="text-(--color-text-secondary) text-lg sm:text-xl mb-2 font-light min-h-[1.75rem]"
@@ -69,10 +64,6 @@
             }
           </p>
         }
-        @if (nickname()) {
-          <p class="text-(--color-text-muted) text-base mb-4 font-light">&#64;{{ nickname() }}</p>
-        }
-
         <!-- Badges -->
         <div class="flex flex-wrap justify-center md:justify-start gap-2 mb-5">
           @if (isAvailable() !== undefined) {
