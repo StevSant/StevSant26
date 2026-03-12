@@ -99,7 +99,7 @@
   <!-- Footer -->
   @if (!data.loading()) {
     <app-portfolio-footer
-      [profileName]="data.profile()?.nickname ? '</> ' + data.profile()?.nickname : (data.profile()?.first_name || '') + ' ' + (data.profile()?.last_name || '')"
+      [profileName]="footerDisplayName()"
       [currentYear]="currentYear"
     />
   }
