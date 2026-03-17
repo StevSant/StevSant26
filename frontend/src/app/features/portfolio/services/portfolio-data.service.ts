@@ -73,18 +73,14 @@ export class PortfolioDataService {
       await this.initializing;
       return;
     }
-    if (!isPlatformBrowser(this.platformId)) {
-      this.initializing = Promise.resolve();
-      try {
-        this.loading.set(false);
-        this.initialized = true;
-      } finally {
-        this.initializing = undefined;
-      }
-      return;
-    }
 
     this.initializing = (async () => {
+      if (!isPlatformBrowser(this.platformId)) {
+        this.loading.set(false);
+        this.initialized = true;
+        return;
+      }
+
       await Promise.all([
         this.loadProfile(),
         this.loadProjects(),
@@ -104,6 +100,9 @@ export class PortfolioDataService {
 
     try {
       await this.initializing;
+    } catch (error) {
+      this.loading.set(false);
+      throw error;
     } finally {
       this.initializing = undefined;
     }
