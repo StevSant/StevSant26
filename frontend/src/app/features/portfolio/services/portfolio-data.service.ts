@@ -37,6 +37,7 @@ export class PortfolioDataService {
   private platformId = inject(PLATFORM_ID);
 
   private initialized = false;
+  private initializing?: Promise<void>;
 
   loading = signal(true);
   profile = signal<Profile | null>(null);
@@ -68,26 +69,42 @@ export class PortfolioDataService {
 
   async initialize(): Promise<void> {
     if (this.initialized) return;
-    if (!isPlatformBrowser(this.platformId)) {
-      this.loading.set(false);
+    if (this.initializing) {
+      await this.initializing;
       return;
     }
 
-    await Promise.all([
-      this.loadProfile(),
-      this.loadProjects(),
-      this.loadExperiences(),
-      this.loadEducations(),
-      this.loadCompetitions(),
-      this.loadEvents(),
-      this.loadSkillsWithLevels(),
-      this.loadAllImages(),
-      this.loadAllSkillUsages(),
-      this.loadAllContentSections(),
-      this.loadAllDocuments(),
-    ]);
-    this.loading.set(false);
-    this.initialized = true;
+    this.initializing = (async () => {
+      if (!isPlatformBrowser(this.platformId)) {
+        this.loading.set(false);
+        return;
+      }
+
+      await Promise.all([
+        this.loadProfile(),
+        this.loadProjects(),
+        this.loadExperiences(),
+        this.loadEducations(),
+        this.loadCompetitions(),
+        this.loadEvents(),
+        this.loadSkillsWithLevels(),
+        this.loadAllImages(),
+        this.loadAllSkillUsages(),
+        this.loadAllContentSections(),
+        this.loadAllDocuments(),
+      ]);
+      this.loading.set(false);
+    })();
+
+    try {
+      await this.initializing;
+      this.initialized = true;
+    } catch (error) {
+      this.loading.set(false);
+      throw error;
+    } finally {
+      this.initializing = undefined;
+    }
   }
 
   private async loadProfile(): Promise<void> {
