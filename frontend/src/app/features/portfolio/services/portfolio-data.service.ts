@@ -77,7 +77,6 @@ export class PortfolioDataService {
     this.initializing = (async () => {
       if (!isPlatformBrowser(this.platformId)) {
         this.loading.set(false);
-        this.initialized = true;
         return;
       }
 
@@ -95,11 +94,11 @@ export class PortfolioDataService {
         this.loadAllDocuments(),
       ]);
       this.loading.set(false);
-      this.initialized = true;
     })();
 
     try {
       await this.initializing;
+      this.initialized = true;
     } catch (error) {
       this.loading.set(false);
       throw error;
