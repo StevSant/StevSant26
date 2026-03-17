@@ -74,8 +74,13 @@ export class PortfolioDataService {
       return;
     }
     if (!isPlatformBrowser(this.platformId)) {
-      this.loading.set(false);
-      this.initialized = true;
+      this.initializing = Promise.resolve();
+      try {
+        this.loading.set(false);
+        this.initialized = true;
+      } finally {
+        this.initializing = undefined;
+      }
       return;
     }
 

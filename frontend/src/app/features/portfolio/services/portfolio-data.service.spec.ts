@@ -69,6 +69,9 @@ describe('PortfolioDataService', () => {
 
     await Promise.all([first, second]);
 
+    expect(mockCrudService.getCallCount('profile')).toBe(1);
+    expect(mockCrudService.getCallCount('project')).toBe(1);
+    expect(mockCrudService.getCallCount('skill')).toBe(1);
     expect(mockCrudService.getCallCount('content_section')).toBe(1);
   });
 });
