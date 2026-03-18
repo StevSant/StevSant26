@@ -17,6 +17,8 @@ import { TranslatePipe } from '@shared/pipes/translate.pipe';
 import { ScrollRevealDirective } from '@shared/directives/scroll-reveal.directive';
 import { MatIcon } from '@angular/material/icon';
 import { Document } from '@core/models';
+import { AnalyticsTrackingService } from '@core/services/analytics-tracking.service';
+import { downloadFile } from '@shared/utils/download-file.util';
 
 @Component({
   selector: 'app-portfolio-hero',
@@ -27,6 +29,7 @@ import { Document } from '@core/models';
 export class PortfolioHeroComponent implements OnInit, OnDestroy {
   private elRef = inject(ElementRef);
   private platformId = inject(PLATFORM_ID);
+  private analytics = inject(AnalyticsTrackingService);
 
   // Inputs from parent
   firstName = input<string>('');
@@ -50,6 +53,7 @@ export class PortfolioHeroComponent implements OnInit, OnDestroy {
 
   // CV dropdown state
   cvMenuOpen = signal(false);
+  downloading = signal(false);
 
   ngOnInit(): void {
     this.startTypingAnimation();
@@ -96,6 +100,21 @@ export class PortfolioHeroComponent implements OnInit, OnDestroy {
 
   closeCvMenu(): void {
     this.cvMenuOpen.set(false);
+  }
+
+  async downloadCv(cv: Document): Promise<void> {
+    if (this.downloading()) return;
+    this.downloading.set(true);
+    this.analytics.trackCvDownload({
+      documentId: cv.id,
+      fileName: cv.label || cv.file_name || 'CV',
+      language: cv.language?.name || undefined,
+    });
+    try {
+      await downloadFile(cv.url, cv.file_name || 'CV.pdf');
+    } finally {
+      this.downloading.set(false);
+    }
   }
 
   @HostListener('document:click', ['$event'])
