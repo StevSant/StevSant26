@@ -1,4 +1,4 @@
-import { Component, input, output, inject } from '@angular/core';
+import { Component, input, output, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { TranslatePipe } from '@shared/pipes/translate.pipe';
@@ -7,6 +7,7 @@ import { ThemeToggleComponent } from '@shared/components/theme-toggle/theme-togg
 import { PortfolioDataService } from '../../services/portfolio-data.service';
 import { AnalyticsTrackingService } from '@core/services/analytics-tracking.service';
 import { Document } from '@core/models';
+import { downloadFile } from '@shared/utils/download-file.util';
 
 @Component({
   selector: 'app-portfolio-navbar',
@@ -31,11 +32,20 @@ export class PortfolioNavbarComponent {
   toggleCvMenu = output<void>();
   closeAllMenus = output<void>();
 
-  onCvDownload(cv: Document): void {
+  downloading = signal(false);
+
+  async downloadCv(cv: Document): Promise<void> {
+    if (this.downloading()) return;
+    this.downloading.set(true);
     this.analytics.trackCvDownload({
       documentId: cv.id,
       fileName: cv.label || cv.file_name || 'CV',
       language: cv.language?.name || undefined,
     });
+    try {
+      await downloadFile(cv.url, cv.file_name || 'CV.pdf');
+    } finally {
+      this.downloading.set(false);
+    }
   }
 }
