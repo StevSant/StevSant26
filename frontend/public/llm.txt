@@ -1,0 +1,213 @@
+# StevSant26 Portfolio
+
+> Personal portfolio website for Bryan Steven Menoscal Santana.
+
+Live site: https://stevsant.vercel.app
+Source: https://github.com/StevSant/StevSant26
+
+---
+
+## About Bryan
+
+**Bryan Steven Menoscal Santana** is a Systems Engineer from Manta, Ecuador, currently pursuing a Software Engineering degree at Universidad Laica Eloy Alfaro de Manabi (ULEAM). He is a self-taught, architecture-focused developer passionate about building scalable, well-structured systems.
+
+- **Location:** Manta, Ecuador
+- **Email:** bryanmenoscal2005@gmail.com
+- **Languages:** Spanish (native), English (C1 Advanced)
+- **Status:** Available for work and projects
+- **LinkedIn:** https://www.linkedin.com/in/bryanmenoscal26
+- **GitHub:** https://github.com/StevSant/
+- **Instagram:** https://www.instagram.com/stevsant_/
+
+### Professional Philosophy
+
+Bryan enjoys solving problems — not only large-scale or "interesting" ones, but any situation that creates friction, errors, or inefficiencies. He finds it especially satisfying to take something that isn't working well and turn it into a clear, stable, and maintainable solution. Deeply focused on software architecture and system quality, he cares about how applications grow over time: scalability, clean design, best practices, performance, and code maintainability. He works with concepts such as Domain-Driven Design, Event-Driven Architecture, and microservices — anything related to building resilient, well-structured systems designed to evolve.
+
+### Technical Skills
+
+- **Backend:** Django, Django REST Framework, Flask, FastAPI, NestJS, LangChain, Pydantic, GraphQL, WebSocket, Node.js
+- **Frontend:** Angular, React, TailwindCSS, SCSS, HTML/CSS, NgRx, Leaflet
+- **Mobile:** Kotlin
+- **Languages:** Python, JavaScript, TypeScript, Java/Kotlin
+- **Databases:** MySQL, PostgreSQL, MongoDB, ChromaDB, Supabase
+- **DevOps & Tools:** Git, Docker, GitHub/GitLab, Postman, Playwright, Jest, Pytest, Kafka
+- **Cloud:** Vercel, Azure, Google Cloud Run, AWS (boto/aioboto)
+- **AI/ML:** LangChain, LangGraph, Anthropic SDKs, MCP (Model Context Protocol), RAG pipelines, ChromaDB
+- **Methodologies:** Scrum, Agile, CI/CD, Clean Architecture, REST API, Domain-Driven Design
+
+### Experience
+
+**Patrimore** — AI Agent Developer Intern (March 2026 - May 2026)
+Developer of autonomous AI agents using LangGraph, FastAPI, and Anthropic SDKs (including MCP). AWS integration with boto/aioboto. System observability with OpenTelemetry, Prometheus, and Grafana.
+
+**Club IA ULEAM** — Content Manager (February 2025 - Present)
+Responsible for content creation and management. Designs workshops, contributes to event topics, and supports activities focused on AI, software development, and emerging technologies.
+
+**Personal Projects** — Full Stack & Backend Developer (September 2023 - Present)
+Ongoing development of projects focused on backend and full stack. REST APIs, authentication systems, relational/non-relational databases, and frontend interfaces using Django, FastAPI, NestJS, Angular, PostgreSQL, Supabase, Docker, and AI-assisted tools.
+
+### Education
+
+**Universidad Laica Eloy Alfaro de Manabi (ULEAM)** — Software Engineering (2023 - Present)
+Academic and personal projects using Django REST, Flask, FastAPI, NestJS, and Angular, focused on solving real-world problems with scalable solutions. Complementary self-taught training in backend, frontend, and agile methodologies.
+
+### Notable Projects
+
+**StreamFlow Music** — Full-stack music streaming platform with Clean Architecture. Django REST backend, Angular SSR frontend, Supabase integration, Spotify/YouTube data sourcing, real-time playback, playlist management, and 474+ unit tests with SonarCloud integration.
+
+**mesaYA** — Restaurant reservation system with microservices: Angular SSR frontend, NestJS reservation service (Clean Architecture/DDD), Python Strawberry GraphQL gateway, LangChain chatbot, auth with RBAC, payments, WebSocket real-time updates, and MCP integration.
+
+**Hackathon Agent AI** — Conversational AI agent built during the Viamatica HackIAthon. Python FastAPI backend with LangChain, RAG pipeline with ChromaDB, Angular TailwindCSS frontend, clean architecture.
+
+### Competitions
+
+**HackIAthon - Ecuador's First AI Hackathon** (August 2025) — 3rd Place (Bronze Medal), Top 6 Finalists. Organized by Viamatica, focused on innovative AI solutions with intensive teamwork and jury presentation.
+
+### Community & Events
+
+- Supabase Launch Week #15 (July 2025)
+- Viamatica 20th Anniversary — Invited as HackIAthon winner (August 2025)
+- Supabase Pitch Day at Club IA ULEAM — Presented StreamFlow (September 2025)
+- Cursor Meetup Manta — First Cursor meetup at ULEAM (October 2025)
+- ULEAM Tech Fest 2025 — Attendee and organizing team (November 2025)
+- Supabase Workshop with Tomas Pozo (December 2025)
+- Coffee Cursor 2026 — AI-powered development meetup (February 2026)
+
+---
+
+## Tech Stack
+
+- Angular 21 (standalone components, signals, SSR with hydration)
+- Tailwind CSS 4 + Angular Material 21
+- Supabase (PostgreSQL, auth, storage, real-time)
+- TypeScript 5.9 (strict mode)
+- Vitest + Playwright for testing
+- Deployed on Vercel with 1-year static asset caching
+- PWA support via Angular Service Worker
+
+## Architecture
+
+The app is split into a public-facing portfolio and an authenticated admin dashboard, both served from a single Angular frontend backed by Supabase.
+
+### Project Structure
+
+```
+frontend/src/app/
+  core/             Singleton services, models, guards
+    models/
+      base/         BaseEntity, PolymorphicEntity, Language, getTranslation util
+      entities/     15 domain models (profile, skill, project, experience, etc.)
+      form-data/    13 form DTOs (*-form-data.model.ts)
+    services/       21 injectable services
+    guards/         Route guards (auth, no-auth)
+  features/
+    auth/           Login page
+    dashboard/      Admin CRUD for all entities + analytics (10+ sections)
+    portfolio/      Public-facing portfolio pages (14 routes)
+  shared/
+    components/     29 reusable components (forms, uploads, dialogs, skeletons, etc.)
+    config/         App constants (analytics, file-size, geocoding, message-duration)
+    directives/     countUp, scrollReveal
+    pipes/          translate, markdown, safeHtml
+    utils/          flag-utils, skill-icons, download-file
+
+supabase/
+  tables/           SQL table definitions (current schema)
+  migrations/       21 incremental SQL migrations
+  functions/        17 SQL functions (analytics, admin)
+  rls/              Row-Level Security policies
+  seed/             Demo/seed data
+```
+
+### Path Aliases
+
+- `@core/*` -> `src/app/core/*`
+- `@shared/*` -> `src/app/shared/*`
+- `@features/*` -> `src/app/features/*`
+
+## Key Patterns
+
+### Standalone Components Only
+No NgModules. All components are standalone with route-level lazy loading.
+
+### Signal-Based State
+Uses Angular signals for reactivity instead of heavy RxJS patterns.
+
+### Custom i18n System
+Not ngx-translate. A custom signal-based `TranslateService` with dot-notation keys. Translation files at `frontend/src/assets/i18n/{es,en}.json`. Default language is Spanish.
+
+### Generic CRUD Service
+`CrudService` provides generic Supabase CRUD operations for all data access.
+
+### Entity Model Hierarchy
+All entities extend `BaseEntity` (id, created_at, user_id). Translatable entities use separate `*_translation` tables. `PolymorphicEntity` pattern links entities via `skill_usage` (projects, experiences, competitions, events).
+
+### Dashboard CRUD Pattern
+Each entity follows a consistent structure: `{entity}-list.ts` (list with filtering/pagination), `{entity}-item.ts` (row item), `{entity}-form.ts` (create/edit), `{entity}-form-base-info.ts` (base info tab), `{entity}-form-translations.ts` (i18n tab).
+
+### Theming
+`ThemeService` supports 4 themes: Dark Elegant, Light Elegant, Midnight Blue, Warm Sepia.
+
+### SSR & PWA
+Static prerendering via `@angular/build:application` with `outputMode: "static"`. Service worker configured via `ngsw-config.json` for PWA support.
+
+## Portfolio Pages
+
+- `/` — Home (hero, about, featured projects, skills ticker)
+- `/skills` — Skills overview
+- `/projects` — Projects list + `/projects/:id` detail
+- `/experience` — Experience list + `/experience/:id` detail
+- `/education` — Education list
+- `/competitions` — Competitions list + `/competitions/:id` detail
+- `/events` — Events list + `/events/:id` detail
+- `/contact` — Contact page
+- `/from/:source` — Referrer redirect handler (tracks traffic sources)
+
+## Dashboard Sections
+
+- Profile (editor with live preview, social links, location/availability)
+- Projects, Experiences, Educations, Events, Competitions (full CRUD)
+- Skills, Skill Categories, Skill Usages
+- Analytics (overview, pages, visitors, recruiters, referrers, AI insights, KPIs, active visitors, content ranking, engagement, heatmap, anomaly detection, export, period comparison)
+
+## Services
+
+- `AuthService` — authentication flow via Supabase
+- `CrudService` — generic Supabase CRUD
+- `SupabaseClientService` — singleton Supabase client
+- `ProfileService` — profile data management
+- `TranslateService` — custom i18n
+- `LanguageService` — language selection and detection
+- `TranslationDataService` — translation data loading
+- `ThemeService` — theme switching
+- `SeoService` — meta tags, canonical URLs, SEO
+- `JsonLdBuilder` — structured data for search engines
+- `ContentSectionService` — content section management
+- `StorageService` — image uploads to Supabase buckets
+- `DocumentStorageService` — document file uploads
+- `AnalyticsTrackingService` — page view and visitor tracking
+- `AnalyticsDashboardService` — analytics data retrieval for admin
+- `AnalyticsAlertsService` — analytics alert management
+- `WebVitalsService` — Core Web Vitals monitoring (CLS, FID, LCP)
+- `ToastService` — user notifications
+- `LoggerService` — logging
+
+## Supabase Functions (17)
+
+Analytics: `get_analytics_comparison`, `get_active_visitor_count`, `get_bounce_rate`, `get_visitor_retention`, `get_conversion_funnel`, `get_activity_heatmap`, `get_content_ranking`, `get_period_comparison`, `get_anomaly_detection`, `get_analytics_export`, `get_unique_visitors`, `get_active_visitors`, `get_analytics_changes_since`, `get_visitor_engagement_scores`
+
+Admin: `create_translations`, `handle_new_user`, `get_analyrics_summary`
+
+## Commands
+
+```bash
+cd frontend
+npm start                     # Dev server
+npm run build                 # Production build
+npm test                      # Vitest unit tests
+npm run e2e                   # Playwright e2e tests
+npm run lint                  # ESLint
+npm run analyze               # Bundle size analysis
+npm run generate:sitemap      # Generate sitemap
+npm run serve:ssr:stevsant26  # Serve with SSR
+```

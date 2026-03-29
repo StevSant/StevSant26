@@ -23,14 +23,14 @@ frontend/src/app/
 │   │   ├── base/       # BaseEntity, PolymorphicEntity, Language, getTranslation util
 │   │   ├── entities/   # Domain models (profile, skill, project, experience, etc.)
 │   │   └── form-data/  # Form DTOs (*-form-data.model.ts)
-│   ├── services/       # 20+ injectable services (CRUD, auth, translate, storage, etc.)
+│   ├── services/       # 21 injectable services (CRUD, auth, translate, storage, etc.)
 │   └── guards/         # Route guards (auth, no-auth)
 ├── features/
 │   ├── auth/           # Login page
 │   ├── dashboard/      # Admin CRUD for all entities + analytics
 │   └── portfolio/      # Public-facing portfolio pages
 └── shared/
-    ├── components/     # 20+ reusable components (forms, uploads, dialogs, etc.)
+    ├── components/     # 29 reusable components (forms, uploads, dialogs, etc.)
     ├── config/         # App constants
     ├── directives/
     ├── pipes/
@@ -38,7 +38,7 @@ frontend/src/app/
 
 supabase/
 ├── tables/         # SQL table definitions
-├── migrations/     # Incremental SQL migrations (16 files)
+├── migrations/     # Incremental SQL migrations (21 files)
 ├── functions/      # SQL functions
 ├── rls/            # Row-Level Security policies
 └── seed/           # Demo/seed data
@@ -57,6 +57,10 @@ cd frontend
 npm start          # Dev server
 npm run build      # Production build
 npm test           # Run Vitest tests
+npm run e2e        # Playwright e2e tests
+npm run lint       # ESLint
+npm run analyze    # Bundle size analysis (source-map-explorer)
+npm run generate:sitemap  # Generate sitemap
 ```
 
 ## Architecture & Conventions
@@ -86,12 +90,32 @@ npm test           # Run Vitest tests
 - `ThemeService` — 4 themes (Dark Elegant, Light Elegant, Midnight Blue, Warm Sepia)
 - `StorageService` / `DocumentStorageService` — file uploads to Supabase buckets
 
+### Pipes
+
+- `translate` — translation lookup in templates
+- `markdown` — converts markdown to HTML
+- `safeHtml` — sanitizes HTML for safe rendering
+
+### Directives
+
+- `countUp` — animated number counting
+- `scrollReveal` — scroll-triggered reveal animations
+
 ### Models
 
 - All entities extend `BaseEntity` (has `id`, `created_at`, `user_id`)
 - Translatable entities use separate `*_translation` tables in Supabase
 - `PolymorphicEntity` pattern for entities linked via `skill_usage` (projects, experiences, competitions, events)
 - Form DTOs live in `core/models/form-data/`
+
+### Dashboard CRUD Pattern
+
+Each entity (projects, experiences, educations, events, competitions) follows:
+- `{entity}-list.ts` — list with filtering/pagination
+- `{entity}-item.ts` — list row item
+- `{entity}-form.ts` — create/edit form
+- `{entity}-form-base-info.ts` — base info tab
+- `{entity}-form-translations.ts` — i18n tab
 
 ### Database Rules
 
@@ -100,6 +124,15 @@ npm test           # Run Vitest tests
 - Base schema in `supabase/tables/` must always reflect the current final structure
 - RLS policies are mandatory on all tables
 - Never leave schema drift between remote and local
+
+## Deployment & Infrastructure
+
+- **SSR:** Static prerendering via `@angular/build:application` with `outputMode: "static"`
+- **PWA:** Service worker configured via `ngsw-config.json`
+- **Vercel:** 1-year cache headers for static assets; all routes rewrite to `/index.csr.html`
+- **Pre-commit:** Husky + lint-staged runs linting before each commit
+- **Environment files:** `frontend/src/environments/environment.ts` (prod) and `environment.development.ts` (dev) — contains `supabaseUrl`, `supabaseKey`, `siteUrl`, bucket names
+- **Supabase SQL functions:** 17 analytics/admin functions in `supabase/functions/`
 
 ## Disambiguation Protocol
 
